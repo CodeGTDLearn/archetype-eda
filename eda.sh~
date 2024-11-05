@@ -1,18 +1,19 @@
 #!/bin/bash
 
-# A) EXIBICAO DE LOGS: Opcao para 'Exibir o processamento do Maven'
+# A) EXIBICAO DE LOGS: Exibe logs do 'Maven' e do 'Archetype Pos Processor'
 show_maven_log=true
-show_archetype_pos_CONSTANTESprocessor_log=true
+show_archetype_pos_processor_log=true
 
 
 # B) DEFINICAO DE CONSTANTES
-# B.1) Keyword de erro/sucesso, rastreada pelo script, no output do Maven
+# B.1) Keywords rastreadas pelo script, no output do Maven
 ERROR_KEYWORD="BUILD FAILURE"
 SUCESS_KEYWORD="BUILD SUCCESS"
 
-# B.2) Parametros do  Archetype no Repositorio Local do Maven
-ARCHETYPE_GROUP_ID="com.example"
-ARCHETYPE_ARTIFACT_ID="arch-archetype"
+# B.2) Configurar "CONFORME" o Archetype "INSTALADO" no 'REPO-LOCAL DO MAVEN'
+# 'REPO-LOCAL DO MAVEN': ~\.m2\repository\archetype-catalog.xml)
+ARCHETYPE_GROUP_ID="com.custom-archetype"
+ARCHETYPE_ARTIFACT_ID="eda-archetype"
 ARCHETYPE_VERSION="0.0.1-SNAPSHOT"
 
 # B.3) CONSTANTES relativas aos Prompts "do Script"
@@ -83,7 +84,7 @@ execute_maven_command_line() {
     fi
 }
 
-# C.3) Monitoramento do Log de Execucao da 'Line Command' do Maven
+# C.3) Monitora Log de Execucao da 'Line Command' do Maven-Build
 monitor_maven_build_log() {
 
     if echo "$maven_output" | grep -q "$ERROR_KEYWORD"; then
@@ -149,7 +150,7 @@ match_input_with_pattern() {
   fi
 }
 
-# C.5) Define valores "Default" e adota destes em caso de 'Enter' nos Inputs
+# C.5) Define valores "Default" e os adota em caso de 'Enter' nos Inputs
 default_value_input() {
 
   local input_pattern=$1
@@ -184,7 +185,7 @@ default_value_input() {
   esac
 }
 
-# C.6) Gerencia a 'opcao de custom attributes' nos Inputs
+# C.6) Gerencia 'custom attributes' nos Inputs
 custom_attributes_list_input() {
 
   if [[ "${enable_custom_attributes,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
@@ -306,7 +307,7 @@ maven_command_with_configured_params="mvn archetype:generate -B
 \
 -Dextra_POM_dependencies=\"$extra_dependencies\"
 \
--Dshow_archetype_posprocessor_log=\"$show_archetype_pos_CONSTANTESprocessor_log\""
+-Dshow_archetype_posprocessor_log=\"$show_archetype_pos_processor_log\""
 
 # D.4) Criar um criterio relativo ao 'Parametro -D'(variavel) nos arquivos:
 # D.4.1) src\main\resources\ "META-INF" \ "MAVEN" \archetype-metadata.xml

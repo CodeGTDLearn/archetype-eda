@@ -6,12 +6,12 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example</groupId>
-  <artifactId>arch-archetype</artifactId>
+  <groupId>com.custom-archetype</groupId>
+  <artifactId>eda-archetype</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>maven-archetype</packaging>
 
-  <name>arch-archetype</name>
+  <name>eda-archetype</name>
 
   <build>
     <extensions>

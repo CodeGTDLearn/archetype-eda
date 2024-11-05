@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64388682-f0a0-4158-b39e-c442befd3622" name="Changes" comment="Versao 02">
+      <change afterPath="$PROJECT_DIR$/assets/img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/img_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/img_2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eda.sh" beforeDir="false" afterPath="$PROJECT_DIR$/eda.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +59,7 @@
       <recent name="C:\Users\USER\Downloads\arch5\src\main\resources\archetype-resources\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\SERVIDOR\Projects\archetype-version-3\assets" />
       <recent name="C:\Users\USER\Downloads\arch5\src\main\resources\archetype-resources\src\main\java\__project_name__" />
       <recent name="C:\Users\USER\Downloads\arch5\src\main\resources\META-INF" />
       <recent name="C:\Users\USER\Downloads\arch5\src\main\resources" />
