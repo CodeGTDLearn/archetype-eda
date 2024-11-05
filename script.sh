@@ -1,0 +1,323 @@
+#!/bin/bash
+
+# A) EXIBICAO DE LOGS: Opcao para 'Exibir o processamento do Maven'
+show_maven_log=true
+show_archetype_pos_processor_log=true
+
+
+# B) DEFINICAO DE CONSTANTES
+# B.1) Keyword de erro/sucesso, rastreada pelo script, no output do Maven
+ERROR_KEYWORD="BUILD FAILURE"
+SUCESS_KEYWORD="BUILD SUCCESS"
+
+# B.2) Parametros do  Archetype no Repositorio Local do Maven
+ARCHETYPE_GROUP_ID="com.example"
+ARCHETYPE_ARTIFACT_ID="arch-archetype"
+ARCHETYPE_VERSION="0.0.1-SNAPSHOT"
+
+# B.3) CONSTANTES relativas aos Prompts "do Script"
+#CONFIRMATION_PROMPT="Deseja continuar? (s/n): "
+#OPERATION_CANCELLED_MESSAGE="Operação cancelada pelo usuário."
+#ABSENCE_OF_ANSWER_WARNING="Insira um valor válido."
+FINISH_PROMPT="Pressione Enter para fechar a tela..."
+BUILD_FAILURE_MESSAGE="Ocorreu um erro. Veja o log para mais detalhes."
+BUILD_SUCCESS_MESSAGE="Archetype gerado com sucesso!"
+ARTIFACT_ID_EXISTS_WARNING="já existe. Escolha outro nome."
+PROCESS_ON_GOING="Processando a solicitacao (Maven)...................."
+SHOW_MAVEN_LOG_OUTPUT_MESSAGE="Showing Maven-Output detalhado...................."
+
+
+# C) METODOS/FUNCOES OPERACIONAIS DO SCRIPT
+
+# C.1) Le 'inputs do usuario'
+scan_user_input_line() {
+
+    if [ -z "$BASH_VERSION" ]; then
+       read -p "$1" value_to_be_matched
+
+    else
+       read -e -p "$1" value_to_be_matched
+
+    fi
+
+    echo "$value_to_be_matched"
+}
+
+# C.2) Le 'input de ArtifactId'
+artifactId_input() {
+
+  local artifactId_text='O artifactId'
+  local folder_text='Folders ja existentes:'
+
+  while true; do
+
+    artifactId=$(default_value_input "artifact_model" "my-archetype" "$ARTIFACT_ID_PROMPT")
+
+    if [ -d "$artifactId" ]; then
+       echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_WARNING \n\n$folder_text\n"
+       ls -l
+       echo
+    else
+       break
+    fi
+
+  done
+}
+
+# C.2) Execucao da 'line command' do Maven
+execute_maven_command_line() {
+
+    local show_log=$1
+
+    echo -e "\n$PROCESS_ON_GOING\n"
+
+    if $show_log; then
+       echo -e "\n$SHOW_MAVEN_LOG_OUTPUT_MESSAGE\n"
+       maven_output=$(eval $maven_command_with_configured_params)
+       echo "$maven_output"
+
+    else
+#      echo -e "\n$PROCESS_ON_GOING\n"
+       maven_output=$(eval $maven_command_with_configured_params 2>&1)
+
+    fi
+}
+
+# C.3) Monitoramento do Log de Execucao da 'Line Command' do Maven
+monitor_maven_build_log() {
+
+    if echo "$maven_output" | grep -q "$ERROR_KEYWORD"; then
+       echo -e "\n$BUILD_FAILURE_MESSAGE"
+
+    elif echo "$maven_output" | grep -q "$SUCESS_KEYWORD"; then
+         echo -e "\n$BUILD_SUCCESS_MESSAGE"
+
+    fi
+}
+
+# C.4) Verifica[Match] padrões de valores inseridos nos Inputs
+match_input_with_pattern() {
+  local input_pattern=$1
+  local value_to_be_matched=$2
+
+  local input_patterns
+
+  case $input_pattern in
+
+    #numero: Inteiros/decimais (ex: 123 ou 123.45)
+    numero) input_patterns="^[0-9]+(\.[0-9]+)?$";;
+
+    #texto: Qquer caracter + espaços/acentos (ex: Olá, mundo! ou ``)
+    texto) input_patterns="^[a-zA-Z].*$";;
+
+    #artifact_model: Letra/número/caracteres(_-) sem espaços(ex: teste_123 / nome-dominio)
+    artifact_model) input_patterns="^[a-zA-Z][a-zA-Z0-9_-]+$";;
+
+    #dependency: Letra/número/caracteres(,:._-) sem espaços(ex: org.slf4j:slf4j-api:1.7.1:runtime)
+    dependency) input_patterns="^[a-zA-Z][a-zA-Z0-9,:._-]+$";;
+
+    #package: Sequência de letras|números|pontos|underscore|hífens (ex: com.example.meu_pacote)
+    package) input_patterns="^[a-zA-Z][a-zA-Z0-9]*(\.[a-zA-Z0-9]+)+$";;
+
+    #path: Path de arquivo/pasta (ex: /home/arquivo.txt ou c:\home\arquivo.txt)
+    path) input_patterns="^([a-zA-Z]:)?[\/\\][a-zA-Z0-9._-\/\\]+\/?$";;
+
+    #boleana: Palavras "true"|"false" em diversos formatos (ex: true|False|TRUE)
+    boleana) input_patterns="^(true|false|t|f|T|F|TRUE|FALSE|True|False|tRUE|fALSE)$";;
+
+    #data: Data no formato "dd/mm/aaaa" (ex: 12/03/2023 ou 1/1/23)
+    data) input_patterns="^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{2,4}$";;
+
+    #hora: Hora no formato "HH" (ex: 12, 23, 07)
+    hora) input_patterns="^(2[0-3]|[01][0-9])$";;
+
+    #minuto: Minuto no formato "MM" (ex: 59, 30, 01)
+    minuto) input_patterns="^[0-5][0-9]$";;
+
+    #hora_minuto: Hora e minuto no formato "HH:MM" (ex: 12:30, 07:01)
+    hora_minuto) input_patterns="^(2[0-3]|[01][0-9]):[0-5][0-9]$";;
+
+    #hora_minuto_segundo: Hora, minuto e segundo no formato "HH:MM:SS" (ex: 12:30:45)
+    hora_minuto_segundo) input_patterns="^(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$";;
+
+  esac
+
+  if [[ $value_to_be_matched =~ $input_patterns ]]; then
+    echo "true"
+  else
+    echo "false"
+  fi
+}
+
+# C.5) Define valores "Default" e adota destes em caso de 'Enter' nos Inputs
+default_value_input() {
+
+  local input_pattern=$1
+  local input_default_value=$2
+  local input_prompt=$3
+
+  local valid_input_warning="Digite um valor válido!"
+  local input_value
+
+  while true; do
+
+    read -r -p "$input_prompt (ex: $input_default_value): " input_value
+
+    # Checa se o valor é vazio ('enter' foi pressionado),
+    # se sim, finaliza o loop e atribui o valor default
+    if [ -z "$input_value" ]; then
+      input_value=$input_default_value
+      break
+    fi
+
+    if [ "$(match_input_with_pattern "$input_pattern" "$input_value")" = "true" ]; then
+      break
+    fi
+
+  done
+
+  # Checa input_value p/ 'true/TRUE/True/T/t' ou 'false/FALSE/False/F/f' e converte p/ lowerCase
+  case ${input_value,,} in
+    true|t) echo "true";;
+    false|f) echo "false";;
+    *) echo "$input_value";;
+  esac
+}
+
+# C.6) Gerencia a 'opcao de custom attributes' nos Inputs
+custom_attributes_list_input() {
+
+  if [[ "${enable_custom_attributes,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
+     custom_attributes_list=$(default_value_input "texto" "Long:Id, String:name" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
+
+  else
+     custom_attributes_list="false"
+
+  fi
+}
+
+# C.7) Le 'input de Package'
+package_input() {
+
+    value_to_be_matched=$(scan_user_input_line "$PACKAGE_PROMPT ($groupid.$artifactId): ")
+
+    if [ -z "$value_to_be_matched" ]; then
+       echo "$groupid.$artifactId"
+
+    else
+       echo "$value_to_be_matched"
+
+    fi
+}
+
+# C.8) Gerencia 'Opcao Final', sendo estas: a) Sair ou b) Abrir IDE
+final_input() {
+
+  local user_options_text='\nDo you want to:\n\n 1. Open project in IDE\n 2. Exit\n'
+  local user_options_input_patterns_from_prompt='Choose an option (1/2):'
+  local invalid_user_option='Invalid option. Please try again.'
+
+  echo -e "\n$FINISH_PROMPT\n"
+
+  while true; do
+
+    echo -e "$user_options_text"
+    read -p "$user_options_input_patterns_from_prompt" option
+
+    case $option in
+      1) cd $artifactId && "idea ."; break ;;
+      2) break ;;
+      *) echo "$invalid_user_option" ;;
+    esac
+
+  done
+
+  read -p "$(echo -e "\n$FINISH_PROMPT")"
+
+}
+
+#-------------------------------------------------------------------------------
+# D) 4 PASSOS P/ ADICAO DE FUTUROS CRITERIOS ADVINDOS DO ARCHETYPE-METADATA.XML
+#-------------------------------------------------------------------------------
+
+# D.1) CONSTANTES relativas aos "PROMPTS RESPONDIDOS PELO USUARIO"
+PACKAGE_PROMPT="Digite o package"
+GROUPID_PROMPT="Digite o GroupId"
+VERSION_PROMPT="Digite a Version"
+PROJECT_NAME_PROMPT="Digite o nome do projeto"
+ARTIFACT_ID_PROMPT="Digite o ArtifactId"
+ENABLE_FOLDER_SRC_TEST_JAVA_PROMPT="Habilitar pasta src/test/java"
+ENABLE_FOLDER_SRC_TEST_RESOURCES_PROMPT="Habilitar pasta src/test/resources"
+ENABLE_LOMBOK_PROMPT="Habilitar Lombok"
+ENABLE_CUSTOM_ATTRIBUTES_PROMPT="Habilitar atributos customizados"
+ENABLE_YML_FILE_IN_MAIN_RESOURCES_PROMPT="Criar application.yml no Resources"
+CUSTOM_ATTRIBUTES_LIST_PROMPT="Defina os atributos do Model"
+PROJECT_DESCRIPTION_PROMPT="Descricao do projeto"
+ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT="Inserir suporte a Autenticacao JWT"
+EXTRA_DEPENDENCIES_PROMPT="Add POM-Dependencies [Delimiters , : ]"
+
+
+# D.2) 'RESPOSTAS CHECADAS' COLETADAS EM VARIAVEIS
+# D.2.1) general_inputs
+groupid=$(default_value_input "package" "com.b1r" "$GROUPID_PROMPT")
+version=$(default_value_input "numero" "1.17.1" "$VERSION_PROMPT")
+project_name=$(default_value_input "artifact_model" "NoName" "$PROJECT_NAME_PROMPT")
+project_description=$(default_value_input "texto" "This is my description" "$PROJECT_DESCRIPTION_PROMPT")
+
+enable_folder_src_test_java=$(default_value_input "boleana" "false" "$ENABLE_FOLDER_SRC_TEST_JAVA_PROMPT")
+enable_folder_src_test_resources=$(default_value_input "boleana" "false" "$ENABLE_FOLDER_SRC_TEST_RESOURCES_PROMPT")
+enable_lombok=$(default_value_input "boleana" "false" "$ENABLE_LOMBOK_PROMPT")
+enable_yml_file_in_main_resources=$(default_value_input "boleana" "false" "$ENABLE_YML_FILE_IN_MAIN_RESOURCES_PROMPT")
+enable_security_authentic_support=$(default_value_input "boleana" "false" "$ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT")
+enable_custom_attributes=$(default_value_input "boleana" "false" "$ENABLE_CUSTOM_ATTRIBUTES_PROMPT")
+
+extra_dependencies=$(default_value_input "dependency" "org.slf4j:slf4j-api:1.7.1:runtime" "$EXTRA_DEPENDENCIES_PROMPT")
+
+# D.2.2) Variaveis coletadas via Metodos
+custom_attributes_list_input
+artifactId_input
+
+# D.2.3) package_input
+package=$(package_input)
+
+
+# D.3) Montagem do 'Parametro -D' do Maven, com a Variavel das respostas
+maven_command_with_configured_params="mvn archetype:generate -B
+\
+-DarchetypeGroupId=\"$ARCHETYPE_GROUP_ID\" \
+-DarchetypeArtifactId=\"$ARCHETYPE_ARTIFACT_ID\" \
+-DarchetypeVersion=\"$ARCHETYPE_VERSION\"
+\
+-Dpackage=\"$package\" \
+-DgroupId=\"$groupid\" \
+-DartifactId=\"$artifactId\" \
+-Dversion=\"$version\" \
+-Dproject_name=\"$project_name\" \
+-Dproject_description=\"$project_description\"
+\
+-Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
+-Denable_folder_src_test_resources=\"$enable_folder_src_test_resources\" \
+-Denable_lombok=\"$enable_lombok\" \
+-Denable_yml_file_in_main_resources=\"$enable_yml_file_in_main_resources\"
+-Denable_security_authentication_support=\"$enable_security_authentic_support\"
+-Denable_custom_attributes=\"$enable_custom_attributes\"
+\
+-Dcustom_attributes_list=\"$custom_attributes_list\"
+\
+-Dextra_POM_dependencies=\"$extra_dependencies\"
+\
+-Dshow_archetype_posprocessor_log=\"$show_archetype_pos_processor_log\""
+
+# D.4) Criar um criterio relativo ao 'Parametro -D'(variavel) nos arquivos:
+# D.4.1) src\main\resources\ "META-INF" \ "MAVEN" \archetype-metadata.xml
+# D.4.2) src\test\resources\ "PROJECTS.BASIC"     \archetype.properties
+
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+
+execute_maven_command_line $show_maven_log
+
+monitor_maven_build_log
+
+final_input
