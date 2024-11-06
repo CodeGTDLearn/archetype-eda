@@ -6,7 +6,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.custom-archetype</groupId>
+  <groupId>com.eda-archetype</groupId>
   <artifactId>eda-archetype</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>maven-archetype</packaging>
@@ -32,27 +32,4 @@
     </pluginManagement>
   </build>
 
-<!--  <description>Demo project for Spring Boot</description>-->
-
-<!--  <url>https://spring.io/projects/spring-boot/arch</url>-->
-
-<!--  <developers>-->
-<!--    <developer>-->
-<!--      <name>Spring</name>-->
-<!--      <email>ask@spring.io</email>-->
-<!--      <organization>VMware, Inc.</organization>-->
-<!--      <organizationUrl>https://www.spring.io</organizationUrl>-->
-<!--    </developer>-->
-<!--  </developers>-->
-
-<!--  <licenses>-->
-<!--    <license>-->
-<!--      <name>Apache License, Version 2.0</name>-->
-<!--      <url>https://www.apache.org/licenses/LICENSE-2.0</url>-->
-<!--    </license>-->
-<!--  </licenses>-->
-
-<!--  <scm>-->
-<!--    <url>https://github.com/spring-projects/spring-boot/arch</url>-->
-<!--  </scm>-->
 </project>

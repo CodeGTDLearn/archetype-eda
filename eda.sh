@@ -26,6 +26,8 @@ BUILD_SUCCESS_MESSAGE="Archetype gerado com sucesso!"
 ARTIFACT_ID_EXISTS_WARNING="já existe. Escolha outro nome."
 PROCESS_ON_GOING="Processando a solicitacao (Maven)...................."
 SHOW_MAVEN_LOG_OUTPUT_MESSAGE="Showing Maven-Output detalhado...................."
+FOLDER_ALREADY_EXISTENT_MESSAGE='Folders ja existentes:'
+FOLDER_LIST_MESSAGE='Folders criadas na pasta:'
 
 
 # C) METODOS/FUNCOES OPERACIONAIS DO SCRIPT
@@ -48,14 +50,13 @@ scan_user_input_line() {
 artifactId_input() {
 
   local artifactId_text='O artifactId'
-  local folder_text='Folders ja existentes:'
 
   while true; do
 
     artifactId=$(default_value_input "artifact_model" "my-archetype" "$ARTIFACT_ID_PROMPT")
 
     if [ -d "$artifactId" ]; then
-       echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_WARNING \n\n$folder_text\n"
+       echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_WARNING \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
        ls -l
        echo
     else
@@ -212,13 +213,19 @@ package_input() {
 }
 
 # C.8) Gerencia 'Opcao Final', sendo estas: a) Sair ou b) Abrir IDE
-final_input() {
+open_ide_option_input() {
 
   local user_options_text='\nDo you want to:\n\n 1. Open project in IDE\n 2. Exit\n'
   local user_options_input_patterns_from_prompt='Choose an option (1/2):'
   local invalid_user_option='Invalid option. Please try again.'
+  local ide_path_windows='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.2.2\bin\'
+  local ide_path_unix=':/mnt/c/Program Files/JetBrains/IntelliJ IDEA Community Edition 2022.2.2/bin/'
+#  local ide_path_unix=':/mnt/c/Program Files/JetBrains/IntelliJ IDEA Community Edition 2024.2.2/bin$'
 
-  echo -e "\n$FINISH_PROMPT\n"
+  echo -e "\n$FOLDER_LIST_MESSAGE\n"
+  ls -l
+
+#  echo -e "\n$FINISH_PROMPT\n"
 
   while true; do
 
@@ -283,7 +290,7 @@ package=$(package_input)
 
 
 # D.3) Montagem do 'Parametro -D' do Maven, com a Variavel das respostas
-maven_command_with_configured_params="mvn archetype:generate -B
+maven_command_with_configured_params="mvn archetype:generate -B -X
 \
 -DarchetypeGroupId=\"$ARCHETYPE_GROUP_ID\" \
 -DarchetypeArtifactId=\"$ARCHETYPE_ARTIFACT_ID\" \
@@ -321,4 +328,4 @@ execute_maven_command_line $show_maven_log
 
 monitor_maven_build_log
 
-final_input
+open_ide_option_input
