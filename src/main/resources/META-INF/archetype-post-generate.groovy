@@ -15,7 +15,7 @@ def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 // 2.0) Variaveis Operacionais exclusivas deste Script
 def security_folder_suffix = "Security"
 def project_security_folder = "${properties?.project_name}".concat(security_folder_suffix)
-def log_text = "\n------- ARCHETYPE-POST-GENERATE LOG -------\n\n"
+def log_text = "\n------- POS-PROCESSOR: ARCHETYPE-POST-GENERATE LOG -------\n\n"
 
 def project_package = "${properties?.package}".replace('.', '/')
 
