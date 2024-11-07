@@ -239,6 +239,7 @@ open_ide_final_option_input() {
 
 #  echo -e "\n$FINISH_PROMPT\n"
 
+
   while true; do
 
     echo -e "$user_options_text"

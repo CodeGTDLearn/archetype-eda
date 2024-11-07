@@ -5,25 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64388682-f0a0-4158-b39e-c442befd3622" name="Changes" comment="Versao 02">
-      <change beforePath="$PROJECT_DIR$/eda.sh" beforeDir="false" afterPath="$PROJECT_DIR$/eda.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "CodeGTDLearn"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;CodeGTDLearn&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/CodeGTDLearn/archetype-v2-eda.git",
-    "accountId": "5e5d3e5a-0fe6-4225-9d7f-9bfddf0cba19"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/CodeGTDLearn/archetype-v2-eda.git&quot;,
+    &quot;accountId&quot;: &quot;5e5d3e5a-0fe6-4225-9d7f-9bfddf0cba19&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
