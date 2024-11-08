@@ -15,7 +15,7 @@ def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 // 2.0) Variaveis Operacionais exclusivas deste Script
 def security_folder_suffix = "Security"
 def project_security_folder = "${properties?.project_name}".concat(security_folder_suffix)
-def log_text = "\n------- POS-PROCESSOR: ARCHETYPE-POST-GENERATE LOG -------\n\n"
+def log_text = "\n----------------- POS-PROCESSOR: ARCHETYPE-POST-GENERATE LOG -----------------\n\n"
 
 def project_package = "${properties?.package}".replace('.', '/')
 
@@ -75,7 +75,7 @@ if (keep_security_folder == 'false') {
     deleteFile(filePathAppPub.toFile())
 }
 
-if (extra_POM_dependencies.length() > 0) {
+if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 
     String[] dependencies = extra_POM_dependencies.split(',')
 
@@ -153,7 +153,7 @@ if (extra_POM_dependencies.length() > 0) {
     }
 }
 
-if (show_log == 'true') printf "\n$log_text \n------------------------------\n\n"
+if (show_log == 'true') printf "\n$log_text \n---------------------------------------------------------------------\n\n"
 
 //  Supplementar Methods
 def deleteFolder(File dir) {
