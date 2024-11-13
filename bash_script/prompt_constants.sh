@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#PACKAGE_PROMPT="Digite o package"
+GROUPID_PROMPT="Digite o GroupId"
+VERSION_PROMPT="Digite a Version"
+PROJECT_NAME_PROMPT="Digite o nome do projeto"
+ARTIFACT_ID_PROMPT="Digite o ArtifactId"
+ENABLE_FOLDER_SRC_TEST_JAVA_PROMPT="Habilitar pasta src/test/java"
+ENABLE_FOLDER_SRC_TEST_RESOURCES_PROMPT="Habilitar pasta src/test/resources"
+ENABLE_LOMBOK_PROMPT="Habilitar Lombok"
+ENABLE_YML_FILE_IN_MAIN_RESOURCES_PROMPT="Criar application.yml no Resources"
+PROJECT_DESCRIPTION_PROMPT="Descricao do projeto"
+ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT="Habilitar Autenticacao JWT"
+ENABLE_CUSTOM_ATTRIBUTES_PROMPT="Habilitar atributos customizados"
+CUSTOM_ATTRIBUTES_LIST_PROMPT="Defina os atributos do Model"
+ENABLE_DEPENDENCIES_ADD_PROMPT="Habilitar POM-Dependencies customizadas"
+EXTRA_DEPENDENCIES_PROMPT="Add POM-Dependencies [Delimiters , : ]"

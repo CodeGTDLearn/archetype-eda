@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64388682-f0a0-4158-b39e-c442befd3622" name="Changes" comment="Versao 02">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eda.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/eda.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bash_script/eda.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/eda.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

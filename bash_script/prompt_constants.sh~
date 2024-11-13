@@ -1,0 +1,126 @@
+#!/bin/bash
+
+#PACKAGE_PROMPT="Digite o package"
+GROUPID_PROMPT="Digite o GroupId"
+VERSION_PROMPT="Digite a Version"
+PROJECT_NAME_PROMPT="Digite o nome do projeto"
+ARTIFACT_ID_PROMPT="Digite o ArtifactId"
+ENABLE_FOLDER_SRC_TEST_JAVA_PROMPT="Habilitar pasta src/test/java"
+ENABLE_FOLDER_SRC_TEST_RESOURCES_PROMPT="Habilitar pasta src/test/resources"
+ENABLE_LOMBOK_PROMPT="Habilitar Lombok"
+ENABLE_YML_FILE_IN_MAIN_RESOURCES_PROMPT="Criar application.yml no Resources"
+PROJECT_DESCRIPTION_PROMPT="Descricao do projeto"
+ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT="Habilitar Autenticacao JWT"
+ENABLE_CUSTOM_ATTRIBUTES_PROMPT="Habilitar atributos customizados"
+CUSTOM_ATTRIBUTES_LIST_PROMPT="Defina os atributos do Model"
+ENABLE_DEPENDENCIES_ADD_PROMPT="Habilitar POM-Dependencies customizadas"
+EXTRA_DEPENDENCIES_PROMPT="Add POM-Dependencies [Delimiters , : ]"
+
+inject_external_variable_script_file "$SCRIPT_DIR" "prompt_constants.sh"
+
+
+# D.2) 'RESPOSTAS CHECADAS' COLETADAS EM VARIAVEIS
+# D.2.1) Single Inputs
+groupid=$(user_input_or_return_for_default_value "groupid" "com.b1r" "$GROUPID_PROMPT")
+version=$(user_input_or_return_for_default_value "numero" "1.17.1" "$VERSION_PROMPT")
+project_name=$(user_input_or_return_for_default_value "artifact_model" "NoName" "$PROJECT_NAME_PROMPT")
+project_description=$(user_input_or_return_for_default_value "texto" "This is my description" "$PROJECT_DESCRIPTION_PROMPT")
+
+enable_folder_src_test_java=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_FOLDER_SRC_TEST_JAVA_PROMPT")
+enable_folder_src_test_resources=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_FOLDER_SRC_TEST_RESOURCES_PROMPT")
+enable_lombok=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_LOMBOK_PROMPT")
+enable_yml_file_in_main_resources=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_YML_FILE_IN_MAIN_RESOURCES_PROMPT")
+enable_security_authentic_support=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT")
+
+# D.2.2) Compound Inputs
+enable_custom_attributes=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_CUSTOM_ATTRIBUTES_PROMPT")
+custom_attributes_list_input
+enable_dependencies_addition=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_DEPENDENCIES_ADD_PROMPT")
+custom_dependencies_addition_input
+
+# D.2.3) Input Special Methods - Load the 'variable', inside the methods
+artifactId_input
+
+
+# D.3) Montagem do 'Parametro/Switch -D' do Maven,
+# com a Variavel das respostas coletadas
+#maven_command_line="mvn archetype:generate --batch-mode \
+#-DarchetypeGroupId=\"$ARCHETYPE_GROUP_ID\" \
+#\
+#-DarchetypeArtifactId=\"$ARCHETYPE_ARTIFACT_ID\" \
+#-DarchetypeVersion=\"$ARCHETYPE_VERSION\" \
+#\
+#-Dpackage=\"$groupid.$artifactId\" \
+#-DgroupId=\"$groupid\" \
+#-DartifactId=\"$artifactId\" \
+#-Dversion=\"$version\" \
+#-Dproject_name=\"$project_name\" \
+#-Dproject_description=\"$project_description\" \
+#\
+#-Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
+#-Denable_folder_src_test_resources=\"$enable_folder_src_test_resources\" \
+#-Denable_lombok=\"$enable_lombok\" \
+#-Denable_yml_file_in_main_resources=\"$enable_yml_file_in_main_resources\" \
+#-Denable_security_authentication_support=\"$enable_security_authentic_support\" \
+#-Denable_custom_attributes=\"$enable_custom_attributes\" \
+#\
+#-Dcustom_attributes_list=\"$custom_attributes_list\" \
+#\
+#-Dextra_POM_dependencies=\"$extra_dependencies\" \
+#\
+#-Dshow_archetype_posprocessor_log=\"$add_pos_processor_log_in_maven_basic_log\""
+
+maven_command_line=(
+  "mvn archetype:generate --batch-mode"
+  "-DarchetypeGroupId=$ARCHETYPE_GROUP_ID"
+  "-DarchetypeArtifactId=$ARCHETYPE_ARTIFACT_ID"
+  "-DarchetypeVersion=$ARCHETYPE_VERSION"
+  "-Dpackage=$groupid.$artifactId"
+  "-DgroupId=$groupid"
+  "-DartifactId=$artifactId"
+  "-Dversion=$version"
+  "-Dproject_name=$project_name"
+  "-Dproject_description=$project_description"
+  "-Denable_folder_src_test_java=$enable_folder_src_test_java"
+  "-Denable_folder_src_test_resources=$enable_folder_src_test_resources"
+  "-Denable_lombok=$enable_lombok"
+  "-Denable_yml_file_in_main_resources=$enable_yml_file_in_main_resources"
+  "-Denable_security_authentication_support=$enable_security_authentic_support"
+  "-Denable_custom_attributes=$enable_custom_attributes"
+  "-Dcustom_attributes_list=$custom_attributes_list"
+)
+
+# D.4) Criar um criterio identico ao 'Parametro -D'(variavel) nos arquivos:
+# D.4.1) src\main\resources\ "META-INF" \ "MAVEN" \archetype-metadata.XML
+# D.4.2) src\test\resources\ "PROJECTS" \ "BASIC" \archetype.PROPERTIES
+
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+
+execute_maven_command_line $maven_command_line $show_maven_basic_log $show_maven_debug_log
+
+open_ide_final_option_input
+
+#package_input
+#package_input() {
+#
+#    package=$(scan_user_input_line "$PACKAGE_PROMPT ($groupid.$artifactId): ")
+#
+#    if [ -z "$package" ]; then
+#       package="$groupid.$artifactId"
+#    fi
+#}
+
+#scan_user_input_line() {
+#
+#    if [ -z "$BASH_VERSION" ]; then
+#       read -p "$1" value_to_be_matched
+#
+#    else
+#       read -e -p "$1" value_to_be_matched
+#
+#    fi
+#
+#    echo "$value_to_be_matched"
+#}
