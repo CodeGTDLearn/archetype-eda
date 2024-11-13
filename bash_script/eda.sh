@@ -1,55 +1,47 @@
 #!/bin/bash
 
-# A) CONSTANTES OPERACIONAIS DO SCRIPT
+# A) ELEMENTOS OPERACIONAIS DO SCRIPT
+# A.1) DEBUG OPTIONS
 SHOW_MAVEN_BASIC_LOG=false
 SHOW_MAVEN_DEBUG_LOG=false
 ADD_POS_PROCESSOR_LOG_IN_MAVEN_BASIC_LOG=false
-SCRIPT_DIR="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\bash_script\\"
 
-inject_external_script_file() {
+# A.2) SCRIPT SOURCE CHECKING
+SCRIPT_DIR="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\bash_script"
+DIR_NOT_FOUND_MESSAGE="Script Directory $SCRIPT_DIR NOT FOUND. \nCheck the PATH.\n"
+if [ ! -d "$SCRIPT_DIR" ]; then
+    echo -e "$DIR_NOT_FOUND_MESSAGE"
+    return 1
+fi
 
-    # PADRAO DO PARAMETRO 'target_dir'
-    # - ATENCAO
-    #    - A forma de 'FORNECER' o PARAMETRO p/ o SCRIPT, sera no formato
-    #    do OS-HOST.
-    #    TODAVIA, o 'target_dir' mostrado pelo SCRIPT (quando solicitado),
-    #    sera no formato do SCRIPT(BASH - LINUX)
-    # - Parametro Fornecido:
-    #   - padrao do OS-HOST
-    #     - ex: OS-HOST: WINDOWS10 -> c:\WORKBASE\DEV\bash_script
-    # - Visualizacao do Parametro no SCRIPT:
-    #   - BASH(linux)
-    #     - ex: /c/WORKBASE/DEV/bash_script
-    local target_dir="$1"
-    local file_name_plus_extension="$2"
+# A.3) ROOT FOLDER CHECKING
+PRESS_KEY_MESSAGE="Pressione qualquer tecla para continuar..."
+PROJECT_EXISTS_MESSAGE="Project creation FAILED. Folder not allowed. Try elsewhere.\n"
+CURRENT_DIR=$(pwd)
+if [ -d "$CURRENT_DIR/src" ] || [ -f "$CURRENT_DIR/pom.xml" ] ||
+   [ -n "$(ls -A | grep -v '/')" ]; then
+    echo -e "$PROJECT_EXISTS_MESSAGE"
+    read -p "$PRESS_KEY_MESSAGE" -n 1 -s
+    exit 1
+fi
 
-    if [ ! -d "$target_dir" ]; then
-        echo "Directory $target_dir not found."
-        return 1
-    fi
+# B) INJECOES DE ITEMS 'GERAIS' DO SCRIPT
+# B.1) FUNCOES
+source "${SCRIPT_DIR}\\functions.sh"
 
-    if [ ! -f "$target_dir$file_name_plus_extension" ]; then
-        echo "File $file_name_plus_extension not found."
-        return 1
-    fi
+# B.2) CONFIGURACOES
+source "${SCRIPT_DIR}\\config.sh"
 
-    chmod +x "$target_dir$file_name_plus_extension"
-    source "$target_dir$file_name_plus_extension"
-}
-
-# B) INJECAO DAS FUNCOES OPERACIONAIS DO SCRIPT
-inject_external_script_file "$SCRIPT_DIR" "script_functions.sh"
-
-# C) INJECAO DO 'ARQUIVO DE CONSTANTES GERAIS' DO SCRIPT
-inject_external_script_file "$SCRIPT_DIR" "general_constants.sh"
+# B.3) MENSAGENS
+source "${SCRIPT_DIR}\\messages.sh"
 
 #-------------------------------------------------------------------------------
-# D) 4 PASSOS P/ ADICAO DE CRITERIOS ADVINDOS DO ARCHETYPE-METADATA.XML
+# D) 4 PASSOS P/ ADICAO DE NOVOS CRITERIOS DO ARCHETYPE-METADATA.XML
 #-------------------------------------------------------------------------------
-# D.1) Injecao das CONSTANTES relativas aos "PROMPTS RESPONDIDOS PELO USUARIO"
-inject_external_script_file "$SCRIPT_DIR" "prompt_constants.sh"
+# D.1) INJECAO: 'prompts ao usuario'
+source "${SCRIPT_DIR}\\user_prompts.sh"
 
-# D.2) 'RESPOSTAS CHECADAS' COLETADAS EM VARIAVEIS
+# D.2) 'PROMPT-ANSWERS' CHECADAS E COLETADAS EM VARIAVEIS
 # D.2.1) Single Inputs
 groupid=$(user_input_or_return_for_default_value "groupid" "com.b1r" "$GROUPID_PROMPT")
 version=$(user_input_or_return_for_default_value "numero" "1.17.1" "$VERSION_PROMPT")
@@ -68,43 +60,18 @@ custom_attributes_list_input
 enable_dependencies_addition=$(user_input_or_return_for_default_value "boleana" "false" "$ENABLE_DEPENDENCIES_ADD_PROMPT")
 custom_dependencies_addition_input
 
-# D.2.3) Input Special Methods - Load the 'variable', inside the methods
+# D.2.3) Input Methods - 'Variable' loaded by the methods
 artifactId_input
 
-# D.3) Montagem do 'Parametro/Switch -D' do Maven,
-# com a Variavel das respostas coletadas
-# shellcheck disable=SC2089
-maven_command_line="mvn archetype:generate --batch-mode \
--DarchetypeGroupId=\"$ARCHETYPE_GROUP_ID\" \
-\
--DarchetypeArtifactId=\"$ARCHETYPE_ARTIFACT_ID\" \
--DarchetypeVersion=\"$ARCHETYPE_VERSION\" \
-\
--Dpackage=\"$groupid.$artifactId\" \
--DgroupId=\"$groupid\" \
--DartifactId=\"$artifactId\" \
--Dversion=\"$version\" \
--Dproject_name=\"$project_name\" \
--Dproject_description=\"$project_description\" \
-\
--Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
--Denable_folder_src_test_resources=\"$enable_folder_src_test_resources\" \
--Denable_lombok=\"$enable_lombok\" \
--Denable_yml_file_in_main_resources=\"$enable_yml_file_in_main_resources\" \
--Denable_security_authentication_support=\"$enable_security_authentic_support\" \
--Denable_custom_attributes=\"$enable_custom_attributes\" \
-\
--Dcustom_attributes_list=\"$custom_attributes_list\" \
-\
--Dextra_POM_dependencies=\"$extra_dependencies\" \
-\
--Dshow_archetype_posprocessor_log=\"$ADD_POS_PROCESSOR_LOG_IN_MAVEN_BASIC_LOG\""
+# D.3) INJECAO: 'mvn command line'
+# Montagem de 'Parametros/Switches -D' do Maven, usando-se
+# as 'PROMPT-ANSWERS' COLETADAS EM VARIAVEIS
+source "${SCRIPT_DIR}\\mvn_command_line.sh"
 
-# D.4) Criar um criterio identico ao 'Parametro -D'(variavel) nos arquivos:
+# D.4) Criar um criterio identico ao 'Parametro/Switch -D'(variavel) nos arquivos:
 # D.4.1) src\main\resources\ "META-INF" \ "MAVEN" \archetype-metadata.XML
 # D.4.2) src\test\resources\ "PROJECTS" \ "BASIC" \archetype.PROPERTIES
 
-#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 

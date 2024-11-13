@@ -131,39 +131,59 @@ user_input_or_return_for_default_value() {
   esac
 }
 
+converte_pwd_para_windows() {
+
+  local pwd=$(pwd)
+  # echo "Initial pwd: $pwd"
+
+  local drive_letter=${pwd:1:1}
+  # echo "Drive letter: $drive_letter"
+
+  local windows_path=${pwd/#\/$drive_letter/${drive_letter}:}
+  windows_path=${windows_path//\//\\}
+  # echo "Windows_path converted: $windows_path"
+
+  echo "$windows_path"
+}
+
 open_ide_final_option_input() {
 
-  # shellcheck disable=SC2034
   local user_options_text='\nDo you want to:\n\n 1. Open project in IDE\n 2. Exit\n'
-  # shellcheck disable=SC2034
-  local user_options_input_patterns_from_prompt='Choose an option (1/2): '
-  # shellcheck disable=SC2034
+  local user_options_prompt='Choose an option (1/2): '
   local invalid_user_option='Invalid option. Please try again.'
-  # shellcheck disable=SC2034
-  local ide_path_windows='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.2.2\bin\'
-  local ide_path_unix='/mnt/c/Program Files/JetBrains/IntelliJ IDEA Community Edition 2024.2.2/bin/'
-  # shellcheck disable=SC2034
-  local ide_path_wsl2_windows="'${ide_path_unix}idea64.exe'"
+  local ide_exec='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\idea64.exe'
 
-#  if [ -f "${ide_path_wsl2_windows}idea64.exe" ]; then
-#      OPEN_IDE_CMD="cd $artifactId && "${ide_path_wsl2_windows}" . & ; break ;"
-#  else
-#      echo -e "\n\nErro: idea64.exe não encontrado em ${ide_path_wsl2_windows}"
-#  fi
+  local my_path=$(converte_pwd_para_windows)
+  # echo "my_path $my_path"
 
-  echo -e "\n$FOLDER_LIST_MESSAGE\n"
-  ls -l
+  local OPEN_IDE_CMD
 
-#  while true; do
-#    echo -e "$user_options_text"
-#    read -p "$user_options_input_patterns_from_prompt" option
-#
-#    case $option in
-#      1) eval "$OPEN_IDE_CMD" ;;
-#      2) break ;;
-#      *) echo "$invalid_user_option" ;;
-#    esac
-#  done
+  if [ -f "${ide_exec}" ]; then
+      # echo "ide_Exec_path ${ide_exec}"
+      # read -p "Pressione Enter para continuar..."
+
+      OPEN_IDE_CMD="idea64 \"$my_path\\$artifactId\""
+      # echo "Linha de execucao OPEN_IDE_CMD: $OPEN_IDE_CMD"
+
+      #read -p "Pressione Enter para continuar..."
+  else
+      echo -e "\n\nERRO: ${ide_exec} not found.\n"
+      read -p "Pressione Enter para continuar..."
+      exit 1
+  fi
+
+  while true; do
+    echo -e "$user_options_text"
+    read -p "$user_options_prompt" option
+
+    case $option in
+       1) eval $OPEN_IDE_CMD;;
+#       1) $OPEN_IDE_CMD;;
+#       1) idea64 \"$my_path\\$artifactId\";;
+       2) break ;;
+       *) echo "$invalid_user_option" ;;
+    esac
+  done
 
   read -p "$(echo -e "\n$FINISH_PROMPT")"
 }
