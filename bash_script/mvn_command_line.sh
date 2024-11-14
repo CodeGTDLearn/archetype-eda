@@ -24,4 +24,4 @@ maven_command_line="mvn archetype:generate --batch-mode \
 \
 -Dextra_POM_dependencies=\"$extra_dependencies\" \
 \
--Dshow_archetype_posprocessor_log=\"$ADD_POS_PROCESSOR_LOG_IN_MAVEN_BASIC_LOG\""
+-Dshow_archetype_posprocessor_log=\"$SHOW_POS_PROCESSOR_LOG\""

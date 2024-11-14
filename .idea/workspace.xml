@@ -5,29 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54cba9f0-a92b-4e76-9609-e2fe3b4f2b8c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/bash_script/config.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bash_script/mvn_command_line.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/desktop.ini" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bash_script/eda.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/eda.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bash_script/general_constants.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/messages.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bash_script/prompt_constants.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/user_prompts.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bash_script/script_functions.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/functions.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/desktop.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/maven/desktop.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/archetype-resources/src/test/java/__project_name__Service/desktop.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/archetype-resources/src/test/resources/desktop.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/desktop.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bash_script/functions.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/functions.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bash_script/mvn_command_line.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/mvn_command_line.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2onl8L3iKlaUxqtxpse8ZI3XCjN" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -50,7 +40,7 @@
     "com.codeium.enabled": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/WORKBASE/DEV/SCRIPTS/archetype-v2-eda/bash_script",
-    "settings.editor.selected.configurable": "preferences.keymap"
+    "settings.editor.selected.configurable": "AtomSelectConfig"
   }
 }]]></component>
   <component name="RecentsManager">

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+script_injection() {
+
+  local SCRIPT_FOLDER="$1"
+  local SCRIPT_FILE="$2"
+
+  local FOLDER_NOT_FOUND_MESSAGE="Script Folder \'$SCRIPT_FOLDER\' NOT FOUND.\n"
+  local SCRIPT_NOT_FOUND_MESSAGE="Script \'$SCRIPT_FILE\' NOT FOUND in $SCRIPT_FOLDER.\n"
+
+  if [ ! -d "$SCRIPT_FOLDER" ]; then
+    echo -e "$FOLDER_NOT_FOUND_MESSAGE"
+    return 1
+  fi
+
+  if [ ! -f "$SCRIPT_FOLDER/$SCRIPT_FILE" ]; then
+    echo -e "$SCRIPT_NOT_FOUND_MESSAGE"
+    return 1
+  fi
+
+  source "${SCRIPT_FOLDER}\\${SCRIPT_FILE}"
+}
+
+check_project_directory() {
+  PRESS_KEY_MESSAGE="Pressione qualquer tecla para continuar..."
+  PROJECT_EXISTS_MESSAGE="Project creation FAILED. Folder not allowed. Try elsewhere.\n"
+  CURRENT_DIR=$(pwd)
+
+  if [ -d "$CURRENT_DIR/src" ] ||
+     [ -f "$CURRENT_DIR/pom.xml" ] ||
+     [ -n "$(ls -A | grep -v '/')" ]; then
+    echo -e "$PROJECT_EXISTS_MESSAGE"
+    read -p "$PRESS_KEY_MESSAGE" -n 1 -s
+    return 1
+  fi
+  return 0
+}

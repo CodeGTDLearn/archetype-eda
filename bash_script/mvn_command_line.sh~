@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# shellcheck disable=SC2089
 maven_command_line="mvn archetype:generate --batch-mode \
 -DarchetypeGroupId=\"$ARCHETYPE_GROUP_ID\" \
 \

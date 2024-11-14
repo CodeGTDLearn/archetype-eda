@@ -45,7 +45,7 @@ execute_maven_command_line() {
 
 }
 
-match_input_with_pattern() {
+match_input_pattern() {
   local input_pattern=$1
   local value_to_be_matched=$2
 
@@ -98,13 +98,14 @@ match_input_with_pattern() {
   fi
 }
 
-user_input_or_return_for_default_value() {
+user_input_or_default_value() {
 
   local input_pattern=$1
   local input_default_value=$2
   local input_prompt=$3
 
   local input_value
+  local pattern_not_matched_message="Incorrect input. Follow the example above."
 
   while true; do
 
@@ -117,8 +118,11 @@ user_input_or_return_for_default_value() {
       break
     fi
 
-    if [ "$(match_input_with_pattern "$input_pattern" "$input_value")" = "true" ]; then
+    if [ "$(match_input_pattern "$input_pattern" "$input_value")" = "true" ]; then
       break
+    else
+      echo -e "$pattern_not_matched_message\n" >&2
+      sync
     fi
 
   done
@@ -131,61 +135,87 @@ user_input_or_return_for_default_value() {
   esac
 }
 
-converte_pwd_para_windows() {
+os_path_provider() {
 
   local pwd=$(pwd)
-  # echo "Initial pwd: $pwd"
+   #echo -e "DEBUG LINE - Initial pwd $pwd"
 
-  local drive_letter=${pwd:1:1}
-  # echo "Drive letter: $drive_letter"
+  local converted_path
 
-  local windows_path=${pwd/#\/$drive_letter/${drive_letter}:}
-  windows_path=${windows_path//\//\\}
-  # echo "Windows_path converted: $windows_path"
+  local first_pwd_character=${pwd:0:1}
+   #echo -e "DEBUG LINE - first_pwd_character $first_pwd_character\n"
 
-  echo "$windows_path"
+  local second_pwd_character=${pwd:1:1}
+   #echo -e "DEBUG LINE - second_pwd_character $second_pwd_character\n"
+
+  # Detect Windows - checking a Letter as PATH begin
+  # ex: c:\WORKBASE\DEV\bash_script
+  # convert to Linux-Standard Path
+  if [[ "$first_pwd_character" =~ [a-zA-Z] ]]; then
+    converted_path=${pwd/#\//$drive_letter:\\}
+    converted_path=${converted_path//\//\\}
+    #echo -e "DEBUG LINE - converted_path Linux $converted_path\n"
+  fi
+
+  # Detect Linux - checking a '/' as PATH begin
+  # ex: /c/WORKBASE/DEV/bash_script
+  # convert to Windows-Standard Path
+  if [ "$first_pwd_character" == "/" ]; then
+    converted_path=${pwd/#\/$second_pwd_character/${second_pwd_character}:}
+    converted_path=${converted_path//\//\\}
+    #echo -e "DEBUG LINE - converted_path Windows $converted_path\n"
+  fi
+
+  echo "$converted_path"
 }
 
-open_ide_final_option_input() {
+open_ide_choice_input() {
 
-  local user_options_text='\nDo you want to:\n\n 1. Open project in IDE\n 2. Exit\n'
-  local user_options_prompt='Choose an option (1/2): '
-  local invalid_user_option='Invalid option. Please try again.'
-  local ide_exec='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\idea64.exe'
+  local continue_execution=$1
 
-  local my_path=$(converte_pwd_para_windows)
-  # echo "my_path $my_path"
+  #echo -e "DEBUG LINE - IDE_EXEC $IDE_EXEC\n"
+
+  if [ "$continue_execution" = "false" ]; then
+    read -p "$(echo -e "\n$FINISH_PROMPT")"
+    exit 1
+  fi
+
+  local options_question='\n\nDo you want to:'
+  local options_alternatives=' 1. Open project in IDE\n 2. Exit\n'
+  local options_prompt=' Choose an option (1/2): '
+  local invalid_option_message='Invalid option. Please try again.'
+
+  local current_path=$(os_path_provider)
+  #echo -e "DEBUG LINE - current_path $current_path\n"
 
   local OPEN_IDE_CMD
 
-  if [ -f "${ide_exec}" ]; then
-      # echo "ide_Exec_path ${ide_exec}"
+  if [ -f "${IDE_EXEC}" ]; then
+      # echo -e "DEBUG LINE - ide_Exec_path ${IDE_EXEC}\n"
       # read -p "Pressione Enter para continuar..."
 
-      OPEN_IDE_CMD="idea64 \"$my_path\\$artifactId\""
-      # echo "Linha de execucao OPEN_IDE_CMD: $OPEN_IDE_CMD"
+      OPEN_IDE_CMD="idea64 \"$current_path\\$artifactId\" ; exit"
+      #echo -e "DEBUG LINE - OPEN_IDE_CMD $OPEN_IDE_CMD\n"
 
       #read -p "Pressione Enter para continuar..."
   else
-      echo -e "\n\nERRO: ${ide_exec} not found.\n"
+      #echo -e "\n\nERRO: ${IDE_EXEC} not found.\n"
       read -p "Pressione Enter para continuar..."
       exit 1
   fi
 
   while true; do
-    echo -e "$user_options_text"
-    read -p "$user_options_prompt" option
+    echo -e "$options_question\n\n$options_alternatives"
+    read -p "$options_prompt" option
 
     case $option in
-       1) $OPEN_IDE_CMD;;
-#       1) $OPEN_IDE_CMD;;
-#       1) idea64 \"$my_path\\$artifactId\";;
+       1) eval "$OPEN_IDE_CMD";;
        2) break ;;
-       *) echo "$invalid_user_option" ;;
+       *) echo "$invalid_option_message" ;;
     esac
   done
 
-  read -p "$(echo -e "\n$FINISH_PROMPT")"
+  # read -p "$(echo -e "\n$FINISH_PROMPT")"
 }
 
 artifactId_input() {
@@ -194,7 +224,7 @@ artifactId_input() {
 
   while true; do
 
-    artifactId=$(user_input_or_return_for_default_value "artifact_model" "my-archetype" "$ARTIFACT_ID_PROMPT")
+    artifactId=$(user_input_or_default_value "artifact_model" "my-archetype" "$ARTIFACT_ID_PROMPT")
 
     if [ -d "$artifactId" ]; then
        echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_WARNING \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
@@ -210,7 +240,7 @@ artifactId_input() {
 custom_attributes_list_input() {
 
   if [[ "${enable_custom_attributes,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
-     custom_attributes_list=$(user_input_or_return_for_default_value "texto" "Long:Id, String:name" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
+     custom_attributes_list=$(user_input_or_default_value "texto" "Long:Id, String:name" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
 
   else
      custom_attributes_list="false"
@@ -221,7 +251,7 @@ custom_attributes_list_input() {
 custom_dependencies_addition_input() {
 
   if [[ "${enable_dependencies_addition,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
-     extra_dependencies=$(user_input_or_return_for_default_value "dependency" "org.slf4j:slf4j-api:1.7.1:runtime" "$EXTRA_DEPENDENCIES_PROMPT")
+     extra_dependencies=$(user_input_or_default_value "dependency" "org.slf4j:slf4j-api:1.7.1:runtime" "$EXTRA_DEPENDENCIES_PROMPT")
   else
      extra_dependencies="false"
 
