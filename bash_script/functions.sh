@@ -1,12 +1,53 @@
 #!/bin/bash
 
+progress_bar() {
+
+  local pid=$1
+  local symbol=$2
+  local size_bar=$3
+  local percent_progression=$4
+  local active=$5
+
+  echo -e "\n$PROCESS_ON_GOING_MESSAGE\n"
+
+  printf "\n"
+
+  if [[ $active == true && $percent_progression == false ]]; then
+    while [ -d /proc/$pid ]; do
+      #printf "\r[%-${size_bar}s]" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
+      printf "\r%-${size_bar}s" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
+      printf "\033[0G"
+      sleep 0.1
+    done
+  fi
+
+  if [[ $active == true && $percent_progression == true  ]]; then
+    progress=0
+    while [ -d /proc/$pid ]; do
+      #printf "\r[%-${size_bar}s]%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
+      printf "\r%-${size_bar}s%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
+      printf "\033[0G"  # move o cursor para a posição 0 da linha atual
+      sleep 0.1
+
+      ((progress++))
+      if [ $progress -gt $size_bar ]; then
+        progress=$size_bar
+      fi
+
+    done
+  fi
+
+  if [[ $active == true ]]; then
+     #printf "\r[%-${size_bar}s]100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
+     printf "\r%-${size_bar}s 100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
+  fi
+}
+
 execute_maven_command_line() {
 
   local show_basic_log=$1
   local show_debug_log=$2
   local maven_command_line_param=$3
-
-  echo -e "\n$PROCESS_ON_GOING\n"
 
   local output=""
   local maven_output
@@ -30,15 +71,22 @@ execute_maven_command_line() {
 
   if [ "$show_basic_log" = true ] || [ "$show_debug_log" = true ]; then
     echo -e "\n$output\n"
-    maven_output=$(eval "$debug_command_line ")
+    maven_output=$(eval "$debug_command_line ") &
+    progress_bar $! '■' '55' true true
+    wait $!
+    # ▮ █ ■ ▪ * + -
+
     echo "$debug_command_line "
   else
-    maven_output=$(eval "$maven_command_line_param")
+    maven_output=$(eval "$maven_command_line_param") &
+    progress_bar $! '■' '55' true true
+    wait $!
   fi
 
 #  MONITORA O RESULTA DO BUILD DO MAVEN
   if echo "$maven_output" | grep -q "$ERROR_KEYWORD"; then
      echo -e "\n$BUILD_FAILURE_MESSAGE"
+
   elif echo "$maven_output" | grep -q "$SUCESS_KEYWORD"; then
      echo -e "\n$BUILD_SUCCESS_MESSAGE"
   fi
@@ -105,7 +153,7 @@ user_input_or_default_value() {
   local input_prompt=$3
 
   local input_value
-  local pattern_not_matched_message="Incorrect input. Follow the example above."
+  local pattern_not_matched_message="$INVALID_INPUT_MESSAGE"
 
   while true; do
 
@@ -127,7 +175,9 @@ user_input_or_default_value() {
 
   done
 
-  # Checa input_value p/ 'true/TRUE/True/T/t' ou 'false/FALSE/False/F/f' e converte p/ lowerCase
+  # Checa input_value p/ 'true/TRUE/True/T/t' ou
+  # 'false/FALSE/False/F/f' e
+  # converte p/ lowerCase
   case ${input_value,,} in
     true|t) echo "true";;
     false|f) echo "false";;
@@ -171,12 +221,18 @@ os_path_provider() {
 
 open_ide_choice_input() {
 
-  local continue_execution=$1
+  local active=$1
+  local ide_execution_folder=$2
+  local ide_execution_file=$3
 
-  #echo -e "DEBUG LINE - IDE_EXEC $IDE_EXEC\n"
+  local ide_full_path=$ide_execution_folder$ide_execution_file
 
-  if [ "$continue_execution" = "false" ]; then
-    read -p "$(echo -e "\n$FINISH_PROMPT")"
+#  echo -e "DEBUG LINE - IDE_EXEC_FILE_FOLDER $ide_execution_folder\n"
+#  echo -e "DEBUG LINE - IDE_EXEC_FILE $ide_execution_file\n"
+#  echo -e "DEBUG LINE - IDE_FULL_PATH $ide_full_path\n"
+
+  if [ "$active" = "false" ]; then
+    read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
     exit 1
   fi
 
@@ -186,21 +242,22 @@ open_ide_choice_input() {
   local invalid_option_message='Invalid option. Please try again.'
 
   local current_path=$(os_path_provider)
-  #echo -e "DEBUG LINE - current_path $current_path\n"
+#  echo -e "DEBUG LINE - current_path $current_path\n"
 
   local OPEN_IDE_CMD
 
-  if [ -f "${IDE_EXEC}" ]; then
-      # echo -e "DEBUG LINE - ide_Exec_path ${IDE_EXEC}\n"
+  if [ -f "$ide_full_path" ]; then
+#       echo -e "DEBUG LINE - ide_Exec_path+file ${ide_execution_folder}${ide_execution_file}\n"
       # read -p "Pressione Enter para continuar..."
 
-      OPEN_IDE_CMD="idea64 \"$current_path\\$artifactId\" ; exit"
-      #echo -e "DEBUG LINE - OPEN_IDE_CMD $OPEN_IDE_CMD\n"
-
+      OPEN_IDE_CMD="$ide_execution_file \"$current_path\\$artifactId\" ; exit"
+#      echo -e "DEBUG LINE - OPEN_IDE_CMD $OPEN_IDE_CMD\n"
       #read -p "Pressione Enter para continuar..."
+
   else
-      #echo -e "\n\nERRO: ${IDE_EXEC} not found.\n"
-      read -p "Pressione Enter para continuar..."
+      echo -e "\n\nERROR in ${ide_execution_folder}${ide_execution_file}, \nplease check it out. IDE execution aborted
+      .\n"
+      read -p "$FINISH_PROMPT_MESSAGE"
       exit 1
   fi
 
@@ -215,7 +272,7 @@ open_ide_choice_input() {
     esac
   done
 
-  # read -p "$(echo -e "\n$FINISH_PROMPT")"
+  # read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
 }
 
 artifactId_input() {
@@ -227,7 +284,7 @@ artifactId_input() {
     artifactId=$(user_input_or_default_value "artifact_model" "my-archetype" "$ARTIFACT_ID_PROMPT")
 
     if [ -d "$artifactId" ]; then
-       echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_WARNING \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
+       echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_MESSAGE \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
        ls -l
        echo
     else

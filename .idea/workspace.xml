@@ -5,15 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54cba9f0-a92b-4e76-9609-e2fe3b4f2b8c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/bash_script/eda.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/eda.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bash_script/functions.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/functions.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bash_script/mvn_command_line.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/mvn_command_line.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bash_script/general_messages.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bash_script/general_messages.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;CodeGTDLearn&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/CodeGTDLearn/archetype-v2-eda.git&quot;,
+    &quot;accountId&quot;: &quot;5e5d3e5a-0fe6-4225-9d7f-9bfddf0cba19&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 7
@@ -33,16 +44,16 @@
     <option name="sortByType" value="true" />
     <option name="sortKey" value="BY_TYPE" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.codeium.enabled": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/WORKBASE/DEV/SCRIPTS/archetype-v2-eda/bash_script",
-    "settings.editor.selected.configurable": "AtomSelectConfig"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/WORKBASE/DEV/SCRIPTS/archetype-v2-eda/bash_script&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.appearance&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\bash_script" />
@@ -58,5 +69,16 @@
       <updated>1731513060553</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

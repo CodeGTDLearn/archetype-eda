@@ -1,13 +1,19 @@
 #!/bin/bash
 
 # A) GENERAL OPTIONS
+# A.1) LOGS
 SHOW_MAVEN_BASIC_LOG=false
 SHOW_MAVEN_DEBUG_LOG=false
 SHOW_POS_PROCESSOR_LOG=false
-IDE_EXEC='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\idea64.exe'
-IDE_OPEN_CHOICE=true
+
+# A.2) IDE EXECUTION AFTER SCRIPT EXECUTION
+IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
+IDE_EXEC_FILE='idea64.exe'
+IDE_EXEC_CHOICE=true
+
+# A.3) SCRIPT BOOTSTRAP STARTING
 SCRIPT_FOLDER="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\bash_script"
-source "${SCRIPT_FOLDER}\\project_initializer.sh"
+source "${SCRIPT_FOLDER}\\script_initializer.sh"
 project_folder_viability_checking
 
 # B) INJECOES DE SCRIPTS
@@ -18,7 +24,7 @@ script_injection "${SCRIPT_FOLDER}" "functions.sh"
 script_injection "${SCRIPT_FOLDER}" "config.sh"
 
 # B.3) MENSAGENS
-script_injection "${SCRIPT_FOLDER}" "messages.sh"
+script_injection "${SCRIPT_FOLDER}" "general_messages.sh"
 
 #-------------------------------------------------------------------------------
 # D) 4 PASSOS P/ ADICAO DE NOVOS CRITERIOS DO ARCHETYPE-METADATA.XML
@@ -62,4 +68,4 @@ script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh"
 
 execute_maven_command_line $SHOW_MAVEN_BASIC_LOG $SHOW_MAVEN_DEBUG_LOG "$maven_command_line"
 
-open_ide_choice_input $IDE_OPEN_CHOICE
+open_ide_choice_input $IDE_EXEC_CHOICE "$IDE_EXEC_FILE_FOLDER" "$IDE_EXEC_FILE"
