@@ -9,7 +9,7 @@ def project_name = "${properties?.project_name}"
 def show_log = "${properties?.show_archetype_posprocessor_log}"
 def keep_test_folder = "${properties?.enable_folder_src_test_java}"
 def keep_resources_test_folder = "${properties?.enable_folder_src_test_resources}"
-def keep_application_yml_file = "${properties?.enable_yml_file_in_main_resources}"
+def keep_logback_file = "${properties?.enable_logback}"
 def keep_security_folder = "${properties?.enable_security_authentication_support}"
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 
@@ -17,7 +17,19 @@ def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 // 2.0) Variaveis Operacionais exclusivas deste Script
 def security_folder_suffix = "Security"
 def project_security_folder = "${properties?.project_name}".concat(security_folder_suffix)
-def log_text = "\n----------------- POS-PROCESSOR: ARCHETYPE-POST-GENERATE LOG ------------------\n\n"
+
+def log_text_header="\n\n\n"+
+             "\n-------------------------------------------------------------------------------\n" +
+             "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
+             "\n-------------------------------------------------------------------------------\n\n\n"
+
+def log_text_footer ="\n\n"+
+        "\n-------------------------------------------------------------------------------\n" +
+        "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
+        "\n-------------------------------------------------------------------------------\n" +
+        "\n\n\n\n\n"
+
+def log_text=log_text_header
 
 def project_package = "${properties?.package}".replace('.', '/')
 
@@ -26,7 +38,7 @@ if (keep_test_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java')
-    log_text += "\n1------->folder_src_test_java location:\n $folderPath\n"
+    log_text += "\n1) FOLDER_SRC_TEST_JAVA location:\n $folderPath\n"
 
     deleteFolder(folderPath.toFile())
 }
@@ -36,19 +48,32 @@ if (keep_resources_test_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources')
-    log_text += "\n2------->folder_src_test_resources location:\n $folderPath\n"
+    log_text += "\n2) FOLDER_SRC_TEST_RESOURCES location:\n $folderPath\n"
 
     deleteFolder(folderPath.toFile())
 }
 
-if (keep_application_yml_file == 'false') {
+if (keep_logback_file == 'false') {
     Path filePath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'application.yml')
-    log_text += "\n3------->yml_file_resources_path location:\n $filePath\n"
-
+                    'src', 'main', 'resources', 'logback-spring.xml')
+    log_text += "\n3.1) logback-spring.xml -> resources -> location:\n $filePath\n"
     deleteFile(filePath.toFile())
+
+    Path filePathConfig =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources','properties', 'logback_config.properties')
+    log_text += "\n3.2) logback_config.properties -> resources-properties -> location:\n $filePathConfig\n"
+    deleteFile(filePathConfig.toFile())
+
+    Path filePathTest =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'resources', 'logback-test.xml')
+    log_text += "\n3.3) logback-test.xml -> test-resources -> location:\n $filePathTest\n"
+    deleteFile(filePathTest.toFile())
 }
 
 if (keep_security_folder == 'false') {
@@ -56,7 +81,7 @@ if (keep_security_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'java', project_package, project_security_folder)
-    log_text += "\n4------->Security_folder_path location:\n $folderPath\n"
+    log_text += "\n4) Security_folder_path location:\n $folderPath\n"
 
     deleteFolder(folderPath.toFile())
 
@@ -82,7 +107,7 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
     String[] dependencies = extra_POM_dependencies.split(',')
 
     Path pomFile = Paths.get(request.outputDirectory, request.artifactId, 'pom.xml')
-    log_text += "\n5------->POM.XML"
+    log_text += "\n5) POM.XML"
     log_text += "\n - Location: $pomFile"
     log_text += "\n - Added Dependencies: $dependencies\n"
 
@@ -155,8 +180,7 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
     }
 }
 
-if (show_log == 'true') printf "\n$log_text " +
-        "\n-------------------------------------------------------------------------------\n\n"
+if (show_log == 'true') printf "\n$log_text $log_text_footer"
 
 //  Supplementar Methods
 def deleteFolder(File dir) {

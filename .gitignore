@@ -1,0 +1,19 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+
+### Exclude the follow files ###
+.env
+.pre-commit-config.yaml
+
+### Exclude files with '~' as last letter in extensao or name (if there is not extension) ###
+*~

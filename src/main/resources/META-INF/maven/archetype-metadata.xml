@@ -31,7 +31,7 @@
             <defaultValue></defaultValue>
         </requiredProperty>
 
-        <requiredProperty key="enable_yml_file_in_main_resources">
+        <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>
         </requiredProperty>
 
@@ -48,12 +48,14 @@
     </requiredProperties>
 
     <fileSets>
+
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/main/java</directory>
             <includes>
                 <include>**/*.java</include>
             </includes>
         </fileSet>
+
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources</directory>
             <includes>
@@ -62,26 +64,33 @@
                 <include>app.key</include>
                 <include>app.pub</include>
                 <include>application.yml</include>
+                <include>logback-spring.xml</include>
+                <include>properties/logback_config.properties</include>
             </includes>
         </fileSet>
+
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/test/java</directory>
             <includes>
                 <include>**/*.java</include>
             </includes>
         </fileSet>
+
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/test/resources</directory>
             <includes>
                 <include>**/*.properties</include>
+                <include>logback-test.xml</include>
             </includes>
         </fileSet>
+
         <fileSet filtered="true" encoding="UTF-8">
             <directory>.mvn/wrapper</directory>
             <includes>
                 <include>**/*.properties</include>
             </includes>
         </fileSet>
+
         <fileSet encoding="UTF-8">
             <directory></directory>
             <includes>
@@ -98,6 +107,7 @@
 <!--                <include>**/*.java</include>-->
 <!--            </includes>-->
 <!--        </fileSet>-->
+
     </fileSets>
 
 </archetype-descriptor>
