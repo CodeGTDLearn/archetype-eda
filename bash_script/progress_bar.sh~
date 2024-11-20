@@ -1,0 +1,89 @@
+#!/bin/bash
+
+percentual_mult_layer_progression_bar() {
+
+# 'ADDING' EXTRA 'LAYER-BARS' - 03 STEPS
+
+# STEP 01) ADD THE 'ADDITIONAL' 'LABEL' FOR THE 'NEW BAR'
+  local model_label="      Model:"
+  local view_label="       View:"
+  local controller_label=" Controller: "
+  local resource_label="   Resource: "
+
+# STEP 02) ADD THE 'ADDITIONAL' 'FOR-COMPONENT' FOR THE 'NEW BAR'
+  for component in model view controller resource; do
+
+    for ((i=1; i<=size_bar; i++)); do
+
+# STEP 03) ADD THE 'ADDITIONAL' 'CASE-COMPONENT+PRINTF' FOR THE 'NEW BAR'
+      case $component in
+
+        model)      printf "\r${model_label} %-${size_bar}s%4d%%" "$(printf "%*s" $i | tr ' ' "$symbol")" $((i * 100 / size_bar));;
+        view)       printf "\r${view_label} %-${size_bar}s%4d%%" "$(printf "%*s" $i | tr ' ' "$symbol")" $((i * 100 / size_bar));;
+        controller) printf "\r${controller_label} %-${size_bar}s%4d%%" "$(printf "%*s" $i | tr ' ' "$symbol")" $((i * 100 / size_bar));;
+        resource)   printf "\r${resource_label} %-${size_bar}s%4d%%" "$(printf "%*s" $i | tr ' ' "$symbol")" $((i * 100 / size_bar));;
+
+      esac
+
+    done
+
+    printf "\n"
+
+  done
+}
+
+percentual_progression_bar() {
+
+  progress=0
+
+  while [ -d /proc/$pid ]; do
+
+    #printf "\r[%-${size_bar}s]%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
+    printf "\r%-${size_bar}s%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
+    printf "\033[0G"  # move o cursor para a posição 0 da linha atual
+    sleep 0.1
+
+    ((progress++))
+
+    if [ $progress -gt $size_bar ]; then
+      progress=$size_bar
+    fi
+
+  done
+
+     #printf "\r[%-${size_bar}s]100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
+     printf "\r%-${size_bar}s 100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
+}
+
+random_progression_bar() {
+
+    while [ -d /proc/$pid ]; do
+
+      #printf "\r[%-${size_bar}s]" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
+      printf "\r%-${size_bar}s" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
+      printf "\033[0G"
+      sleep 0.1
+
+    done
+}
+
+progression_bar() {
+
+  local pid=$1
+  local symbol=$2
+  local size_bar=$3
+  local progression_bar_type=$4
+  local active=$5
+
+  echo -e "\n$PROCESS_ON_GOING_MESSAGE\n"
+
+  printf "\n"
+
+  if $active == true; then
+    case $progression_bar_type in
+      "percentual_mult_layer") percentual_mult_layer_progression_bar ;;
+      "percentual") percentual_progression_bar ;;
+      "random") random_progression_bar ;;
+    esac
+  fi
+}

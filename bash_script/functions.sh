@@ -1,77 +1,5 @@
 #!/bin/bash
 
-progression_bar() {
-
-  local pid=$1
-  local symbol=$2
-  local size_bar=$3
-  local progression_bar_type=$4
-  local active=$5
-
-  echo -e "\n$PROCESS_ON_GOING_MESSAGE\n"
-
-  printf "\n"
-
-  _percentual_mult_layer_progression_bar() {
-
-    local model_label="Model:     "
-    local view_label="View:      "
-    local controller_label="Controller:"
-    local delay=0.01
-
-    # Esgotar as barras de progresso uma após a outra
-    for component in model view controller; do
-      for ((i=1; i<=size_bar; i++)); do
-        # Atualizar a barra de progresso
-        case $component in
-          model) printf "\r${model_label} %-${size_bar}s%4d%%" "$(printf "%*s" $i | tr ' ' "$symbol")" $((i * 100 / size_bar));;
-          view) printf "\r${view_label} %-${size_bar}s%4d%%" "$(printf "%*s" $i | tr ' ' "$symbol")" $((i * 100 / size_bar));;
-          controller) printf "\r${controller_label} %-${size_bar}s%4d%%" "$(printf "%*s" $i | tr ' ' "$symbol")" $((i * 100 / size_bar));;
-        esac
-      done
-      printf "\n"
-    done
-  }
-
-  _percentual_progression_bar() {
-    # código para quando $active == true e $percent_progression == true
-    progress=0
-    while [ -d /proc/$pid ]; do
-      #printf "\r[%-${size_bar}s]%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
-      printf "\r%-${size_bar}s%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
-      printf "\033[0G"  # move o cursor para a posição 0 da linha atual
-      sleep 0.1
-
-      ((progress++))
-      if [ $progress -gt $size_bar ]; then
-        progress=$size_bar
-      fi
-
-    done
-
-       #printf "\r[%-${size_bar}s]100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
-       printf "\r%-${size_bar}s 100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
-  }
-
-  _random_progression_bar() {
-
-      while [ -d /proc/$pid ]; do
-        #printf "\r[%-${size_bar}s]" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
-        printf "\r%-${size_bar}s" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
-        printf "\033[0G"
-        sleep 0.1
-      done
-  }
-
-  if $active == true; then
-    case $progression_bar_type in
-      "percentual_mult_layer") _percentual_mult_layer_progression_bar ;;
-      "percentual") _percentual_progression_bar ;;
-      "random") _random_progression_bar ;;
-    esac
-  fi
-}
-
 execute_maven_command_line() {
 
   local show_basic_log=$1
@@ -99,17 +27,22 @@ execute_maven_command_line() {
   fi
 
   if [ "$show_basic_log" = true ] || [ "$show_debug_log" = true ]; then
+
     echo -e "\n$output\n"
     maven_output=$(eval "$debug_command_line ") &
-    progression_bar $! '■' '55' "percentual" true
+    progression_bar $! '■' '55' "percentual_mult_layer" false
     wait $!
     # Symbol types options: ▮ █ ■ ▪ * + -
+    # ProgressBar types: percentual_mult_layer, percentual, random
 
     echo "$debug_command_line "
+
   else
+
     maven_output=$(eval "$maven_command_line_param") &
-    progression_bar $! '■' '55' "percentual" true
+    progression_bar $! '■' '55' "percentual_mult_layer" false
     wait $!
+
   fi
 
 #  MONITORA O RESULTA DO BUILD DO MAVEN

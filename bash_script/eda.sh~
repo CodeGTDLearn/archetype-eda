@@ -17,13 +17,16 @@ source "${SCRIPT_FOLDER}\\script_initializer.sh"
 project_folder_viability_checking
 
 # B) INJECOES DE SCRIPTS
-# B.1) FUNCOES
+# B.1) FUNCOES ESPECIAIS
 script_injection "${SCRIPT_FOLDER}" "functions.sh"
 
-# B.2) CONFIGURACOES
+# B.2) FUNCOES GERAIS
+script_injection "${SCRIPT_FOLDER}" "functions.sh"
+
+# B.3) CONFIGURACOES
 script_injection "${SCRIPT_FOLDER}" "config.sh"
 
-# B.3) MENSAGENS
+# B.4) MENSAGENS
 script_injection "${SCRIPT_FOLDER}" "general_messages.sh"
 
 #-------------------------------------------------------------------------------
@@ -68,4 +71,4 @@ script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh"
 
 execute_maven_command_line $SHOW_MAVEN_BASIC_LOG $SHOW_MAVEN_DEBUG_LOG "$maven_command_line"
 
-open_ide_choice_input $IDE_EXEC_CHOICE "$IDE_EXEC_FILE_FOLDER" $IDE_EXEC_FILE
+open_ide_choice_input $IDE_EXEC_CHOICE "$IDE_EXEC_FILE_FOLDER" "$IDE_EXEC_FILE"

@@ -17,13 +17,16 @@ source "${SCRIPT_FOLDER}\\script_initializer.sh"
 project_folder_viability_checking
 
 # B) INJECOES DE SCRIPTS
-# B.1) FUNCOES
+# B.1) FUNCOES ESPECIAIS
+script_injection "${SCRIPT_FOLDER}" "progress_bar.sh"
+
+# B.2) FUNCOES GERAIS
 script_injection "${SCRIPT_FOLDER}" "functions.sh"
 
-# B.2) CONFIGURACOES
+# B.3) CONFIGURACOES
 script_injection "${SCRIPT_FOLDER}" "config.sh"
 
-# B.3) MENSAGENS
+# B.4) MENSAGENS
 script_injection "${SCRIPT_FOLDER}" "general_messages.sh"
 
 #-------------------------------------------------------------------------------
