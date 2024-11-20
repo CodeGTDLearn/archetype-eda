@@ -38,7 +38,7 @@ if (keep_test_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java')
-    log_text += "\n1) FOLDER_SRC_TEST_JAVA location:\n $folderPath\n"
+    log_text += "\n1.0) FOLDER_SRC_TEST_JAVA location:\n $folderPath\n"
 
     deleteFolder(folderPath.toFile())
 }
@@ -48,7 +48,7 @@ if (keep_resources_test_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources')
-    log_text += "\n2) FOLDER_SRC_TEST_RESOURCES location:\n $folderPath\n"
+    log_text += "\n2.0) FOLDER_SRC_TEST_RESOURCES location:\n $folderPath\n"
 
     deleteFolder(folderPath.toFile())
 }
@@ -81,7 +81,7 @@ if (keep_security_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'java', project_package, project_security_folder)
-    log_text += "\n4) Security_folder_path location:\n $folderPath\n"
+    log_text += "\n4.0) Security_folder_path location:\n $folderPath\n"
 
     deleteFolder(folderPath.toFile())
 
@@ -107,7 +107,7 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
     String[] dependencies = extra_POM_dependencies.split(',')
 
     Path pomFile = Paths.get(request.outputDirectory, request.artifactId, 'pom.xml')
-    log_text += "\n5) POM.XML"
+    log_text += "\n5.0) POM.XML"
     log_text += "\n - Location: $pomFile"
     log_text += "\n - Added Dependencies: $dependencies\n"
 

@@ -4,6 +4,11 @@ script_injection() {
 
   local FOLDER="$1"
   local FILE="$2"
+  local DEBUG_LOG="$3"
+
+  if [ "$DEBUG_LOG" = "true" ]; then
+    echo -e "\n-----> INJECTING: $FILE\n"
+  fi
 
   local FOLDER_NOT_FOUND_MESSAGE="Script Folder \'$FOLDER\' NOT FOUND.\n"
   local SCRIPT_NOT_FOUND_MESSAGE="Script \'$FILE\' NOT FOUND in $FOLDER.\n"

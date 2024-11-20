@@ -8,6 +8,6 @@ SUCESS_KEYWORD="BUILD SUCCESS"
 
 # B.2) Configurar "CONFORME" o Archetype "INSTALADO" no 'REPO-LOCAL DO MAVEN'
 # 'REPO-LOCAL DO MAVEN' localizacao: ~\.m2\repository\archetype-catalog.xml
+ARCHETYPE_VERSION="0.0.1-SNAPSHOT"
 ARCHETYPE_GROUP_ID="com.eda-archetype"
 ARCHETYPE_ARTIFACT_ID="eda-archetype"
-ARCHETYPE_VERSION="0.0.1-SNAPSHOT"

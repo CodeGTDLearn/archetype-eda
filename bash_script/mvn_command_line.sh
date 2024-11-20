@@ -8,18 +8,20 @@ maven_command_line="mvn archetype:generate --batch-mode \
 \
 -Dpackage=\"$package\" \
 -DgroupId=\"$groupid\" \
--DartifactId=\"$artifactId\" \
 -Dversion=\"$version\" \
+-DartifactId=\"$artifactId\" \
 -Dproject_name=\"$project_name\" \
 -Dproject_description=\"$project_description\" \
 \
 -Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
 -Denable_folder_src_test_resources=\"$enable_folder_src_test_resources\" \
+\
 -Denable_lombok=\"$enable_lombok\" \
 -Denable_logback=\"$enable_logback\" \
--Denable_security_authentication_support=\"$enable_security_authentic_support\" \
--Denable_custom_attributes=\"$enable_custom_attributes\" \
 \
+-Denable_security_authentication_support=\"$enable_security_authentic_support\" \
+\
+-Denable_custom_attributes=\"$enable_custom_attributes\" \
 -Dcustom_attributes_list=\"$custom_attributes_list\" \
 \
 -Dextra_POM_dependencies=\"$extra_dependencies\" \
