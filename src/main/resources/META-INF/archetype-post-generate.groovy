@@ -54,26 +54,19 @@ if (keep_resources_test_folder == 'false') {
 }
 
 if (keep_logback_file == 'false') {
-    Path filePath =
+    Path logbackPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring.xml')
-    log_text += "\n3.1) logback-spring.xml -> resources -> location:\n $filePath\n"
-    deleteFile(filePath.toFile())
+    log_text += "\n3.1) logback-spring.xml -> resources -> location:\n $logbackPath\n"
+    deleteFile(logbackPath.toFile())
 
-    Path filePathConfig =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources','properties', 'logback_config.properties')
-    log_text += "\n3.2) logback_config.properties -> resources-properties -> location:\n $filePathConfig\n"
-    deleteFile(filePathConfig.toFile())
-
-    Path filePathTest =
+    Path testLogbackPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources', 'logback-test.xml')
-    log_text += "\n3.3) logback-test.xml -> test-resources -> location:\n $filePathTest\n"
-    deleteFile(filePathTest.toFile())
+    log_text += "\n3.2) logback-test.xml -> test-resources -> location:\n $testLogbackPath\n"
+    deleteFile(testLogbackPath.toFile())
 }
 
 if (keep_security_folder == 'false') {

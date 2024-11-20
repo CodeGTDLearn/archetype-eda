@@ -85,10 +85,12 @@ check_maven_build_result() {
 }
 
 match_input_pattern_with_regex() {
+
   local input_pattern=$1
   local value_to_be_matched=$2
 
   local input_patterns
+  local return_result="false"
 
   case $input_pattern in
 
@@ -98,11 +100,14 @@ match_input_pattern_with_regex() {
     #texto: Qquer caracter + espaços/acentos (ex: Olá, mundo! ou ``)
     texto) input_patterns="^[a-zA-Z].*$";;
 
+    #entity_list_attributes: Long:id, MyId:id, My_I8d:my_i9d, My_Id:my_id, Invalid:ID, notValid:id
+    entity_list_attributes) input_patterns="^[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*$";;
+
     #artifact: Letra maisc minusc/número/caracteres(_) sem espaços(ex: tes_123n)
     artifact) input_patterns="^[a-z][a-z0-9_]+$";;
 
     #model: Letra/número/caracteres(_.) sem espaços(ex: tes_123.domain)
-    model_entity) input_patterns="^[A-Z][a-zA-Z0-9_]+$";;
+    entity_project_name) input_patterns="^[A-Z][a-zA-Z0-9_]+$";;
 
     #package: Letra minuscula/número/caracteres(_.) sem espaços(ex: tes_123.domain)
     package) input_patterns="^[a-z][a-z0-9_.]+$";;
@@ -136,11 +141,27 @@ match_input_pattern_with_regex() {
 
   esac
 
-  if [[ $value_to_be_matched =~ $input_patterns ]]; then
-    echo "true"
-  else
-    echo "false"
+  if [ "$input_pattern" != "entity_list_attributes" ] &&
+     [[ $value_to_be_matched =~ $input_patterns ]]; then
+     return_result="true"
   fi
+
+  if [ "$input_pattern" == "entity_list_attributes" ]; then
+
+      # Limpa espacos e splita em array usando ',' e '\n'
+      IFS=$',\n' read -r -a attribute_list <<< "${value_to_be_matched// /}"
+
+      for attribute in "${attribute_list[@]}"; do
+          if [[ $attribute =~ $input_patterns ]]; then
+              return_result="true"
+          else
+              return_result="false"
+              echo $return_result
+          fi
+      done
+  fi
+
+  echo $return_result
 }
 
 is_java_reserved_word() {
@@ -361,7 +382,7 @@ artifactId_input() {
 custom_attributes_list_input() {
 
   if [[ "${enable_custom_attributes,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
-     custom_attributes_list=$(user_input_or_default_value "texto" "Long:Id, String:name" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
+     custom_attributes_list=$(user_input_or_default_value "entity_list_attributes" "Long:id, MyId:id, My_Id:my_id" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
 
   else
      custom_attributes_list="false"

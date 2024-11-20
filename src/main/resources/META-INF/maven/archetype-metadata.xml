@@ -65,7 +65,6 @@
                 <include>app.pub</include>
                 <include>application.yml</include>
                 <include>logback-spring.xml</include>
-                <include>properties/logback_config.properties</include>
             </includes>
         </fileSet>
 
