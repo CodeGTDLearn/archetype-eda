@@ -12,6 +12,7 @@ IDE_EXEC_FILE='idea64.exe'
 IDE_EXEC_CHOICE=true
 
 # A.3) SCRIPT BOOTSTRAP STARTING
+ACTIVE_PROGRESS_BAR=false
 SCRIPT_FOLDER="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\bash_script"
 source "${SCRIPT_FOLDER}\\script_initializer.sh"
 project_folder_viability_checking

@@ -8,7 +8,6 @@ import ${package}.${project_name}Repository.${project_name}Repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 #set($firstChar = $project_name.substring(0,1).toLowerCase())

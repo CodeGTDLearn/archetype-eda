@@ -1,7 +1,6 @@
 #set($symbol_pound = '#' )
 #set($symbol_dollar = '$' )
 #set($symbol_escape = '\' )
-
 package ${package}.${project_name};
 
 import jakarta.persistence.Entity;
@@ -22,8 +21,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 #end
 @Entity
-
 public class ${project_name} {
+
 #if(${enable_custom_attributes} == "true")
 #set($attributes = [])
 #set($attribute_list = ${custom_attributes_list})

@@ -6,53 +6,64 @@ execute_maven_command_line() {
   local show_debug_log=$2
   local maven_command_line_param=$3
 
-  local output=""
+  local show_progress_bar=$ACTIVE_PROGRESS_BAR
   local maven_output
   local debug_command_line
+  local output="-------------------------------------------------------------------------------"
 
-  if [ "$show_basic_log" = true ]; then
-    output="$SHOW_MAVEN_BASIC_LOG_MESSAGE"
-  fi
+# debug_log: implicitamente POSSUI o basic_log
+  if [ "$show_debug_log" = "true" ]; then
 
-  if [ "$show_debug_log" = true ]; then
     output+="\n\n$SHOW_MAVEN_DEBUG_LOG_MESSAGE"
+    echo -e "\n$output\n"
 
     mvn_cli_switches="--batch-mode --debug"
     before_batch_switch=${maven_command_line_param%%--batch-mode*}
     after_batch_switch=${maven_command_line_param#*--batch-mode}
-
     debug_command_line="$before_batch_switch $mvn_cli_switches $after_batch_switch"
 
-    echo -e "$SHOW_MAVEN_COMMANDO_LINE_LOG_MESSAGE \n\n$debug_command_line \n"
+    maven_output=$(eval "$debug_command_line" | tee /dev/tty)
+
+    echo -e "\n\nMAVEN MVN-COMMAND PROCESSED:\n---> $debug_command_line\n"
   fi
 
-  if [ "$show_basic_log" = true ] || [ "$show_debug_log" = true ]; then
+# basic_log: NAO POSSUI o debug_log implicitamente
+  if [ "$show_basic_log" = "true" ] && [ "$show_debug_log" = "false" ]; then
+    #output+="-------------------------------------------------------------------------------\n\n"
+    output+="\n\n$SHOW_MAVEN_BASIC_LOG_MESSAGE"
+    echo -e "\n\n$output\n\n"
 
-    echo -e "\n$output\n"
-    maven_output=$(eval "$debug_command_line ") &
-    progression_bar $! '■' '55' "percentual_mult_layer" false
-    wait $!
-    # Symbol types options: ▮ █ ■ ▪ * + -
-    # ProgressBar types: percentual_mult_layer, percentual, random
+    maven_output=$(eval "$maven_command_line_param" | tee /dev/tty)
 
-    echo "$debug_command_line "
+    echo -e "\n\nMAVEN MVN-COMMAND PROCESSED:\n---> $maven_command_line_param\n"
 
-  else
+  fi
 
+  if [ "$show_basic_log" = "false" ] && [ "$show_debug_log" = "false" ]; then
+
+    # Progression_Bar Parameters:
+    # a) Symbol types options: ▮ █ ■ ▪ * + -
+    # b) ProgressBar types:   percentual_mult_layer,    percentual,    random
     maven_output=$(eval "$maven_command_line_param") &
-    progression_bar $! '■' '55' "percentual_mult_layer" false
+    progression_bar $! '■' '55' "percentual_mult_layer" $show_progress_bar
     wait $!
 
+    check_maven_build_result "$maven_output"
+
   fi
+}
 
-#  MONITORA O RESULTA DO BUILD DO MAVEN
-  if echo "$maven_output" | grep -q "$ERROR_KEYWORD"; then
-     echo -e "\n$BUILD_FAILURE_MESSAGE"
+check_maven_build_result() {
 
-  elif echo "$maven_output" | grep -q "$SUCESS_KEYWORD"; then
-     echo -e "\n$BUILD_SUCCESS_MESSAGE"
+  local output_to_be_checked=$1
+
+  if echo "$output_to_be_checked" | grep -q "$ERROR_KEYWORD"; then
+    echo -e "\n$BUILD_FAILURE_MESSAGE"
+
+  elif echo "$output_to_be_checked" | grep -q "$SUCCESS_KEYWORD"; then
+    echo -e "\n$BUILD_SUCCESS_MESSAGE"
+
   fi
-
 }
 
 match_input_pattern() {

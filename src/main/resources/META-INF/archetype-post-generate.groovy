@@ -3,6 +3,7 @@ import java.nio.file.Paths
 
 Properties properties = request.properties
 
+
 // 1.0) capturando Variaveis oriundas do archetype-metadata.xml
 def project_name = "${properties?.project_name}"
 def show_log = "${properties?.show_archetype_posprocessor_log}"
@@ -12,10 +13,11 @@ def keep_application_yml_file = "${properties?.enable_yml_file_in_main_resources
 def keep_security_folder = "${properties?.enable_security_authentication_support}"
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 
+
 // 2.0) Variaveis Operacionais exclusivas deste Script
 def security_folder_suffix = "Security"
 def project_security_folder = "${properties?.project_name}".concat(security_folder_suffix)
-def log_text = "\n----------------- POS-PROCESSOR: ARCHETYPE-POST-GENERATE LOG -----------------\n\n"
+def log_text = "\n----------------- POS-PROCESSOR: ARCHETYPE-POST-GENERATE LOG ------------------\n\n"
 
 def project_package = "${properties?.package}".replace('.', '/')
 
@@ -153,7 +155,8 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
     }
 }
 
-if (show_log == 'true') printf "\n$log_text \n---------------------------------------------------------------------\n\n"
+if (show_log == 'true') printf "\n$log_text " +
+        "\n-------------------------------------------------------------------------------\n\n"
 
 //  Supplementar Methods
 def deleteFolder(File dir) {
