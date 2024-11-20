@@ -15,5 +15,6 @@ target/
 .env
 .pre-commit-config.yaml
 
-### Exclude files with '~' as last letter in extensao or name (if there is not extension) ###
+### Exclude files with '~'/'ini' in "end of file"
 *~
+*ini
