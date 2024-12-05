@@ -29,6 +29,8 @@ def entity_name = "${properties?.entity_name}"
 def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"
 
+def properties_folder = "properties"
+
 def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
 
 def log_text_header =
@@ -42,7 +44,6 @@ def log_text_footer =
                 "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
                 "\n-------------------------------------------------------------------------------\n" +
                 "\n\n\n\n\n"
-
 
 def log_text = log_text_header
 
@@ -76,15 +77,13 @@ Path rootGitIgnoreFile = projectRootFolder.resolve(".gitignore")
 Path srcMainJava = projectRootFolder.resolve("src").resolve("main").resolve("java")
 Path srcMainResources = projectRootFolder.resolve("src").resolve("main").resolve("resources")
 
-def resourcePropertiesFolder = "properties"
-
-Path srcMainResourcesProperties = srcMainResources.resolve(resourcePropertiesFolder)
+Path srcMainResourcesProperties = srcMainResources.resolve(properties_folder)
 
 Path srcMainJavaEntityFolder = srcMainJava.resolve(project_package).resolve(entity_folder)
 Path srcMainJavaEntityConfigFolder = srcMainJavaEntityFolder.resolve(config_folder)
 
 
-Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(resourcePropertiesFolder)
+Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(properties_folder)
 
 // -----------------------------------------------------------------------------
 
@@ -98,14 +97,12 @@ Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.res
 Path srcTestJava = projectRootFolder.resolve("src").resolve("test").resolve("java")
 Path srcTestResources = projectRootFolder.resolve("src").resolve("test").resolve("resources")
 
-def testResourcePropertiesFolder = "properties_test"
-
 Path srcTestJavaEntityConfigPropertiesFolder = srcTestJava
         .resolve(entity_folder)
         .resolve(config_folder)
-        .resolve(testResourcePropertiesFolder)
+        .resolve(properties_folder)
 
-Path srcTestResourcesPropertiesFolder = srcTestResources.resolve(testResourcePropertiesFolder)
+Path srcTestResourcesPropertiesFolder = srcTestResources.resolve(properties_folder)
 
 // -----------------------------------------------------------------------------
 

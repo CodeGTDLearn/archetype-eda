@@ -2,6 +2,8 @@ package ${package}.${entity_name_package}.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+##
+##
 #if(${validated_binding_properties} == "true")
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;

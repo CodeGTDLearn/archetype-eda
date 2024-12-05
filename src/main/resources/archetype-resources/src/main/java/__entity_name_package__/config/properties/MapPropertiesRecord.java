@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Collections;
 import java.util.Map;
 
-@ConfigurationProperties("application.property")
+@ConfigurationProperties(prefix = "application.property")
 public record MapPropertiesRecord(
      Map<String, MapItem> map
 ) {

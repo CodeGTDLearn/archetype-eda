@@ -1,6 +1,15 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
+##
+##
+## APACHE VELOCITY VARIABLES ___________________________________________________
+#set($mapProps = "${map_binding_properties}")
+#set($listProps = "${list_binding_properties}")
+#set($bindProps = "${enable_binding_properties}")
+#set($sec_jwt = "${enable_security_authentication_support}")
+##
+##
 properties_folder: classpath:properties
 protected_properties_folder: classpath:protected_properties
 
@@ -16,14 +25,27 @@ spring:
   output:
     ansi:
       enabled: always
+##
+##
+## ENABLING IMPORT SWITCH ______________________________________________________
+#if($mapProps == "true" || $listProps == "true" || $sec_jwt == "true")
   config:
     import:
+#end
+##
+##
+## SECURITY - JWT AUTHENTICATION _______________________________________________
+#if($sec_jwt == "true")
       - ${protected_properties_folder}/application_keys.yml
       - ${protected_properties_folder}/admin_credentials.yml
       - ${protected_properties_folder}/authentication_credentials.yml
-#if(${enable_binding_properties} == "true" and ${list_binding_properties} == "true")
-      - ${properties_folder}/application_list.yml
 #end
-#if(${enable_binding_properties} == "true" and ${map_binding_properties} == "true")
+##
+##
+## CONFIGURATION PROPERTIES - BINDING PROPERTIES _______________________________
+#if($bindProps == "true" && $mapProps == "true")
       - ${properties_folder}/application_map.yml
+#end
+#if($bindProps == "true" && $listProps == "true")
+      - ${properties_folder}/application_list.yml
 #end

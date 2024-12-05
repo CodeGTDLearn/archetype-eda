@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 
 
-@ConfigurationProperties("application.property")
+@ConfigurationProperties(prefix = "application.property")
 public class MapPropertiesImmutable {
 
   private final Map<String, MapItem> map;

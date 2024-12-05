@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @Component
-@ConfigurationProperties("application.property")
+@ConfigurationProperties(prefix = "application.property")
 public class MapProperties {
 
   private Map<String, MapItem> map;

@@ -13,12 +13,10 @@ import java.nio.file.Path
 Path srcMainJava = projectRootFolder.resolve("src").resolve("main").resolve("java")
 Path srcMainResources = projectRootFolder.resolve("src").resolve("main").resolve("resources")
 
-def resourcePropertiesFolder = "properties"
-
-Path srcMainResourcesProperties = srcMainResources.resolve(resourcePropertiesFolder)
+Path srcMainResourcesProperties = srcMainResources.resolve(properties_folder)
 
 Path srcMainJavaEntityFolder = srcMainJava.resolve(project_package).resolve(entity_folder)
 Path srcMainJavaEntityConfigFolder = srcMainJavaEntityFolder.resolve(config_folder)
 
 
-Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(resourcePropertiesFolder)
+Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(properties_folder)

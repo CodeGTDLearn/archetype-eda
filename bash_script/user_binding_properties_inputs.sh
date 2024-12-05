@@ -33,12 +33,12 @@ fi
 
 validated_binding_properties="false"
 if [[ "$default_binding_properties" = "true" ]]; then
-validated_binding_properties=$(get_user_input_or_default_value "boleana" "false" "$VALIDATED_BIND_PROPS_PROMPT" "$enable_binding_properties")
+validated_binding_properties=$(get_user_input_or_default_value "boleana" "true" "$VALIDATED_BIND_PROPS_PROMPT" "$enable_binding_properties")
 fi
 
 enable_binding_properties_tests="false"
 if [[ "$enable_folder_src_test_java" = "true" && "$binding_properties_styles_enabled" -eq 1 ]]; then
-enable_binding_properties_tests=$(get_user_input_or_default_value "boleana" "false" "$BINDING_PROPERTIES_TEST_PROMPT" "$enable_binding_properties")
+enable_binding_properties_tests=$(get_user_input_or_default_value "boleana" "true" "$BINDING_PROPERTIES_TEST_PROMPT" "$enable_binding_properties")
 fi
 
 # 3) ADD PROMPT IN PROGRESS_BAR
