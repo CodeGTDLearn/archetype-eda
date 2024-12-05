@@ -7,25 +7,35 @@ java.io.File
 // -----------------------------------------------------------------------------
 
 // ARCHETYPE-PATH-ROOT-VARIABLES.GROOVY ----------------------------------------
-Path projectRootFolder =
-        Paths.get(
-                request.outputDirectory,
-                request.artifactId)
+//Path projectRootFolder =
+//        Paths.get(
+//                request.outputDirectory,
+//                request.artifactId)
+//
+//Path rootGitFolder =
+//        projectRootFolder
+//                .resolve("git_temp")
+//
+//Path rootGitIgnoreFile =
+//        projectRootFolder
+//                .resolve('gitignore')
+//
+//Path rootDockerFolder =
+//        projectRootFolder
+//                .resolve("docker")
+//
+//Path rootELKFolder =
+//        Paths.get(
+//                request.outputDirectory,
+//                request.artifactId,
+//                'ELK')
 
-Path rootGitFolder =
-        projectRootFolder
-                .resolve("git_temp")
+// ARCHETYPE-PATH-ROOT-VARIABLES.GROOVY ----------------------------------------
 
-Path rootGitIgnoreFile =
-        projectRootFolder
-                .resolve('gitignore')
+Path projectRootFolder = Paths.get(request.outputDirectory, request.artifactId)
 
-Path rootDockerFolder =
-        projectRootFolder
-                .resolve("docker")
+Path rootELKFolder = projectRootFolder.resolve("ELK")
+Path rootGitFolder = projectRootFolder.resolve("git_temp")
+Path rootDockerFolder = projectRootFolder.resolve("docker")
 
-Path rootELKFolder =
-        Paths.get(
-                request.outputDirectory,
-                request.artifactId,
-                'ELK')
+Path rootGitIgnoreFile = projectRootFolder.resolve(".gitignore")

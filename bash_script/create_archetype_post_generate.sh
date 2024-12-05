@@ -85,32 +85,34 @@ create_archetype_post_generate_groovy() {
     exit 1
   fi
 
-  # 1) Create/Overriding '$final_file_content_merged file', adding the 'HEADER_FILE'
+  # ============================================================================
+  # =================== FINAL FILE CONTENT MERGE - SEQUENCE ====================
+  # ============================================================================
+  # 1) Adding the 'HEADER_FILE' creating OR Overriding 'FINAL FILE CONTENT MERGE'
   cat "$header_file" > "$final_file_content_merged"
 
-  # 2) Add the 'GLOBAL_VARIABLES' to the 'final file'
+  # 2) Appending the 'GLOBAL_VARIABLES'
   sed -i -e '$r '"$global_vars_file" "$final_file_content_merged"
 
-  # 3.1) Add the 'PATH_VARIABLES' to the 'final file'
+  # 3) MULTIPLE-APPENDING of 'PATH_VARIABLES' (THIS ORDER IS MANDATORY)
   sed -i -e '$r '"$path_vars_root" "$final_file_content_merged"
   sed -i -e '$r '"$path_vars_src_main" "$final_file_content_merged"
   sed -i -e '$r '"$path_vars_src_test" "$final_file_content_merged"
   sed -i -e '$r '"$path_vars_logback" "$final_file_content_merged"
   sed -i -e '$r '"$path_vars_security" "$final_file_content_merged"
 
-  # 4) Add the "content of each file from ORDERED_FINAL_FILE_LIST"
-  #    to the 'final file' APPENDING
+  # 4) Appending the "content of each file from ORDERED_FINAL_FILE_LIST"
   for file in "${ordered_final_file_list[@]}"; do
       sed -i -e '$r '"$file" "$final_file_content_merged"
   done
 
-  # 5) Adds the 'FOOTER_FILE' to the 'final file' (APPENDING)
+  # 5) Appending the 'FOOTER_FILE'
   sed -i -e '$r '"$footer_file" "$final_file_content_merged"
 
-  # 6) Adds the 'FILE_FUNCTIONS' to the 'final file' (APPENDING)
+  # 6) Appending the 'FILE_FUNCTIONS'
   sed -i -e '$r '"$file_functions" "$final_file_content_merged"
 
-  # 7) Adds the 'FOLDER_FUNCTIONS' to the 'final file' (APPENDING)
+  # 7) Appending the 'FOLDER_FUNCTIONS'
   sed -i -e '$r '"$folder_functions" "$final_file_content_merged"
 
   #NAO DELETAR ESTE LOG COMENTADO - ELE PODE SER UTILIZADO
@@ -120,8 +122,7 @@ create_archetype_post_generate_groovy() {
 #     echo "END   ---- FINAL-CONTENT 'BEFORE' 'REMOVING IMPORTS KEYWORD':"
 #  fi
 
-  # 7) Removing 'IMPORT KEYWORD' lines from the 'final file'
-  #    and storing the result in 'free_imports_content'
+  # 7) Removing 'IMPORT KEYWORD' lines AND "storing the result"
   free_imports_content=$(remove_lines_with_import_keyword "$final_file_content_merged" "$show_debug_log_param")
 
   #NAO DELETAR ESTE LOG COMENTADO - ELE PODE SER UTILIZADO
@@ -131,10 +132,11 @@ create_archetype_post_generate_groovy() {
 #     echo "END   ---- FINAL-CONTENT 'AFTER' 'REMOVING IMPORTS KEYWORD':"
 #  fi
 
-  # 8) Adding 'IMPORT KEYWORD FILE' in 'final file' "OVERRIDING THE FINAL FILE"
+  # 8) Overriding the 'FINAL FILE CONTENT MERGE' adding 'IMPORT KEYWORD FILE'
   cat "$imports_file" | tr -d '/' > "$final_file_content_merged"
 
-  # 9) Adding 'FREE IMPORTS CONTENT' APPENDING in the 'final file' above overrided
+  # 9) Finalizing the 'FINAL FILE CONTENT MERGE'
+  #    Appending 'FREE-IMPORTS-CONTENT VARIABLE' on bottom of that
   echo "$free_imports_content" >> "$final_file_content_merged"
 
   if [ "$show_debug_log_param" = "true" ]; then

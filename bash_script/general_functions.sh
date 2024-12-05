@@ -111,13 +111,19 @@ open_ide_manager() {
 }
 
 colorize_delimited_text() {
+
     # Parameters:
     # $1 - Input string
     # $2 - Use parentheses (true) or brackets (false)
     # $3 - Color name
-
     local input_string="$1"
-    local use_parentheses="$2"
+    local apply_color_in_sequence_marker="$2"
+    local color_name_sequence_marker="${3:-green}"
+    local color_name_default="${4:-cyan}"
+
+    local COLOR_DEFAULT
+    local COLOR_SEQUENCE_MARKER
+    local result
 
     # Define colors with \001 and \002 to work with readline
     RED=$'\001\033[0;31m\002'
@@ -127,26 +133,30 @@ colorize_delimited_text() {
     CYAN=$'\001\033[0;36m\002'
     RESET=$'\001\033[0m\002'
 
-    # Default color is cyan if not specified
-    local color_name="${3:-cyan}"
-    local COLOR
-
-    # Convert color name to color code
-    case "${color_name,,}" in
-        "red") COLOR=$RED ;;
-        "green") COLOR=$GREEN ;;
-        "yellow") COLOR=$YELLOW ;;
-        "magenta") COLOR=$MAGENTA ;;
-        "cyan") COLOR=$CYAN ;;
-        *) COLOR=$CYAN ;;
+    case "${color_name_default,,}" in
+        "red") COLOR_DEFAULT=$RED ;;
+        "green") COLOR_DEFAULT=$GREEN ;;
+        "yellow") COLOR_DEFAULT=$YELLOW ;;
+        "magenta") COLOR_DEFAULT=$MAGENTA ;;
+        "cyan") COLOR_DEFAULT=$CYAN ;;
+        *) COLOR_DEFAULT=$CYAN ;;
     esac
 
-    local result
-    if [ "$use_parentheses" = true ]; then
-        result=$(echo -e "$input_string" | sed "s/(\([^)]*\))/$COLOR\0$RESET/g")
+    case "${color_name_sequence_marker,,}" in
+        "red") COLOR_SEQUENCE_MARKER=$RED ;;
+        "green") COLOR_SEQUENCE_MARKER=$GREEN ;;
+        "yellow") COLOR_SEQUENCE_MARKER=$YELLOW ;;
+        "magenta") COLOR_SEQUENCE_MARKER=$MAGENTA ;;
+        "cyan") COLOR_SEQUENCE_MARKER=$CYAN ;;
+        *) COLOR_SEQUENCE_MARKER=$CYAN ;;
+    esac
+
+    result=$(echo -e "$input_string" | sed "s/\[\([^]]*\)\]/$COLOR_DEFAULT\0$RESET/g")
+
+    local colorize_seq_marker_limit=1
+    if [ "$apply_color_in_sequence_marker" = true ]; then
+        result="${COLOR_SEQUENCE_MARKER}${result:0:${colorize_seq_marker_limit}}${RESET}${result:1}"
     fi
-    if [ "$use_parentheses" = false ]; then
-        result=$(echo -e "$input_string" | sed "s/\[\([^]]*\)\]/$COLOR\0$RESET/g")
-    fi
+
     printf "%s" "$result"
 }

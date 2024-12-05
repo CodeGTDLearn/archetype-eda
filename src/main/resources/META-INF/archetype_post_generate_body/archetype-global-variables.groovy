@@ -2,13 +2,12 @@
 
 // ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
 
-def entity_folder = "${properties?.entity_name}"
+def project_package = "${properties?.package}".replace('.', '/')
 
 def entity_name = "${properties?.entity_name}"
 
+def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"
-
-def project_package = "${properties?.package}".replace('.', '/')
 
 def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
 
