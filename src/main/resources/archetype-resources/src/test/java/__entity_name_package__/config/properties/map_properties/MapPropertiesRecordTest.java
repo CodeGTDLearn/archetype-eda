@@ -1,4 +1,4 @@
-package ${package}.${entity_name_package}.config.properties;
+package ${package}.${entity_name_package}.config.properties.map_properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -6,18 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.List;
-import java.util.HashMap;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.MethodOrderer.*;
 
+
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
-class MapPropertiesTest {
+class MapPropertiesRecordTest {
 
   @Autowired
-  MapProperties properties;
+  MapPropertiesRecord properties;
 
   List<String> expectedKeys;
   List<MapItem> expectedValues;
@@ -27,6 +27,8 @@ class MapPropertiesTest {
   @BeforeEach
   void setUp() {
 
+    checkPropertiesTotal(properties.map(), 2);
+
     expectedKeys = List.of("brazil_Test", "spain_Test");
     expectedValues =
          List.of(
@@ -34,12 +36,12 @@ class MapPropertiesTest {
               new MapItem("spanish Test")
          );
 
-    actualMap = properties.getMap();
+    actualMap = properties.map();
   }
 
   @Order(1)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyKeyValuePairs() {
+  void givenMapProperties_whenBindingData_thenAllKeyValuePairsMatch() {
 
     IntStream
          .range(0, actualMap.size())
@@ -61,21 +63,21 @@ class MapPropertiesTest {
 
   @Order(2)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyTotalSize() {
+  void givenMapProperties_whenBindingData_thenTotalPropertiesMatch() {
 
     assertEquals(expectedKeys.size(), actualMap.size());
   }
 
   @Order(3)
   @Test
-  void givenMapProperties_whenInitialized_thenMapShouldNotBeNull() {
+  void givenMapProperties_whenBindingData_thenMapIsNotNull() {
 
     assertNotNull(actualMap);
   }
 
   @Order(4)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyValueTypes() {
+  void givenMapProperties_whenBindingData_thenAllValuesAreOfTypeMapItem() {
 
     assertTrue(actualMap.values()
                         .stream()
@@ -84,7 +86,7 @@ class MapPropertiesTest {
 
   @Order(5)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyKeyOrder() {
+  void givenMapProperties_whenBindingData_thenKeyOrderIsPreserved() {
 
     var keys = actualMap.keySet()
                         .toArray();
@@ -99,7 +101,7 @@ class MapPropertiesTest {
 
   @Order(6)
   @Test
-  void givenMapProperties_whenUsingGetter_thenMapShouldBeUnmodifiable() {
+  void givenMapProperties_whenModifyingMap_thenThrowUnsupportedOperationException() {
 
     assertThrows(
          UnsupportedOperationException.class,
@@ -107,16 +109,9 @@ class MapPropertiesTest {
     );
   }
 
-  @Order(7)
-  @Test
-  void givenMapProperties_whenUsingSetter_thenMapShouldBeModifiable() {
+  private void checkPropertiesTotal(Map<?, ?> properties, int expectedTotal) {
 
-    var newMap = new HashMap<String, MapItem>();
-    newMap.put("uruguai", new MapItem("espanhol-uruguaio"));
-    properties.setMap(newMap);
-
-    var uruguaiMap = properties.getMap()
-                               .get("uruguai");
-    assertEquals("espanhol-uruguaio", uruguaiMap.name());
+    int actualTotal = properties.size();
+    assertEquals(expectedTotal, actualTotal);
   }
 }

@@ -1,4 +1,4 @@
-package ${package}.${entity_name_package}.config.properties;
+package ${package}.${entity_name_package}.config.properties.list_properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.test.annotation.DirtiesContext;
@@ -29,6 +29,9 @@ class ListPropertiesTest {
 
   @BeforeEach
   void setUp() {
+
+    checkPropertiesTotal(properties, 2);
+    checkPropertiesTotal(properties.getObjects().get(0), 2);
 
     expectedProperty = "Binding Object Properties Test";
 
@@ -133,6 +136,7 @@ class ListPropertiesTest {
   }
 
   @Order(10)
+  @DirtiesContext
   @Test
   void givenEmptyList_whenSettingObjects_thenAcceptsEmpty() {
 
@@ -143,9 +147,8 @@ class ListPropertiesTest {
   }
 
   @Order(11)
-  @DirtiesContext
   @Test
-  void givenNullList_whenSettingObjects_thenThrowsNPE() {
+  void givenNullList_whenSettingObjects_thenThrowsNullPointerException() {
 
     properties.setObjects(null);
 
@@ -153,5 +156,11 @@ class ListPropertiesTest {
          NullPointerException.class,
          () -> properties.getObjects()
     );
+  }
+
+  private void checkPropertiesTotal(Object properties, int expectedTotal) {
+
+    int actualTotal = properties.getClass().getDeclaredFields().length;
+    assertEquals(expectedTotal, actualTotal);
   }
 }

@@ -1,4 +1,4 @@
-package ${package}.${entity_name_package}.config.properties;
+package ${package}.${entity_name_package}.config.properties.list_properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +29,9 @@ class ListPropertiesImmutableTest {
   @BeforeEach
   void setUp() {
 
+    checkPropertiesTotal(properties, 2);
+    checkPropertiesTotal(properties.getObjects().get(0), 2);
+
     expectedProperty = "Binding Object Properties Test";
 
     expectedAllIndex0Properties = List.of("Brazil Test", "Canada Test");
@@ -48,7 +51,7 @@ class ListPropertiesImmutableTest {
 
   @Order(2)
   @Test
-  void givenPropertiesFile_whenBindingListObjects_thenAllFieldsAreSet() {
+  void givenPropertiesFile_whenBindingListObjects_thenAllFieldsAreSetCorrectly() {
 
     IntStream
          .range(0, actualListObjects.size())
@@ -93,5 +96,11 @@ class ListPropertiesImmutableTest {
 
     actualListObjects
          .forEach(object -> assertInstanceOf(ListObjects.class, object));
+  }
+
+  private void checkPropertiesTotal(Object properties, int expectedTotal) {
+
+    int actualTotal = properties.getClass().getDeclaredFields().length;
+    assertEquals(expectedTotal, actualTotal);
   }
 }

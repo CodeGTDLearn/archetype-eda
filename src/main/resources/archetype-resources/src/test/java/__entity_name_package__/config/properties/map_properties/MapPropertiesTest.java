@@ -1,4 +1,4 @@
-package ${package}.${entity_name_package}.config.properties;
+package ${package}.${entity_name_package}.config.properties.map_properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -6,18 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.List;
+import java.util.HashMap;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.MethodOrderer.*;
 
-
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
-class MapPropertiesImmutableTest {
+class MapPropertiesTest {
 
   @Autowired
-  MapPropertiesImmutable properties;
+  MapProperties properties;
 
   List<String> expectedKeys;
   List<MapItem> expectedValues;
@@ -26,6 +26,8 @@ class MapPropertiesImmutableTest {
 
   @BeforeEach
   void setUp() {
+
+    checkPropertiesTotal(properties.getMap(), 2);
 
     expectedKeys = List.of("brazil_Test", "spain_Test");
     expectedValues =
@@ -39,7 +41,7 @@ class MapPropertiesImmutableTest {
 
   @Order(1)
   @Test
-  void givenMapProperties_whenBindingKeyValuePairs_thenAllPairsMatchExpected() {
+  void givenMapProperties_whenBindingData_thenVerifyKeyValuePairs() {
 
     IntStream
          .range(0, actualMap.size())
@@ -61,21 +63,21 @@ class MapPropertiesImmutableTest {
 
   @Order(2)
   @Test
-  void givenMapProperties_whenCountingEntries_thenSizeMatchesExpected() {
+  void givenMapProperties_whenBindingData_thenVerifyTotalSize() {
 
     assertEquals(expectedKeys.size(), actualMap.size());
   }
 
   @Order(3)
   @Test
-  void givenMapProperties_whenInstantiated_thenMapIsNotNull() {
+  void givenMapProperties_whenInitialized_thenMapShouldNotBeNull() {
 
     assertNotNull(actualMap);
   }
 
   @Order(4)
   @Test
-  void givenMapValues_whenCheckingType_thenAllAreMapItemInstances() {
+  void givenMapProperties_whenBindingData_thenVerifyValueTypes() {
 
     assertTrue(actualMap.values()
                         .stream()
@@ -84,7 +86,7 @@ class MapPropertiesImmutableTest {
 
   @Order(5)
   @Test
-  void givenMapKeys_whenCheckingOrder_thenMatchesExpectedSequence() {
+  void givenMapProperties_whenBindingData_thenVerifyKeyOrder() {
 
     var keys = actualMap.keySet()
                         .toArray();
@@ -99,11 +101,30 @@ class MapPropertiesImmutableTest {
 
   @Order(6)
   @Test
-  void givenImmutableMap_whenModifying_thenThrowsException() {
+  void givenMapProperties_whenUsingGetter_thenMapShouldBeUnmodifiable() {
 
     assertThrows(
          UnsupportedOperationException.class,
          () -> actualMap.put("brazil", new MapItem("newLanguage"))
     );
+  }
+
+  @Order(7)
+  @Test
+  void givenMapProperties_whenUsingSetter_thenMapShouldBeModifiable() {
+
+    var newMap = new HashMap<String, MapItem>();
+    newMap.put("uruguai", new MapItem("espanhol-uruguaio"));
+    properties.setMap(newMap);
+
+    var uruguaiMap = properties.getMap()
+                               .get("uruguai");
+    assertEquals("espanhol-uruguaio", uruguaiMap.name());
+  }
+
+  private void checkPropertiesTotal(Map<?, ?> properties, int expectedTotal) {
+
+    int actualTotal = properties.size();
+    assertEquals(expectedTotal, actualTotal);
   }
 }

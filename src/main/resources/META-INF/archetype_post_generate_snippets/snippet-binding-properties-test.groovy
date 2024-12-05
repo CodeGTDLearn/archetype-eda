@@ -7,6 +7,7 @@
 
 
 // SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
+// TESTS -----------------------------------------------------------------------
 if (keep_binding_properties_tests == 'false') {
 
     log_text += "\nFOLDER_BINDING_PROPERTIES_TEST:\n $srcTestJavaEntityConfigPropertiesFolder\n"
@@ -79,6 +80,8 @@ if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'f
             filesToDeleteResources.toString() + "\n $srcTestResourcesPropertiesFolder\n"
 }
 
+
+// MUTABILITY TESTS ------------------------------------------------------------
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
     List<String> filesToDelete =
@@ -111,6 +114,8 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
             filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 }
 
+
+// VALIDATED TESTS -------------------------------------------------------------
 if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties == 'false') {
 
     List<String> filesToDelete =

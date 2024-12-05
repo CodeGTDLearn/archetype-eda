@@ -1,4 +1,4 @@
-package ${package}.${entity_name_package}.config.properties;
+package ${package}.${entity_name_package}.config.properties.list_properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +29,9 @@ class ListPropertiesRecordTest {
 
   @BeforeEach
   void setUp() {
+
+    checkPropertiesTotal(properties, 2);
+    checkPropertiesTotal(properties.objects().get(0), 2);
 
     expectedProperty = "Binding Object Properties Test";
 
@@ -94,5 +97,11 @@ class ListPropertiesRecordTest {
 
     actualListObjects
          .forEach(object -> assertInstanceOf(ListObjects.class, object));
+  }
+
+  private void checkPropertiesTotal(Object properties, int expectedTotal) {
+
+    int actualTotal = properties.getClass().getDeclaredFields().length;
+    assertEquals(expectedTotal, actualTotal);
   }
 }

@@ -9,6 +9,9 @@ import java.nio.file.Path
 
 // ARCHETYPE-FOLDER-FUNCTIONS.GROOVY -------------------------------------------
 def deleteFolder(File pathToFolder) {
+
+    println "\nEntrou na funcao deleteFolder: $pathToFolder"
+
     if (pathToFolder.isDirectory()) {
 
         pathToFolder.listFiles()
@@ -17,36 +20,31 @@ def deleteFolder(File pathToFolder) {
                 }
     }
     pathToFolder.delete()
+
+    println "\nSaiu na funcao deleteFolder: $pathToFolder"
+
 }
-
-
-//def deleteElkLogSystemStructure(log_text) {
-//
-//    log_text += "\nFOLDER_ELK:\n $rootELKFolder\n"
-//    deleteFolder(rootELKFolder.toFile())
-//
-//    Path dockerElkComposePath =
-//            rootDockerFolder
-//                    .resolve("elk-compose.yml")
-//
-//    log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
-//    deleteFile(dockerElkComposePath.toFile())
-//}
 
 
 def renameFolder(File pathToFolder, String newName) {
 
+    println "\nEntrou na funcao renameFolder: $pathToFolder"
+
     if (pathToFolder.isDirectory()) {
         def newFolderPath = pathToFolder.parentFile.toPath().resolve(newName)
+
         if (newFolderPath.toFile().exists()) {
-            println "Erro: Pasta com o nome $newName já existe."
+            println "\nErro: Pasta com o nome $newName já existe."
             return
         }
         pathToFolder.renameTo(newFolderPath.toFile())
-        println "Pasta renomeada com sucesso: $pathToFolder -> $newName"
+        println "\nPasta renomeada com sucesso: $pathToFolder -> $newName"
     } else {
-        println "Erro: $pathToFolder não é um diretório."
+        println "\nErro: $pathToFolder não é um diretório."
     }
+
+    println "\nSaiu da funcao renameFolder: $pathToFolder"
+
 }
 
 
@@ -56,6 +54,8 @@ def renameFolder(File pathToFolder, String newName) {
  * @param extension Extensão dos arquivos (exemplo: ".yml", ".properties")
  */
 def deleteFilesByExtensionRecursivelyFromFolder(Path pathToFiles, String extension) {
+
+    println "\nEntrou na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
 
     def currentFolder = pathToFiles.toFile()
 
@@ -70,18 +70,20 @@ def deleteFilesByExtensionRecursivelyFromFolder(Path pathToFiles, String extensi
     currentFolder.eachDir {
         subDir -> deleteFilesByExtensionRecursivelyFromFolder(subDir.toPath(), extension)
     }
+
+    println "\nSaiu na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
 }
 
 
 def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
 
-    println "Entrou na funcao deleteFilesFromListFromFolder"
+    println "\nEntrou na funcao deleteFilesFromListFromFolder: $pathToFiles"
 
     files.removeIf { it == null || it.trim() == "" }
 
     // Valida se diretório existe
     if (!pathToFiles.toFile().isDirectory()) {
-        println "Pasta não encontrada: $pathToFiles"
+        println "\nPasta não encontrada: $pathToFiles"
         return
     }
 
@@ -94,15 +96,15 @@ def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
                 if (fileToDelete.exists()) {
 
                     fileToDelete.delete()
-                    println "File Found: $fileName"
+                    println "\nFile Found: $fileName"
                 } else {
 
-                    println "File Not Found: $fileName em ${pathToFiles.toAbsolutePath()}"
+                    println "\nFile Not Found: $fileName em ${pathToFiles.toAbsolutePath()}"
                 }
             } catch (Exception e) {
-                println "Erro ao deletar $fileName: ${e.message}"
+                println "\nErro ao deletar $fileName: ${e.message}"
             }
     }
 
-    println "Saiu da funcao deleteFilesFromListFromFolder"
+    println "\nSaiu da funcao deleteFilesFromListFromFolder: $pathToFiles"
 }

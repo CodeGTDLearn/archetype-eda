@@ -23,6 +23,7 @@ class ApplicationPropertiesRecordTest {
 
   @BeforeEach
   void setUp() {
+    checkPropertiesTotal(properties, 2);
 
     expectedName = "${artifactId}";
     expectedVersion = "${version}";
@@ -33,7 +34,7 @@ class ApplicationPropertiesRecordTest {
 
   @Order(1)
   @Test
-  void givenApplicationPropertiesRecord_whenBinding_thenAllFieldsAreSet() {
+  void givenApplicationPropertiesRecord_whenBinding_thenAllFieldsAreSetCorrectly() {
 
     assertEquals(expectedName, actualName);
     assertEquals(expectedVersion, actualVersion);
@@ -63,5 +64,19 @@ class ApplicationPropertiesRecordTest {
 
     assertFalse(actualName.isEmpty());
     assertFalse(actualVersion.isEmpty());
+  }
+
+  @Order(5)
+  @Test
+  void givenApplicationProperties_whenBound_thenCheckPropertiesTotal() {
+
+    checkPropertiesTotal(properties, 2);
+  }
+
+  private void checkPropertiesTotal(Object properties, int expectedTotal) {
+
+    int actualTotal = properties.getClass().getDeclaredFields().length;
+
+    assertEquals(expectedTotal, actualTotal);
   }
 }

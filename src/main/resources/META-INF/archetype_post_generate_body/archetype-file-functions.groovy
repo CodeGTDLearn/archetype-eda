@@ -7,32 +7,40 @@
 
 // ARCHETYPE-FILE-FUNCTIONS.GROOVY ---------------------------------------------
 
-def deleteFile(File file) {
-    if (file.isFile()) file.delete()
+def deleteFile(File pathToFile) {
+
+    println "\nEntrou na funcao deleteFile - File: $pathToFile"
+
+    if (pathToFile.isFile()) pathToFile.delete()
+
+    println "\nSaiu da funcao deleteFile - File: $pathToFile"
+
 }
 
 
-def renameFile(File file, String newName) {
+def renameFile(File pathToFile, String newName) {
 
-    println "File: $file"
+    println "\nEntrou na funcao renameFile - File: $pathToFile"
 
-    def newFile = new File(file.getParent(), newName)
+    def newFile = new File(pathToFile.getParent(), newName)
 
-    println "newFile: $newFile"
+    println "\nnewFile: $newFile"
 
-    if (!file.exists() || !file.isFile()) {
-        println "Error: File $file invalid or inexistent."
+    if (!pathToFile.exists() || !pathToFile.isFile()) {
+        println "\nError: File $pathToFile invalid or inexistent."
         return
     }
 
     if (newFile.exists()) {
-        println "Error: File $newName already exists in the path"
+        println "\nError: File $newName already exists in the path"
         return
     }
 
-    if (file.renameTo(newFile)) {
-        println "File renamed: $file -> $newName"
+    if (pathToFile.renameTo(newFile)) {
+        println "\nFile renamed: $pathToFile -> $newName"
     } else {
-        println "Error: Unable to rename $file to $newFile"
+        println "\nError: Unable to rename $pathToFile to $newFile"
     }
+
+    println "\nSaiu da funcao renameFile - File: $pathToFile"
 }

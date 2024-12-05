@@ -6,7 +6,8 @@
 
 
 
-// SNIPPET-BINDING-PROPERTIES.GROOVY
+// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
+// BINDING PROPERTIES ----------------------------------------------------------
 if (keep_binding_properties == 'false') {
 
     deleteFolder(srcMainJavaEntityConfigPropertiesFolder.toFile())
@@ -80,6 +81,7 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
             filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
 }
 
+// MUTABILITY ------------------------------------------------------------------
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
     List<String> filesToDelete =

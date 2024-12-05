@@ -25,20 +25,20 @@ ACTIVE_PROGRESS_BAR=false
 
 # A.5) 'ARCHETYPE FILES' GENERATION:
 # A.5.1) 'ARCHETYPE FILES' PATH
-PROJECT_FOLDER="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda"
+PROJECT_FOLDER_WIN="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda"
 PROJECT_FOLDER_LINUX="/c/WORKBASE/DEV/SCRIPTS/archetype-v2-eda"
-META_INF_FOLDER="${PROJECT_FOLDER}\\src\\main\\resources\\META-INF"
-MAVEN_FOLDER="${META_INF_FOLDER}\\maven"
-SCRIPT_FOLDER="${PROJECT_FOLDER}\\bash_script"
-source "${SCRIPT_FOLDER}\\maven_functions.sh"
+META_INF_FOLDER_WIN="${PROJECT_FOLDER_WIN}\\src\\main\\resources\\META-INF"
+MAVEN_FOLDER_WIN="${META_INF_FOLDER_WIN}\\maven"
+SCRIPT_FOLDER_WIN="${PROJECT_FOLDER_WIN}\\bash_script"
+source "${SCRIPT_FOLDER_WIN}\\maven_functions.sh"
 
 # A.5.2) RE-CREATING ARCHETYPE-METADATA.XML
-source "${SCRIPT_FOLDER}\\create_archetype_metadata.sh"
-create_archetype_metadata_xml "${RECREATE_ARCHETYPE}" "${MAVEN_FOLDER}" "archetype-metadata.xml" "$SHOW_RECREATE_ARCHETYPE_LOG"
+source "${SCRIPT_FOLDER_WIN}\\create_archetype_metadata.sh"
+create_archetype_metadata_xml "${RECREATE_ARCHETYPE}" "${MAVEN_FOLDER_WIN}" "archetype-metadata.xml" "$SHOW_RECREATE_ARCHETYPE_LOG"
 
 # A.5.3) RE-CREATING ARCHETYPE-POST-GENERATE.GROOVY
-source "${SCRIPT_FOLDER}\\create_archetype_post_generate.sh"
-create_archetype_post_generate_groovy "${RECREATE_ARCHETYPE}" "${META_INF_FOLDER}" "archetype-post-generate.groovy" "$SHOW_RECREATE_ARCHETYPE_LOG"
+source "${SCRIPT_FOLDER_WIN}\\create_archetype_post_generate.sh"
+create_archetype_post_generate_groovy "${RECREATE_ARCHETYPE}" "${META_INF_FOLDER_WIN}" "archetype-post-generate.groovy" "$SHOW_RECREATE_ARCHETYPE_LOG"
 
 # A.5.4) INSTALLING THE ARCHETYPE BASED ON THE NEWLY FILES CREATED ABOVE:
 # - ARCHETYPE-POST-GENERATE.GROOVY
@@ -46,20 +46,20 @@ create_archetype_post_generate_groovy "${RECREATE_ARCHETYPE}" "${META_INF_FOLDER
 execute_mvn_clean_install "${PROJECT_FOLDER_LINUX}" "${RECREATE_ARCHETYPE}" "${SHOW_RECREATE_ARCHETYPE_LOG}"
 
 # A.6) CHECKING PROJECT FOLDER VIABILITY
-source "${SCRIPT_FOLDER}\\project_viability_checker.sh"
+source "${SCRIPT_FOLDER_WIN}\\project_viability_checker.sh"
 check_project_folder_viability "true"
 
 # A.7) SCRIPT INITIALIZATION
-source "${SCRIPT_FOLDER}\\script_injection.sh"
+source "${SCRIPT_FOLDER_WIN}\\script_injection.sh"
 
 
 # B) INJECOES DE FUNCOES -------------------------------------------------------
-inject_script "${SCRIPT_FOLDER}" "progress_bar_functions.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "general_functions.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "general_functions_for_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "config_constants.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "progress_bar_functions.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "general_functions.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "general_functions_for_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "config_constants.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
 
 
 #-------------------------------------------------------------------------------
@@ -70,26 +70,26 @@ inject_script "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECTION
 #             * Pos-Processador: "ARCHETYPE-POS-GENERATE".GROOVY
 #-------------------------------------------------------------------------------
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
-inject_script "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_java_version_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_github_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_binding_properties_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_logback_manager_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_cpanel_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_jwt_authentication_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_java_version_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_github_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_binding_properties_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_logback_manager_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_docker_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_cpanel_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_jwt_authentication_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
 
 # C.2) Packages: 'Arvores de Pastas separadas por ".", onde a(s) classe(s) se encontra(m)
 project_package=$groupId.$artifactId
 
 # C.3) MONTAGEM das 'SWITCHES -D' para o MVN-CLI
-inject_script "${SCRIPT_FOLDER}" "mvn_command_line_archetype_generate.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "mvn_command_line_archetype_generate.sh" $SHOW_INJECTION_LOG
 
 # C.4) 'REQUIRED-PROPERTY':
 # C.5) 'PROPERTY DE TESTE' do archetype

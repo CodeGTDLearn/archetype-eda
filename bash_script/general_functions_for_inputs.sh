@@ -16,34 +16,34 @@ is_compound_input_valid() {
   echo "true"
 }
 
-get_artifactId_input() {
+#get_artifactId_input() {
+#
+#  local artifactId_text='O artifactId'
+#
+#  while true; do
+#
+#    artifactId=$(get_user_input_or_default_value "artifact" "api_v1" "$ARTIFACT_ID_PROMPT")
+#
+#    if [ -d "$artifactId" ]; then
+#       echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_MESSAGE \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
+#       pwd
+#
+#       ls -l
+#       echo
+#    else
+#       break
+#    fi
+#
+#  done
+#}
 
-  local artifactId_text='O artifactId'
-
-  while true; do
-
-    artifactId=$(get_user_input_or_default_value "artifact" "my_artifact" "$ARTIFACT_ID_PROMPT")
-
-    if [ -d "$artifactId" ]; then
-       echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_MESSAGE \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
-       pwd
-
-       ls -l
-       echo
-    else
-       break
-    fi
-
-  done
-}
-
-get_custom_attributes_list_input() {
-
-  if [[ "${enable_custom_attributes,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
-     custom_attributes_list=$(get_user_input_or_default_value "entity_list_attributes" "Long:id, MyId:id, My_Id:my_id" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
-
-  else
-     custom_attributes_list="false"
-
-  fi
-}
+#get_custom_attributes_list_input() {
+#
+#  if [[ "${enable_custom_attributes,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
+#     custom_attributes_list=$(get_user_input_or_default_value "entity_list_attributes" "Long:id, MyId:id, My_Id:my_id" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
+#
+#  else
+#     custom_attributes_list="false"
+#
+#  fi
+#}

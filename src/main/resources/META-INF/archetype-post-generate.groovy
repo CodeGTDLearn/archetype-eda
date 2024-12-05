@@ -280,6 +280,7 @@ if (keep_jwt_authentication == 'false') {
 
 
 // SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
+// TESTS -----------------------------------------------------------------------
 if (keep_binding_properties_tests == 'false') {
 
     log_text += "\nFOLDER_BINDING_PROPERTIES_TEST:\n $srcTestJavaEntityConfigPropertiesFolder\n"
@@ -352,6 +353,8 @@ if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'f
             filesToDeleteResources.toString() + "\n $srcTestResourcesPropertiesFolder\n"
 }
 
+
+// MUTABILITY TESTS ------------------------------------------------------------
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
     List<String> filesToDelete =
@@ -384,6 +387,8 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
             filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 }
 
+
+// VALIDATED TESTS -------------------------------------------------------------
 if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties == 'false') {
 
     List<String> filesToDelete =
@@ -404,7 +409,8 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
 
 
 
-// SNIPPET-BINDING-PROPERTIES.GROOVY
+// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
+// BINDING PROPERTIES ----------------------------------------------------------
 if (keep_binding_properties == 'false') {
 
     deleteFolder(srcMainJavaEntityConfigPropertiesFolder.toFile())
@@ -478,6 +484,7 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
             filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
 }
 
+// MUTABILITY ------------------------------------------------------------------
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
     List<String> filesToDelete =
@@ -817,34 +824,42 @@ if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 
 // ARCHETYPE-FILE-FUNCTIONS.GROOVY ---------------------------------------------
 
-def deleteFile(File file) {
-    if (file.isFile()) file.delete()
+def deleteFile(File pathToFile) {
+
+    println "\nEntrou na funcao deleteFile - File: $pathToFile"
+
+    if (pathToFile.isFile()) pathToFile.delete()
+
+    println "\nSaiu da funcao deleteFile - File: $pathToFile"
+
 }
 
 
-def renameFile(File file, String newName) {
+def renameFile(File pathToFile, String newName) {
 
-    println "File: $file"
+    println "\nEntrou na funcao renameFile - File: $pathToFile"
 
-    def newFile = new File(file.getParent(), newName)
+    def newFile = new File(pathToFile.getParent(), newName)
 
-    println "newFile: $newFile"
+    println "\nnewFile: $newFile"
 
-    if (!file.exists() || !file.isFile()) {
-        println "Error: File $file invalid or inexistent."
+    if (!pathToFile.exists() || !pathToFile.isFile()) {
+        println "\nError: File $pathToFile invalid or inexistent."
         return
     }
 
     if (newFile.exists()) {
-        println "Error: File $newName already exists in the path"
+        println "\nError: File $newName already exists in the path"
         return
     }
 
-    if (file.renameTo(newFile)) {
-        println "File renamed: $file -> $newName"
+    if (pathToFile.renameTo(newFile)) {
+        println "\nFile renamed: $pathToFile -> $newName"
     } else {
-        println "Error: Unable to rename $file to $newFile"
+        println "\nError: Unable to rename $pathToFile to $newFile"
     }
+
+    println "\nSaiu da funcao renameFile - File: $pathToFile"
 }
 
 // -----------------------------------------------------------------------------
@@ -856,6 +871,9 @@ def renameFile(File file, String newName) {
 
 // ARCHETYPE-FOLDER-FUNCTIONS.GROOVY -------------------------------------------
 def deleteFolder(File pathToFolder) {
+
+    println "\nEntrou na funcao deleteFolder: $pathToFolder"
+
     if (pathToFolder.isDirectory()) {
 
         pathToFolder.listFiles()
@@ -864,36 +882,31 @@ def deleteFolder(File pathToFolder) {
                 }
     }
     pathToFolder.delete()
+
+    println "\nSaiu na funcao deleteFolder: $pathToFolder"
+
 }
-
-
-//def deleteElkLogSystemStructure(log_text) {
-//
-//    log_text += "\nFOLDER_ELK:\n $rootELKFolder\n"
-//    deleteFolder(rootELKFolder.toFile())
-//
-//    Path dockerElkComposePath =
-//            rootDockerFolder
-//                    .resolve("elk-compose.yml")
-//
-//    log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
-//    deleteFile(dockerElkComposePath.toFile())
-//}
 
 
 def renameFolder(File pathToFolder, String newName) {
 
+    println "\nEntrou na funcao renameFolder: $pathToFolder"
+
     if (pathToFolder.isDirectory()) {
         def newFolderPath = pathToFolder.parentFile.toPath().resolve(newName)
+
         if (newFolderPath.toFile().exists()) {
-            println "Erro: Pasta com o nome $newName já existe."
+            println "\nErro: Pasta com o nome $newName já existe."
             return
         }
         pathToFolder.renameTo(newFolderPath.toFile())
-        println "Pasta renomeada com sucesso: $pathToFolder -> $newName"
+        println "\nPasta renomeada com sucesso: $pathToFolder -> $newName"
     } else {
-        println "Erro: $pathToFolder não é um diretório."
+        println "\nErro: $pathToFolder não é um diretório."
     }
+
+    println "\nSaiu da funcao renameFolder: $pathToFolder"
+
 }
 
 
@@ -903,6 +916,8 @@ def renameFolder(File pathToFolder, String newName) {
  * @param extension Extensão dos arquivos (exemplo: ".yml", ".properties")
  */
 def deleteFilesByExtensionRecursivelyFromFolder(Path pathToFiles, String extension) {
+
+    println "\nEntrou na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
 
     def currentFolder = pathToFiles.toFile()
 
@@ -917,18 +932,20 @@ def deleteFilesByExtensionRecursivelyFromFolder(Path pathToFiles, String extensi
     currentFolder.eachDir {
         subDir -> deleteFilesByExtensionRecursivelyFromFolder(subDir.toPath(), extension)
     }
+
+    println "\nSaiu na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
 }
 
 
 def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
 
-    println "Entrou na funcao deleteFilesFromListFromFolder"
+    println "\nEntrou na funcao deleteFilesFromListFromFolder: $pathToFiles"
 
     files.removeIf { it == null || it.trim() == "" }
 
     // Valida se diretório existe
     if (!pathToFiles.toFile().isDirectory()) {
-        println "Pasta não encontrada: $pathToFiles"
+        println "\nPasta não encontrada: $pathToFiles"
         return
     }
 
@@ -941,15 +958,15 @@ def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
                 if (fileToDelete.exists()) {
 
                     fileToDelete.delete()
-                    println "File Found: $fileName"
+                    println "\nFile Found: $fileName"
                 } else {
 
-                    println "File Not Found: $fileName em ${pathToFiles.toAbsolutePath()}"
+                    println "\nFile Not Found: $fileName em ${pathToFiles.toAbsolutePath()}"
                 }
             } catch (Exception e) {
-                println "Erro ao deletar $fileName: ${e.message}"
+                println "\nErro ao deletar $fileName: ${e.message}"
             }
     }
 
-    println "Saiu da funcao deleteFilesFromListFromFolder"
+    println "\nSaiu da funcao deleteFilesFromListFromFolder: $pathToFiles"
 }
