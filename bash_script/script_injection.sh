@@ -6,6 +6,8 @@ script_injection() {
   local FILE="$2"
   local SHOW_DEBUG_LOG="$3"
 
+  local ENABLE_SPACER_AFTER_FUNCTION="true"
+
   local divider="\n--------------------------------------------------------------------->\n"
 
   if [ "$SHOW_DEBUG_LOG" = "true" ]; then
@@ -27,6 +29,10 @@ script_injection() {
   fi
 
   source "${FOLDER}\\${FILE}"
+
+  if [ "$ENABLE_SPACER_AFTER_FUNCTION" = "true" ]; then
+    echo -e "\n"
+  fi
 
     if [ "$SHOW_DEBUG_LOG" = "true" ]; then
       echo -e "\n-----> INJECTING: $FILE ------ END\n"

@@ -20,7 +20,8 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -Dlist_binding_properties=\"$list_binding_properties\" \
 -Dmap_binding_properties=\"$map_binding_properties\" \
 -Denable_binding_properties_tests=\"$enable_binding_properties_tests\" \
--Dimmutable_binding_properties=\"$immutable_binding_properties\" \
+-Dmutable_binding_properties=\"$mutable_binding_properties\" \
+-Dvalidated_binding_properties=\"$validated_binding_properties\" \
 \
 -Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
 \

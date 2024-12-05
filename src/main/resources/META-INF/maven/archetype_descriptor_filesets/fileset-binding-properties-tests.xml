@@ -8,7 +8,7 @@
         <!--  FILESET-BINDING-PROPERTIES-TEST.XML __________________________ -->
 
         <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/java/resources/properties_test</directory>
+            <directory>src/test/resources/properties_test</directory>
             <includes>
                 <include>**/*.yml</include>
                 <include>**/*.properties</include>

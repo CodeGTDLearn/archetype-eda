@@ -2,7 +2,7 @@
 
 # PROMPT
 ENABLE_API_CONTROL_PANEL_PROMPT="Enable 'API Control Panel'"
-ENABLE_CPANEL_ELK_OPTION_PROMPT="-> Enable Elk(Elastic+Logstash+Kibana) system"
+ENABLE_CPANEL_ELK_OPTION_PROMPT=" •Enable Elk(Elastic+Logstash+Kibana)"
 ENABLE_ELK_OPTION="false"
 
 # VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS

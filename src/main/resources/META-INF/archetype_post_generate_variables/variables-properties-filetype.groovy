@@ -14,4 +14,4 @@
 
 // VARIABLE-PROPERTIES-FILETYPE.GROOVY -----------------------------------------
 
-def properties_filetype = "${properties?.properties_filetype}"
+def properties_filetype_choice = "${properties?.properties_filetype}"

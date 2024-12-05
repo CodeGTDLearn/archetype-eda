@@ -67,7 +67,7 @@ script_injection "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECT
 #-------------------------------------------------------------------------------
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
 script_injection "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_attributes_inputs.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG

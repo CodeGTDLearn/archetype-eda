@@ -33,6 +33,19 @@
 
 
 
+        <!--  PROPERTY-BINDING-PROPERTIES-TESTS.XML  _______________________ -->
+
+        <requiredProperty key="enable_binding_properties_tests">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+
+
+
+
         <!--  PROPERTY-BINDING-PROPERTIES.XML   ____________________________ -->
         <requiredProperty key="enable_binding_properties">
             <defaultValue></defaultValue>
@@ -47,6 +60,14 @@
         </requiredProperty>
 
         <requiredProperty key="map_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="mutable_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="validated_binding_properties">
             <defaultValue></defaultValue>
         </requiredProperty>
 
@@ -223,11 +244,12 @@
 
 
         <!--  FILESET-BINDING-PROPERTIES-TEST.XML __________________________ -->
-        <!-- SRC\TEST\PROPERTIES -->
+
         <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/java/binding_properties_test</directory>
+            <directory>src/test/resources/properties_test</directory>
             <includes>
-                <include>**/*.java</include>
+                <include>**/*.yml</include>
+                <include>**/*.properties</include>
             </includes>
         </fileSet>
 
@@ -344,28 +366,6 @@
 
 
 
-        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
-        <!-- SRC\TEST\RESOURCES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources</directory>
-            <includes>
-
-                <include>application.yml</include>
-                <include>application.properties</include>
-
-                <include>logback-test.xml</include>
-
-                <include>banner.txt</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-
         <!--  FILESET-SRC.XML  _____________________________________________ -->
         <!-- SRC\MAIN -->
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
@@ -390,6 +390,39 @@
                 <include>application.properties</include>
 
                 <include>logback-spring.xml</include>
+
+                <include>banner.txt</include>
+
+            </includes>
+        </fileSet>
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
+        <!-- SRC\TEST -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/java</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+
+
+        <!-- SRC\TEST\RESOURCES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+
+                <include>application.yml</include>
+                <include>application.properties</include>
+
+                <include>logback-test.xml</include>
 
                 <include>banner.txt</include>
 

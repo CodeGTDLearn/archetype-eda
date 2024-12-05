@@ -18,5 +18,9 @@ spring:
       - ${protected_properties_folder}/application_keys.yml
       - ${protected_properties_folder}/admin_credentials.yml
       - ${protected_properties_folder}/authentication_credentials.yml
-      - ${properties_folder}/application_map.yml
+#if(${enable_binding_properties} == "true" and ${list_binding_properties} == "true")
       - ${properties_folder}/application_list.yml
+#end
+#if(${enable_binding_properties} == "true" and ${map_binding_properties} == "true")
+      - ${properties_folder}/application_map.yml
+#end

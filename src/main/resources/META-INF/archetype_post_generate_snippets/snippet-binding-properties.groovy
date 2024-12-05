@@ -58,7 +58,10 @@ if (keep_binding_properties == 'true' && keep_default_binding_properties == 'fal
                     "ApplicationPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
-    log_text += "\nDEFAULT_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+
+    log_text += "\nDEFAULT_BINDING_PROPERTY - " +
+            filesToDelete.toString() + "\\n " +
+            "$binding_properties_path\n"
 
 }
 
@@ -84,6 +87,7 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
                     "ListPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
+
     log_text += "\nLIST_BINDING_PROPERTY - " +
             filesToDelete.toString() + "\\n " +
             "$binding_properties_path\n"
@@ -103,6 +107,7 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
                     "application_list.yml"
             ]
     deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+
     log_text += "\nLIST_BINDING_PROPERTY_RESOURCES - " +
             filesToDeleteResources.toString() + "\\n " +
             "$binding_properties_resources_path\n"
@@ -130,7 +135,10 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
                     "MapPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
-    log_text += "\nMAP_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+
+    log_text += "\nMAP_BINDING_PROPERTY - " +
+            filesToDelete.toString() + "\\n " +
+            "$binding_properties_path\n"
 
 
 
@@ -148,6 +156,7 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
                     "application_map.yml"
             ]
     deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+
     log_text += "\nMAP_BINDING_PROPERTY_RESOURCES - " +
             filesToDeleteResources.toString() + "\\n " +
             "$binding_properties_resources_path\n"
@@ -155,8 +164,9 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
 
 
 
-// MUTABLES --------------------------------------------------------------------
-if (keep_binding_properties == 'true' && keep_mutable_binding_properties == 'false') {
+// MUTABLEs --------------------------------------------------------------------
+// mutable_binding_properties_choice:   1 - Immutable;   2 - Mutable;   3 - Both
+if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
     Path binding_properties_path =
             Paths.get(request.outputDirectory,
@@ -173,6 +183,33 @@ if (keep_binding_properties == 'true' && keep_mutable_binding_properties == 'fal
                     "MapProperties.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
+
+    log_text += "\nIMMUTABLE_BINDING_PROPERTY - " +
+            filesToDelete.toString() + "\\n " +
+            "$binding_properties_path\n"
+
+}
+
+if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2') {
+
+    Path binding_properties_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'java',
+                    project_package,
+                    entity_folder,
+                    config_folder,
+                    'properties')
+    List<String> filesToDelete =
+            [
+                    "ApplicationPropertiesRecord.java",
+                    "ListPropertiesImmutable.java",
+                    "ListPropertiesRecord.java",
+                    "MapPropertiesImmutable.java",
+                    "MapPropertiesRecord.java"
+            ]
+    deleteFilesFromList(binding_properties_path, filesToDelete)
+
     log_text += "\nMUTABLE_BINDING_PROPERTY - " +
             filesToDelete.toString() + "\\n " +
             "$binding_properties_path\n"

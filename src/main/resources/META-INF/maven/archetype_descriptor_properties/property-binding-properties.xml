@@ -26,5 +26,9 @@
             <defaultValue></defaultValue>
         </requiredProperty>
 
+        <requiredProperty key="validated_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
 
 <!-- ______________ -->

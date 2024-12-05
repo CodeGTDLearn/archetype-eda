@@ -32,13 +32,16 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 #if(${enable_lombok} == "true")
+<!-- LOMBOK ________________________________________________________________ -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+<!-- _______________________________________________________________________ -->
 #end
 #if(${enable_logback} == "true" and ${enable_api_cpanel_elk_log_system} == "true")
+<!-- LOGBACK _______________________________________________________________ -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
@@ -56,8 +59,10 @@
             <artifactId>janino</artifactId>
             <version>3.1.12</version>
         </dependency>
+<!-- _______________________________________________________________________ -->
 #end
 #if(${enable_jwt_authentication} == "true")
+<!-- JWT AUTH ______________________________________________________________ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -73,8 +78,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
+<!-- _______________________________________________________________________ -->
 #end
 #if(${enable_folder_src_test_java} == "true")
+<!-- SRC_TEST ______________________________________________________________ -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -86,12 +93,15 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+<!-- _______________________________________________________________________ -->
 #end
 #if(${enable_binding_properties} == "true" and ${validated_binding_properties} == "true")
+<!-- BINDING PROPERTIES ____________________________________________________ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+<!-- _______________________________________________________________________ -->
 #end
     </dependencies>
 
