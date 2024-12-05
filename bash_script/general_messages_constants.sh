@@ -3,6 +3,8 @@
 #CONFIRMATION_PROMPT="Deseja continuar? (s/n): "
 #OPERATION_CANCELLED_MESSAGE="Operação cancelada pelo usuário."
 INVALID_INPUT_MESSAGE="Incorrect input. Follow the example above."
+INVALID_JSON_FILE_FORMAT_MESSAGE="ERRO: JSON inválido. Detalhes do erro:"
+VALID_JSON_FILE_FORMAT_MESSAGE="✓ JSON válido!"
 INVALID_INPUT_OPTIONS_INTERVAL_MESSAGE="The option chosen is not allowed. Try again."
 ARCHETYPE_BODY_ITEMS_NOT_FOUND_MESSAGE="Erro - Montagem ARCHETYPE-METADATA: O Header ou Footer ausente em: "
 FINISH_PROMPT_MESSAGE="Pressione Enter para fechar a tela..."

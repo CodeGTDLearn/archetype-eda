@@ -24,6 +24,7 @@ enable_custom_attributes=""
 json_file_path=""
 enable_denormalization="false"
 absolute_path_jsonfile=""
+RESULTADO="false"
 
 
 # 2.2) ENTITY CREATION OPTIONS
@@ -41,25 +42,34 @@ if [[ "$entity_creation_option" -eq 1 ]]; then
  }
   get_custom_attributes_list_input
 
-# 3) ADD PROMPT IN PROGRESS_BAR
+# 2.3.1) ADD PROMPT IN PROGRESS_BAR
   add_apostrophe_item_in_progress_bar "${ENTITY_NAME_PROMPT}" "true"
 fi
 
 # 2.4) JSON CONVERTER ENTITY
 if [[ "$entity_creation_option" -eq 2 ]]; then
 
-  while [ -z "$entity_name" ] || [ "$entity_name" = "null" ]; do
-    json_file_path=$(get_user_input_or_default_value "path_linux_json" "/json/entity.json" "$JSON_PATH_PROMPT")
+  while [ "$RESULTADO" = "false" ]; do
+    json_file_path=$(get_user_input_or_default_value "path_linux_json" "/json/model.json" "$JSON_PATH_PROMPT")
     absolute_path_jsonfile=$(pwd)$json_file_path
-    entity_name=$(get_filename "$absolute_path_jsonfile")
+    RESULTADO=$(check_file_existence "$absolute_path_jsonfile" "Invalid Path or File not found. Try again\n")
   done
 
+  validar_json "$absolute_path_jsonfile"
+  entity_name=$(get_filename_checking_path "$absolute_path_jsonfile")
   echo -e "  ${OPTION_MARK}Entity Name extracted: ${entity_name}"
 
-  custom_attributes_list=$(get_json_atributes "$absolute_path_jsonfile" "true")
+#  if [[ $(validar_json "$absolute_path_jsonfile") -eq 0 ]]; then
+#    echo -e "JSON-File is invalid.\n"
+#    exit 1
+#  fi
+
+#  custom_attributes_list=$(get_json_properties_and_types "$absolute_path_jsonfile" "false")
+#  echo -e "  ${OPTION_MARK}Entity Attributes extracted: ${custom_attributes_list}\n"
+
   enable_denormalization=$(get_user_input_or_default_value "boleana" "false" "$ENABLE_DENORMALIZATION_PROMPT")
 
-  # ADD PROMPT IN PROGRESS_BAR
+  # 2.4.1)ADD PROMPT IN PROGRESS_BAR
   add_apostrophe_item_in_progress_bar "${DENORMALIZE_EXPLANATION_PROMPT}" "true"
 fi
 

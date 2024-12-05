@@ -1,184 +1,203 @@
 #!/bin/bash
 
-validar_json() {
-
-  local full_absolute_path_json_file="$1"
-
-  # 1) Checar chaves de abertura e fechamento
-  local primeiro_caractere=$(head -c 1 "$full_absolute_path_json_file")
-  local ultimo_caractere=$(tail -c 1 "$full_absolute_path_json_file")
-  if [[ "$primeiro_caractere" != "{" || "$ultimo_caractere" != "}" ]]; then
-    echo "false"
-    return
-  fi
-
-  # 2) Varredura de propriedades e verificação individual
-  local conteudo=$(cat "$full_absolute_path_json_file")
-
-  # Remover chaves de abertura e fechamento para facilitar a análise
-  conteudo="${conteudo#"{"}"
-  conteudo="${conteudo%"}"}"
-
-  # Remover espaços e quebras de linha extras
-  conteudo=$(echo "$conteudo" | tr -d ' \t\n\r')
-
-  # Separar propriedades
-  local propriedades=($(echo "$conteudo" | tr ',' '\n'))
-
-  for propriedade in "${propriedades[@]}"; do
-    # 3) Verificar formato da propriedade (chave: valor)
-    if [[ ! "$propriedade" =~ ^\"[^\"]+\"\:.*$ ]]; then
-      echo "false"
-      return
-    fi
-
-    local chave=$(echo "$propriedade" | cut -d':' -f1)
-    local valor=$(echo "$propriedade" | cut -d':' -f2-)
-
-    # 3.1) Verificar se a chave está formatada corretamente
-    if [[ ! "$chave" =~ ^\"[^\"]+\"$ ]]; then
-      echo "false"
-      return
-    fi
-
-    # 4) Verificar tipo do valor
-    if [[ "$valor" =~ ^\"[^\"]*\"$ ]]; then
-      # String
-      continue
-
-    elif [[ "$valor" =~ ^-?[0-9]+(\.[0-9]+)?$ ]]; then
-      # Número
-      continue
-
-    elif [[ "$valor" == "true" || "$valor" == "false" ]]; then
-      # Booleano
-      continue
-
-    elif [[ "$valor" == "null" ]]; then
-      # Null
-      continue
-
-    elif [[ "$valor" =~ ^\[.*\]$ ]]; then
-      # Array
-      continue
-
-    elif [[ "$valor" =~ ^\{.*\}$ ]]; then
-      # Objeto
-      continue
-
-    else
-      echo "false"
-      return
-    fi
-  done
-
-  echo "true"
-}
-
 obter_tipagem_do_java() {
-
   local valor="$1"
-  local chave="$2" # Adicionamos a chave como parâmetro
+  local chave="$2"
 
+  # Remover espaços
+  valor=$(echo "$valor" | tr -d ' ')
+
+  # Verificar o tipo do valor
   if [[ "$valor" == "true" || "$valor" == "false" ]]; then
     echo "Boolean"
-
   elif [[ "$valor" =~ ^-?[0-9]+$ ]]; then
     echo "Integer"
-
-  elif [[ "$valor" =~ ^-?[0-9]+(\.[0-9]+)?$ ]]; then
+  elif [[ "$valor" =~ ^-?[0-9]+\.[0-9]+$ ]]; then
     echo "Double"
-
   elif [[ "$valor" == "null" ]]; then
     echo "String"
-
-  elif [[ "$valor" =~ ^\"(.*)\"$ ]]; then
+  elif [[ "$valor" =~ ^\".*\"$ ]]; then
     echo "String"
-
   elif [[ "$valor" =~ ^\[.*\]$ ]]; then
-    # Array: nome da propriedade no singular e capitalizado
-    local chave_singular="${chave%s}" # Remove o 's' final
-    local primeira_letra="${chave_singular:0:1}"
-    local resto="${chave_singular:1}"
-    echo "${primeira_letra^^}${resto}s"
-
+    echo "List"
   elif [[ "$valor" =~ ^\{.*\}$ ]]; then
-    # Objeto: nome da propriedade capitalizado
+    # Capitalizar a primeira letra do nome da propriedade para objetos
     local primeira_letra="${chave:0:1}"
     local resto="${chave:1}"
-    echo "${primeira_letra^^}${resto}"
-
+    echo "${primeira_letra^}${resto}"
   else
     echo "String"
   fi
 }
 
-obter_propriedades_e_tipos() {
-  
-  local full_absolute_path_json_file="$1"
+get_json_properties_and_types() {
+  local arquivo="$1"
   local show_log="$2"
 
-#  -----------------------------------------------------------------------------
-#                            JSON VALIDACAO
-#  -----------------------------------------------------------------------------
-  if ! validar_json "$full_absolute_path_json_file"; then
+  # Validar o JSON
+  if ! validar_json "$arquivo"; then
     if [ "$show_log" = "true" ]; then
-      echo "Erro: Formato JSON inválido - Funcao: obter_propriedades_e_tipos."
+      echo "Erro: Formato JSON inválido" >&2
     fi
     return 1
   fi
 
-  echo -e "  ${OPTION_MARK}Json-File validated.\n" >&2
-#  -----------------------------------------------------------------------------
-#  -----------------------------------------------------------------------------
+  if [ "$show_log" = "true" ]; then
+    echo -e "  ${OPTION_MARK}Json-File validated.\n" >&2
+  fi
 
-  local conteudo=$(cat "$full_absolute_path_json_file")
+  # Ler o JSON
+  local json=$(cat "$arquivo")
 
-  # Remover chaves de abertura e fechamento para facilitar a análise
-  conteudo="${conteudo#"{"}"
-  conteudo="${conteudo%"}"}"
+  # Remover espaços em branco, quebras de linha e comentários
+  json=$(echo "$json" | tr -d '\n\r\t')
 
-  # Remover espaços e quebras de linha extras
-  conteudo=$(echo "$conteudo" | tr -d ' \t\n\r')
+  # Remover as chaves externas
+  json="${json#"{"}"
+  json="${json%"}"}"
 
-  # Separar propriedades
-  local propriedades=($(echo "$conteudo" | tr ',' '\n'))
+  # Resultado
   local resultado=""
 
-  for propriedade in "${propriedades[@]}"; do
-    local chave=$(echo "$propriedade" | cut -d':' -f1 | tr -d '"') # Remove as aspas da chave
-    local valor=$(echo "$propriedade" | cut -d':' -f2-)
-    local tipo=$(obter_tipagem_do_java "$valor" "$chave") # Passamos a chave para obter_tipagem_do_java
-    resultado+="$tipo:$chave, "
+  # Variáveis para o processamento
+  local estado="chave"  # estados: chave, valor
+  local chave=""
+  local valor=""
+  local dentro_string=0
+  local nivel_chaves=0
+  local nivel_colchetes=0
+  local buffer=""
+
+  for (( i=0; i<${#json}; i++ )); do
+    local c="${json:$i:1}"
+
+    # Gerenciar strings
+    if [[ "$c" == '"' ]]; then
+      # Verificar se é uma aspas escapada
+      if [[ $i -gt 0 && "${json:$i-1:1}" == '\' ]]; then
+        buffer+="$c"
+        continue
+      fi
+
+      if [[ $dentro_string -eq 0 ]]; then
+        dentro_string=1
+      else
+        dentro_string=0
+
+        # Se estamos procurando uma chave, a string completa é a chave
+        if [[ "$estado" == "chave" ]]; then
+          chave="$buffer"
+          buffer=""
+
+          # Procurar o próximo ':'
+          while (( i < ${#json} )); do
+            i=$((i+1))
+            c="${json:$i:1}"
+            if [[ "$c" == ":" ]]; then
+              estado="valor"
+              break
+            fi
+          done
+
+          continue
+        fi
+      fi
+
+      buffer+="$c"
+      continue
+    fi
+
+    # Se estamos dentro de uma string, adicione o caractere ao buffer
+    if [[ $dentro_string -eq 1 ]]; then
+      buffer+="$c"
+      continue
+    fi
+
+    # Se estamos procurando um valor
+    if [[ "$estado" == "valor" ]]; then
+      # Início de um objeto
+      if [[ "$c" == "{" ]]; then
+        nivel_chaves=1
+        buffer="{"
+
+        # Capturar o objeto inteiro
+        while (( i < ${#json} && nivel_chaves > 0 )); do
+          i=$((i+1))
+          c="${json:$i:1}"
+
+          if [[ "$c" == "{" ]]; then
+            ((nivel_chaves++))
+          elif [[ "$c" == "}" ]]; then
+            ((nivel_chaves--))
+          fi
+
+          buffer+="$c"
+        done
+
+        valor="$buffer"
+        buffer=""
+
+      # Início de um array
+      elif [[ "$c" == "[" ]]; then
+        nivel_colchetes=1
+        buffer="["
+
+        # Capturar o array inteiro
+        while (( i < ${#json} && nivel_colchetes > 0 )); do
+          i=$((i+1))
+          c="${json:$i:1}"
+
+          if [[ "$c" == "[" ]]; then
+            ((nivel_colchetes++))
+          elif [[ "$c" == "]" ]]; then
+            ((nivel_colchetes--))
+          fi
+
+          buffer+="$c"
+        done
+
+        valor="$buffer"
+        buffer=""
+
+      # Outros valores (número, boolean, null)
+      else
+        buffer="$c"
+
+        # Capturar até o próximo separador (vírgula ou fim do JSON)
+        while (( i < ${#json} - 1 )); do
+          i=$((i+1))
+          c="${json:$i:1}"
+
+          if [[ "$c" == "," ]]; then
+            break
+          fi
+
+          buffer+="$c"
+        done
+
+        valor=$(echo "$buffer" | tr -d ' ')
+        buffer=""
+      fi
+
+      # Processar o par chave-valor encontrado
+      chave=$(echo "$chave" | tr -d '"')
+      local tipo=$(obter_tipagem_do_java "$valor" "$chave")
+      resultado+="$tipo:$chave, "
+
+      # Resetar para procurar uma nova chave
+      chave=""
+      valor=""
+      estado="chave"
+      continue
+    fi
+
+    # Se não estamos dentro de uma string e não estamos processando um valor
+    # simplesmente adicione o caractere ao buffer
+    buffer+="$c"
   done
 
-  echo "${resultado%, }"
-}
-
-get_json_atributes() {
-
-  local full_absolute_path_json_file="$1"
-  local show_log="$2"
-
-  local divider="\n--------------------------------------------------------->\n"
-
-echo -e "entrei na funcao get_json_atributes"
-
-#  -----------------------------------------------------------------------------
-#                CAPTURANDO PROPRIEDADES E TIPOS DO ARQUIVO JSON
-#  -----------------------------------------------------------------------------
-  local resultado=$(obter_propriedades_e_tipos "$full_absolute_path_json_file" "$show_log")
-#  -----------------------------------------------------------------------------
-#  -----------------------------------------------------------------------------
-    echo -e "$resultado"
-
-  if [ "$show_log" = "true" ]; then
-    echo -e "$divider"
-    echo -e "\n-----> Processing GET_JSON_ATRIBUTES <------ START\n"
-    echo -e "$resultado"
-    echo -e "\n-----> Processing GET_JSON_ATRIBUTES <------ END\n"
-    echo -e "$divider"
-  fi
+  # Remover a vírgula e espaço finais
+  resultado="${resultado%, }"
 
   echo "$resultado"
 }

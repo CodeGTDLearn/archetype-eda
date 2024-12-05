@@ -61,6 +61,7 @@ inject_script "${SCRIPT_FOLDER_WIN}" "general_functions_for_inputs.sh" $SHOW_INJ
 inject_script "${SCRIPT_FOLDER_WIN}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "config_constants.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "json_validator.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "json_processor_main_entity.sh" $SHOW_INJECTION_LOG
 
 

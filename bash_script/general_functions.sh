@@ -178,7 +178,7 @@ check_file_existence() {
     echo "$retorno"
 }
 
-get_filename() {
+get_filename_checking_path() {
     local full_absolute_path="$1"
 
     local nome_arquivo="null"

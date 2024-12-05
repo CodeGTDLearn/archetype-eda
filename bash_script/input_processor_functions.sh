@@ -51,7 +51,8 @@ match_input_pattern_with_regex() {
     path_windows_json) input_patterns="^[a-zA-Z]:[\/\\].*\.json$";;
 
     # path_linux_json: Path do Linux terminado com arquivo JSON (ex: /home/arquivo.json)
-    path_linux_json) input_patterns="^\/.*\.json$";;
+#    path_linux_json) input_patterns="^\/.*\.json$";;
+     path_linux_json) input_patterns="^\/([^\/]+\/)*[^\/]+\.json$";;
 
     #boleana: Palavras "true"|"false" em diversos formatos (ex: true|False|TRUE)
     boleana) input_patterns="^(true|false|t|f|T|F|TRUE|FALSE|True|False|tRUE|fALSE|tRuE|fALsE)$";;
