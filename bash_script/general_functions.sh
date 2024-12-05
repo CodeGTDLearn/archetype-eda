@@ -199,32 +199,17 @@ colorize_delimited_text() {
     printf "%s" "$result"
 }
 
-#colorize_text() {
-#    # Parameters:
-#    # $1 - Input string
-#    # $2 - Color name (e.g., red, green, yellow, cyan)
-#
-#    local input_string="$1"
-#    local color_name="${2:-cyan}"  # Default color is cyan if not specified
-#
-#    # Define colors with \001 and \002 to work with readline
-#    RED=$'\001\033[0;31m\002'
-#    GREEN=$'\001\033[0;32m\002'
-#    YELLOW=$'\001\033[0;33m\002'
-#    MAGENTA=$'\001\033[0;35m\002'
-#    CYAN=$'\001\033[0;36m\002'
-#    RESET=$'\001\033[0m\002'
-#
-#    # Convert color name to color code
-#    case "${color_name,,}" in
-#        "red") COLOR=$RED ;;
-#        "green") COLOR=$GREEN ;;
-#        "yellow") COLOR=$YELLOW ;;
-#        "magenta") COLOR=$MAGENTA ;;
-#        "cyan") COLOR=$CYAN ;;
-#        *) COLOR=$CYAN ;;
-#    esac
-#
-#    # Apply the color to the input string
-#    echo -n "${COLOR}${input_string}${RESET}"
-#}
+add_item_in_progress_bar() {
+  local input_text_prompt="$1"
+  local proceed_with_function="$2"
+
+  if [ "$proceed_with_function" = "false" ]; then
+    return 1
+  fi
+
+  # Loop to extract all occurrences of text between apostrophes
+  while [[ $input_text_prompt =~ \'([^\']+)\' ]]; do
+    PROGRESS_BAR_ITEMS+=("${BASH_REMATCH[1]}")
+    input_text_prompt="${input_text_prompt#*${BASH_REMATCH[0]}}"
+  done
+}

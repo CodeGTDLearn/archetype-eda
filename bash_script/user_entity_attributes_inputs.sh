@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PROMPT
-ENTITY_NAME_PROMPT="${ITEM_MARK}Digite o nome de 'Entity/Model'"
+ENTITY_NAME_PROMPT="${ITEM_MARK}Digite o nome de 'Entity'"
 ENABLE_CUSTOM_ATTRIBUTES_PROMPT="${TOPIC_MARK}Add 'Custom Attributes'"
 CUSTOM_ATTRIBUTES_LIST_PROMPT="${OPTION_MARK}Provide the 'Attributes'"
 
@@ -10,3 +10,6 @@ entity_name=$(user_input_or_default_value "entity_name" "EntityName" "$ENTITY_NA
 enable_custom_attributes=$(user_input_or_default_value "boleana" "false" "$ENABLE_CUSTOM_ATTRIBUTES_PROMPT")
 
 custom_attributes_list_input
+
+# ADD PROMPT IN PROGRESS_BAR
+add_item_in_progress_bar "${ENTITY_NAME_PROMPT}" "true"

@@ -187,9 +187,8 @@ user_numeric_selection_or_default_value() {
   local numeric_option_prompt=$1
   local numeric_option_interval_from_min_to_max=$2
   local proceed_with_function=${3:-true}
-  local DEFAULT_KEYWORD=$4
 
-  local default_numeric_option=1
+  local default_option=1
   local matching_pattern="numero"
   local chosen_option
   local is_numeric_option_allowed
@@ -201,7 +200,7 @@ user_numeric_selection_or_default_value() {
   intervalMax=$(echo "$numeric_option_interval_from_min_to_max" | cut -d'-' -f2)
 
   if [ "$proceed_with_function" = "false" ]; then
-    echo "$default_numeric_option"
+    echo "$default_option"
     exit 1
   fi
 
@@ -216,15 +215,14 @@ user_numeric_selection_or_default_value() {
 
   while true; do
 
-    #read -r -p "$(echo -e "$numeric_option_prompt [$default_numeric_option]: ")" chosen_option
-    local prompt="${numeric_option_prompt}${DEFAULT_KEYWORD}[$default_numeric_option]: "
+    local prompt="${numeric_option_prompt}"
     local highlighted_prompt=$(colorize_delimited_text "$prompt" false "magenta")
     read -r -p "$highlighted_prompt" chosen_option
 
     # Checa se o valor é vazio ('enter' foi pressionado),
     # Se sim, finaliza o loop e atribui o valor default
     if [ -z "$chosen_option" ]; then
-      chosen_option=$default_numeric_option
+      chosen_option=$default_option
     fi
 
     if (( chosen_option >= intervalMin && chosen_option <= intervalMax )); then

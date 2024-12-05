@@ -5,3 +5,6 @@ ENABLE_FOLDER_DOCKER_PROMPT="${ITEM_MARK}Enable 'Docker support'"
 
 # VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
 enable_docker=$(user_input_or_default_value "boleana" "true" "$ENABLE_FOLDER_DOCKER_PROMPT")
+
+# ADD PROMPT IN PROGRESS_BAR
+add_item_in_progress_bar "${ENABLE_FOLDER_DOCKER_PROMPT}" "${enable_docker}"

@@ -8,7 +8,7 @@ RECREATE_ARCHETYPE=false
 SHOW_RECREATE_ARCHETYPE_LOG=false
 
 # A.2) LOG|DEBUG MANAGEMENT "PROCESSOR"
-SHOW_MAVEN_BASIC_LOG=true
+SHOW_MAVEN_BASIC_LOG=false
 SHOW_MAVEN_DEBUG_LOG=false
 SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
 SHOW_INJECTION_LOG=false
@@ -16,11 +16,13 @@ SHOW_INJECTION_LOG=false
 # A.3) IDE EXECUTION AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
 IDE_EXEC_FILE='idea64.exe'
-USE_IDE_ACTIVATION_MANAGER=true
+USE_IDE_ACTIVATION_MANAGER=false
 OPEN_IDE_DIRECTLY=false
 
 # A.4) ENABLING PROGRESS_BAR
-ACTIVE_PROGRESS_BAR=false
+# Progress_bar is executed inside the function 'execute_maven_command_line'
+# this function is found inside the script file: maven_functions.sh
+ACTIVE_PROGRESS_BAR=true
 
 # A.5) ARCHETYPE FILES GENERATION:
 # A.5.1) PATH DEFINITIONS
@@ -93,6 +95,8 @@ script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTION_LOG
 # C.9) FUNCAO P/ "MANIPULACAO DE PASTAS OU ARQUIVOS" (se necessario)
 #-------------------------------------------------------------------------------
 
+# Progression_Bar is executed inside the function 'execute_maven_command_line'
+# which is found inside the script: maven_functions.sh
 execute_maven_command_line $SHOW_MAVEN_BASIC_LOG $SHOW_MAVEN_DEBUG_LOG "$maven_command_line"
 
 open_ide_manager $USE_IDE_ACTIVATION_MANAGER $OPEN_IDE_DIRECTLY "$IDE_EXEC_FILE_FOLDER" "$IDE_EXEC_FILE" $SHOW_INJECTION_LOG

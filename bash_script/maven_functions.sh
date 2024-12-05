@@ -96,7 +96,7 @@ execute_maven_command_line() {
     # a) Symbol types options: ▮ █ ■ ▪ * + -
     # b) ProgressBar types:   percentual_mult_layer,    percentual,    random
     maven_output=$(eval "$maven_command_line_param") &
-    progression_bar $! '■' '55' "percentual_mult_layer" $show_progress_bar
+    progression_bar $! "▪" '20' $show_progress_bar
     wait $!
 
     check_maven_build_result "$maven_output"
