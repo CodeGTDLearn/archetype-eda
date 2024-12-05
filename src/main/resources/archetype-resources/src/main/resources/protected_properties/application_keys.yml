@@ -1,4 +1,4 @@
 my:
   key:
-    public_key: "classpath:app.key"
-    private_key: "classpath:app.pub"
+    public_key: "classpath:security\app.key"
+    private_key: "classpath:security\app.pub"
