@@ -1,21 +1,22 @@
 #!/bin/bash
 
 # PROMPT
-ENABLE_BINDING_PROPERTIES_PROMPT="Enable 'Type Safe Property Binding'"
-DEFAULT_BINDING_PROPERTIES_PROMPT=" •Default Binding"
-LIST_BINDING_PROPERTIES_PROMPT=" •List Binding"
-MAP_BINDING_PROPERTIES_PROMPT=" •Map Binding"
-MUTABLE_BINDING_PROPERTIES_PROMPT=" •Properties 'Mutability':\n  ▪1)Immutable\n  ▪2)Mutable\n  ▪3)Both\n  ▪Default"
-MUTABLE_OPTIONS_INTERVAL="1-3"
-VALIDATED_BINDING_PROPERTIES_PROMPT=" •Enable 'Properties Validation'"
-BINDING_PROPERTIES_TEST_PROMPT=" •Properties 'Test Support'"
+ENABLE_BINDING_PROPERTIES_PROMPT="${ITEM_MARK}Enable 'Type Safe Property Binding'"
+DEFAULT_BIND_PROPS_PROMPT="${TOPIC_MARK}Default Binding"
+LIST_BIND_PROPS_PROMPT="${TOPIC_MARK}List Binding"
+MAP_BIND_PROPS_PROMPT="${TOPIC_MARK}Map Binding"
+MUTABLE_OPT_1="${OPTION_MARK}1)Immutable\n${OPTION_MARK}2)Mutable\n${OPTION_MARK}3)Both\n"
+MUTABLE_BIND_PROPS_PROMPT="${TOPIC_MARK}Mutability:\n${MUTABLE_OPT_1}"
+MUTABLE_NUM_OPT_INTERVAL="1-3"
+VALIDATED_BIND_PROPS_PROMPT="${TOPIC_MARK}Enable 'Properties Validation'"
+BINDING_PROPERTIES_TEST_PROMPT="${TOPIC_MARK}Properties 'Test Support'"
 
 
 # VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
 enable_binding_properties=$(user_input_or_default_value "boleana" "true" "$ENABLE_BINDING_PROPERTIES_PROMPT")
-default_binding_properties=$(user_input_or_default_value "boleana" "true" "$DEFAULT_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
-list_binding_properties=$(user_input_or_default_value "boleana" "false" "$LIST_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
-map_binding_properties=$(user_input_or_default_value "boleana" "false" "$MAP_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
+default_binding_properties=$(user_input_or_default_value "boleana" "true" "$DEFAULT_BIND_PROPS_PROMPT" "$enable_binding_properties")
+list_binding_properties=$(user_input_or_default_value "boleana" "false" "$LIST_BIND_PROPS_PROMPT" "$enable_binding_properties")
+map_binding_properties=$(user_input_or_default_value "boleana" "false" "$MAP_BIND_PROPS_PROMPT" "$enable_binding_properties")
 
 if [[ "$default_binding_properties" = "true" ||
       "$list_binding_properties" = "true" ||
@@ -28,12 +29,12 @@ fi
 
 mutable_binding_properties=false
 if [[ "$binding_properties_styles_enabled" -eq 1 ]]; then
-mutable_binding_properties=$(user_numeric_selection_or_default_value "$MUTABLE_BINDING_PROPERTIES_PROMPT" "$MUTABLE_OPTIONS_INTERVAL" "$enable_binding_properties")
+mutable_binding_properties=$(user_numeric_selection_or_default_value "$MUTABLE_BIND_PROPS_PROMPT" "$MUTABLE_NUM_OPT_INTERVAL" "$enable_binding_properties" "${OPTION_MARK}Default")
 fi
 
 validated_binding_properties="false"
 if [[ "$default_binding_properties" = "true" ]]; then
-validated_binding_properties=$(user_input_or_default_value "boleana" "false" "$VALIDATED_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
+validated_binding_properties=$(user_input_or_default_value "boleana" "false" "$VALIDATED_BIND_PROPS_PROMPT" "$enable_binding_properties")
 fi
 
 enable_binding_properties_tests="false"

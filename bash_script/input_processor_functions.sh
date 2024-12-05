@@ -148,16 +148,21 @@ user_input_or_default_value() {
 
   while true; do
 
-    read -r -p "$input_prompt [$defaultValue_onEnterKey_press]: " input_value
+    local prompt="$input_prompt [$defaultValue_onEnterKey_press]: "
+    local highlighted_prompt=$(colorize_delimited_text "$prompt" false "green")
+    read -r -p "$highlighted_prompt" input_value
 
-    # Checa se o valor é vazio ('enter' foi pressionado),
+    # Checa se o valor é vazio (vazio significa que o 'enter' foi pressionado),
     # Se sim, finaliza o loop e atribui o valor default
+    # valor default(presumidamente no pattern correto + Nao sendo palavra reservada)
     if [ -z "$input_value" ]; then
       input_value=$defaultValue_onEnterKey_press
       break
     fi
 
-    # Checar se o 'pattern-regex' da 'match' E checar é uma palavra reservada do Java
+    # Checar se:
+    # - o 'pattern-regex' da 'match' E
+    # - se o 'input_value' é uma palavra reservada do Java
     if [ "$(match_input_pattern_with_regex "$matching_pattern" "$input_value")" = "true" ] &&
        [ "$(is_java_reserved_word "$matching_pattern" "$input_value")" = "false" ]; then
       break
@@ -165,12 +170,11 @@ user_input_or_default_value() {
       echo -e "$pattern_not_matched_message\n" >&2
       sync
     fi
-
   done
 
-  # Checa input_value p/ 'true/TRUE/True/T/t' ou
-  # 'false/FALSE/False/F/f' e
-  # converte p/ lowerCase
+  # Checa input_value p/:
+  # - 'true/TRUE/True/T/t' ou 'false/FALSE/False/F/f' e
+  # - converte p/ lowerCase
   case ${input_value,,} in
     true|t) echo "true";;
     false|f) echo "false";;
@@ -180,20 +184,21 @@ user_input_or_default_value() {
 
 user_numeric_selection_or_default_value() {
 
-  local numeric_options_prompt=$1
-  local numeric_options_interval=$2
+  local numeric_option_prompt=$1
+  local numeric_option_interval_from_min_to_max=$2
   local proceed_with_function=${3:-true}
+  local DEFAULT_KEYWORD=$4
 
   local default_numeric_option=1
   local matching_pattern="numero"
-  local chosen_numeric_option_value
+  local chosen_option
   local is_numeric_option_allowed
   local intervalMin
   local intervalMax
   local FUNCTION_INTERNAL_DEBUG="false"
 
-  intervalMin=$(echo "$numeric_options_interval" | cut -d'-' -f1)
-  intervalMax=$(echo "$numeric_options_interval" | cut -d'-' -f2)
+  intervalMin=$(echo "$numeric_option_interval_from_min_to_max" | cut -d'-' -f1)
+  intervalMax=$(echo "$numeric_option_interval_from_min_to_max" | cut -d'-' -f2)
 
   if [ "$proceed_with_function" = "false" ]; then
     echo "$default_numeric_option"
@@ -211,15 +216,18 @@ user_numeric_selection_or_default_value() {
 
   while true; do
 
-    read -r -p "$(echo -e "$numeric_options_prompt [$default_numeric_option]: ")" chosen_numeric_option_value
+    #read -r -p "$(echo -e "$numeric_option_prompt [$default_numeric_option]: ")" chosen_option
+    local prompt="${numeric_option_prompt}${DEFAULT_KEYWORD}[$default_numeric_option]: "
+    local highlighted_prompt=$(colorize_delimited_text "$prompt" false "magenta")
+    read -r -p "$highlighted_prompt" chosen_option
 
     # Checa se o valor é vazio ('enter' foi pressionado),
     # Se sim, finaliza o loop e atribui o valor default
-    if [ -z "$chosen_numeric_option_value" ]; then
-      chosen_numeric_option_value=$default_numeric_option
+    if [ -z "$chosen_option" ]; then
+      chosen_option=$default_numeric_option
     fi
 
-    if (( chosen_numeric_option_value >= intervalMin && chosen_numeric_option_value <= intervalMax )); then
+    if (( chosen_option >= intervalMin && chosen_option <= intervalMax )); then
       is_numeric_option_allowed="true"
     else
       echo -e "\n$$INVALID_INPUT_OPTIONS_INTERVAL_MESSAGE"
@@ -227,9 +235,9 @@ user_numeric_selection_or_default_value() {
 
     # Checar se o 'pattern-regex' da 'match' E checar é uma palavra reservada do Java
     if [ "$is_numeric_option_allowed" = "true" ] &&
-       [ "$(match_input_pattern_with_regex "$matching_pattern" "$chosen_numeric_option_value")" = "true" ] &&
-       [ "$(is_java_reserved_word "$matching_pattern" "$chosen_numeric_option_value")" = "false" ]; then
-         echo "$chosen_numeric_option_value"
+       [ "$(match_input_pattern_with_regex "$matching_pattern" "$chosen_option")" = "true" ] &&
+       [ "$(is_java_reserved_word "$matching_pattern" "$chosen_option")" = "false" ]; then
+         echo "$chosen_option"
          break
     else
          echo -e "$INVALID_INPUT_MESSAGE\n" >&2
