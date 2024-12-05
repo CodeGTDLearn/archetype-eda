@@ -9,9 +9,10 @@ PROJECT_DESCRIPTION_PROMPT="Descricao do projeto"
 #VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
 
 # OBSERVACAO 1
-# groupid:
+# groupid: (https://maven.apache.org/pom.html#Maven_Coordinates)
 # * Company-Domain Invertido "WITHOUT" the 'PROJECT-NAME'/'ARTIFACT_ID'
 groupid=$(user_input_or_default_value "groupid" "com.domain" "$GROUPID_PROMPT")
+cd ..
 
 # OBSERVACAO 2
 entity_name=$(user_input_or_default_value "entity_name" "EntityName" "$ENTITY_NAME_PROMPT")

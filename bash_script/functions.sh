@@ -103,7 +103,7 @@ match_input_pattern_with_regex() {
     #entity_list_attributes: Long:id, MyId:id, My_I8d:my_i9d, My_Id:my_id, Invalid:ID, notValid:id
     entity_list_attributes) input_patterns="^[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*$";;
 
-    #artifact:
+    #artifact: (https://maven.apache.org/pom.html#Maven_Coordinates)
     # - Letra maisc minusc/número/caracteres(_) sem espaços(ex: tes_123n)
     # - Segundo a documentacao do Maven deve ser o PROJECT_NAME:
     #   * "generally the name that the project is known by."

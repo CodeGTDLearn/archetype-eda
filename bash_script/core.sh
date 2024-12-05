@@ -22,17 +22,17 @@ source "${SCRIPT_FOLDER}\\script_injection_tool.sh"
 source "${SCRIPT_FOLDER}\\project_viability_checker.sh"
 project_folder_viability_checking
 
-# B) INJECOES DE SCRIPTS OPERACIONAIS-------------------------------------------
-# B.1) FUNCOES ESPECIAIS DO SCRIPT
+# B) INJECOES DE FUNCOES/SCRIPTS OPERACIONAIS-------------------------------------------
+# B.1) FUNCOES ESPECIAIS
 script_injection "${SCRIPT_FOLDER}" "progress_bar.sh" $SHOW_INJECTOR_TOOL_LOG
 
-# B.2) FUNCOES GERAIS DO SCRIPT
+# B.2) FUNCOES GERAIS
 script_injection "${SCRIPT_FOLDER}" "functions.sh" $SHOW_INJECTOR_TOOL_LOG
 
-# B.3) CONFIGURACOES GENERICAS DO SCRIPT
+# B.3) FUNCAO DE CONFIGURCAO GERAL
 script_injection "${SCRIPT_FOLDER}" "config.sh" $SHOW_INJECTOR_TOOL_LOG
 
-# B.4) MENSAGENS DE USO GERAL
+# B.4) FUNCAO DE MENSAGENS GERAIS
 script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTOR_TOOL_LOG
 
 #-------------------------------------------------------------------------------
