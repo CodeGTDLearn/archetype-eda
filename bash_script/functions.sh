@@ -22,10 +22,10 @@ execute_maven_command_line() {
 
   local output=""
 
-  echo -e "$output_header"
-
 # debug_log: implicitamente "POSSUI" o "BASIC_LOG"
   if [ "$show_debug_log" = "true" ]; then
+
+    echo -e "$output_header"
 
     output+="$SHOW_MAVEN_DEBUG_LOG_MESSAGE"
     echo -e "\n$output\n"
@@ -124,7 +124,8 @@ match_input_pattern_with_regex() {
     # - Company-Domain 'invertido' "WITHOUT" the 'PROJECT-NAME'/'ARTIFACT_ID'
     groupid) input_patterns="^[a-z][a-z0-9]*(\.[a-z0-9]+)+$";;
 
-    #dependency: Letra/número/caracteres(,:._-) sem espaços(ex: org.slf4j:slf4j-api:1.7.1:runtime)
+    #dependency: Letra/número/caracteres(,:._-) sem espaços
+    # (ex: org.aa:aa-api:1.7:test, org.bb:bb-api:1.8:runtime)
     dependency) input_patterns="^[a-zA-Z][a-zA-Z0-9,:._-]+$";;
 
     #path: Path de arquivo/pasta (ex: /home/arquivo.txt ou c:\home\arquivo.txt)
@@ -235,13 +236,18 @@ user_input_or_default_value() {
   local input_pattern=$1
   local input_default_value=$2
   local input_prompt=$3
+  local active=${4:-true}
 
   local input_value
   local pattern_not_matched_message="$INVALID_INPUT_MESSAGE"
 
+  if [ "$active" = "false" ]; then
+    exit 1
+  fi
+
   while true; do
 
-    read -r -p "$input_prompt (ex: $input_default_value): " input_value
+    read -r -p "$input_prompt [$input_default_value]: " input_value
 
     # Checa se o valor é vazio ('enter' foi pressionado),
     # Se sim, finaliza o loop e atribui o valor default
@@ -271,17 +277,18 @@ user_input_or_default_value() {
   esac
 }
 
-user_numeric_options_or_default_value() {
+user_numeric_selection_or_default_value() {
 
-  local active=$1
-  local numeric_options_prompt=$2
-  local numeric_options_interval=$3
+  local numeric_options_prompt=$1
+  local numeric_options_interval=$2
+  local active=${3:-true}
 
   local default_numeric_option=1
   local input_pattern="numero"
   local chosen_numeric_option_value
   local is_numeric_option_allowed
-  local intervalMin intervalMax
+  local intervalMin
+  local intervalMax
   local FUNCTION_INTERNAL_DEBUG="false"
 
   intervalMin=$(echo "$numeric_options_interval" | cut -d'-' -f1)
@@ -292,7 +299,6 @@ user_numeric_options_or_default_value() {
     exit 1
   fi
 
-  #if [ "$FUNCTION_INTERNAL_DEBUG" = "true" ]; then
   if [[ "${FUNCTION_INTERNAL_DEBUG,,}" = "true" ]]; then
     echo -e "\n\n\n-----> FUNCTION INTERNAL DEBUG <-----" >&2
     echo -e "\nFunction: user_numeric_options_or_default_value" >&2
@@ -304,7 +310,7 @@ user_numeric_options_or_default_value() {
 
   while true; do
 
-    read -r -p "$(echo -e "$numeric_options_prompt (ex: $default_numeric_option): ")" chosen_numeric_option_value
+    read -r -p "$(echo -e "$numeric_options_prompt [$default_numeric_option]: ")" chosen_numeric_option_value
 
     # Checa se o valor é vazio ('enter' foi pressionado),
     # Se sim, finaliza o loop e atribui o valor default
@@ -463,12 +469,13 @@ custom_attributes_list_input() {
   fi
 }
 
-custom_dependencies_addition_input() {
+extra_pom_dependencies_addition_input() {
 
-  if [[ "${enable_dependencies_addition,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
-     extra_dependencies=$(user_input_or_default_value "dependency" "org.slf4j:slf4j-api:1.7.1:runtime" "$EXTRA_DEPENDENCIES_PROMPT")
+  local input_example="org.aa:aa-api:1.7:test, org.bb:bb-api:1.8:runtime"
+
+  if [[ "${enable_extra_pom_dependencies_addition,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
+     extra_POM_dependencies=$(user_input_or_default_value "dependency" "$input_example" "$EXTRA_POM_DEPENDENCIES_PROMPT")
   else
-     extra_dependencies="false"
-
+     extra_POM_dependencies="false"
   fi
 }

@@ -3,12 +3,12 @@
 <configuration>
 #if(${logback_console_type} == "2" ||
     ${logback_console_type} == "3" ||
-    ${enable_logback_appender_logstash} == "true")
+    ${enable_api_cpanel_elk_log_system} == "true")
     <import class="ch.qos.logback.core.ConsoleAppender"/>
     <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
     <import class="ch.qos.logback.core.filter.EvaluatorFilter"/>
 #end
-#if(${enable_logback_appender_logstash} == "true")
+#if(${enable_api_cpanel_elk_log_system} == "true")
     <import class="net.logstash.logback.appender.LogstashTcpSocketAppender"/>
     <import class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"/>
 #end
@@ -21,7 +21,6 @@
     <import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"/>
     <import class="ch.qos.logback.core.FileAppender"/>
     <import class="ch.qos.logback.classic.encoder.JsonEncoder"/>
-    <import class="net.logstash.logback.encoder.LogstashEncoder"/>
 #end
 </configuration>
 <!--    <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"/>-->

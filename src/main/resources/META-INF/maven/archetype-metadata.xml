@@ -8,10 +8,13 @@
 
     <requiredProperties>
         <requiredProperty key="entity_name"/>
-        <requiredProperty key="project_description"/>
-        <requiredProperty key="enable_folder_src_test_java">
+        <requiredProperty key="enable_custom_attributes">
             <defaultValue></defaultValue>
         </requiredProperty>
+        <requiredProperty key="custom_attributes_list"/>
+
+        <requiredProperty key="project_description"/>
+
         <requiredProperty key="enable_docker">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -21,16 +24,11 @@
         <requiredProperty key="enable_jwt_authentication">
             <defaultValue></defaultValue>
         </requiredProperty>
-        <requiredProperty key="enable_custom_attributes">
-            <defaultValue></defaultValue>
-        </requiredProperty>
+
         <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>
         </requiredProperty>
         <requiredProperty key="logback_console_type">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-        <requiredProperty key="enable_logback_appender_logstash">
             <defaultValue></defaultValue>
         </requiredProperty>
         <requiredProperty key="enable_logback_appender_smtp">
@@ -39,11 +37,23 @@
         <requiredProperty key="enable_logback_appender_file">
             <defaultValue></defaultValue>
         </requiredProperty>
-        <requiredProperty key="custom_attributes_list"/>
-        <requiredProperty key="show_archetype_posprocessor_log">
+
+        <requiredProperty key="enable_api_cpanel">
             <defaultValue></defaultValue>
         </requiredProperty>
+        <requiredProperty key="enable_api_cpanel_elk_log_system">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="show_archetype_pos_processor_log">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
         <requiredProperty key="extra_POM_dependencies">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>
         </requiredProperty>
     </requiredProperties>

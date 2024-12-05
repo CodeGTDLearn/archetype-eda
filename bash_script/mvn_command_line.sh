@@ -19,9 +19,11 @@ maven_command_line="mvn archetype:generate --batch-mode \
 \
 -Denable_logback=\"$enable_logback\" \
 -Dlogback_console_type=\"$logback_console_type\" \
--Denable_logback_appender_logstash=\"$enable_logback_appender_logstash\" \
 -Denable_logback_appender_smtp=\"$enable_logback_appender_smtp\" \
 -Denable_logback_appender_file=\"$enable_logback_appender_file\" \
+\
+-Denable_api_control_panel=\"$enable_api_control_panel\" \
+-Denable_elk_log_system=\"$enable_elk_log_system\" \
 \
 -Denable_docker=\"$enable_docker\" \
 \
@@ -30,6 +32,6 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -Denable_custom_attributes=\"$enable_custom_attributes\" \
 -Dcustom_attributes_list=\"$custom_attributes_list\" \
 \
--Dextra_POM_dependencies=\"$extra_dependencies\" \
+-Dextra_POM_dependencies=\"$extra_POM_dependencies\" \
 \
--Dshow_archetype_posprocessor_log=\"$SHOW_POS_PROCESSOR_LOG\""
+-Dshow_archetype_pos_processor_log=\"$SHOW_ARCHETYPE_POS_PROCESSOR_LOG\""

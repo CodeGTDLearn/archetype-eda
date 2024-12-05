@@ -23,6 +23,24 @@
         </rollingPolicy>
     </appender>
 
+    <!-- JSON-FILE LOG ROLLING ______________________________________________-->
+    <property name="JSON_FILE_ROL_ROOT" value="./logs"/>
+    <property name="JSON_FILE_ROL_LOCATION" value="json_logs_rol"/>
+    <property name="JSON_FILE_ROL_NAME" value="spring-json_logs_rol"/>
+    <appender name="JSON_FILE_ROLLING" class="RollingFileAppender">
+
+        <file>${JSON_FILE_ROL_ROOT}/${JSON_FILE_ROL_LOCATION}/${JSON_FILE_ROL_NAME}.json</file>
+
+        <rollingPolicy class="TimeBasedRollingPolicy">
+            <fileNamePattern>${JSON_FILE_ROL_ROOT}/${JSON_FILE_ROL_LOCATION}/${JSON_FILE_ROL_NAME}_%d{yyyy-MM-dd}.json
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="JsonEncoder"/>
+    </appender>
+
     <!-- JSON-FILE LOG ______________________________________________________-->
     <property name="JSON_FILE_ROOT" value="./logs"/>
     <property name="JSON_FILE_STD_LOCATION" value="json_logs_std"/>
@@ -45,24 +63,6 @@
                 }
             </pattern>
         </encoder>
-    </appender>
-
-    <!-- JSON-FILE LOG ROLLING ______________________________________________-->
-    <property name="JSON_FILE_ROL_ROOT" value="./logs"/>
-    <property name="JSON_FILE_ROL_LOCATION" value="json_logs_rol"/>
-    <property name="JSON_FILE_ROL_NAME" value="spring-json_logs_rol"/>
-    <appender name="JSON_FILE_ROLLING" class="RollingFileAppender">
-
-        <file>${JSON_FILE_ROL_ROOT}/${JSON_FILE_ROL_LOCATION}/${JSON_FILE_ROL_NAME}.json</file>
-
-        <rollingPolicy class="TimeBasedRollingPolicy">
-            <fileNamePattern>${JSON_FILE_ROL_ROOT}/${JSON_FILE_ROL_LOCATION}/${JSON_FILE_ROL_NAME}_%d{yyyy-MM-dd}.json
-            </fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-
-        <encoder class="LogstashEncoder"/>
     </appender>
 
 </configuration>

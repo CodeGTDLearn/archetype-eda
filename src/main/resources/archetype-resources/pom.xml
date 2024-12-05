@@ -38,7 +38,7 @@
             <optional>true</optional>
         </dependency>
 #end
-#if(${enable_logback} == "true")
+#if(${enable_logback} == "true" and ${enable_api_cpanel_elk_log_system} == "true")
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>

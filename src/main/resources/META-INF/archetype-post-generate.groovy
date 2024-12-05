@@ -4,17 +4,22 @@ import java.nio.file.Paths
 Properties properties = request.properties
 
 // 1.0) capturando Variaveis/Properties vindas do "ARCHETYPE-METADATA".xml
+def show_log = "${properties?.show_archetype_pos_processor_log}"
+
 def entity_folder = "${properties?.entity_name}"
-def enable_logback = "${properties?.enable_logback}"
-def keep_docker_folder = "${properties?.enable_docker}"
-def show_log = "${properties?.show_archetype_posprocessor_log}"
+def keep_api_test_structure = "${properties?.enable_folder_src_test_java}"
+def keep_docker_structure = "${properties?.enable_docker}"
+
+def keep_logback_structure = "${properties?.enable_logback}"
 def logback_console_type = "${properties?.logback_console_type}"
-def keep_test_folder = "${properties?.enable_folder_src_test_java}"
+def keep_appender_smtp = "${properties?.enable_logback_appender_smtp}"
+def keep_appender_file = "${properties?.enable_logback_appender_file}"
+
+def keep_elk_log_system_structure = "${properties?.enable_api_cpanel_elk_log_system}"
+
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
-def keep_jwt_auth_folder = "${properties?.enable_jwt_authentication}"
-def enable_logback_appender_smtp = "${properties?.enable_logback_appender_smtp}"
-def enable_logback_appender_file = "${properties?.enable_logback_appender_file}"
-def enable_logback_appender_logstash = "${properties?.enable_logback_appender_logstash}"
+
+def keep_jwt_auth_structure = "${properties?.enable_jwt_authentication}"
 
 
 // 2.0) Variaveis Operacionais exclusivas deste Script
@@ -22,22 +27,22 @@ def config_folder = "config"
 def authentication_folder = "authentication"
 //def project_security_folder = "${properties?.entity_name}".concat(config_folder)
 
-def log_text_header="\n\n\n"+
-             "\n-------------------------------------------------------------------------------\n" +
-             "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
-             "\n-------------------------------------------------------------------------------\n\n\n"
+def log_text_header = "\n\n\n" +
+        "\n-------------------------------------------------------------------------------\n" +
+        "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
+        "\n-------------------------------------------------------------------------------\n\n\n"
 
-def log_text_footer ="\n\n"+
+def log_text_footer = "\n\n" +
         "\n-------------------------------------------------------------------------------\n" +
         "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
         "\n-------------------------------------------------------------------------------\n" +
         "\n\n\n\n\n"
 
-def log_text=log_text_header
+def log_text = log_text_header
 
 def project_package = "${properties?.package}".replace('.', '/')
 
-if (keep_test_folder == 'false') {
+if (keep_api_test_structure == 'false') {
     Path folderTestPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
@@ -54,103 +59,91 @@ if (keep_test_folder == 'false') {
     deleteFolder(folderTestResourcePath.toFile())
 }
 
-if (enable_logback == 'false') {
-    Path logbackPath =
+if (keep_logback_structure == 'false') {
+    Path logbackSpring_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring.xml')
-    log_text += "\nlogback-spring.xml -> resources:\n $logbackPath\n"
-    deleteFile(logbackPath.toFile())
+    log_text += "\nlogback-spring.xml -> resources:\n $logbackSpring_Path\n"
+    deleteFile(logbackSpring_Path.toFile())
 
-    Path testLogbackPath =
+    Path logbackTest_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources', 'logback-test.xml')
-    log_text += "\nlogback-test.xml -> test-resources:\n $testLogbackPath\n"
-    deleteFile(testLogbackPath.toFile())
+    log_text += "\nlogback-test.xml -> test-resources:\n $logbackTest_Path\n"
+    deleteFile(logbackTest_Path.toFile())
 
-    Path folderLogbackSpringConfigPath =
+    Path logbackSpringConfig_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config')
-    log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $folderLogbackSpringConfigPath\n"
-    deleteFolder(folderLogbackSpringConfigPath.toFile())
+    log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $logbackSpringConfig_Path\n"
+    deleteFolder(logbackSpringConfig_Path.toFile())
+
+    deleteElkLogSystemStructure(log_text)
 }
 
-if (enable_logback == 'true' && logback_console_type == '1') {
-
-    Path logbackPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring.xml')
-    log_text += "\nlogback-spring.xml -> resources:\n $logbackPath\n"
-    deleteFile(logbackPath.toFile())
-
-    Path testLogbackPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources', 'logback-test.xml')
-    log_text += "\nlogback-test.xml -> test-resources:\n $testLogbackPath\n"
-    deleteFile(testLogbackPath.toFile())
+if (keep_logback_structure == 'true' && logback_console_type == '1') {
 
     Path consoleGranular =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-granular.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-console-granular.xml')
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
     deleteFile(consoleGranular.toFile())
 
     Path granularLayoutConsole =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-layouts-granular.xml')
-    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
-    deleteFile(granularLayoutConsole.toFile())
-
-    Path consoleTabular =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-tabular.xml')
-    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
-    deleteFile(consoleTabular.toFile())
-}
-
-if (enable_logback == 'true' && logback_console_type == '2') {
-
-    Path consoleGranular =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-granular.xml')
-    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
-    deleteFile(consoleGranular.toFile())
-
-    Path granularLayoutConsole =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-layouts-granular.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-console-layouts-granular.xml')
     log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
     deleteFile(granularLayoutConsole.toFile())
 }
 
-if (enable_logback == 'true' && logback_console_type == '3') {
+if (keep_logback_structure == 'true' && logback_console_type == '2') {
 
     Path consoleTabular =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-tabular.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-console-tabular.xml')
     log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
     deleteFile(consoleTabular.toFile())
 }
 
-if (enable_logback == 'true' && enable_logback_appender_logstash == 'false') {
+if (keep_logback_structure == 'true' && keep_appender_smtp == 'false') {
+
+    Path stmpPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-smtp.xml')
+    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPath\n"
+    deleteFile(stmpPath.toFile())
+}
+
+if (keep_logback_structure == 'true' && keep_appender_file == 'false') {
+
+    Path filePath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-file.xml')
+    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
+    deleteFile(filePath.toFile())
+}
+
+if (keep_logback_structure == 'true' && keep_elk_log_system_structure == 'false') {
 
     Path logstachPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-tcp-logstash.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-tcp-logstash.xml')
     log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logstachPath\n"
     deleteFile(logstachPath.toFile())
 
+    deleteElkLogSystemStructure(log_text)
+}
+
+private void deleteElkLogSystemStructure(log_text) {
     Path folderELKPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
@@ -166,27 +159,7 @@ if (enable_logback == 'true' && enable_logback_appender_logstash == 'false') {
     deleteFile(dockerElkComposePath.toFile())
 }
 
-if (enable_logback == 'true' && enable_logback_appender_smtp == 'false') {
-
-    Path stmpPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-smtp.xml')
-    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPath\n"
-    deleteFile(stmpPath.toFile())
-}
-
-if (enable_logback == 'true' && enable_logback_appender_file == 'false') {
-
-    Path filePath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config','appenders-file.xml')
-    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
-    deleteFile(filePath.toFile())
-}
-
-if (keep_jwt_auth_folder == 'false') {
+if (keep_jwt_auth_structure == 'false') {
     Path folderPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
@@ -212,26 +185,40 @@ if (keep_jwt_auth_folder == 'false') {
 
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 
-    String[] dependencies = extra_POM_dependencies.split(',')
+    def additional_dependencies_splitter = ','
+    def dependency_internal_coordinates_splitter = ':'
 
-    Path pomFile = Paths.get(request.outputDirectory, request.artifactId, 'pom.xml')
+    // REGEX will avoid any 'SPACE' in the input storaged in 'extra_POM_dependencies variable'
+    // JUST IN CASE, the code below will be executed
+    extra_POM_dependencies = extra_POM_dependencies.trim()
+    extra_POM_dependencies = extra_POM_dependencies.replaceAll("\\s+", "").trim()
+
+    String[] dependencies = extra_POM_dependencies.split(additional_dependencies_splitter)
+
+    Path pomFilePath =
+            Paths.get(
+                    request.outputDirectory,
+                    request.artifactId,
+                    'pom.xml')
+
     log_text += "\nPOM.XML"
-    log_text += "\n - Location: $pomFile"
+    log_text += "\n - Location: $pomFilePath"
     log_text += "\n - Added Dependencies: $dependencies\n"
 
-    if (pomFile.toFile().isFile()) {
+    if (pomFilePath.toFile().isFile()) {
 
         def sb = new StringBuilder()
 
         Scanner sc
 
         try {
-            sc = new Scanner(pomFile)
+            sc = new Scanner(pomFilePath)
             String currentLine = ''
             String lastLine = ''
 
             while (sc.hasNext()) {
-//                log_text += "\n - While: $lastLine\n"
+
+                // log_text += "\n - While: $lastLine\n"
                 lastLine = currentLine
                 currentLine = sc.nextLine()
 
@@ -249,15 +236,16 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
                 ) sb.append(currentLine).append("\n\n")
                 else sb.append(currentLine).append("\n")
 
-//                log_text += sb.toString()
-
+                // log_text += sb.toString()
                 // Add dependencies
-//                if (lastLine.contains("</dependencyManagement>") && currentLine.contains("<dependencies>")) {
+                // if (lastLine.contains("</dependencyManagement>") && currentLine.contains("<dependencies>")) {
                 if (currentLine.contains("<dependencies>")) {
 
-                    for (def dep : dependencies) {
+                    for (def dependency : dependencies) {
 
-                        String[] depInfo = dep.split(':')
+                        def splitter = dependency_internal_coordinates_splitter
+
+                        String[] depInfo = dependency.split(splitter)
                         String scopeVal = 'compile'
 
                         if (depInfo.length > 3) scopeVal = depInfo[3]
@@ -277,18 +265,18 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
         }
 
         // Empty the parent pom file
-        //  PrintWriter pw = new PrintWriter(pomFile.toFile())
+        // PrintWriter pw = new PrintWriter(pomFilePath.toFile())
         PrintWriter pw = new PrintWriter(System.err)
         pw.close()
 
         // Write the modified parent pom
-        PrintWriter writer = new PrintWriter(pomFile.toFile())
+        PrintWriter writer = new PrintWriter(pomFilePath.toFile())
         writer.write(sb.toString())
         writer.close()
     }
 }
 
-if (keep_docker_folder == 'false') {
+if (keep_docker_structure == 'false') {
     Path folderPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,

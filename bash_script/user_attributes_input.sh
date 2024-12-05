@@ -2,7 +2,7 @@
 
 # PROMPT
 ENABLE_CUSTOM_ATTRIBUTES_PROMPT="Habilitar atributos customizados"
-CUSTOM_ATTRIBUTES_LIST_PROMPT="Defina os atributos do Model"
+CUSTOM_ATTRIBUTES_LIST_PROMPT="-> Defina os atributos do Model"
 
 # VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
 enable_custom_attributes=$(user_input_or_default_value "boleana" "false" "$ENABLE_CUSTOM_ATTRIBUTES_PROMPT")
