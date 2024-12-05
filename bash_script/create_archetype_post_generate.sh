@@ -66,17 +66,17 @@ create_archetype_post_generate_groovy() {
     exit 1
   fi
 
-  # Debug to check the content of each array before merging
-  if [ "$show_debug_log_param" = "true" ]; then
-    echo -e "\n\nArchetype-post-generate-VARIABLE_file_list_from_folder - CONTENT:"
-    printf '%s\n' "${variable_filename_list_from_folder[@]}"
-
-    echo -e "\n\nArchetype-post-generate-SNIPPETS_file_list_from_folder - CONTENT:"
-    printf '%s\n' "${snippets_filename_list_from_folder[@]}"
-
-    echo -e "\n\nOrdered_final_file_list_from_folder - CONTENT:"
-    printf '%s\n\n' "${ordered_final_file_list[@]}"
-  fi
+#  # Debug to check the content of each array before merging
+#  if [ "$show_debug_log_param" = "true" ]; then
+#    echo -e "\n\nArchetype-post-generate-VARIABLE_file_list_from_folder - CONTENT:"
+#    printf '%s\n' "${variable_filename_list_from_folder[@]}"
+#
+#    echo -e "\n\nArchetype-post-generate-SNIPPETS_file_list_from_folder - CONTENT:"
+#    printf '%s\n' "${snippets_filename_list_from_folder[@]}"
+#
+#    echo -e "\n\nOrdered_final_file_list_from_folder - CONTENT:"
+#    printf '%s\n\n' "${ordered_final_file_list[@]}"
+#  fi
 
   local final_file_content_merged="${archetype_filepath_param}\\${archetype_filename_param}"
   local initial_lines_to_be_deleted_from_groovy_files='2'

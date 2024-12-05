@@ -1,0 +1,33 @@
+<!-- ______________ -->
+
+
+
+        <!--  FILESET-BINDING-PROPERTIES.XML _______________________________ -->
+        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/main/java/${entity_name}/config/properties</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/protected_properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+
+<!-- ______________ -->

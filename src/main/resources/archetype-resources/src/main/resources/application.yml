@@ -1,0 +1,20 @@
+properties_folder: classpath:properties
+protected_properties_folder: classpath:protected_properties
+
+spring:
+  application:
+    name: ${artifactId}
+    version: ${version}
+  main:
+    banner-mode: console
+  output:
+    ansi:
+      enabled: always
+  config:
+    import:
+      - ${properties_folder}/i18n_messages.properties
+      - ${protected_properties_folder}/admin_credentials.properties
+      - ${protected_properties_folder}/authentication_credentials.properties
+      - ${properties_folder}/application_map.properties
+      - ${properties_folder}/application_list.properties
+      - ${protected_properties_folder}/application_keys.properties

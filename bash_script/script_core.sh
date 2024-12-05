@@ -3,8 +3,8 @@
 # A) GENERAL OPTIONS------------------------------------------------------------
 # A.1) ATUALIZA o ARCHETYPE-METADATA 'PROCESSOR'
 # qdo o 'ARCHETYPE_METADATA.XML' for alterado
-RECREATE_ARCHETYPE=false
-SHOW_RECREATE_ARCHETYPE_LOG=false
+RECREATE_ARCHETYPE=true
+SHOW_RECREATE_ARCHETYPE_LOG=true
 
 # A.2) LOG|DEBUG MANAGEMENT
 SHOW_MAVEN_BASIC_LOG=false
@@ -65,6 +65,7 @@ script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTION_LOG
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
 script_injection "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_attributes_input.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_binding_properties.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_logback_manager_input.sh" $SHOW_INJECTION_LOG
@@ -74,11 +75,13 @@ script_injection "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHO
 script_injection "${SCRIPT_FOLDER}" "user_test_inputs.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
 
+
 # C.2) Packages: 'Arvores de Pastas separadas por ".", onde a(s) classe(s) se encontra(m)
 project_package=$groupid
 
 # C.3) MONTAGEM das 'SWITCHES -D' para o MVN-CLI
 script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTION_LOG
+print_maven_command_line "$maven_command_line" "${SHOW_RECREATE_ARCHETYPE_LOG}"
 
 # C.4) 'REQUIRED-PROPERTY':
 # C.5) 'PROPERTY DE TESTE' do archetype

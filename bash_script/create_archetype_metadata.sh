@@ -78,20 +78,20 @@ create_archetype_metadata_xml() {
     exit 1
   fi
 
-  # Debug to check the content of each array before merging
-  if [ "$show_debug_log_param" = "true" ]; then
-    echo "Req_properties_files content:"
-    printf '%s\n' "${properties_filename_list_from_folder[@]}"
-
-    echo -e "\nTransition File:"
-    echo "$transition_properties_filesets_file"
-
-    echo -e "\nFile_sets_files content:"
-    printf '%s\n' "${filesets_filename_list_from_folder[@]}"
-
-    echo -e "\nOrdered Final Array:"
-    printf '%s\n' "${ordered_intermediate_files[@]}"
-  fi
+#  # Debug to check the content of each array before merging
+#  if [ "$show_debug_log_param" = "true" ]; then
+#    echo "Req_properties_files content:"
+#    printf '%s\n' "${properties_filename_list_from_folder[@]}"
+#
+#    echo -e "\nTransition File:"
+#    echo "$transition_properties_filesets_file"
+#
+#    echo -e "\nFile_sets_files content:"
+#    printf '%s\n' "${filesets_filename_list_from_folder[@]}"
+#
+#    echo -e "\nOrdered Final Array:"
+#    printf '%s\n' "${ordered_intermediate_files[@]}"
+#  fi
 
   local final_file_content_merged="${archetype_filepath_param}\\${archetype_filename_param}"
 

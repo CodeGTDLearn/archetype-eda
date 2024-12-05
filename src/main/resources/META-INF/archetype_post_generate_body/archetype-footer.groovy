@@ -3,7 +3,11 @@ import java.nio.file.Path
 
 
 
-// FOOTER ----------------------------------------------------------------------
+
+
+
+
+// ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
 
 
 def deleteFolder(File dir) {

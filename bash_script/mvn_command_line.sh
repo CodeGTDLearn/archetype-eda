@@ -12,6 +12,7 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -Dentity_name=\"$entity_name\" \
 -Dproject_description=\"$project_description\" \
 \
+-Denable_binding_properties=\"$enable_binding_properties\" \
 -Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
 \
 -Denable_lombok=\"$enable_lombok\" \

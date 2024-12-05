@@ -1,6 +1,8 @@
 <!-- ______________ -->
 
 
+
+        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
         <!-- SRC\TEST -->
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/test/java</directory>
@@ -9,7 +11,7 @@
             </includes>
         </fileSet>
 
-
+        <!-- SRC\TEST\RESOURCES -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/test/resources</directory>
             <includes>

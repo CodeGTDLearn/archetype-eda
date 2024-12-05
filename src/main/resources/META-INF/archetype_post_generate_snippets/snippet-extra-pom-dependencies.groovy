@@ -4,7 +4,10 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+
+// SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY ---------------------------------------
 
 
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
@@ -96,6 +99,3 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
         writer.close()
     }
 }
-
-
-// SNIPPET ---------------------------------------------------------------------

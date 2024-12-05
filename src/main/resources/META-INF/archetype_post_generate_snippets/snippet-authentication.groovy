@@ -3,18 +3,22 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+
+
+// SNIPPET-AUTHENTICATION.GROOVY -----------------------------------------------
 
 
 if (keep_jwt_authentication == 'false') {
 
-    Path folderPath =
+    Path folderJwtPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'java',
                     project_package, entity_folder, config_folder, authentication_folder)
-    log_text += "\nJwt_authentication_folder_path:\n $folderPath\n"
-    deleteFolder(folderPath.toFile())
+    log_text += "\nJwt_authentication_folder_path:\n $folderJwtPath\n"
+    deleteFolder(folderJwtPath.toFile())
 
     Path filePathAppKey =
             Paths.get(request.outputDirectory,
@@ -31,7 +35,3 @@ if (keep_jwt_authentication == 'false') {
     deleteFile(filePathAppPub.toFile())
 
 }
-
-
-
-// SNIPPET ---------------------------------------------------------------------

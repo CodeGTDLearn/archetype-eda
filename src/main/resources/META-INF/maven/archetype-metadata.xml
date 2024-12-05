@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--  ARCHETYPE-HEADER.XML  _______________________________________________  -->
 
 <archetype-descriptor
         xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.1.0
@@ -12,6 +13,9 @@
 
 <!-- ______________ -->
 
+
+        <!--   PROPERTY-AUTHENTICATION.XML   ______________________________  -->
+        <!-- JWT-AUTHENTICATION -->
         <requiredProperty key="enable_jwt_authentication">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -19,6 +23,17 @@
 
 
 
+
+        <!--  PROPERTY-BINDING-PROPERTIES.XML   ____________________________ -->
+        <requiredProperty key="enable_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+
+        <!--  PROPERTY-CPANEL.XML __________________________________________ -->
         <requiredProperty key="enable_api_cpanel">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -31,23 +46,8 @@
 
 
 
-        <requiredProperty key="enable_docker">
-            <defaultValue></defaultValue>
-        </requiredProperty>
 
-
-        <requiredProperty key="enable_lombok">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="extra_POM_dependencies">
-        <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
+        <!--  PROPERTY-ENTITY.XML  _________________________________________ -->
         <requiredProperty key="entity_name"/>
 
         <requiredProperty key="enable_custom_attributes">
@@ -59,6 +59,8 @@
 
 
 
+
+        <!--  PROPERTY-GENERAL.XML  _______________________________________  -->
         <requiredProperty key="project_description"/>
 
 
@@ -69,6 +71,8 @@
 
 
 
+
+        <!--  PROPERTY-LOGBACK.XML _________________________________________ -->
         <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -91,6 +95,27 @@
 
 
 
+
+        <!--  PROPERTY-POM-DEPENDENCIES.XML  ______________________________  -->
+        <requiredProperty key="enable_docker">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+        <requiredProperty key="enable_lombok">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+        <requiredProperty key="extra_POM_dependencies">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+
+        <!--   PROPERTY-TEST.XML ___________________________________________ -->
         <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -98,12 +123,59 @@
 
 
 
+    <!--  ARCHETYPE-TRANSITION.XML  _______________________________________  -->
     </requiredProperties>
     <fileSets>
 
 
 
 
+
+        <!--  FILESET-BINDING-PROPERTIES-TEST.XML __________________________ -->
+        <!-- SRC\TEST\PROPERTIES -->
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/test/java/binding_properties_test</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+
+
+
+
+        <!--  FILESET-BINDING-PROPERTIES.XML _______________________________ -->
+        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/main/java/${entity_name}/config/properties</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/protected_properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+
+
+
+
+        <!--  FILESET-CPANEL.XML ___________________________________________ -->
         <!-- CPANEL / ELK SUPPORT -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>ELK</directory>
@@ -115,19 +187,8 @@
 
 
 
-        <!-- DOCKER SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>docker</directory>
-            <includes>
-                <include>**/*compose*.yml</include>
-                <include>**/*compose*.yaml</include>
-                <include>**/*Dockerfile*</include>
-            </includes>
-        </fileSet>
 
-
-
-
+        <!--  FILESET-GENERAL.XML  _________________________________________ -->
         <!-- MAVEN -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>.mvn/wrapper</directory>
@@ -135,7 +196,6 @@
                 <include>**/*.properties</include>
             </includes>
         </fileSet>
-
 
         <!-- GENERAL FILES -->
         <fileSet encoding="UTF-8">
@@ -151,6 +211,8 @@
 
 
 
+
+        <!--   FILESET-LOGBACK.XML   _______________________________________ -->
         <!-- LOGBACK SUPPORT -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources/logback-spring-config</directory>
@@ -162,6 +224,23 @@
 
 
 
+
+        <!--  FILESET-POM-DEPENDENCIES.XML  ________________________________ -->
+        <!-- DOCKER SUPPORT -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>docker</directory>
+            <includes>
+                <include>**/*compose*.yml</include>
+                <include>**/*compose*.yaml</include>
+                <include>**/*Dockerfile*</include>
+            </includes>
+        </fileSet>
+
+
+
+
+
+        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
         <!-- SRC\TEST -->
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/test/java</directory>
@@ -170,7 +249,7 @@
             </includes>
         </fileSet>
 
-
+        <!-- SRC\TEST\RESOURCES -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/test/resources</directory>
             <includes>
@@ -183,6 +262,8 @@
 
 
 
+
+        <!--  FILESET-SRC.XML  _____________________________________________ -->
         <!-- SRC\MAIN -->
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/main/java</directory>
@@ -191,17 +272,25 @@
             </includes>
         </fileSet>
 
-
+        <!-- SRC\MAIN\RESOURCES -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources</directory>
             <includes>
+
                 <include>**/*.properties</include>
-                <include>**/*.sql</include>
+                <include>data.sql</include>
+                <include>schema.sql</include>
+
                 <include>app.key</include>
                 <include>app.pub</include>
+
                 <include>application.yml</include>
+                <include>application.properties</include>
+
                 <include>logback-spring.xml</include>
+
                 <include>banner.txt</include>
+
             </includes>
         </fileSet>
 
@@ -209,6 +298,7 @@
 <!-- ______________ -->
 
 
+    <!--    ARCHETYPE-FOOTER.XML  _________________________________________  -->
     </fileSets>
 </archetype-descriptor>
 

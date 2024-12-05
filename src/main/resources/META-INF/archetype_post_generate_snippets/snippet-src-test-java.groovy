@@ -3,7 +3,11 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+
+
+// SNIPPET-SRC-TEST-JAVA.GROOVY ------------------------------------------------
 
 if (keep_src_test_java == 'false') {
     Path folderTestPath =
@@ -21,6 +25,3 @@ if (keep_src_test_java == 'false') {
 
     deleteFolder(folderTestResourcePath.toFile())
 }
-
-
-// SNIPPET ---------------------------------------------------------------------

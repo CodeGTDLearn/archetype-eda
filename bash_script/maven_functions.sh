@@ -1,5 +1,20 @@
 #!/bin/bash
 
+print_maven_command_line() {
+
+  local mvn_cli=$1
+  local proceed_with_function_param=${2:-true}
+
+
+  if [ "$proceed_with_function_param" = "false" ]; then
+    return 1
+  fi
+
+  echo -e "\n\n\n\n-----> MVN-COMMAND CLI GENERATED: maven_command_line\n"
+  echo -e "$mvn_cli" | sed 's/ -D/\n-D/g'
+  echo -e "\n----------------------------------->\n\n"
+}
+
 execute_maven_command_line() {
 
   local show_basic_log=$1
@@ -11,13 +26,6 @@ execute_maven_command_line() {
   local debug_command_line
 
   local divider="\n--------------------------------------------------------------------->\n"
-
-  print_maven_command_line() {
-    local mvn_cli=$1
-    echo -e "\n\n\n\n-----> MVN-COMMAND GENERATED: maven_command_line\n"
-    echo -e "$mvn_cli" | sed 's/ -D/\n-D/g'
-    echo -e "\n----------------------------------->\n\n"
-  }
 
   if [ "$show_basic_log" = "true" ]; then
     echo -e "$divider"
@@ -52,6 +60,7 @@ execute_maven_command_line() {
     maven_output=$(eval "$debug_command_line" | tee /dev/tty)
 
     print_maven_command_line "$maven_command_line_param"
+
     echo -e "$output"
     echo -e "$output_footer"
   fi
@@ -65,6 +74,7 @@ execute_maven_command_line() {
     maven_output=$(eval "$maven_command_line_param" | tee /dev/tty)
 
     print_maven_command_line "$maven_command_line_param"
+
     echo -e "$output"
     echo -e "$output_footer"
   fi
@@ -105,6 +115,9 @@ execute_mvn_clean_install() {
   local proceed_with_function_param=$2
   local show_maven_log_param=$3
 
+  local divider="<------------------------------------------------------------------------->"
+  local spacer="\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
   if [ "$proceed_with_function_param" = "false" ]; then
     return 1
   fi
@@ -113,18 +126,20 @@ execute_mvn_clean_install() {
   cd "$archetype_project_path_in_linux" || return 1
 
   if [ "$show_maven_log_param" = "true" ]; then
-    echo -e "\n\n\nMaven DEBUG - STARTING ---------------------------------\n\n"
 
-    echo -e "\n\n\nMaven DEBUG - CLEAN ------------------------------------\n\n"
+    echo -e "${spacer}Maven DEBUG - STARTING ${divider}\n"
+
+    echo -e "${spacer}Maven DEBUG - CLEAN ${divider}\n"
     mvn clean
 
-    echo -e "\n\n\nMaven DEBUG - VERIFY -----------------------------------\n\n"
+    echo -e "${spacer}Maven DEBUG - VERIFY ${divider}\n"
     mvn verify
 
-    echo -e "\n\n\nMaven DEBUG - CLEAN INSTALL ----------------------------\n\n"
+    echo -e "${spacer}Maven DEBUG - CLEAN INSTALL ${divider}\n"
     mvn clean install -X
 
-    echo -e "\n\n\nMaven DEBUG - ENDING -----------------------------------\n\n"
+    echo -e "${spacer}Maven DEBUG - ENDING ${divider}\n"
+
   else
     mvn clean
     mvn verify

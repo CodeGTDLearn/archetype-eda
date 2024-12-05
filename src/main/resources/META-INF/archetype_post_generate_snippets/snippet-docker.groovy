@@ -3,17 +3,18 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+
+
+// SNIPPET-DOCKER.GROOVY -------------------------------------------------------
 
 
 if (keep_docker == 'false') {
-    Path folderPath =
+    Path folderDockerPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'docker')
-    log_text += "\nFOLDER_DOCKER:\n $folderPath\n"
-    deleteFolder(folderPath.toFile())
+    log_text += "\nFOLDER_DOCKER:\n $folderDockerPath\n"
+    deleteFolder(folderDockerPath.toFile())
 }
-
-
-// SNIPPET ---------------------------------------------------------------------

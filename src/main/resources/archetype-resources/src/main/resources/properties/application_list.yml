@@ -1,0 +1,8 @@
+nation:
+  property:
+    strategy: Country
+    country:
+      - name: Brazil
+        currency: Brazilian Real
+      - name: Canada
+        currency: Canadian Dollar

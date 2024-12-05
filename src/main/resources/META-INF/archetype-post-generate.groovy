@@ -3,12 +3,16 @@ import java.nio.file.Paths
 
 
 
-// HEADER ----------------------------------------------------------------------
+
+
+
+// ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
 
 
 Properties properties = request.properties
 
 def entity_folder = "${properties?.entity_name}"
+def entity_name = "${properties?.entity_name}"
 
 // 2.0) Variaveis Operacionais exclusivas deste Script
 def config_folder = "config"
@@ -16,10 +20,11 @@ def config_folder = "config"
 def project_package = "${properties?.package}".replace('.', '/')
 
 
-// HEADER ----------------------------------------------------------------------
 
 
-// VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE-AUTHENTICATION.GROOVY ----------------------------------------------
 
 
 def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
@@ -28,37 +33,51 @@ def authentication_folder = "authentication"
 //def project_security_folder = "${properties?.entity_name}".concat(config_folder)
 
 
-// VARIABLE --------------------------------------------------------------------
 
 
-// VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE-BINDING-PROPERTIES.GROOVY ------------------------------------------
+
+
+def keep_binding_properties = "${properties?.enable_binding_properties}"
+
+
+
+
+
+
+// VARIABLE-CPANEL.GROOVY ------------------------------------------------------
 
 
 def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system}"
 
 
-// VARIABLE --------------------------------------------------------------------
 
 
-// VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE-DOCKER.GROOVY ------------------------------------------------------
 
 
 def keep_docker = "${properties?.enable_docker}"
 
 
-// VARIABLE --------------------------------------------------------------------
 
 
-// VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE-EXTRA-POM-DEPENDENCIES.GROOVY --------------------------------------
 
 
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 
 
-// VARIABLE --------------------------------------------------------------------
 
 
-// VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE-LOGBACK.GROOVY -----------------------------------------------------
 
 
 def keep_logback = "${properties?.enable_logback}"
@@ -67,51 +86,56 @@ def keep_appender_smtp = "${properties?.enable_logback_appender_smtp}"
 def keep_appender_file = "${properties?.enable_logback_appender_file}"
 
 
-// VARIABLE --------------------------------------------------------------------
 
 
-//  VARIABLE -------------------------------------------------------------------
+
+
+//  VARIABLE-POST-GENERATE-LOG.GROOVY ------------------------------------------
 
 
 def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
 
 def log_text_header =
-        "\n\n\n-------------------------------------------------------------------------------\n" +
-                "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
-                "\n-------------------------------------------------------------------------------\n\n\n"
+"\n\n\n-------------------------------------------------------------------------------\n" +
+    "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
+    "\n-------------------------------------------------------------------------------\n" +
+"\n\n"
 
 def log_text_footer =
-        "\n\n\n-------------------------------------------------------------------------------\n" +
-                "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
-                "\n-------------------------------------------------------------------------------\n\n\n\n\n\n"
+"\n\n\n-------------------------------------------------------------------------------\n" +
+    "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
+    "\n-------------------------------------------------------------------------------\n" +
+"\n\n\n\n\n"
 
 def log_text = log_text_header
 
 
-//  VARIABLE -------------------------------------------------------------------
 
 
-// VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE-SRC-TEST-JAVA.GROOVY -----------------------------------------------
 
 
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
 
 
-// VARIABLE --------------------------------------------------------------------
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET-AUTHENTICATION.GROOVY -----------------------------------------------
 
 
 if (keep_jwt_authentication == 'false') {
 
-    Path folderPath =
+    Path folderJwtPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'java',
                     project_package, entity_folder, config_folder, authentication_folder)
-    log_text += "\nJwt_authentication_folder_path:\n $folderPath\n"
-    deleteFolder(folderPath.toFile())
+    log_text += "\nJwt_authentication_folder_path:\n $folderJwtPath\n"
+    deleteFolder(folderJwtPath.toFile())
 
     Path filePathAppKey =
             Paths.get(request.outputDirectory,
@@ -131,10 +155,48 @@ if (keep_jwt_authentication == 'false') {
 
 
 
-// SNIPPET ---------------------------------------------------------------------
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+// SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
+
+
+
+if (keep_binding_properties == 'false') {
+
+    Path bindingPropertiesTestPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'java', 'binding_properties_test')
+    log_text += "\\nFOLDER_BINDING_PROPERTIES_TEST:\\n $bindingPropertiesTestPath\n"
+    deleteFolder(bindingPropertiesTestPath.toFile())
+}
+
+
+
+
+
+
+// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
+
+
+
+if (keep_binding_properties == 'false') {
+
+    Path bindingPropertiesPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'java', entity_name, 'config', 'properties')
+    log_text += "\\nFOLDER_BINDING_PROPERTIES:\\n $bindingPropertiesPath\n"
+    deleteFolder(bindingPropertiesPath.toFile())
+}
+
+
+
+
+
+
+// SNIPPET-CPANEL.GROOVY -------------------------------------------------------
 
 
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
@@ -150,27 +212,28 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 }
 
 
-// SNIPPET ---------------------------------------------------------------------
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET-DOCKER.GROOVY -------------------------------------------------------
 
 
 if (keep_docker == 'false') {
-    Path folderPath =
+    Path folderDockerPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'docker')
-    log_text += "\nFOLDER_DOCKER:\n $folderPath\n"
-    deleteFolder(folderPath.toFile())
+    log_text += "\nFOLDER_DOCKER:\n $folderDockerPath\n"
+    deleteFolder(folderDockerPath.toFile())
 }
 
 
-// SNIPPET ---------------------------------------------------------------------
 
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+// SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY ---------------------------------------
 
 
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
@@ -264,10 +327,11 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 }
 
 
-// SNIPPET ---------------------------------------------------------------------
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET-LOGBACK.GROOVY ------------------------------------------------------
 
 
 if (keep_logback == 'false' ||
@@ -304,26 +368,26 @@ if (keep_logback == 'false' ||
 
 if (keep_logback == 'true' && console_type == '1') {
 
-    Path consoleGranular =
+    Path consoleGranularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
-    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
-    deleteFile(consoleGranular.toFile())
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
+    deleteFile(consoleGranularFile.toFile())
 
-    Path granularLayoutConsole =
+    Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
-    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
-    deleteFile(granularLayoutConsole.toFile())
+    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
+    deleteFile(granularLayoutConsoleFile.toFile())
 
-    Path consoleTabular =
+    Path consoleTabularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-tabular.xml')
-    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
-    deleteFile(consoleTabular.toFile())
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabularFile\n"
+    deleteFile(consoleTabularFile.toFile())
 
 //        O Arquivo "LOGBACK-SPRING.XML" continua existindo E sendo usado
 //        MAS SEM NENHUMA ESTRUTURA de CUSTOM-CONSOLE(tabular ou granular),
@@ -332,75 +396,77 @@ if (keep_logback == 'true' && console_type == '1') {
 //        o CONSOLE-DEFAULT-INTERNO do Spring Boot AUTOMATICAMENTE
 //        NO CASO DE TESTE("LOGBACK-TEST.XML") o arquivo e removido
 //        E O console do Spring Boot sera acionado
-    Path logbackTest_Path =
+    Path logbackTestPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources', 'logback-test.xml')
-    log_text += "\nlogback-test.xml -> test-resources:\n $logbackTest_Path\n"
-    deleteFile(logbackTest_Path.toFile())
+    log_text += "\nlogback-test.xml -> test-resources:\n $logbackTestPath\n"
+    deleteFile(logbackTestPath.toFile())
 }
 
 if (keep_logback == 'true' && console_type == '2') {
 
-    Path consoleGranular =
+    Path consoleGranularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
-    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
-    deleteFile(consoleGranular.toFile())
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
+    deleteFile(consoleGranularFile.toFile())
 
-    Path granularLayoutConsole =
+    Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
-    log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
-    deleteFile(granularLayoutConsole.toFile())
+    log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
+    deleteFile(granularLayoutConsoleFile.toFile())
 }
 
 if (keep_logback == 'true' && console_type == '3') {
 
-    Path consoleTabular =
+    Path consoleTabularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-tabular.xml')
-    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
-    deleteFile(consoleTabular.toFile())
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabularFile\n"
+    deleteFile(consoleTabularFile.toFile())
 }
 
 if (keep_logback == 'true' && keep_appender_smtp == 'false') {
 
-    Path stmpPath =
+    Path stmpPathFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-smtp-email.xml')
-    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPath\n"
-    deleteFile(stmpPath.toFile())
+    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPathFile\n"
+    deleteFile(stmpPathFile.toFile())
 }
 
 if (keep_logback == 'true' && keep_appender_file == 'false') {
 
-    Path filePath =
+    Path rolFilePath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-rolfile-file.xml')
-    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
-    deleteFile(filePath.toFile())
+    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $rolFilePath\n"
+    deleteFile(rolFilePath.toFile())
 }
 
 
-// SNIPPET ---------------------------------------------------------------------
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET-POST-GENERATE-LOG.GROOVY --------------------------------------------
 
 
 if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 
 
-// SNIPPET ---------------------------------------------------------------------
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET-SRC-TEST-JAVA.GROOVY ------------------------------------------------
 
 if (keep_src_test_java == 'false') {
     Path folderTestPath =
@@ -420,10 +486,11 @@ if (keep_src_test_java == 'false') {
 }
 
 
-// SNIPPET ---------------------------------------------------------------------
 
 
-// FOOTER ----------------------------------------------------------------------
+
+
+// ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
 
 
 def deleteFolder(File dir) {

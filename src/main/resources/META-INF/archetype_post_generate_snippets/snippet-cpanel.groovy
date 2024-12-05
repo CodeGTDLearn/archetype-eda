@@ -3,7 +3,11 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET ---------------------------------------------------------------------
+
+
+
+
+// SNIPPET-CPANEL.GROOVY -------------------------------------------------------
 
 
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
@@ -17,6 +21,3 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     deleteElkLogSystemStructure(log_text)
 }
-
-
-// SNIPPET ---------------------------------------------------------------------
