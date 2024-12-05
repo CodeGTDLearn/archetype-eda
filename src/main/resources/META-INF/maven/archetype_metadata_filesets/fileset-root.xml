@@ -10,11 +10,7 @@
         <fileSet encoding="UTF-8">
             <directory></directory>
             <includes>
-                <include>.gitignore</include>
-                <include>README.md</include>
                 <include>HELP.md</include>
-                <include>mvnw</include>
-                <include>mvnw.cmd</include>
             </includes>
         </fileSet>
 

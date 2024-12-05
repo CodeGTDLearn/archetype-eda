@@ -15,5 +15,13 @@
         </fileSet>
 
 
+        <fileSet encoding="UTF-8">
+            <directory></directory>
+            <includes>
+                <include>pom.xml</include>
+                <include>mvnw</include>
+                <include>mvnw.cmd</include>
+            </includes>
+        </fileSet>
 
 <!-- ______________ -->

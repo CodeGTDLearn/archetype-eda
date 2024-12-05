@@ -116,7 +116,7 @@ check_maven_build_result() {
     echo -e "\n$BUILD_FAILURE_MESSAGE"
 
   elif echo "$output_to_be_checked" | grep -q "$SUCCESS_KEYWORD"; then
-    echo -e "\n$BUILD_SUCCESS_MESSAGE"
+    echo -e "\n$BUILD_SUCCESS_MESSAGE\n"
 
   fi
 }

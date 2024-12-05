@@ -1,114 +1,188 @@
-# 🔐 Secure WebService Project
+<!-- ====================================================
+     1. Cabeçalho e Informações Iniciais
+======================================================= -->
+<h1> 🔐 ${artifactId} WebService Project </h1>
+<h2> 1 Description </h2>
+<p> ${project_description} </p>
 
-## 1 Description:
-> A robust web application focused on security, logging, and type-safe configuration management.
+<h2> 2 System Design </h2>
+<p>
+  This project implements a secure webservice with emphasis on credential protection, comprehensive logging, and type-safe configuration management. It follows best practices for security and maintainability.
+</p>
 
-## 2 System Design
-
-This project implements a secure webservice with emphasis on credential protection, comprehensive logging, and type-safe configuration management. It follows best practices for security and maintainability.
-
-## 3 Technical Specifications
-- [Credentials Protection](#credentials-protection-top)
-- [Advanced Logging System](#advanced-logging-system-top)
-- [Type-Safe Configuration](#type-safe-configuration-top)
-
----
-
-### 🔐Credentials Protection [[top]](#3-technical-specifications)
-
-#### ✅ Strategy based on:
-- OS Encrypted Folder Vault
-- Global GitIgnore Implementation
-- Project Protected Properties Folder
-
-#### 🔒 OS Encrypted Folder Vault
-- Utilizes Windows 10 BitLocker for encryption
-- Stores all credential files iindividually
-- Automatic encryption of all content (files + subfolders)
-- Completely separated from project structure
-- Environment variable integration with **_"Project Protected Properties Folder"_**
-
-#### 🚫 Global GitIgnore Implementation
-- Centralized sensitive file exclusion
-- Keyword-based file exclusion, such as:
-- CLI Configuration:
-  ```bash
-  # Create new global gitignore (if not exists yet)
-  git config --global core.excludesfile C:\your-path\.gitignore_global
-  
-  # Find existing file
-  git config --global core.excludesfile
-  ```
-
-#### 🛡️ Project Protected Properties Folder
-- Project Dedicated folder for sensitive properties
-- Environment variable integration with _**"OS Encrypted Folder Vault"**_
-- Localized inside the project
-
----
-
-### 📄Advanced Logging System [[top]](#3-technical-specifications)
-
-#### ✅ Strategy based on:
-- **Multi-layer Logging Architecture**
-
-#### 📜Logback Integration
-- Customized logback-spring and logback-test implementations
-- Development and test environment console banners
-
-#### 🎯 Console Appenders Types
-1. Default Spring
-2. Tabular
-3. Granular
-
-#### 📊 Extended Logging Capabilities
-- Email notification system
-- RollingFile storage
-  - Classic mode
-  - Rolling mode
-  - Logstash format
-- TCP-SOCKETS for logstash
-  - CPanel integration
-
-#### 📈 Logging Hierarchy
-```
-ERROR > WARN > INFO > DEBUG > TRACE
-```
----
-
-### 🛠️Type-Safe Configuration [[top]](#3-technical-specifications)
-
-#### ✅ Strategy based on:
-- **Externalized Properties/Configuration Binding**
-
-#### 🔄 Binding Types
-1. 🏗️Constructor Binding (Immutable)
-    - Record-based implementation
-    - Class-based implementation with final Attributes
-2. 🔧JavaBean Binding (Mutable)
-    - Standard class implementation
-    - Setter-based configuration
-
-#### 🔍 Context Scanning
-1. Combined scanning for Constructor and JavaBean Binding:
-  * EnableConfigurationProperties
-  * _ConfigurationPropertiesScan_
-2. Specialized JavaBean Binding scanning:
-  * Stereotype Annotations: Component or Configuration
-
-#### 📁📄 Supported Filetypes
-- Properties files
-- YAML configuration
-
-#### 🎨 Binding Formats
-  - Simple properties
-  - List
-  - Map
-
-#### ✔️ Validation
-- Spring-Validation integration
-
----
+<h2 id="technical-specifications">3 Technical Specifications</h2>
+<ul>
+  #if(${enable_lombok} == "true")
+    <li>Lombok</li>
+  #end
+  #if(${enable_docker} == "true")
+    <li>Docker Support</li>
+  #end
+  #if(${enable_git_support} == "true")
+    <li>Git Repo: <a href="${git_url_repo}">${git_url_repo}</a></li>
+  #end
+  <li><a href="#credentials-protection-top">Credentials Protection</a></li>
+  #if(${enable_logback} == "true")
+    <li><a href="#advanced-logging-system-top">Advanced Logging System</a></li>
+  #end
+  #if(${enable_binding_properties} == "true")
+    <li><a href="#type-safe-binding-configuration-top">Type-Safe Binding Configuration</a></li>
+  #end
+</ul>
+<hr>
 
 
----
+<!-- ====================================================
+     2. Seção: Credentials Protection (Collapse Simples)
+======================================================= -->
+<details>
+  <summary id="credentials-protection-top">
+    <b>
+      🔐 Credentials Protection <a href="#technical-specifications">[top]</a>
+    </b>
+  </summary>
+  <div>
+    <h4> ✅ Strategy based on: </h4>
+    <ul>
+      <li> OS Encrypted Folder Vault </li>
+      <li> Global GitIgnore Implementation </li>
+      <li> Project Protected Properties Folder </li>
+    </ul>
+    <h4> 🔒 OS Encrypted Folder Vault </h4>
+    <ul>
+      <li> Utilizes Windows 10 BitLocker for encryption </li>
+      <li> Stores all credential files individually </li>
+      <li> Automatic encryption of all folder-content (files + subfolders) </li>
+      <li> Completely separated from project structure </li>
+      <li> Environment variable integration with <b>"Project Protected Properties Folder"</b> </li>
+    </ul>
+    <h4> 🚫 Global GitIgnore Implementation </h4>
+    <ul>
+      <li> Centralized sensitive file exclusion </li>
+      <li> Keyword-based file exclusion, such as: </li>
+      <li> CLI Configuration: </li>
+    </ul>
+    <ul>
+      <li> Create new global gitignore (if not exists yet) </li>
+      <pre>  git config --global core.excludesfile C:\your-path\.gitignore_global </pre>
+      <li> Find existing file </li>
+      <pre> git config --global core.excludesfile  </pre>
+    </ul>
+    <h4> 🛡️ Project Protected Properties Folder </h4>
+    <ul>
+      <li> Project Dedicated folder for sensitive properties </li>
+      <li>Environment variable integration with <i>"OS Encrypted Folder Vault"</i></li>
+      <li> Localized inside the project </li>
+    </ul>
+  </div>
+</details>
+<hr>
+
+#if(${enable_logback} == "true")
+<!-- ====================================================
+     3. Seção: Advanced Logging System (Collapse Simples)
+======================================================= -->
+<details>
+  <summary id="advanced-logging-system-top">
+    <b>
+      📄 Advanced Logging System <a href="#technical-specifications">[top]</a>
+    </b>
+  </summary>
+  <div>
+    <h4> ✅ Strategy based on: </h4>
+    <ul>
+      <li> Multi-layer Logging Architecture </li>
+    </ul>
+    <h4> 📜Logback Integration </h4>
+    <ul>
+      <li> Customized logback-spring and logback-test implementations </li>
+      <li> Development and test environment console banners </li>
+    </ul>
+    <h4> 🎯 Console Appenders Types </h4>
+    <ul>
+      <li> Default Spring </li>
+      <li> Tabular </li>
+      <li> Granular </li>
+    </ul>
+    <h4> 📊 Extended Logging Capabilities </h4>
+    <ul>
+      <li> Email notification system </li>
+      <li> RollingFile storage </li>
+      <ul>
+        <li> Classic mode </li>
+        <li> Rolling mode </li>
+      </ul>
+      <li> Logstash format </li>
+      <ul>
+        <li> TCP-SOCKETS for logstash </li>
+      </ul>
+      <li> CPanel integration </li>
+    </ul>
+    <h4> 📈 Logging Hierarchy </h4>
+    <pre>
+      ERROR > WARN > INFO > DEBUG > TRACE
+    </pre>
+  </div>
+</details>
+<hr>
+#end
+
+#if(${enable_binding_properties} == "true")
+<!-- ====================================================
+     4. Seção: Type-Safe Binding Configuration (Collapse Simples)
+======================================================= -->
+<details>
+  <summary id="type-safe-binding-configuration-top">
+    <b>
+      🛠️ Type-Safe Binding Configuration <a href="#technical-specifications">[top]</a>
+    </b>
+  </summary>
+  <div>
+    <h4> ✅ Strategy based on: </h4>
+    <ul>
+      <li> Externalized Properties/Configuration Binding </li>
+    </ul>
+    <h4> 🔄 Binding Types </h4> 
+    <ul>
+      <li> 🏗️Constructor Binding (Immutable) </li>
+      <ul>
+        <li> Record-based implementation </li>
+        <li> Class-based implementation with final Attributes </li>
+      </ul>
+      <li> 🔧JavaBean Binding (Mutable) </li>
+      <ul>
+        <li> Standard class implementation </li>
+        <li> Setter-based configuration </li>
+      </ul>
+    </ul>
+    <h4> 🔍 Context Scanning </h4>
+    <ul>
+      <li> Combined scanning for Constructor and JavaBean Binding: </li> 
+      <ul>
+        <li> EnableConfigurationProperties  </li> 
+        <li> ConfigurationPropertiesScan </li>
+      </ul>
+      <li> Specialized JavaBean Binding scanning: </li> 
+      <ul>
+        <li> Stereotype Annotations: Component or Configuration </li> 
+      </ul>
+    </ul>
+    <h4> 📁📄 Supported Filetypes </h4>
+    <ul>
+      <li> Properties files </li>
+      <li> YAML configuration </li>
+    </ul>
+    <h4> 🎨 Binding Formats </h4>
+    <ul>
+      <li> Simple properties </li>
+      <li> List </li>
+      <li> Map </li>
+    </ul>
+    <h4> ✔️ Validation </h4>
+    <ul>
+      <li> Spring-Validation integration </li>
+    </ul>
+  </div>
+</details>
+<hr>
+#end

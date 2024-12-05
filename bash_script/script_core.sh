@@ -21,7 +21,7 @@ OPEN_IDE_DIRECTLY=true
 
 # A.4) ENABLING PROGRESS_BAR
 # Progress_bar runa inside the function 'execute_maven_command_line'(maven_functions.sh)
-ACTIVE_PROGRESS_BAR=true
+ACTIVE_PROGRESS_BAR=false
 
 # A.5) ARCHETYPE FILES GENERATION:
 # A.5.1) PATH DEFINITIONS
@@ -54,6 +54,7 @@ source "${SCRIPT_FOLDER}\\script_injection.sh"
 # B) INJECOES DE FUNCOES -------------------------------------------------------
 inject_script "${SCRIPT_FOLDER}" "progress_bar_functions.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "general_functions.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "general_functions_for_inputs.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "config_constants.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECTION_LOG

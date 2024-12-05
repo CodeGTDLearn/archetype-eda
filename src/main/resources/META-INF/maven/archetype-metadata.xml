@@ -328,7 +328,6 @@
 
 
         <!--  FILESET-GITHUB.XML ___________________________________________ -->
-        <!-- GIT SUPPORT -->
         <fileSet filtered="false" encoding="UTF-8">
           <directory>git_temp</directory>
           <includes>
@@ -345,6 +344,22 @@
           <includes>
             <include>config</include>
           </includes>
+        </fileSet>
+
+
+        <fileSet encoding="UTF-8">
+            <directory></directory>
+            <includes>
+                <include>.gitignore</include>
+            </includes>
+        </fileSet>
+
+
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory></directory>
+            <includes>
+                <include>README.md</include>
+            </includes>
         </fileSet>
 
 
@@ -380,6 +395,14 @@
         </fileSet>
 
 
+        <fileSet encoding="UTF-8">
+            <directory></directory>
+            <includes>
+                <include>pom.xml</include>
+                <include>mvnw</include>
+                <include>mvnw.cmd</include>
+            </includes>
+        </fileSet>
 
 
 
@@ -392,10 +415,7 @@
         <fileSet encoding="UTF-8">
             <directory></directory>
             <includes>
-                <include>.gitignore</include>
                 <include>HELP.md</include>
-                <include>mvnw</include>
-                <include>mvnw.cmd</include>
             </includes>
         </fileSet>
 
