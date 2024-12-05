@@ -1,7 +1,11 @@
 import java.nio.file.Path
 import java.nio.file.Paths
 
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
 if (keep_logback == 'false' ||
         (keep_logback == 'true' &&
                 console_type == '1' &&
@@ -118,3 +122,6 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
     log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
     deleteFile(filePath.toFile())
 }
+
+
+// SNIPPET ---------------------------------------------------------------------

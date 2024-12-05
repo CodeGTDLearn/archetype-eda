@@ -1,7 +1,11 @@
 import java.nio.file.Path
 import java.nio.file.Paths
 
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     Path logstachPath =
@@ -13,3 +17,6 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     deleteElkLogSystemStructure(log_text)
 }
+
+
+// SNIPPET ---------------------------------------------------------------------

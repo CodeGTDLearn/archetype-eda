@@ -1,6 +1,8 @@
 import java.nio.file.Path
 import java.nio.file.Paths
 
+
+
 // SNIPPET ---------------------------------------------------------------------
 
 if (keep_src_test_java == 'false') {
@@ -19,3 +21,6 @@ if (keep_src_test_java == 'false') {
 
     deleteFolder(folderTestResourcePath.toFile())
 }
+
+
+// SNIPPET ---------------------------------------------------------------------

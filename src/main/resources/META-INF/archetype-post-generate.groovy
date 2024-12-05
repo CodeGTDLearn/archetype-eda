@@ -1,5 +1,10 @@
 import java.nio.file.Path
+import java.nio.file.Paths
+
+
+
 // HEADER ----------------------------------------------------------------------
+
 
 Properties properties = request.properties
 
@@ -9,23 +14,64 @@ def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"
 
 def project_package = "${properties?.package}".replace('.', '/')
+
+
+// HEADER ----------------------------------------------------------------------
+
+
 // VARIABLE --------------------------------------------------------------------
+
+
 def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
 
 def authentication_folder = "authentication"
 //def project_security_folder = "${properties?.entity_name}".concat(config_folder)
+
+
 // VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE --------------------------------------------------------------------
+
+
 def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system}"
+
+
 // VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE --------------------------------------------------------------------
+
+
 def keep_docker = "${properties?.enable_docker}"
+
+
 // VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE --------------------------------------------------------------------
+
+
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
+
+
 // VARIABLE --------------------------------------------------------------------
+
+
+// VARIABLE --------------------------------------------------------------------
+
+
 def keep_logback = "${properties?.enable_logback}"
 def console_type = "${properties?.logback_console_type}"
 def keep_appender_smtp = "${properties?.enable_logback_appender_smtp}"
 def keep_appender_file = "${properties?.enable_logback_appender_file}"
+
+
+// VARIABLE --------------------------------------------------------------------
+
+
 //  VARIABLE -------------------------------------------------------------------
+
 
 def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
 
@@ -40,10 +86,25 @@ def log_text_footer =
                 "\n-------------------------------------------------------------------------------\n\n\n\n\n\n"
 
 def log_text = log_text_header
+
+
+//  VARIABLE -------------------------------------------------------------------
+
+
 // VARIABLE --------------------------------------------------------------------
+
+
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
+
+
+// VARIABLE --------------------------------------------------------------------
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
 if (keep_jwt_authentication == 'false') {
+
     Path folderPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
@@ -65,8 +126,17 @@ if (keep_jwt_authentication == 'false') {
                     'src', 'main', 'resources', 'appJwt.pub')
     log_text.concat("\nsrc_main_resources_app_pub:\n $filePathAppPub\n")
     deleteFile(filePathAppPub.toFile())
+
 }
+
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET ---------------------------------------------------------------------
+
+
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     Path logstachPath =
@@ -78,7 +148,14 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     deleteElkLogSystemStructure(log_text)
 }
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET ---------------------------------------------------------------------
+
+
 if (keep_docker == 'false') {
     Path folderPath =
             Paths.get(request.outputDirectory,
@@ -87,7 +164,15 @@ if (keep_docker == 'false') {
     log_text += "\nFOLDER_DOCKER:\n $folderPath\n"
     deleteFolder(folderPath.toFile())
 }
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
+
+// SNIPPET ---------------------------------------------------------------------
+
+
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 
     def additional_dependencies_splitter = ','
@@ -128,7 +213,15 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 
                 if (currentLine.trim().length() == 0) continue
 
-                if (currentLine.contains("</dependency>") || currentLine.contains("</modelVersion>") || currentLine.contains("</parent>") || currentLine.contains("</description>") || currentLine.contains("</properties>") || currentLine.contains("</dependencies>") || currentLine.contains("</build>") || currentLine.contains("</dependencyManagement>")) sb.append(currentLine).append("\n\n") else sb.append(currentLine).append("\n")
+                if (currentLine.contains("</dependency>") ||
+                        currentLine.contains("</modelVersion>") ||
+                        currentLine.contains("</parent>") ||
+                        currentLine.contains("</description>") ||
+                        currentLine.contains("</properties>") ||
+                        currentLine.contains("</dependencies>") ||
+                        currentLine.contains("</build>") ||
+                        currentLine.contains("</dependencyManagement>")) sb.append(currentLine).append("\n\n")
+                else sb.append(currentLine).append("\n")
 
                 // log_text += sb.toString()
                 // Add dependencies
@@ -169,7 +262,14 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
         writer.close()
     }
 }
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
+// SNIPPET ---------------------------------------------------------------------
+
+
 if (keep_logback == 'false' ||
         (keep_logback == 'true' &&
                 console_type == '1' &&
@@ -286,9 +386,20 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
     log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
     deleteFile(filePath.toFile())
 }
+
+
 // SNIPPET ---------------------------------------------------------------------
 
+
+// SNIPPET ---------------------------------------------------------------------
+
+
 if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
+
+
+// SNIPPET ---------------------------------------------------------------------
+
+
 // SNIPPET ---------------------------------------------------------------------
 
 if (keep_src_test_java == 'false') {
@@ -307,7 +418,14 @@ if (keep_src_test_java == 'false') {
 
     deleteFolder(folderTestResourcePath.toFile())
 }
+
+
+// SNIPPET ---------------------------------------------------------------------
+
+
 // FOOTER ----------------------------------------------------------------------
+
+
 def deleteFolder(File dir) {
     if (dir.isDirectory()) {
         dir.listFiles().each { file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
@@ -336,3 +454,6 @@ private void deleteElkLogSystemStructure(log_text) {
     log_text += "\nelk-compose.xml -> docker:\n $dockerElkComposePath\n"
     deleteFile(dockerElkComposePath.toFile())
 }
+
+
+// FOOTER ----------------------------------------------------------------------

@@ -79,20 +79,24 @@ create_archetype_post_generate_groovy() {
   fi
 
   local final_file_content_merged="${archetype_filepath_param}\\${archetype_filename_param}"
+  local initial_lines_to_be_deleted_from_groovy_files='2'
 
   # Create/Overwrite the output file and add the import_file
   cat "$import_file" | tr -d '/' > "$final_file_content_merged"
 
   # Add the import_file to the final file
-  sed '1,2d' "$header_file" >> "$final_file_content_merged"
+  #sed '1,2d' "$header_file" >> "$final_file_content_merged"
+  sed '1,'${initial_lines_to_be_deleted_from_groovy_files}'d' "$header_file" >> "$final_file_content_merged"
 
   # Merging the "content of each file" (without extra tags)
   for file in "${ordered_final_file_list[@]}"; do
-      sed '1,2d' "$file" >> "$final_file_content_merged"
+      #sed '1,2d' "$header_file" >> "$final_file_content_merged"
+      sed '1,'${initial_lines_to_be_deleted_from_groovy_files}'d' "$file" >> "$final_file_content_merged"
   done
 
   # Adds the footer to the final file
-  sed '1,2d' "$footer_file" >> "$final_file_content_merged"
+  #sed '1,2d' "$footer_file" >> "$final_file_content_merged"
+  sed '1,'${initial_lines_to_be_deleted_from_groovy_files}'d' "$footer_file" >> "$final_file_content_merged"
 
   if [ "$show_debug_log_param" = "true" ]; then
     echo -e "$divider"

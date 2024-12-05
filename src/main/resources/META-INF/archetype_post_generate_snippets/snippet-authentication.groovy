@@ -1,8 +1,13 @@
 import java.nio.file.Path
 import java.nio.file.Paths
 
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
 if (keep_jwt_authentication == 'false') {
+
     Path folderPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
@@ -24,4 +29,9 @@ if (keep_jwt_authentication == 'false') {
                     'src', 'main', 'resources', 'appJwt.pub')
     log_text.concat("\nsrc_main_resources_app_pub:\n $filePathAppPub\n")
     deleteFile(filePathAppPub.toFile())
+
 }
+
+
+
+// SNIPPET ---------------------------------------------------------------------

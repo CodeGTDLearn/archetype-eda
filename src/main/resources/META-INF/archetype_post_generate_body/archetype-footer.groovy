@@ -1,7 +1,11 @@
 import java.nio.file.Path
 
 
+
+
 // FOOTER ----------------------------------------------------------------------
+
+
 def deleteFolder(File dir) {
     if (dir.isDirectory()) {
         dir.listFiles().each { file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
@@ -30,3 +34,6 @@ private void deleteElkLogSystemStructure(log_text) {
     log_text += "\nelk-compose.xml -> docker:\n $dockerElkComposePath\n"
     deleteFile(dockerElkComposePath.toFile())
 }
+
+
+// FOOTER ----------------------------------------------------------------------

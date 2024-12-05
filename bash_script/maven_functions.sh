@@ -103,6 +103,7 @@ execute_mvn_clean_install() {
 
   local archetype_project_path_in_linux=$1
   local proceed_with_function_param=$2
+  local show_maven_log_param=$3
 
   if [ "$proceed_with_function_param" = "false" ]; then
     return 1
@@ -110,7 +111,26 @@ execute_mvn_clean_install() {
 
   current_dir=$(pwd)
   cd "$archetype_project_path_in_linux" || return 1
-  mvn clean install
+
+  if [ "$show_maven_log_param" = "true" ]; then
+    echo -e "\n\n\nMaven DEBUG - STARTING ---------------------------------\n\n"
+
+    echo -e "\n\n\nMaven DEBUG - CLEAN ------------------------------------\n\n"
+    mvn clean
+
+    echo -e "\n\n\nMaven DEBUG - VERIFY -----------------------------------\n\n"
+    mvn verify
+
+    echo -e "\n\n\nMaven DEBUG - CLEAN INSTALL ----------------------------\n\n"
+    mvn clean install -X
+
+    echo -e "\n\n\nMaven DEBUG - ENDING -----------------------------------\n\n"
+  else
+    mvn clean
+    mvn verify
+    mvn clean install
+  fi
+
   cd $current_dir || return 1
 }
 

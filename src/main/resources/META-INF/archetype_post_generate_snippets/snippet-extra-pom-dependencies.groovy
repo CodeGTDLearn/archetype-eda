@@ -1,7 +1,12 @@
 import java.nio.file.Path
 import java.nio.file.Paths
 
+
+
+
 // SNIPPET ---------------------------------------------------------------------
+
+
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 
     def additional_dependencies_splitter = ','
@@ -42,7 +47,15 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 
                 if (currentLine.trim().length() == 0) continue
 
-                if (currentLine.contains("</dependency>") || currentLine.contains("</modelVersion>") || currentLine.contains("</parent>") || currentLine.contains("</description>") || currentLine.contains("</properties>") || currentLine.contains("</dependencies>") || currentLine.contains("</build>") || currentLine.contains("</dependencyManagement>")) sb.append(currentLine).append("\n\n") else sb.append(currentLine).append("\n")
+                if (currentLine.contains("</dependency>") ||
+                        currentLine.contains("</modelVersion>") ||
+                        currentLine.contains("</parent>") ||
+                        currentLine.contains("</description>") ||
+                        currentLine.contains("</properties>") ||
+                        currentLine.contains("</dependencies>") ||
+                        currentLine.contains("</build>") ||
+                        currentLine.contains("</dependencyManagement>")) sb.append(currentLine).append("\n\n")
+                else sb.append(currentLine).append("\n")
 
                 // log_text += sb.toString()
                 // Add dependencies
@@ -83,3 +96,6 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
         writer.close()
     }
 }
+
+
+// SNIPPET ---------------------------------------------------------------------

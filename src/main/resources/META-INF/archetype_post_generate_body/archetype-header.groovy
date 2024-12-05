@@ -1,7 +1,11 @@
 
 
 
+
+
+
 // HEADER ----------------------------------------------------------------------
+
 
 Properties properties = request.properties
 
@@ -11,3 +15,6 @@ def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"
 
 def project_package = "${properties?.package}".replace('.', '/')
+
+
+// HEADER ----------------------------------------------------------------------
