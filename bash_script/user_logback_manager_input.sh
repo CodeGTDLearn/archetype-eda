@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # PROMPT
-ENABLE_LOGBACK_PROMPT="Enable Custom Logback"
-OPTIONS_PROMPT="-> Select 'Console Style':\n   1)Spring Default; 2)Tabular; 3)Granular"
+ENABLE_LOGBACK_PROMPT="Enable 'Custom Logback'"
+OPTIONS_PROMPT="-> Select 'Console Style':\n   1)Default; 2)Tabular; 3)Granular"
 NUMERIC_OPTIONS_INTERVAL="1-3"
 ENABLE_SMTP_PROMPT="-> Enable SMTP/Email Appender"
 ENABLE_FILE_PROMPT="-> Enable FILE Appender"

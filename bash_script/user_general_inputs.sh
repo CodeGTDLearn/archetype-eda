@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # PROMPT
-GROUPID_PROMPT="Digite o GroupId"
-VERSION_PROMPT="Digite a Version"
-ENTITY_NAME_PROMPT="Digite o nome de Entity/Model"
-PROJECT_DESCRIPTION_PROMPT="Descricao do projeto"
+GROUPID_PROMPT="Digite o 'GroupId'"
+VERSION_PROMPT="Digite a 'Version'"
+ENTITY_NAME_PROMPT="Digite o nome de 'Entity/Model'"
+PROJECT_DESCRIPTION_PROMPT="Project 'Description'"
 
 #VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
 

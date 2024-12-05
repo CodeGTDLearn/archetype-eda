@@ -2,21 +2,20 @@
 
 
 
-        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
-        <!-- SRC\TEST -->
-        <fileSet filtered="true" packaged="true" encoding="UTF-8">
-            <directory>src/test/java</directory>
-            <includes>
-                <include>**/*.java</include>
-            </includes>
-        </fileSet>
 
+
+
+        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
         <!-- SRC\TEST\RESOURCES -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/test/resources</directory>
             <includes>
-                <include>**/*.properties</include>
+
+                <include>application.yml</include>
+                <include>application.properties</include>
+
                 <include>logback-test.xml</include>
+
                 <include>banner.txt</include>
             </includes>
         </fileSet>

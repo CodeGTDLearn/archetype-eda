@@ -2,6 +2,9 @@
 
 
 
+
+
+
         <!--   PROPERTY-TEST.XML ___________________________________________ -->
         <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>

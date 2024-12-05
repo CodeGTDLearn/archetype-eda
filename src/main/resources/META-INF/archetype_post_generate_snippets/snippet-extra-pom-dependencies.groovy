@@ -7,6 +7,9 @@ import java.nio.file.Paths
 
 
 
+
+
+
 // SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY ---------------------------------------
 
 

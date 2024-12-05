@@ -2,10 +2,20 @@
 
 
 
+
+
+
         <!--  PROPERTY-BINDING-PROPERTIES.XML   ____________________________ -->
         <requiredProperty key="enable_binding_properties">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
+        <requiredProperty key="properties_filetype">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
 
 
 <!-- ______________ -->

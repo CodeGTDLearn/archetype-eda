@@ -217,7 +217,6 @@ user_numeric_selection_or_default_value() {
     # Se sim, finaliza o loop e atribui o valor default
     if [ -z "$chosen_numeric_option_value" ]; then
       chosen_numeric_option_value=$default_numeric_option
-      #break
     fi
 
     if (( chosen_numeric_option_value >= intervalMin && chosen_numeric_option_value <= intervalMax )); then

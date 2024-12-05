@@ -1,4 +1,4 @@
-package dev.danvega.props.properties;
+package ${package}.config.properties;
 
 public record Country(String name, String currency) {
 

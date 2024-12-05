@@ -1,20 +1,5 @@
 #!/bin/bash
 
-print_maven_command_line() {
-
-  local mvn_cli=$1
-  local proceed_with_function_param=${2:-true}
-
-
-  if [ "$proceed_with_function_param" = "false" ]; then
-    return 1
-  fi
-
-  echo -e "\n\n\n\n-----> MVN-COMMAND CLI GENERATED: maven_command_line\n"
-  echo -e "$mvn_cli" | sed 's/ -D/\n-D/g'
-  echo -e "\n----------------------------------->\n\n"
-}
-
 execute_maven_command_line() {
 
   local show_basic_log=$1
@@ -26,6 +11,13 @@ execute_maven_command_line() {
   local debug_command_line
 
   local divider="\n--------------------------------------------------------------------->\n"
+
+  print_maven_command_line() {
+    local mvn_cli=$1
+    echo -e "\n\n\n\n-----> MVN-COMMAND GENERATED: maven_command_line\n"
+    echo -e "$mvn_cli" | sed 's/ -D/\n-D/g'
+    echo -e "\n----------------------------------->\n\n"
+  }
 
   if [ "$show_basic_log" = "true" ]; then
     echo -e "$divider"

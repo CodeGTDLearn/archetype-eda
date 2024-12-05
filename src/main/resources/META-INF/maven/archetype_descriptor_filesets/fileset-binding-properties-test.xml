@@ -2,9 +2,12 @@
 
 
 
+
+
+
         <!--  FILESET-BINDING-PROPERTIES-TEST.XML __________________________ -->
         <!-- SRC\TEST\PROPERTIES -->
-        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+        <fileSet filtered="true" encoding="UTF-8">
             <directory>src/test/java/binding_properties_test</directory>
             <includes>
                 <include>**/*.java</include>

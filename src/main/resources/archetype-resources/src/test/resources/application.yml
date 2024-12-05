@@ -1,0 +1,16 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+
+properties_folder: classpath:properties
+protected_properties_folder: classpath:protected_properties
+schemas_contracts_path: classpath:schemas_contracts_paths
+
+spring:
+  config:
+    import:
+      - ${properties_folder}/i18n_messages.properties
+      - ${schemas_contracts_path}/contracts_entities.properties
+      - ${schemas_contracts_path}/schemas_entities.properties
+      - ${schemas_contracts_path}/schemas_exceptions.properties
+      - ${protected_properties_folder}/authentication_credentials.properties

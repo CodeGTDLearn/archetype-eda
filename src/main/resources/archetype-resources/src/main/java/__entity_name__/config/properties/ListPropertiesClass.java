@@ -1,4 +1,4 @@
-package dev.danvega.props.properties;
+package ${package}.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;

@@ -1,5 +1,10 @@
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.FileVisitResult
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
+import java.util.concurrent.atomic.AtomicInteger
+
 
 
 
@@ -8,17 +13,38 @@ import java.nio.file.Paths
 
 // ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
 
-
 Properties properties = request.properties
+
+
+
+
+
+// ARCHETYPE-GLOBAL-VARIABLES.GROOVY ------------------------------------------
 
 def entity_folder = "${properties?.entity_name}"
 def entity_name = "${properties?.entity_name}"
 
-// 2.0) Variaveis Operacionais exclusivas deste Script
 def config_folder = "config"
+
+def binding_properties_folder = "properties"
 
 def project_package = "${properties?.package}".replace('.', '/')
 
+def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
+
+def log_text_header =
+        "\n\n\n-------------------------------------------------------------------------------\n" +
+                "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
+                "\n-------------------------------------------------------------------------------\n" +
+                "\n\n"
+
+def log_text_footer =
+        "\n\n\n-------------------------------------------------------------------------------\n" +
+                "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
+                "\n-------------------------------------------------------------------------------\n" +
+                "\n\n\n\n\n"
+
+def log_text = log_text_header
 
 
 
@@ -36,12 +62,11 @@ def authentication_folder = "authentication"
 
 
 
-
 // VARIABLE-BINDING-PROPERTIES.GROOVY ------------------------------------------
 
 
 def keep_binding_properties = "${properties?.enable_binding_properties}"
-
+def properties_filetype = "${properties?.properties_filetype}"
 
 
 
@@ -56,7 +81,6 @@ def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system
 
 
 
-
 // VARIABLE-DOCKER.GROOVY ------------------------------------------------------
 
 
@@ -66,12 +90,10 @@ def keep_docker = "${properties?.enable_docker}"
 
 
 
-
 // VARIABLE-EXTRA-POM-DEPENDENCIES.GROOVY --------------------------------------
 
 
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
-
 
 
 
@@ -89,36 +111,10 @@ def keep_appender_file = "${properties?.enable_logback_appender_file}"
 
 
 
-
-//  VARIABLE-POST-GENERATE-LOG.GROOVY ------------------------------------------
-
-
-def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
-
-def log_text_header =
-"\n\n\n-------------------------------------------------------------------------------\n" +
-    "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
-    "\n-------------------------------------------------------------------------------\n" +
-"\n\n"
-
-def log_text_footer =
-"\n\n\n-------------------------------------------------------------------------------\n" +
-    "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
-    "\n-------------------------------------------------------------------------------\n" +
-"\n\n\n\n\n"
-
-def log_text = log_text_header
-
-
-
-
-
-
 // VARIABLE-SRC-TEST-JAVA.GROOVY -----------------------------------------------
 
 
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
-
 
 
 
@@ -133,26 +129,31 @@ if (keep_jwt_authentication == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'java',
-                    project_package, entity_folder, config_folder, authentication_folder)
+                    project_package,
+                    entity_folder,
+                    config_folder,
+                    authentication_folder)
     log_text += "\nJwt_authentication_folder_path:\n $folderJwtPath\n"
     deleteFolder(folderJwtPath.toFile())
+
 
     Path filePathAppKey =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'appJwt.key')
+                    'src', 'main', 'resources',
+                    'appJwt.key')
     log_text.concat("\nsrc_main_resources_app_key:\n $filePathAppKey\n")
     deleteFile(filePathAppKey.toFile())
+
 
     Path filePathAppPub =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'appJwt.pub')
+                    'src', 'main', 'resources',
+                    'appJwt.pub')
     log_text.concat("\nsrc_main_resources_app_pub:\n $filePathAppPub\n")
     deleteFile(filePathAppPub.toFile())
-
 }
-
 
 
 
@@ -167,11 +168,20 @@ if (keep_binding_properties == 'false') {
     Path bindingPropertiesTestPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'test', 'java', 'binding_properties_test')
+                    'src', 'test', 'java',
+                    'binding_properties_test')
     log_text += "\\nFOLDER_BINDING_PROPERTIES_TEST:\\n $bindingPropertiesTestPath\n"
     deleteFolder(bindingPropertiesTestPath.toFile())
-}
 
+
+    Path propertiesYmlTestPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'resources',
+                    'application.yml')
+    log_text += "\napplication.yml -> test-resources:\n $propertiesYmlTestPath\n"
+    deleteFile(propertiesYmlTestPath.toFile())
+}
 
 
 
@@ -180,17 +190,57 @@ if (keep_binding_properties == 'false') {
 // SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
 
 
-
 if (keep_binding_properties == 'false') {
 
     Path bindingPropertiesPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'java', entity_name, 'config', 'properties')
+                    'src', 'main', 'java',
+                    project_package,
+                    entity_folder,
+                    config_folder,
+                    binding_properties_folder)
     log_text += "\\nFOLDER_BINDING_PROPERTIES:\\n $bindingPropertiesPath\n"
     deleteFolder(bindingPropertiesPath.toFile())
+
+
+    Path propertiesYmlPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'application.yml')
+    log_text += "\napplication.yml -> resources:\n $propertiesYmlPath\n"
+    deleteFile(propertiesYmlPath.toFile())
 }
 
+
+if (keep_binding_properties == 'true') {
+
+    def fileType = (properties_filetype == '1') ? '.yml' : '.properties'
+    def fileTypeMessage = (properties_filetype == '1') ? 'Delete All YML-FILES' : 'Delete All PROPERTIES-FILES'
+    log_text += "\\nChosen FileType: " + fileType + " | " + fileTypeMessage
+
+    Path mainJavaYmlPathDeletion =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'java',
+                    project_package,
+                    entity_folder,
+                    config_folder,
+                    binding_properties_folder)
+    log_text += "\\nFOLDER_BINDING_PROPERTIES - " + fileTypeMessage + "\\n $mainJavaYmlPathDeletion\n"
+//    deleteFolder(mainJavaYmlPathDeletion.toFile())
+    deleteFilesByExtension(mainJavaYmlPathDeletion, fileType, true)
+
+
+    Path mainResourcesYmlPathDeletion =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources',
+                    fileType)
+    log_text += "\n" + fileTypeMessage + " -> resources:\n $mainResourcesYmlPathDeletion\n"
+//    deleteFile(mainResourcesYmlPathDeletion.toFile())
+    deleteFilesByExtension(mainJavaYmlPathDeletion, fileType, true)
+}
 
 
 
@@ -208,9 +258,9 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
     log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logstachPath\n"
     deleteFile(logstachPath.toFile())
 
+
     deleteElkLogSystemStructure(log_text)
 }
-
 
 
 
@@ -227,7 +277,6 @@ if (keep_docker == 'false') {
     log_text += "\nFOLDER_DOCKER:\n $folderDockerPath\n"
     deleteFolder(folderDockerPath.toFile())
 }
-
 
 
 
@@ -330,7 +379,6 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 
 
 
-
 // SNIPPET-LOGBACK.GROOVY ------------------------------------------------------
 
 
@@ -349,12 +397,14 @@ if (keep_logback == 'false' ||
     log_text += "\nlogback-spring.xml -> resources:\n $logbackSpring_Path\n"
     deleteFile(logbackSpring_Path.toFile())
 
+
     Path logbackTest_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources', 'logback-test.xml')
     log_text += "\nlogback-test.xml -> test-resources:\n $logbackTest_Path\n"
     deleteFile(logbackTest_Path.toFile())
+
 
     Path logbackSpringConfig_Path =
             Paths.get(request.outputDirectory,
@@ -375,12 +425,14 @@ if (keep_logback == 'true' && console_type == '1') {
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
     deleteFile(consoleGranularFile.toFile())
 
+
     Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
     log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
     deleteFile(granularLayoutConsoleFile.toFile())
+
 
     Path consoleTabularFile =
             Paths.get(request.outputDirectory,
@@ -412,6 +464,7 @@ if (keep_logback == 'true' && console_type == '2') {
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
     deleteFile(consoleGranularFile.toFile())
+
 
     Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,
@@ -455,17 +508,6 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
 
 
 
-
-// SNIPPET-POST-GENERATE-LOG.GROOVY --------------------------------------------
-
-
-if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
-
-
-
-
-
-
 // SNIPPET-SRC-TEST-JAVA.GROOVY ------------------------------------------------
 
 if (keep_src_test_java == 'false') {
@@ -476,11 +518,13 @@ if (keep_src_test_java == 'false') {
     log_text += "\nFOLDER_SRC_TEST_JAVA:\n $folderTestPath\n"
     deleteFolder(folderTestPath.toFile())
 
+
     Path folderTestResourcePath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources')
     log_text += "\nFOLDER_SRC_TEST_RESOURCES:\n $folderTestResourcePath\n"
+
 
     deleteFolder(folderTestResourcePath.toFile())
 }
@@ -488,11 +532,14 @@ if (keep_src_test_java == 'false') {
 
 
 
-
-
 // ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
 
 
+// SNIPPET-POST-GENERATE-LOG.GROOVY --------------------------------------------
+if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
+
+
+// UTIL FUNCTIONS --------------------------------------------------------------
 def deleteFolder(File dir) {
     if (dir.isDirectory()) {
         dir.listFiles().each { file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
@@ -501,10 +548,12 @@ def deleteFolder(File dir) {
     dir.delete()
 }
 
+
 def deleteFile(File file) {
     if (file.isFile()) file.delete()
 //    FileOperations.deleteFile(file)
 }
+
 
 private void deleteElkLogSystemStructure(log_text) {
     Path folderELKPath =
@@ -521,6 +570,44 @@ private void deleteElkLogSystemStructure(log_text) {
     log_text += "\nelk-compose.xml -> docker:\n $dockerElkComposePath\n"
     deleteFile(dockerElkComposePath.toFile())
 }
+
+
+/**
+ * Deletes all files with a specified extension in a directory and its subdirectories.
+ *
+ * @param directoryPath Path of the directory where files will be deleted
+ * @param extension Extension of files to be deleted (e.g.: ".yml", ".properties")
+ * @param recursive If true, deletes files in subdirectories as well
+ * @return Number of files deleted
+ * @throws IOException If an error occurs while accessing or deleting files
+ * @example: deleteFilesByExtension(Paths.get(directoryPath), ".yml", true)   */
+private int deleteFilesByExtension(Path directoryPath, String extension, boolean recursive = true) {
+
+    if (!Files.exists(directoryPath)) return 0
+
+    final def deletedFiles = new AtomicInteger(0)
+
+    Files.walkFileTree(directoryPath, new SimpleFileVisitor<Path>() {
+        @Override
+        FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+            if (file.toString().endsWith(extension)) {
+                Files.delete(file)
+                deletedFiles.incrementAndGet()
+            }
+            return FileVisitResult.CONTINUE
+        }
+
+        @Override
+        FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+            return recursive || dir == directoryPath ?
+                    FileVisitResult.CONTINUE :
+                    FileVisitResult.SKIP_SUBTREE
+        }
+    })
+
+    return deletedFiles.get()
+}
+
 
 
 // FOOTER ----------------------------------------------------------------------

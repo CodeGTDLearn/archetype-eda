@@ -13,12 +13,16 @@ create_archetype_post_generate_groovy() {
     return 1
   fi
 
+  local final_file_content_merged="${archetype_filepath_param}\\${archetype_filename_param}"
+  local initial_lines_to_be_deleted_from_merged_groovy_files='6'
+
   local body_folder="${archetype_filepath_param}\\archetype_post_generate_body"
   local variables_folder="${archetype_filepath_param}\\archetype_post_generate_variables"
   local snippets_folder="${archetype_filepath_param}\\archetype_post_generate_snippets"
 
   local import_file="${body_folder}\\archetype-imports.groovy"
   local header_file="${body_folder}\\archetype-header.groovy"
+  local general_vars_file="${body_folder}\\archetype-global-variables.groovy"
   local footer_file="${body_folder}\\archetype-footer.groovy"
 
   mapfile -t variable_filename_list_from_folder < <(ls -1 "${variables_folder}")
@@ -59,6 +63,7 @@ create_archetype_post_generate_groovy() {
   # Checks if necessary files exist
   if [[ ! -f "$header_file" ]] ||
      [[ ! -f "$import_file" ]] ||
+     [[ ! -f "$general_vars_file" ]] ||
      [[ ! -f "$footer_file" ]]; then
     echo "ERROR_BODY_FILES in ARCHETYPE_POST_GENERATE_GROOVY - NOT FOUND!"
     echo -e "\nType any 'key' to exit."
@@ -66,39 +71,26 @@ create_archetype_post_generate_groovy() {
     exit 1
   fi
 
-#  # Debug to check the content of each array before merging
-#  if [ "$show_debug_log_param" = "true" ]; then
-#    echo -e "\n\nArchetype-post-generate-VARIABLE_file_list_from_folder - CONTENT:"
-#    printf '%s\n' "${variable_filename_list_from_folder[@]}"
-#
-#    echo -e "\n\nArchetype-post-generate-SNIPPETS_file_list_from_folder - CONTENT:"
-#    printf '%s\n' "${snippets_filename_list_from_folder[@]}"
-#
-#    echo -e "\n\nOrdered_final_file_list_from_folder - CONTENT:"
-#    printf '%s\n\n' "${ordered_final_file_list[@]}"
-#  fi
 
-  local final_file_content_merged="${archetype_filepath_param}\\${archetype_filename_param}"
-  local initial_lines_to_be_deleted_from_groovy_files='2'
-
-  # Create/Overwrite the output file and add the import_file
+  # 1) Create/Overwrite the output file and add the 'IMPORT_FILE'
   cat "$import_file" | tr -d '/' > "$final_file_content_merged"
 
-  # Add the import_file to the final file
-  #sed '1,2d' "$header_file" >> "$final_file_content_merged"
-  sed '1,'${initial_lines_to_be_deleted_from_groovy_files}'d' "$header_file" >> "$final_file_content_merged"
+  # 2) Add the 'HEADER_FILE' to the final file
+  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$header_file" >> "$final_file_content_merged"
 
-  # Merging the "content of each file" (without extra tags)
+  # 3) Add the 'GENERAL_VARIABLES' to the final file
+  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$general_vars_file" >> "$final_file_content_merged"
+
+  # 4) Merging the "content of each file from ORDERED_FINAL_FILE_LIST" (without extra tags) to the final file
   for file in "${ordered_final_file_list[@]}"; do
-      #sed '1,2d' "$header_file" >> "$final_file_content_merged"
-      sed '1,'${initial_lines_to_be_deleted_from_groovy_files}'d' "$file" >> "$final_file_content_merged"
+      sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$file" >> "$final_file_content_merged"
   done
 
-  # Adds the footer to the final file
-  #sed '1,2d' "$footer_file" >> "$final_file_content_merged"
-  sed '1,'${initial_lines_to_be_deleted_from_groovy_files}'d' "$footer_file" >> "$final_file_content_merged"
+  # 5) Adds the 'FOOTER_FILE' to the final file
+  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$footer_file" >> "$final_file_content_merged"
 
   if [ "$show_debug_log_param" = "true" ]; then
+
     echo -e "$divider"
     echo -e "\n\n-----> EXECUTING: 'create_archetype_post_generate_groovy function' - START \n\n"
 
@@ -112,6 +104,7 @@ create_archetype_post_generate_groovy() {
 
     echo -e "\n\n-----> EXECUTING: 'create_archetype_post_generate_groovy function' - END \n\n"
     echo -e "$divider"
+
   fi
 
 }

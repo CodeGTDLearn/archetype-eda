@@ -7,6 +7,9 @@ import java.nio.file.Paths
 
 
 
+
+
+
 // SNIPPET-LOGBACK.GROOVY ------------------------------------------------------
 
 
@@ -25,12 +28,14 @@ if (keep_logback == 'false' ||
     log_text += "\nlogback-spring.xml -> resources:\n $logbackSpring_Path\n"
     deleteFile(logbackSpring_Path.toFile())
 
+
     Path logbackTest_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources', 'logback-test.xml')
     log_text += "\nlogback-test.xml -> test-resources:\n $logbackTest_Path\n"
     deleteFile(logbackTest_Path.toFile())
+
 
     Path logbackSpringConfig_Path =
             Paths.get(request.outputDirectory,
@@ -51,12 +56,14 @@ if (keep_logback == 'true' && console_type == '1') {
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
     deleteFile(consoleGranularFile.toFile())
 
+
     Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
     log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
     deleteFile(granularLayoutConsoleFile.toFile())
+
 
     Path consoleTabularFile =
             Paths.get(request.outputDirectory,
@@ -88,6 +95,7 @@ if (keep_logback == 'true' && console_type == '2') {
                     'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
     deleteFile(consoleGranularFile.toFile())
+
 
     Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,

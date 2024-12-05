@@ -1,0 +1,14 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  PROPERTY-DOCKER.XML  ________________________________________  -->
+        <requiredProperty key="enable_docker">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+<!-- ______________ -->

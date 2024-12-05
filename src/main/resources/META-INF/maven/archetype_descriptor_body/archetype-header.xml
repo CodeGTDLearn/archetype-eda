@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--  ARCHETYPE-HEADER.XML  _______________________________________________  -->
 
+
+
 <archetype-descriptor
         xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.1.0
         http://maven.apache.org/xsd/archetype-catalog-1.1.0.xsd"
@@ -9,6 +11,7 @@
         name="arch">
 
     <requiredProperties>
+
 
 
 <!-- ______________ -->
