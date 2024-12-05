@@ -14,7 +14,7 @@ ARCHETYPE_ARTIFACT_ID="eda-archetype"
 
 # Sinalizacao de 'Item', 'Topico' ou 'Opcao' - ARIAL FONT
 ITEM_MARK="♦ "
-TOPIC_MARK=" •"
+TOPIC_MARK="  •"
 OPTION_MARK="  ▪"
 
 

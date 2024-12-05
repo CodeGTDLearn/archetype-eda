@@ -18,11 +18,11 @@ is_compound_input_valid() {
 
 get_artifactId_input() {
 
-  local artifactId_text='O artifactId[Nome do Projeto]'
+  local artifactId_text='O artifactId'
 
   while true; do
 
-    artifactId=$(get_user_input_or_default_value "artifact" "my_archetype" "$ARTIFACT_ID_PROMPT")
+    artifactId=$(get_user_input_or_default_value "artifact" "my_artifact" "$ARTIFACT_ID_PROMPT")
 
     if [ -d "$artifactId" ]; then
        echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_MESSAGE \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"

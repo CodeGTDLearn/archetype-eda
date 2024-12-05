@@ -6,7 +6,7 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -DarchetypeVersion=\"$ARCHETYPE_VERSION\" \
 \
 -Dpackage=\"$project_package\" \
--DgroupId=\"$groupid\" \
+-DgroupId=\"$groupId\" \
 -Dversion=\"$version\" \
 -DartifactId=\"$artifactId\" \
 -Dproject_description=\"$project_description\" \

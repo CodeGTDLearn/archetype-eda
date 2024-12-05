@@ -1,8 +1,0 @@
-application:
-  property:
-    task: Binding Object Properties Test
-    objects:
-      - name: Brazil Test
-        currency: Brazilian Real Test
-      - name: Canada Test
-        currency: Canadian Dollar Test

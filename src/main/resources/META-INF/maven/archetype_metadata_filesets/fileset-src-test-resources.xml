@@ -1,0 +1,33 @@
+<!-- ______________ -->
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
+
+        <!-- SRC\TEST\RESOURCES  -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>application.yml</include>
+                <include>application.properties</include>
+                <include>logback-test.xml</include>
+                <include>banner.txt</include>
+            </includes>
+        </fileSet>
+
+
+        <!--  FILESET-SRC-TEST-RESOURCES-PROPERTIES.XML ____________________ -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources/properties_test</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.properties</include>
+            </includes>
+        </fileSet>
+
+<!-- ______________ -->

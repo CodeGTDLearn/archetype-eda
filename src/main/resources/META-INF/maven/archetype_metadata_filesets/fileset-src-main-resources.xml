@@ -1,0 +1,51 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  FILESET-SRC-MAIN-RSCS.XML  ___________________________________ -->
+
+        <!-- SRC\MAIN\RESOURCES FILES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources</directory>
+            <includes>
+
+                <include>data.sql</include>
+                <include>schema.sql</include>
+
+                <include>app.key</include>
+                <include>app.pub</include>
+
+                <include>application.yml</include>
+                <include>application.properties</include>
+
+                <include>logback-spring.xml</include>
+
+                <include>banner.txt</include>
+
+            </includes>
+        </fileSet>
+
+
+        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+
+        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/protected_properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+<!-- ______________ -->

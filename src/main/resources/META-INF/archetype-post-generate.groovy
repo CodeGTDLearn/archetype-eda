@@ -1,22 +1,10 @@
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.Files
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
+import java.nio.file.Files// ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
 
 Properties properties = request.properties
+
+// -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
 // ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
@@ -45,34 +33,9 @@ def log_text_footer =
 
 def log_text = log_text_header
 
-java.io.File
-
-
 // -----------------------------------------------------------------------------
 
-// ARCHETYPE-PATH-ROOT-VARIABLES.GROOVY ----------------------------------------
-//Path projectRootFolder =
-//        Paths.get(
-//                request.outputDirectory,
-//                request.artifactId)
-//
-//Path rootGitFolder =
-//        projectRootFolder
-//                .resolve("git_temp")
-//
-//Path rootGitIgnoreFile =
-//        projectRootFolder
-//                .resolve('gitignore')
-//
-//Path rootDockerFolder =
-//        projectRootFolder
-//                .resolve("docker")
-//
-//Path rootELKFolder =
-//        Paths.get(
-//                request.outputDirectory,
-//                request.artifactId,
-//                'ELK')
+// -----------------------------------------------------------------------------
 
 // ARCHETYPE-PATH-ROOT-VARIABLES.GROOVY ----------------------------------------
 
@@ -84,154 +47,46 @@ Path rootDockerFolder = projectRootFolder.resolve("docker")
 
 Path rootGitIgnoreFile = projectRootFolder.resolve(".gitignore")
 
-java.io.File
-
+// -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 
-// ARCHETYPE-PATH-VARIABLES.GROOVY ---------------------------------------------
-//
-//Path srcMainJava =
-//        Paths.get(
-//                request.outputDirectory,
-//                request.artifactId,
-//                'src', 'main', 'java')
-//
-//Path srcMainResources =
-//        Paths.get(
-//                request.outputDirectory,
-//                request.artifactId,
-//                'src', 'main', 'resources')
-//
-//Path srcMainResourcesProperties =
-//        srcMainResources
-//                .resolve("properties")
-//
-//Path srcMainJavaEntityFolder =
-//        srcMainJava
-//                .resolve(project_package)
-//                .resolve(entity_folder)
-//
-//Path srcMainJavaEntityConfigFolder =
-//        srcMainJavaEntityFolder
-//                .resolve(config_folder)
-//
-//Path srcMainJavaEntityConfigPropertiesFolder =
-//        srcMainJavaEntityConfigFolder
-//                .resolve("properties")
-
 // ARCHETYPE-PATH-SRC-MAIN-VARIABLES.GROOVY -----------------------------------
 
-//Path srcMainJava = Paths.get(request.outputDirectory, request.artifactId, "src", "main", "java")
-//Path srcMainResources = Paths.get(request.outputDirectory, request.artifactId, "src", "main", "resources")
 Path srcMainJava = projectRootFolder.resolve("src").resolve("main").resolve("java")
 Path srcMainResources = projectRootFolder.resolve("src").resolve("main").resolve("resources")
 
-Path srcMainResourcesProperties = srcMainResources.resolve("properties")
+def resourcePropertiesFolder = "properties"
+
+Path srcMainResourcesProperties = srcMainResources.resolve(resourcePropertiesFolder)
 
 Path srcMainJavaEntityFolder = srcMainJava.resolve(project_package).resolve(entity_folder)
 Path srcMainJavaEntityConfigFolder = srcMainJavaEntityFolder.resolve(config_folder)
 
 
-Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve("properties")
-
-java.io.File
-
+Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(resourcePropertiesFolder)
 
 // -----------------------------------------------------------------------------
 
-//// ARCHETYPE-PATH-SRC-TEST-VARIABLES.GROOVY ---------------------------------------------
-//Path srcTestJava =
-//        Paths.get(request.outputDirectory,
-//                request.artifactId,
-//                'src', 'test', 'java')
-//
-//Path srcTestResources =
-//        Paths.get(request.outputDirectory,
-//                request.artifactId,
-//                'src', 'test', 'resources')
-//
-//Path srcTestJavaEntityConfigPropertiesFolder =
-//        srcTestJava
-//                .resolve(entity_folder)
-//                .resolve(config_folder)
-//                .resolve("properties")
-//
-//Path srcTestResourcesPropertiesFolder =
-//        srcTestResources
-//                .resolve("properties")
-
+// -----------------------------------------------------------------------------
 
 // ARCHETYPE-PATH-SRC-TEST-VARIABLES.GROOVY -----------------------------------
-
-//Path srcTestJava = Paths.get(request.outputDirectory, request.artifactId, "src", "test", "java")
-//Path srcTestResources = Paths.get(request.outputDirectory, request.artifactId, "src", "test", "resources")
 
 Path srcTestJava = projectRootFolder.resolve("src").resolve("test").resolve("java")
 Path srcTestResources = projectRootFolder.resolve("src").resolve("test").resolve("resources")
 
+def testResourcePropertiesFolder = "properties_test"
+
 Path srcTestJavaEntityConfigPropertiesFolder = srcTestJava
         .resolve(entity_folder)
         .resolve(config_folder)
-        .resolve("properties")
+        .resolve(testResourcePropertiesFolder)
 
-Path srcTestResourcesPropertiesFolder = srcTestResources.resolve("properties")
-
-java.io.File
-
+Path srcTestResourcesPropertiesFolder = srcTestResources.resolve(testResourcePropertiesFolder)
 
 // -----------------------------------------------------------------------------
 
-// ARCHETYPE-PATH-LOGBACK-VARIABLES.GROOVY -------------------------------------
-//Path srcMainResourcesLogbackSpringConfigFolder =
-//        srcMainResources
-//                .resolve("logback-spring-config")
-//
-//Path logstachPath =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-tcp-elk-logstash.xml")
-//
-//Path logbackConsoleTabularFile =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-console-tabular.xml")
-//
-//Path logbackStmpPathFile =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-smtp-email.xml")
-//
-//Path logbackRolFilePath =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-rolfile-file.xml")
-//
-//
-//Path logbackAppenderConsoleGranularFile =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-console-granular.xml")
-//
-//Path appenderGranularLayoutConsoleFile =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-console-layouts-granular.xml")
-//
-//Path srcTestResourceslogbackTestFile =
-//        srcTestResources
-//                .resolve("logback-test.xml")
-//
-//Path logbackConsoleGranularFile =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-console-granular.xml")
-//
-//Path logbackGranularLayoutConsoleFile =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-console-layouts-granular.xml")
-//
-//Path logbackConsoleTabularFile222 =
-//        srcMainResourcesLogbackSpringConfigFolder
-//                .resolve("appender-console-tabular.xml")
-//
-//Path srcMainResourcesLogbackSpringXmlFile =
-//        srcMainResources
-//                .resolve("logback-spring.xml")
-
+// -----------------------------------------------------------------------------
 
 // ARCHETYPE-PATH-LOGBACK-VARIABLES.GROOVY -------------------------------------
 
@@ -247,24 +102,10 @@ Path appenderGranularLayoutConsoleFile = srcMainResourcesLogbackSpringConfigFold
 Path srcTestResourcesLogbackTestFile = srcTestResources.resolve("logback-test.xml")
 Path srcMainResourcesLogbackSpringXmlFile = srcMainResources.resolve("logback-spring.xml")
 
-java.io.File
+// -----------------------------------------------------------------------------
 
 
 // -----------------------------------------------------------------------------
-
-// ARCHETYPE-PATH-SECURITY-VARIABLES.GROOVY ------------------------------------
-//Path folderJwtPath =
-//        srcMainJavaEntityConfigFolder
-//                .resolve(authentication_folder)
-//
-//Path filePathAppKey =
-//        srcMainResources
-//                .resolve("appJwt.key")
-//
-//Path filePathAppPub =
-//        srcMainResources
-//                .resolve("appJwt.pub")
-
 
 // ARCHETYPE-PATH-SECURITY-VARIABLES.GROOVY ------------------------------------
 def authentication_folder = "authentication"
@@ -273,6 +114,8 @@ def authentication_folder = "authentication"
 Path filePathAppKey = srcMainResources.resolve("appJwt.key")
 Path filePathAppPub = srcMainResources.resolve("appJwt.pub")
 Path folderJwtPath = srcMainJavaEntityConfigFolder.resolve(authentication_folder)
+
+// -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
 
@@ -824,26 +667,13 @@ if (keep_src_test_java == 'false') {
     log_text += "\nFOLDER_SRC_TEST_RESOURCES:\n $srcTestResources\n"
     deleteFolder(srcTestResources.toFile())
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
 
 // ARCHETYPE-POST-GENERATE-LOG -------------------------------------------------
 if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 
-// FOOTER ----------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // ARCHETYPE-FILE-FUNCTIONS.GROOVY ---------------------------------------------
 
 def deleteFile(File file) {
@@ -877,9 +707,9 @@ def renameFile(File file, String newName) {
 }
 
 
-// FUNCTIONS -------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
-
+// -----------------------------------------------------------------------------
 // ARCHETYPE-FOLDER-FUNCTIONS.GROOVY -------------------------------------------
 def deleteFolder(File pathToFolder) {
     if (pathToFolder.isDirectory()) {
@@ -905,6 +735,7 @@ def deleteElkLogSystemStructure(log_text) {
     log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
     deleteFile(dockerElkComposePath.toFile())
 }
+
 
 def renameFolder(File pathToFolder, String newName) {
 
@@ -979,4 +810,4 @@ def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
     println "Saiu da funcao deleteFilesFromListFromFolder"
 }
 
-// FUNCTIONS -------------------------------------------------------------------
+// -----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 import java.nio.file.Path
 
-
+// -----------------------------------------------------------------------------
 // ARCHETYPE-FOLDER-FUNCTIONS.GROOVY -------------------------------------------
 def deleteFolder(File pathToFolder) {
     if (pathToFolder.isDirectory()) {
@@ -26,6 +26,7 @@ def deleteElkLogSystemStructure(log_text) {
     log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
     deleteFile(dockerElkComposePath.toFile())
 }
+
 
 def renameFolder(File pathToFolder, String newName) {
 
@@ -100,4 +101,4 @@ def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
     println "Saiu da funcao deleteFilesFromListFromFolder"
 }
 
-// FUNCTIONS -------------------------------------------------------------------
+// -----------------------------------------------------------------------------

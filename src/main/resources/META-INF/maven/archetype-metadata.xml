@@ -23,6 +23,8 @@
 
 
         <!-- PROPERTY-API-GENERAL.XML ______________________________________ -->
+
+        <!-- PORT __________________________________________________________ -->
         <requiredProperty key="api_port">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -410,37 +412,16 @@
 
 
 
-        <!--  FILESET-SRC-MAIN-RSCS-PROPERTIES.XML _________________________ -->
+        <!--  FILESET-SRC-MAIN-JAVA.XML  ___________________________________ -->
 
-
-        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/properties</directory>
+        <!-- SRC\MAIN -->
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/main/java</directory>
             <includes>
-                <include>**/*.properties</include>
-                <include>**/*.yml</include>
+                <include>**/*.java</include>
+                <include>AppStarter.java</include>
             </includes>
         </fileSet>
-
-
-
-
-
-
-
-
-        <!--  FILESET-SRC-MAIN-RSCS-PROTECTED-PROPERTIES.XML _______________ -->
-
-
-        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/protected_properties</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>**/*.yml</include>
-            </includes>
-        </fileSet>
-
 
 
 
@@ -450,7 +431,7 @@
 
         <!--  FILESET-SRC-MAIN-RSCS.XML  ___________________________________ -->
 
-        <!-- SRC\MAIN\RESOURCES -->
+        <!-- SRC\MAIN\RESOURCES FILES -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources</directory>
             <includes>
@@ -472,63 +453,24 @@
         </fileSet>
 
 
-
-
-
-
-
-
-        <!--  FILESET-SRC-MAIN.XML  ________________________________________ -->
-
-        <!-- SRC\MAIN -->
-        <fileSet filtered="true" packaged="true" encoding="UTF-8">
-            <directory>src/main/java</directory>
-            <includes>
-                <include>**/*.java</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-
-        <!--  FILESET-SRC-TEST-RSCS-PROPERTIES.XML _________________________ -->
-
+        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
         <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources/properties</directory>
+            <directory>src/main/resources/properties</directory>
             <includes>
-                <include>**/*.yml</include>
                 <include>**/*.properties</include>
+                <include>**/*.yml</include>
             </includes>
         </fileSet>
 
 
-
-
-
-
-
-
-        <!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
-
-        <!-- SRC\TEST\RESOURCES -->
+        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
         <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources</directory>
+            <directory>src/main/resources/protected_properties</directory>
             <includes>
-
-                <include>application.yml</include>
-                <include>application.properties</include>
-
-                <include>logback-test.xml</include>
-
-                <include>banner.txt</include>
-
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
             </includes>
         </fileSet>
-
 
 
 
@@ -546,6 +488,37 @@
             </includes>
         </fileSet>
 
+
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
+
+        <!-- SRC\TEST\RESOURCES  -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>application.yml</include>
+                <include>application.properties</include>
+                <include>logback-test.xml</include>
+                <include>banner.txt</include>
+            </includes>
+        </fileSet>
+
+
+        <!--  FILESET-SRC-TEST-RESOURCES-PROPERTIES.XML ____________________ -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources/properties_test</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.properties</include>
+            </includes>
+        </fileSet>
 
 <!-- ______________ -->
 
