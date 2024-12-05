@@ -23,23 +23,12 @@
 
 
         <!-- PROPERTY-API-GENERAL.XML ______________________________________ -->
-        <!-- API-PORT -->
         <requiredProperty key="api_port">
             <defaultValue></defaultValue>
         </requiredProperty>
 
-        <!-- GIT-REPOT -->
-        <requiredProperty key="enable_git_support">
-            <defaultValue></defaultValue>
-        </requiredProperty>
 
-        <requiredProperty key="git_url_repo">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-        <requiredProperty key="git_branch_repo">
-            <defaultValue></defaultValue>
-        </requiredProperty>
+        <requiredProperty key="project_description"/>
 
 
 
@@ -65,7 +54,6 @@
 
 
         <!--  PROPERTY-BINDING-PROPERTIES-TESTS.XML  _______________________ -->
-
         <requiredProperty key="enable_binding_properties_tests">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -161,12 +149,34 @@
 
 
         <!--  PROPERTY-GENERAL.XML  _______________________________________  -->
-        <requiredProperty key="project_description"/>
-
-
         <requiredProperty key="show_archetype_pos_processor_log">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
+
+
+
+
+
+
+
+
+        <!-- PROPERTY-GITHUB.XML ___________________________________________ -->
+        <requiredProperty key="enable_git_support">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="git_url_repo">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="git_branch_repo">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
 
 
 
@@ -255,7 +265,7 @@
 
 
 
-        <!--   PROPERTY-TEST.XML ___________________________________________ -->
+        <!--   PROPERTY-SRC-TEST.XML ___________________________________________ -->
         <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -272,85 +282,6 @@
     <fileSets>
 
 
-
-
-
-
-
-
-
-
-
-
-
-        <!--  FILESET-API-GENERAL.XML ______________________________________ -->
-        <!-- GIT SUPPORT -->
-        <fileSet filtered="false" encoding="UTF-8">
-          <directory>git_temp</directory>
-          <includes>
-              <include>**/*</include>
-          </includes>
-          <excludes>
-            <exclude>config</exclude>
-          </excludes>
-        </fileSet>
-
-
-        <fileSet filtered="true" encoding="UTF-8">
-          <directory>git_temp</directory>
-          <includes>
-            <include>config</include>
-          </includes>
-        </fileSet>
-
-
-
-
-
-
-
-
-
-
-
-        <!--  FILESET-BINDING-PROPERTIES-TEST.XML __________________________ -->
-
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources/properties</directory>
-            <includes>
-                <include>**/*.yml</include>
-                <include>**/*.properties</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-
-        <!--  FILESET-BINDING-PROPERTIES.XML _______________________________ -->
-
-
-        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/properties</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>**/*.yml</include>
-            </includes>
-        </fileSet>
-
-
-        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/protected_properties</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>**/*.yml</include>
-            </includes>
-        </fileSet>
 
 
 
@@ -393,24 +324,27 @@
 
 
 
-        <!--  FILESET-GENERAL.XML  _________________________________________ -->
-        <!-- MAVEN -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>.mvn/wrapper</directory>
-            <includes>
-                <include>**/*.properties</include>
-            </includes>
+
+
+
+        <!--  FILESET-GITHUB.XML ___________________________________________ -->
+        <!-- GIT SUPPORT -->
+        <fileSet filtered="false" encoding="UTF-8">
+          <directory>git_temp</directory>
+          <includes>
+              <include>**/*</include>
+          </includes>
+          <excludes>
+            <exclude>config</exclude>
+          </excludes>
         </fileSet>
 
-        <!-- GENERAL FILES -->
-        <fileSet encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>.gitignore</include>
-                <include>HELP.md</include>
-                <include>mvnw</include>
-                <include>mvnw.cmd</include>
-            </includes>
+
+        <fileSet filtered="true" encoding="UTF-8">
+          <directory>git_temp</directory>
+          <includes>
+            <include>config</include>
+          </includes>
         </fileSet>
 
 
@@ -436,14 +370,81 @@
 
 
 
-        <!--  FILESET-SRC.XML  _____________________________________________ -->
-        <!-- SRC\MAIN -->
-        <fileSet filtered="true" packaged="true" encoding="UTF-8">
-            <directory>src/main/java</directory>
+        <!--  FILESET-ROOT-MVN.XML  ________________________________________ -->
+        <!-- MAVEN -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>.mvn/wrapper</directory>
             <includes>
-                <include>**/*.java</include>
+                <include>**/*.properties</include>
             </includes>
         </fileSet>
+
+
+
+
+
+
+
+
+
+        <!--  FILESET-ROOT.XML  ____________________________________________ -->
+        <!-- GENERAL FILES -->
+        <fileSet encoding="UTF-8">
+            <directory></directory>
+            <includes>
+                <include>.gitignore</include>
+                <include>HELP.md</include>
+                <include>mvnw</include>
+                <include>mvnw.cmd</include>
+            </includes>
+        </fileSet>
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-MAIN-RSCS-PROPERTIES.XML _________________________ -->
+
+
+        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-MAIN-RSCS-PROTECTED-PROPERTIES.XML _______________ -->
+
+
+        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/protected_properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-MAIN-RSCS.XML  ___________________________________ -->
 
         <!-- SRC\MAIN\RESOURCES -->
         <fileSet filtered="true" encoding="UTF-8">
@@ -473,16 +474,41 @@
 
 
 
-        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
-        <!-- SRC\TEST -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/java</directory>
+        <!--  FILESET-SRC-MAIN.XML  ________________________________________ -->
+
+        <!-- SRC\MAIN -->
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/main/java</directory>
             <includes>
                 <include>**/*.java</include>
             </includes>
         </fileSet>
 
 
+
+
+
+
+
+
+        <!--  FILESET-SRC-TEST-RSCS-PROPERTIES.XML _________________________ -->
+
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources/properties</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.properties</include>
+            </includes>
+        </fileSet>
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
 
         <!-- SRC\TEST\RESOURCES -->
         <fileSet filtered="true" encoding="UTF-8">
@@ -496,6 +522,23 @@
 
                 <include>banner.txt</include>
 
+            </includes>
+        </fileSet>
+
+
+
+
+
+
+
+
+        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
+
+        <!-- SRC\TEST -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/java</directory>
+            <includes>
+                <include>**/*.java</include>
             </includes>
         </fileSet>
 

@@ -1,0 +1,27 @@
+<!-- ______________ -->
+
+
+
+
+
+
+
+
+        <!-- PROPERTY-GITHUB.XML ___________________________________________ -->
+        <requiredProperty key="enable_git_support">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="git_url_repo">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="git_branch_repo">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+
+<!-- ______________ -->

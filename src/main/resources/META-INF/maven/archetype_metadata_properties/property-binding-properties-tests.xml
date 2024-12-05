@@ -1,0 +1,14 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  PROPERTY-BINDING-PROPERTIES-TESTS.XML  _______________________ -->
+        <requiredProperty key="enable_binding_properties_tests">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+<!-- ______________ -->

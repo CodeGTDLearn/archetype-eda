@@ -104,13 +104,6 @@ Path propertiesProjectFolder =
 // -----------------------------------------------------------------------------
 
 
-// VARIABLES-API-GENERAL.GROOVY ------------------------------------------------
-
-// GIT SUPPORT -----------------------------------------------------------------
-def keep_git_support= "${properties?.enable_git_support}"
-// -----------------------------------------------------------------------------
-
-
 
 // VARIABLES-AUTHENTICATION.GROOVY ---------------------------------------------
 
@@ -161,6 +154,13 @@ def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 // -----------------------------------------------------------------------------
 
 
+// VARIABLES-GITHUB.GROOVY -----------------------------------------------------
+
+// GIT SUPPORT -----------------------------------------------------------------
+def keep_git_support= "${properties?.enable_git_support}"
+// -----------------------------------------------------------------------------
+
+
 
 // VARIABLES-LOGBACK.GROOVY ----------------------------------------------------
 
@@ -182,35 +182,10 @@ def properties_filetype_choice = "${properties?.properties_filetype}"
 // VARIABLES-SRC-TEST-JAVA.GROOVY ----------------------------------------------
 
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
-// -----------------------------------------------------------------------------
-
-
-// SNIPPET-API-GENERAL.GROOVY --------------------------------------------------
-
-// GIT SUPPORT -----------------------------------------------------------------
-if (keep_git_support == 'false') {
-
-  log_text += "\\nRemovind FOLDER_.GIT:\\n $rootGitFolder\n"
-  
-  deleteFolder(rootGitFolder.toFile())
-}
-
-
-if (keep_git_support == 'true') {
-
-  log_text += "\\nRenaming FOLDER_.GIT:\\n $rootGitFolder\n"
-
-  listFolderContents(rootGitFolder.toFile())
-
-  renameFolder(rootGitFolder.toFile(), ".git")
-}
 
 
 // -----------------------------------------------------------------------------
-
-
-
-// SNIPPET-AUTHENTICATION.GROOVY -----------------------------------------------
+// SNIPPET-AUTHENTICATION.GROOVY
 if (keep_jwt_authentication == 'false') {
 
     Path folderJwtPath =
@@ -432,11 +407,14 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
             filesToDelete.toString() + "\n $binding_properties_path\n"
 
 }
+
+
+
+
+
+
 // -----------------------------------------------------------------------------
-
-
-
-// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
+// SNIPPET-BINDING-PROPERTIES.GROOVY
 if (keep_binding_properties == 'false') {
 
     deleteFolder(propertiesProjectFolder.toFile())
@@ -663,6 +641,30 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 }
 
 
+
+
+
+
+// -----------------------------------------------------------------------------
+// SNIPPET-GITHUB.GROOVY
+if (keep_git_support == 'false') {
+
+  log_text += "\\nRemovind FOLDER_.GIT:\\n $rootGitFolder\n"
+  
+  deleteFolder(rootGitFolder.toFile())
+}
+
+
+if (keep_git_support == 'true') {
+
+  log_text += "\\nRenaming FOLDER_.GIT:\\n $rootGitFolder\n"
+
+  listFolderContents(rootGitFolder.toFile())
+
+  renameFolder(rootGitFolder.toFile(), ".git")
+}
+
+
 // -----------------------------------------------------------------------------
 
 // SNIPPET-LOGBACK.GROOVY
@@ -702,8 +704,6 @@ if (keep_logback == 'false' ||
 
     deleteElkLogSystemStructure(log_text)
 }
-
-
 
 
 if (keep_logback == 'true' && console_type == '1') {
@@ -754,8 +754,6 @@ if (keep_logback == 'true' && console_type == '1') {
 }
 
 
-
-
 if (keep_logback == 'true' && console_type == '2') {
 
     Path consoleGranularFile =
@@ -779,8 +777,6 @@ if (keep_logback == 'true' && console_type == '2') {
 }
 
 
-
-
 if (keep_logback == 'true' && console_type == '3') {
 
     Path consoleTabularFile =
@@ -794,8 +790,6 @@ if (keep_logback == 'true' && console_type == '3') {
 }
 
 
-
-
 if (keep_logback == 'true' && keep_appender_smtp == 'false') {
 
     Path stmpPathFile =
@@ -807,8 +801,6 @@ if (keep_logback == 'true' && keep_appender_smtp == 'false') {
     log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPathFile\n"
     deleteFile(stmpPathFile.toFile())
 }
-
-
 
 
 if (keep_logback == 'true' && keep_appender_file == 'false') {
@@ -827,7 +819,7 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
 
 // -----------------------------------------------------------------------------
 
-// SNIPPET-PROPERTIES-FILETYPE.GROOVY ------------------------------------------
+// SNIPPET-PROPERTIES-FILETYPE.GROOVY
 // properties_filetype_choice:        1 - yml          2 - properties
 def deleteFileType = (properties_filetype_choice == '1') ? '.yml' : '.properties'
 def fileTypeMessage = (properties_filetype_choice == '1') ? 'Delete All YML-FILES' : 'Delete All PROPERTIES-FILES'
@@ -1004,6 +996,7 @@ def renameFolder(File pathToFolder, String newName) {
         println "Erro: $pathToFolder não é um diretório."
     }
 }
+
 
 def listFolderContents(File folder) {
     if (folder.isDirectory()) {

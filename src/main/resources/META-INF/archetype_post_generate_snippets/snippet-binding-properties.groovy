@@ -1,8 +1,11 @@
+
+
+
+
+
+
 // -----------------------------------------------------------------------------
-
-
-
-// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
+// SNIPPET-BINDING-PROPERTIES.GROOVY
 if (keep_binding_properties == 'false') {
 
     deleteFolder(propertiesProjectFolder.toFile())

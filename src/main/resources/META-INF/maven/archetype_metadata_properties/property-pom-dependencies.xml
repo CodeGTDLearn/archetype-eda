@@ -1,0 +1,14 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  PROPERTY-POM-DEPENDENCIES.XML  ______________________________  -->
+        <requiredProperty key="extra_POM_dependencies">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+<!-- ______________ -->

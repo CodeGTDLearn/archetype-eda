@@ -1,0 +1,17 @@
+<!-- ______________ -->
+
+
+
+
+
+
+
+        <!-- PROPERTY-JAVA-VERSION.XML _____________________________________ -->
+        <requiredProperty key="java_version">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+<!-- ______________ -->

@@ -13,13 +13,13 @@ create_archetype_metadata_xml() {
     return 1
   fi
 
-  local body_folder="${archetype_filepath_param}\\archetype_descriptor_body"
+  local body_folder="${archetype_filepath_param}\\archetype_metadata_body"
   local transition_properties_filesets_file="${body_folder}\\archetype-transition.xml"
   local header_file="${body_folder}\\archetype-header.xml"
   local footer_file="${body_folder}\\archetype-footer.xml"
 
-  local filesets_folder="${archetype_filepath_param}\\archetype_descriptor_filesets"
-  local properties_folder="${archetype_filepath_param}\\archetype_descriptor_properties"
+  local filesets_folder="${archetype_filepath_param}\\archetype_metadata_filesets"
+  local properties_folder="${archetype_filepath_param}\\archetype_metadata_properties"
 
   mapfile -t filesets_filename_list_from_folder < <(ls -1 "${filesets_folder}")
   mapfile -t properties_filename_list_from_folder < <(ls -1 "${properties_folder}")

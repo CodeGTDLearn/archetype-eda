@@ -1,0 +1,32 @@
+<!-- ______________ -->
+
+
+
+
+
+
+
+
+
+        <!--  FILESET-GITHUB.XML ___________________________________________ -->
+        <!-- GIT SUPPORT -->
+        <fileSet filtered="false" encoding="UTF-8">
+          <directory>git_temp</directory>
+          <includes>
+              <include>**/*</include>
+          </includes>
+          <excludes>
+            <exclude>config</exclude>
+          </excludes>
+        </fileSet>
+
+
+        <fileSet filtered="true" encoding="UTF-8">
+          <directory>git_temp</directory>
+          <includes>
+            <include>config</include>
+          </includes>
+        </fileSet>
+
+
+<!-- ______________ -->

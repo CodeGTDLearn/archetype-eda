@@ -1,0 +1,19 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  FILESET-SRC-TEST-RSCS-PROPERTIES.XML _________________________ -->
+
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources/properties</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.properties</include>
+            </includes>
+        </fileSet>
+
+
+<!-- ______________ -->

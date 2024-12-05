@@ -1,0 +1,14 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  PROPERTY-LOMBOK.XML  ________________________________________  -->
+        <requiredProperty key="enable_lombok">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+<!-- ______________ -->

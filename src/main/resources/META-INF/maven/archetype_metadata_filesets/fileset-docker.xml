@@ -1,0 +1,20 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  FILESET-DOCKER.XML  __________________________________________ -->
+        <!-- DOCKER SUPPORT -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>docker</directory>
+            <includes>
+                <include>**/*compose*.yml</include>
+                <include>**/*compose*.yaml</include>
+                <include>**/*Dockerfile*</include>
+            </includes>
+        </fileSet>
+
+
+<!-- ______________ -->

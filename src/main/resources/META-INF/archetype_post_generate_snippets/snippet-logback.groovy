@@ -43,8 +43,6 @@ if (keep_logback == 'false' ||
 }
 
 
-
-
 if (keep_logback == 'true' && console_type == '1') {
 
     Path consoleGranularFile =
@@ -93,8 +91,6 @@ if (keep_logback == 'true' && console_type == '1') {
 }
 
 
-
-
 if (keep_logback == 'true' && console_type == '2') {
 
     Path consoleGranularFile =
@@ -118,8 +114,6 @@ if (keep_logback == 'true' && console_type == '2') {
 }
 
 
-
-
 if (keep_logback == 'true' && console_type == '3') {
 
     Path consoleTabularFile =
@@ -133,8 +127,6 @@ if (keep_logback == 'true' && console_type == '3') {
 }
 
 
-
-
 if (keep_logback == 'true' && keep_appender_smtp == 'false') {
 
     Path stmpPathFile =
@@ -146,8 +138,6 @@ if (keep_logback == 'true' && keep_appender_smtp == 'false') {
     log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPathFile\n"
     deleteFile(stmpPathFile.toFile())
 }
-
-
 
 
 if (keep_logback == 'true' && keep_appender_file == 'false') {

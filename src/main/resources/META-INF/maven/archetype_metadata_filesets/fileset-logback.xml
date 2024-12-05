@@ -1,0 +1,18 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--   FILESET-LOGBACK.XML   _______________________________________ -->
+        <!-- LOGBACK SUPPORT -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/logback-spring-config</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </fileSet>
+
+
+<!-- ______________ -->

@@ -1,0 +1,14 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  PROPERTY-GENERAL.XML  _______________________________________  -->
+        <requiredProperty key="show_archetype_pos_processor_log">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+<!-- ______________ -->

@@ -1,0 +1,21 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  FILESET-SRC-MAIN-RSCS-PROTECTED-PROPERTIES.XML _______________ -->
+
+
+        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/protected_properties</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+
+
+<!-- ______________ -->

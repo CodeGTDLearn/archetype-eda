@@ -5,7 +5,7 @@ import java.nio.file.Paths
 
 // -----------------------------------------------------------------------------
 
-// SNIPPET-PROPERTIES-FILETYPE.GROOVY ------------------------------------------
+// SNIPPET-PROPERTIES-FILETYPE.GROOVY
 // properties_filetype_choice:        1 - yml          2 - properties
 def deleteFileType = (properties_filetype_choice == '1') ? '.yml' : '.properties'
 def fileTypeMessage = (properties_filetype_choice == '1') ? 'Delete All YML-FILES' : 'Delete All PROPERTIES-FILES'

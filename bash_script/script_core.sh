@@ -5,13 +5,13 @@
 RECREATE_ARCHETYPE=true
 
 # A.1.2) LOG|DEBUG - ARCHETYPE RECREATION
-SHOW_RECREATE_ARCHETYPE_LOG=false
+SHOW_RECREATE_ARCHETYPE_LOG=true
 
 # A.2) LOG|DEBUG MANAGEMENT "PROCESSOR"
 SHOW_INJECTION_LOG=false
 SHOW_MAVEN_BASIC_LOG=false
 SHOW_MAVEN_DEBUG_LOG=false
-SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
+SHOW_ARCHETYPE_POS_PROCESSOR_LOG=true
 
 # A.3) IDE EXECUTION AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
@@ -32,7 +32,7 @@ MAVEN_FOLDER="${META_INF_FOLDER}\\maven"
 SCRIPT_FOLDER="${PROJECT_FOLDER}\\bash_script"
 source "${SCRIPT_FOLDER}\\maven_functions.sh"
 
-# A.5.2) ARCHETYPE FILES GENERATION ('archetype-metadata.xml', 'archetype-post-generate.groovy')
+# A.5.2) ARCHETYPE-FILES GENERATION ('archetype-metadata.xml', 'archetype-post-generate.groovy')
 source "${SCRIPT_FOLDER}\\create_archetype_metadata.sh"
 create_archetype_metadata_xml "${RECREATE_ARCHETYPE}" "${MAVEN_FOLDER}" "archetype-metadata.xml" "$SHOW_RECREATE_ARCHETYPE_LOG"
 
