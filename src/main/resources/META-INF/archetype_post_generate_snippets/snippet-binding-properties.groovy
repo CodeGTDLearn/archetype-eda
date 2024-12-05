@@ -1,17 +1,9 @@
+// -----------------------------------------------------------------------------
 
 
 
+// SNIPPET-BINDING-PROPERTIES.GROOVY
 
-
-
-
-
-
-
-
-
-
-// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
 if (keep_binding_properties == 'false') {
 
     deleteFolder(propertiesProjectFolder.toFile())
@@ -21,8 +13,6 @@ if (keep_binding_properties == 'false') {
     log_text += "\nBINDING_PROPERTY_RESOURCES:\n $propertiesResourcesFolder\n"
 }
 
-
-// DEFAULTs --------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
 
     List<String> filesToDelete =
@@ -36,8 +26,6 @@ if (keep_binding_properties == 'true' && keep_default_binding_properties == 'fal
             filesToDelete.toString() + "\n $propertiesProjectFolder\n"
 }
 
-
-// LISTs -----------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false') {
 
     List<String> filesToDelete =
@@ -64,8 +52,6 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
             filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
 }
 
-
-// MAPs ------------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
 
     List<String> filesToDelete =
@@ -91,9 +77,6 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
             filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
 }
 
-
-// MUTABILITY ------------------------------------------------------------------
-// mutable_binding_properties_choice:   1 - Immutable;   2 - Mutable;   3 - Both
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
     List<String> filesToDelete =

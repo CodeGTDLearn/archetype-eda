@@ -2,17 +2,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 
+// -----------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-// SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY ---------------------------------------
+// SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY
 
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 

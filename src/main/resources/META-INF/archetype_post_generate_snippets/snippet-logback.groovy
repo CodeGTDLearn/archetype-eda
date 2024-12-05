@@ -2,17 +2,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 
+// -----------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-// SNIPPET-LOGBACK.GROOVY ------------------------------------------------------
+// SNIPPET-LOGBACK.GROOVY
 
 if (keep_logback == 'false' ||
         (keep_logback == 'true' &&
@@ -34,7 +26,8 @@ if (keep_logback == 'false' ||
     Path logbackTest_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'test', 'resources', 'logback-test.xml')
+                    'src', 'test', 'resources',
+                    'logback-test.xml')
     log_text += "\nlogback-test.xml -> test-resources:\n $logbackTest_Path\n"
     deleteFile(logbackTest_Path.toFile())
 

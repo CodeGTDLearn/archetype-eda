@@ -2,17 +2,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 
+// -----------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-// SNIPPET-SRC-TEST-JAVA.GROOVY ------------------------------------------------
+// SNIPPET-SRC-TEST-JAVA.GROOVY
 
 if (keep_src_test_java == 'false') {
     Path folderTestPath =

@@ -2,20 +2,12 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 
+// -----------------------------------------------------------------------------
 
 
 
+// SNIPPET-BINDING-PROPERTIES-TEST.GROOVY
 
-
-
-
-
-
-
-
-
-
-// SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
 if (keep_binding_properties_tests == 'false') {
 
     Path srcTestJava_bindingPropertiesTestFolder_path =
@@ -38,9 +30,6 @@ if (keep_binding_properties_tests == 'false') {
     log_text += "\nBINDING_PROPERTY_RESOURCES_TEST:\n $binding_properties_resources_path\n"
 }
 
-
-
-// DEFAULTs --------------------------------------------------------------------
 if (keep_binding_properties_tests == 'true' && keep_default_binding_properties == 'false') {
 
     Path binding_properties_path =
@@ -64,9 +53,6 @@ if (keep_binding_properties_tests == 'true' && keep_default_binding_properties =
 
 }
 
-
-
-// LISTs -----------------------------------------------------------------------
 if (keep_binding_properties_tests == 'true' && keep_list_binding_properties == 'false') {
 
     Path binding_properties_path =
@@ -102,9 +88,6 @@ if (keep_binding_properties_tests == 'true' && keep_list_binding_properties == '
             filesToDeleteResources.toString() + "\n $binding_properties_resources_path\n"
 }
 
-
-
-// MAPs ------------------------------------------------------------------------
 if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'false') {
 
     Path binding_properties_path =
@@ -140,10 +123,6 @@ if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'f
             filesToDeleteResources.toString() + "\n $binding_properties_resources_path\n"
 }
 
-
-
-// MUTABILITY ------------------------------------------------------------------
-// mutable_binding_properties_choice:   1 - Immutable;   2 - Mutable;   3 - Both
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
     Path binding_properties_path =
@@ -192,8 +171,6 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
 
 }
 
-
-// VALIDATION ------------------------------------------------------------------
 if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties == 'false') {
 
     Path binding_properties_path =

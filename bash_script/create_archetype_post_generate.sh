@@ -73,53 +73,66 @@ create_archetype_post_generate_groovy() {
     exit 1
   fi
 
+  # 1) Create/Overriding '$final_file_content_merged file', adding the 'HEADER_FILE'
+  cat "$header_file" > "$final_file_content_merged"
 
-  # 1) Create/Overwrite the 'final output file'(final_file_content_merged) adding the 'IMPORT_FILE'
-  cat "$imports_file" | tr -d '/' > "$final_file_content_merged"
+  # 2) Add the 'GENERAL_VARIABLES' to the 'final file'
+  sed -i -e '$r '"$global_vars_file" "$final_file_content_merged"
 
-  # 2) Add the 'HEADER_FILE' to the final file
-  free_imports_header=$(remove_import_lines_from_a_groovy_file "$header_file" "$show_debug_log_param")
-  echo "$free_imports_header" >> "$final_file_content_merged"
-
-  # 3) Add the 'GENERAL_VARIABLES' to the final file
-  free_imports_global_vars=$(remove_import_lines_from_a_groovy_file "$global_vars_file" "$show_debug_log_param")
-  echo "$free_imports_global_vars" >> "$final_file_content_merged"
-
-  # 4) Merging the "content of each file from ORDERED_FINAL_FILE_LIST" (without extra tags) to the final file
+  # 3) Add the "content of each file from ORDERED_FINAL_FILE_LIST"
+  #    to the 'final file' APPENDING
   for file in "${ordered_final_file_list[@]}"; do
-
-      free_imports_file=$(remove_import_lines_from_a_groovy_file "$file" "$show_debug_log_param")
-      #sed '1,'${initial_lines_qtde_to_trim_in_merging_groovy_files}'d' "$file" >> "$final_file_content_merged"
-      echo "$free_imports_file" >> "$final_file_content_merged"
-
+      sed -i -e '$r '"$file" "$final_file_content_merged"
   done
 
-  # 5) Adds the 'FOOTER_FILE' to the final file
-  free_imports_footer=$(remove_import_lines_from_a_groovy_file "$footer_file" "$show_debug_log_param")
-  echo "$free_imports_footer" >> "$final_file_content_merged"
+  # 4) Adds the 'FOOTER_FILE' to the 'final file' (APPENDING)
+  sed -i -e '$r '"$footer_file" "$final_file_content_merged"
 
-  # 6) Adds the 'FUNCTION_FILE' to the final file
-  free_imports_functions=$(remove_import_lines_from_a_groovy_file "$functions_file" "$show_debug_log_param")
-  echo "$free_imports_functions" >> "$final_file_content_merged"
+  # 5) Adds the 'FUNCTION_FILE' to the 'final file' (APPENDING)
+  sed -i -e '$r '"$functions_file" "$final_file_content_merged"
+
+  #NAO DELETAR ESTE LOG COMENTADO - ELE PODE SER UTILIZADO
+#  if [ "$show_debug_log_param" = "true" ]; then
+#     echo "BEGIN ---- FINAL-CONTENT 'BEFORE' 'REMOVING IMPORTS KEYWORD':"
+#     cat "$final_file_content_merged"
+#     echo "END   ---- FINAL-CONTENT 'BEFORE' 'REMOVING IMPORTS KEYWORD':"
+#  fi
+
+  # 6) Removing 'IMPORT KEYWORD' lines from the 'final file'
+  #    and storing the result in 'free_imports_content'
+  free_imports_content=$(remove_lines_with_import_keyword "$final_file_content_merged" "$show_debug_log_param")
+
+  #NAO DELETAR ESTE LOG COMENTADO - ELE PODE SER UTILIZADO
+#  if [ "$show_debug_log_param" = "true" ]; then
+#     echo "BEGIN ---- FINAL-CONTENT 'AFTER' 'REMOVING IMPORTS KEYWORD':"
+#     echo "$free_imports_content"
+#     echo "END   ---- FINAL-CONTENT 'AFTER' 'REMOVING IMPORTS KEYWORD':"
+#  fi
+
+  # 7) Adding 'IMPORT KEYWORD FILE' in 'final file' "OVERRIDING THE FINAL FILE"
+  cat "$imports_file" | tr -d '/' > "$final_file_content_merged"
+
+  # 8) Adding 'FREE IMPORTS CONTENT' APPENDING in the 'final file' above overrided
+  echo "$free_imports_content" >> "$final_file_content_merged"
 
   if [ "$show_debug_log_param" = "true" ]; then
     echo -e "$divider"
     echo -e "\n\n-----> EXECUTING: 'CREATE_ARCHETYPE_POST_GENERATE_GROOVY.SH function' - START \n\n"
+
+    echo -e "\n\n-----> \"ARCHETYPE_POST-GENERATE.GROOVY\" created ------------ \n"
+    cat "$final_file_content_merged"
 
     echo -e "\n\n-----> Files MERGED for 'ARCHETYPE_POST-GENERATE.GROOVY' creation ------------ \n"
     for file in "${ordered_final_file_list[@]}"; do
       echo -e "${file}"
     done
 
-    echo -e "\n\n-----> \"ARCHETYPE_POST-GENERATE.GROOVY\" created ------------ \n"
-    echo "$final_file_content_merged"
-
     echo -e "\n\n-----> EXECUTING: 'CREATE_ARCHETYPE_POST_GENERATE_GROOVY.SH function' - END \n\n"
     echo -e "$divider"
   fi
 }
 
-remove_import_lines_from_a_groovy_file() {
+remove_lines_with_import_keyword() {
   local file_path=$1
   local show_debug_log_param=$2
 
@@ -128,7 +141,7 @@ remove_import_lines_from_a_groovy_file() {
   if [ "$show_debug_log_param" = "true" ]; then
     echo -e >&2 "
 $divider
------> EXECUTING: 'REMOVE_IMPORT_LINES_FROM_A_GROOVY_FILE.SH function' - START
+-----> EXECUTING: 'REMOVE_LINES_WITH_IMPORT_KEYWORD function' - START
 --> TARGET-FILE:
 $file_path"
   fi
@@ -143,12 +156,12 @@ $file_path"
 
   local found_import_lines=false
   local line_number=0
-  local total_lines_found=0
+  local total_import_lines_found=0
 
-  # Garantir que o arquivo tenha uma quebra de linha no final
+  # Garantir que o arquivo($file_path) tenha uma quebra de linha no final
   # Isso é importante para garantir que a última linha seja lida,
-  # e nao ignorada pelo 'read', do proximo 'while', pois
-  # o read ignora a ultima linha, se nao houver uma quebra de linha
+  # e nao ignorada pelo comando 'read'(proximo 'while'), pois
+  # o read ignora a ultima linha, se nao houver uma quebra de linha nela
   if [[ $(tail -c 1 "$file_path" | wc -l) -eq 0 ]]; then
     echo >> "$file_path"  # Adiciona uma quebra de linha ao final, se necessário
   fi
@@ -157,9 +170,10 @@ $file_path"
   while IFS= read -r line; do
     line_number=$((line_number + 1))
 
-    # Verificar se a linha começa com 'import', '//import' ou '// import' (ignorando maiúsculas e minúsculas e espaços)
+    # Verificar se a linha começa com 'import', '//import' ou '// import'
+    # (ignorando maiúsculas e minúsculas e espaços)
     if [[ "$line" =~ ^[[:space:]]*(import|//[[:space:]]*import) ]]; then
-      total_lines_found=$((total_lines_found + 1))
+      total_import_lines_found=$((total_import_lines_found + 1))
       found_import_lines=true
       echo -e "\nLine $line_number: 'Import' detected - Type: $line" >&2
       continue  # Ignorar esta linha, não adiciona-la ao '$temp_file'
@@ -169,19 +183,19 @@ $file_path"
   done < "$file_path"
 
   # Se nenhuma linha de import for encontrada, avisar
-  if [ "$found_import_lines" = false ]; then
-    echo -e "\n\nNo 'import lines' were detected." >&2
-    echo -e "\n------------------------------------------------------------------------ END" >&2
-    return 0
-  fi
+if [ "$show_debug_log_param" = "true" ] && [ "$found_import_lines" = false ]; then
+  echo -e "\n\nNo 'import lines' were detected." >&2
+  echo -e "\n------------------------------------------------------------------------ END" >&2
+  echo "$temp_content"
+  return 0
+fi
 
   if [ "$show_debug_log_param" = "true" ]; then
     echo -e >&2 "
------> Total 'Import Lines' found: $((total_lines_found))
+-----> Total 'Import Lines' found: $((total_import_lines_found))
 -----> 'Import Lines' SUCCESSFULLY REMOVED.
 ------------------------------------------------------------------------ END
 $divider"
   fi
-
-  echo -n "$temp_content"
+  echo "$temp_content"
 }

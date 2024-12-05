@@ -1,18 +1,8 @@
+// -----------------------------------------------------------------------------
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// VARIABLE-BINDING-PROPERTIES.GROOVY ------------------------------------------
+// VARIABLE-BINDING-PROPERTIES.GROOVY
 
 def keep_binding_properties = "${properties?.enable_binding_properties}"
 def keep_map_binding_properties = "${properties?.map_binding_properties}"

@@ -2,17 +2,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 
+// -----------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-// SNIPPET-DOCKER.GROOVY -------------------------------------------------------
+// SNIPPET-DOCKER.GROOVY
 
 if (keep_docker == 'false') {
     Path folderDockerPath =

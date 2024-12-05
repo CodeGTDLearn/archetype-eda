@@ -6,10 +6,6 @@
 
 
 
-
-
-
-
         <!--  PROPERTY-BINDING-PROPERTIES.XML   ____________________________ -->
         <requiredProperty key="enable_binding_properties">
             <defaultValue></defaultValue>

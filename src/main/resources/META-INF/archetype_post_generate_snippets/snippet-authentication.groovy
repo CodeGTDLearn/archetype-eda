@@ -2,17 +2,11 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 
+// -----------------------------------------------------------------------------
 
 
 
-
-
-
-
-
-
-
-// SNIPPET-AUTHENTICATION.GROOVY -----------------------------------------------
+// SNIPPET-AUTHENTICATION.GROOVY
 
 if (keep_jwt_authentication == 'false') {
 
