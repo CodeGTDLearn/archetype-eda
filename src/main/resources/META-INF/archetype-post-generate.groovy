@@ -7,10 +7,6 @@ import java.nio.file.Paths
 
 
 
-// ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
-
-Properties properties = request.properties
-
 
 
 
@@ -78,100 +74,13 @@ Path propertiesProjectFolder =
 
 
 
-// VARIABLE-AUTHENTICATION.GROOVY ----------------------------------------------
 
-def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
 
-def authentication_folder = "authentication"
-//def project_security_folder = "${properties?.entity_name}".concat(config_folder)
 
 
 
 
 
-
-
-// VARIABLE-BINDING-PROPERTIES-TESTS.GROOVY ------------------------------------
-
-def keep_binding_properties_tests = "${properties?.enable_binding_properties_tests}"
-
-
-
-
-
-
-
-// VARIABLE-BINDING-PROPERTIES.GROOVY ------------------------------------------
-
-def keep_binding_properties = "${properties?.enable_binding_properties}"
-def keep_map_binding_properties = "${properties?.map_binding_properties}"
-def keep_list_binding_properties = "${properties?.list_binding_properties}"
-def keep_default_binding_properties = "${properties?.default_binding_properties}"
-def mutable_binding_properties_choice = "${properties?.mutable_binding_properties}"
-def keep_validated_binding_properties = "${properties?.validated_binding_properties}"
-
-
-
-
-
-
-
-// VARIABLE-CPANEL.GROOVY ------------------------------------------------------
-
-def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system}"
-
-
-
-
-
-
-
-// VARIABLE-DOCKER.GROOVY ------------------------------------------------------
-
-def keep_docker = "${properties?.enable_docker}"
-
-
-
-
-
-
-
-// VARIABLE-EXTRA-POM-DEPENDENCIES.GROOVY --------------------------------------
-
-def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
-
-
-
-
-
-
-
-// VARIABLE-LOGBACK.GROOVY -----------------------------------------------------
-
-def keep_logback = "${properties?.enable_logback}"
-def console_type = "${properties?.logback_console_type}"
-def keep_appender_smtp = "${properties?.enable_logback_appender_smtp}"
-def keep_appender_file = "${properties?.enable_logback_appender_file}"
-
-
-
-
-
-
-
-// VARIABLE-PROPERTIES-FILETYPE.GROOVY -----------------------------------------
-
-def properties_filetype_choice = "${properties?.properties_filetype}"
-
-
-
-
-
-
-
-// VARIABLE-SRC-TEST-JAVA.GROOVY -----------------------------------------------
-
-def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
 
 
 
@@ -212,6 +121,11 @@ if (keep_jwt_authentication == 'false') {
     log_text.concat("\nsrc_main_resources_app_pub:\n $filePathAppPub\n")
     deleteFile(filePathAppPub.toFile())
 }
+
+
+
+
+
 
 
 
@@ -427,120 +341,6 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
 
 
 
-// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
-if (keep_binding_properties == 'false') {
-
-    deleteFolder(propertiesProjectFolder.toFile())
-    log_text += "\nFOLDER_BINDING_PROPERTIES:\n $propertiesProjectFolder\n"
-
-    deleteFolder(propertiesResourcesFolder.toFile())
-    log_text += "\nBINDING_PROPERTY_RESOURCES:\n $propertiesResourcesFolder\n"
-}
-
-
-// DEFAULTs --------------------------------------------------------------------
-if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
-
-    List<String> filesToDelete =
-            [
-                    "ApplicationProperties.java",
-                    "ApplicationPropertiesRecord.java"
-            ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
-
-    log_text += "\nDEFAULT_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
-}
-
-
-// LISTs -----------------------------------------------------------------------
-if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false') {
-
-    List<String> filesToDelete =
-            [
-                    "ListObjects.java",
-                    "ListProperties.java",
-                    "ListPropertiesImmutable.java",
-                    "ListPropertiesRecord.java"
-            ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
-
-    log_text += "\nLIST_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
-
-
-    List<String> filesToDeleteResources =
-            [
-                    "application_list.properties",
-                    "application_list.yml"
-            ]
-    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
-
-    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
-}
-
-
-// MAPs ------------------------------------------------------------------------
-if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
-
-    List<String> filesToDelete =
-            [
-                    "MapItem.java",
-                    "MapProperties.java",
-                    "MapPropertiesImmutable.java",
-                    "MapPropertiesRecord.java"
-            ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
-
-    log_text += "\nMAP_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
-
-    List<String> filesToDeleteResources =
-            [
-                    "application_map.properties",
-                    "application_map.yml"
-            ]
-    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
-
-    log_text += "\nMAP_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
-}
-
-
-// MUTABILITY ------------------------------------------------------------------
-// mutable_binding_properties_choice:   1 - Immutable;   2 - Mutable;   3 - Both
-if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
-
-    List<String> filesToDelete =
-            [
-                    "ApplicationProperties.java",
-                    "ListProperties.java",
-                    "MapProperties.java"
-            ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
-
-    log_text += "\nIMMUTABLE_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
-
-}
-
-if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2') {
-
-    List<String> filesToDelete =
-            [
-                    "ApplicationPropertiesRecord.java",
-                    "ListPropertiesImmutable.java",
-                    "ListPropertiesRecord.java",
-                    "MapPropertiesImmutable.java",
-                    "MapPropertiesRecord.java"
-            ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
-
-    log_text += "\nMUTABLE_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
-
-}
 
 
 
@@ -569,6 +369,11 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
 
 
+
+
+
+
+
 // SNIPPET-DOCKER.GROOVY -------------------------------------------------------
 
 if (keep_docker == 'false') {
@@ -579,6 +384,11 @@ if (keep_docker == 'false') {
     log_text += "\nFOLDER_DOCKER:\n $folderDockerPath\n"
     deleteFolder(folderDockerPath.toFile())
 }
+
+
+
+
+
 
 
 
@@ -677,6 +487,11 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
         writer.close()
     }
 }
+
+
+
+
+
 
 
 
@@ -848,6 +663,11 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
 
 
 
+
+
+
+
+
 // SNIPPET-PROPERTIES-FILETYPE.GROOVY ------------------------------------------
 // properties_filetype_choice:
 // 1 - yml
@@ -871,6 +691,11 @@ Path srcTestJava_resourcesFolder_path =
                 'src', 'test', 'resources')
 log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestJava_resourcesFolder_path\n"
 deleteFilesByExtensionRecursively(srcTestJava_resourcesFolder_path, deleteFileType)
+
+
+
+
+
 
 
 
@@ -903,12 +728,6 @@ if (keep_src_test_java == 'false') {
 
 
 
-// ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
-
-// ARCHETYPE-POST-GENERATE-LOG -------------------------------------------------
-if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
-
-// FOOTER ----------------------------------------------------------------------
 
 
 
