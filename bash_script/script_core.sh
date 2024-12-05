@@ -2,25 +2,26 @@
 
 # A.1) ARCHETYPE UPDATE - "PRE-PROCESSOR" --------------------------------------
 # A.1.1) RECRIA o "ARCHETYPE-METADATA.XML" e "ARCHETYPE-POST-GENERATE.GROOVY"
-RECREATE_ARCHETYPE=true
+RECREATE_ARCHETYPE=false
 
 # A.1.2) LOG|DEBUG - ARCHETYPE RECREATION
-SHOW_RECREATE_ARCHETYPE_LOG=true
+SHOW_RECREATE_ARCHETYPE_LOG=false
 
 # A.2) LOG|DEBUG MANAGEMENT "PROCESSOR"
-SHOW_INJECTION_LOG=true
-SHOW_MAVEN_BASIC_LOG=true
-SHOW_MAVEN_DEBUG_LOG=true
-SHOW_ARCHETYPE_POS_PROCESSOR_LOG=true
+SHOW_INJECTION_LOG=false
+SHOW_MAVEN_BASIC_LOG=false
+SHOW_MAVEN_DEBUG_LOG=false
+SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
 
-# A.3) IDE EXECUTION AFTER SCRIPT EXECUTION
+# A.3) PHASES EXECUTED AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
 IDE_EXEC_FILE='idea64.exe'
-USE_IDE_ACTIVATION_MANAGER=true
-OPEN_IDE_DIRECTLY=false
+USE_IDE_ACTIVATION_MANAGER=false
+OPEN_IDE_DIRECTLY=true
+EXECUTE_API_TESTS=false
 
 # A.4) ENABLING PROGRESS_BAR
-# Progress_bar runa inside the function 'execute_maven_command_line'(maven_functions.sh)
+# Progress_bar run a inside the function 'execute_maven_command_line'(maven_functions.sh)
 ACTIVE_PROGRESS_BAR=false
 
 # A.5) 'ARCHETYPE FILES' GENERATION:
@@ -103,5 +104,7 @@ inject_script "${SCRIPT_FOLDER_WIN}" "mvn_command_line_archetype_generate.sh" $S
 # Progression_Bar is executed inside the function 'execute_maven_command_line'
 # which is found inside the script: maven_functions.sh
 execute_maven_command_line $SHOW_MAVEN_BASIC_LOG $SHOW_MAVEN_DEBUG_LOG "$maven_command_line_arch_generate_var"
+
+execute_api_tests_using_maven_command_line $EXECUTE_API_TESTS $(provide_os_path) "$artifactId"
 
 open_ide_manager $USE_IDE_ACTIVATION_MANAGER $OPEN_IDE_DIRECTLY "$IDE_EXEC_FILE_FOLDER" "$IDE_EXEC_FILE" $SHOW_INJECTION_LOG

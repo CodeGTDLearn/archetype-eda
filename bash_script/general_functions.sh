@@ -68,14 +68,14 @@ open_ide_manager() {
   local current_path=$(provide_os_path)
 #  echo -e "DEBUG LINE - current_path $current_path\n"
 
-  local OPEN_IDE_CMD
+  local ARCHETYPE_PATH
 
   if [ -f "$ide_full_path" ]; then
 #       echo -e "DEBUG LINE - ide_Exec_path+file ${ide_execution_folder}${ide_execution_file}\n"
       # read -p "Pressione Enter para continuar..."
 
-      OPEN_IDE_CMD="$ide_execution_file \"$current_path\\$artifactId\" ; exit"
-#      echo -e "DEBUG LINE - OPEN_IDE_CMD $OPEN_IDE_CMD\n"
+      ARCHETYPE_PATH="$ide_execution_file \"$current_path\\$artifactId\" ; exit"
+#      echo -e "DEBUG LINE - ARCHETYPE_PATH $ARCHETYPE_PATH\n"
       #read -p "Pressione Enter para continuar..."
 
   else
@@ -86,7 +86,7 @@ open_ide_manager() {
   fi
 
   if [ "$open_ide_directly_no_option" = "true" ]; then
-    eval "$OPEN_IDE_CMD"
+    eval "$ARCHETYPE_PATH"
     # read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
     exit 1
   fi
@@ -101,7 +101,7 @@ open_ide_manager() {
     read -p "$options_prompt" option
 
     case $option in
-       1) eval "$OPEN_IDE_CMD";;
+       1) eval "$ARCHETYPE_PATH";;
        2) exit 0 ;;
        *) echo "$invalid_option_message" ;;
     esac

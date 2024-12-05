@@ -18,6 +18,42 @@ check_empty_switches_in_maven_command_line() {
   fi
 }
 
+execute_api_tests_using_maven_command_line() {
+
+  local proceed_with_function=$1
+  local current_path_param=$2
+  local artifactId_param=$3
+
+  local divider="\n--------------------------------------------------------------------->\n"
+
+  if [ "$proceed_with_function" = "false" ]; then
+    #read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
+    return 1
+  fi
+
+  echo -e "$divider"
+  echo -e "\n-----> EXECUTING: 'API TESTS USING MAVEN COMMAND LINE' - START\n"
+  echo -e "\n----->                     'UNIT TESTS'\n"
+  echo -e "\n----->                  'INTEGRATION TESTS'\n"
+
+  # Guardar o diretório atual
+  current_dir=$(pwd)
+
+  # Mudar para o diretório desejado
+  cd "$current_path_param/$artifactId_param"
+
+  # Executar o comando Maven:
+  # - test para executar os testes unitários
+  # - integration-test para executar os testes de integração
+  # - verify para executar os testes de verificação
+  mvn clean test integration-test verify
+
+  # Voltar para o diretório original
+  cd "$current_dir"
+
+  echo -e "\n-----> ENDIND: 'API TESTS USING MAVEN COMMAND LINE' - END\n"
+}
+
 execute_maven_command_line() {
 
   local show_basic_log=$1
