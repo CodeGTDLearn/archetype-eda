@@ -1,7 +1,7 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.${project_name}Security;
+package ${package}.${entity_name}.config.authentication;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -14,11 +14,11 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-#set($firstChar = $project_name.substring(0,1).toLowerCase())
-#set($restOfName = $project_name.substring(1))
+#set($firstChar = $entity_name.substring(0,1).toLowerCase())
+#set($restOfName = $entity_name.substring(1))
 #set($componentAliasPrefix = "${firstChar}${restOfName}")
 @Service(value = "${componentAliasPrefix}JwtService")
-public class ${project_name}JwtService {
+public class ${entity_name}JwtService {
 
   @Autowired
   private JwtEncoder encoder;

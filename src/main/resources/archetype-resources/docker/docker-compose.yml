@@ -1,0 +1,11 @@
+name: API
+
+networks:
+  api-db-net:
+  api-elk-net:
+
+include:
+  - db-mongo-compose.yml
+  - api-compose.yml
+  - elk-compose.yml
+#  - nginx-compose.yml

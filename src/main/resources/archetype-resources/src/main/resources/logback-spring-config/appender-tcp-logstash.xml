@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!-- TCP-SOCKET FOR LOGSTASH ____________________________________________-->
+    <property name="DESTINY_IP" value="logstash"/> <!-- Logstash Compose Service -->
+    <property name="DESTINY_PORT" value="5000"/> <!-- Logstash Compose Service Port -->
+    <property name="MANDATORY_LOGSTASH_LOWERCASE_PATTERN" value="mylog"/>
+    <appender name="LOGSTASH-TCP-SOCKET" class="LogstashTcpSocketAppender">
+
+        <destination>${DESTINY_IP}:${DESTINY_PORT}</destination>
+
+        <encoder class="LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <context/>
+                <logLevel/>
+                <loggerName/>
+                <pattern>
+                    <pattern>
+                        {
+                        "app": "spring-${MANDATORY_LOGSTASH_LOWERCASE_PATTERN}"
+                        }
+                    </pattern>
+                </pattern>
+                <threadName/>
+                <message/>
+                <logstashMarkers/>
+                <stackTrace/>
+            </providers>
+        </encoder>
+
+    </appender>
+
+</configuration>

@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:read-only
+    depends_on:
+      - kibana
+    networks:
+      - api-elk-net

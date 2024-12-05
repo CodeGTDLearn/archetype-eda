@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <property name="SMTP_PATTERN_MESSAGE" value="
+%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%nthrowable"/>
+
+    <appender name="SMTP_EMAIL" class="SMTPAppender">
+
+        <!-- Configure SMTP settings -->
+        <smtpHost>smtp.example.com</smtpHost>
+        <smtpPort>587</smtpPort>
+        <username>your_username</username>
+        <password>your_password</password>
+        <SSL>true</SSL>
+
+        <encoder>
+            <pattern>${SMTP_PATTERN_MESSAGE}</pattern>
+        </encoder>
+
+        <filter class="ThresholdFilter">
+            <level>ERROR</level>
+            <!-- <level>WARNING</level>-->
+        </filter>
+    </appender>
+
+</configuration>

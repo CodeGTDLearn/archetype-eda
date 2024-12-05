@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <appender name="CONSOLE_BASE" class="ConsoleAppender">
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${CONSOLE_PATTERN_LAYOUT_BASE}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE_EXCEPTION" class="ConsoleAppender">
+        <filter class="EvaluatorFilter">
+            <evaluator>
+                <expression>return event.getThrowableProxy() != null;</expression>
+            </evaluator>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${CONSOLE_PATTERN_LAYOUT_EXCEPTION}</pattern>
+        </encoder>
+    </appender>
+
+</configuration>

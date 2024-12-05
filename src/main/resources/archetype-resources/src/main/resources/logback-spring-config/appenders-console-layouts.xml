@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <property name="DIVIDER_SIMPLE" value="
+--------------------------------------------------------------------------------------------------%n"/>
+
+    <property name="DIVIDER_EMOJI" value="%n
+%highlight(%-40(%replace(%replace(%replace(%replace(%level){
+'ERROR', '🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨'}){
+'WARN', '🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧'}){
+'TRACE', '🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍️️️️'}){
+'INFO', '💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡'})) %n"/>
+
+
+
+    <property name="LEVEL_EMOJI_GROUP" value="%n
+%highlight(%-40(%replace(%replace(%replace(%replace(%level){
+'ERROR', '🚨   ERROR   🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨'}){
+'WARN',  '⚠️   WARN   ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️'}){
+'TRACE', '🔍   TRACE  🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍️️️️'}){
+'INFO',  '💡   INFO    💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡'})) %n"/>
+
+    <property name="GENERAL_INFO_GROUP" value="
+%green(%-6date{dd-MM-yyyy}) |
+%red(%-6date{HH:mm:ss}) |
+%-40magenta(%thread) |
+%-75cyan(%logger) %n"
+    />
+
+    <property name="TARGET_INFO_GROUP" value="
+%boldMagenta(» TARGET:) %n
+%boldMagenta(  •METHOD:) %-6method %n
+%boldMagenta(  •CLASS:) %-6class{0} %n
+%boldMagenta(  •PACKAGE:) %replace(%caller{0..1}){'Caller\+\d+\s+at\s|.[A-Z].*$', ''}"/>
+
+    <property name="CUSTOM_STACK_TRACE" value="
+%boldMagenta(» STACK TRACE:)
+%n%replace(%caller{0..30}){'Caller\+\d+\s+at\s', '       '}"/>
+
+    <property name="CUSTOM_MESSAGE" value="
+%boldMagenta(» MESSAGE:) %boldGreen(%message) %n %nopex"/>
+
+    <property name="CONSOLE_PATTERN_LAYOUT_BASE" value="
+${DIVIDER_SIMPLE} %n
+${LEVEL_EMOJI_GROUP} %n
+${GENERAL_INFO_GROUP} %n
+${TARGET_INFO_GROUP} %n
+${CUSTOM_STACK_TRACE} %n
+${CUSTOM_MESSAGE} %n"/>
+
+    <property name="CONSOLE_PATTERN_LAYOUT_EXCEPTION" value="
+%boldMagenta( » EXCEPTION:) %n
+
+%boldMagenta( » SOURCE:)
+%n   •%replace(
+%replace(
+%replace(%throwable{0}){
+'(?m)^Caused by: .+(\r?\n)?',''}){
+'(?m)^\s*\n',''}){
+': ([A-Z][a-z])','${line.separator}   ·  $1'} %n
+
+%boldMagenta( » CAUSES:)
+%replace(
+%replace(
+%replace(
+%replace(%throwable{0}){
+'(?s)^.*?Caused by:', 'Caused by:'}){
+'(?&lt;=\\s)Caused by:', 'Caused by:'}){
+'Caused by:', '${line.separator}   ■ Cause: ${line.separator}     •'}){
+': ([A-Z])', '${line.separator}       · $1'
+} %n
+
+%boldMagenta( »FULL STACK_TRACE: %n) %red(%throwable{full})}"/>
+
+</configuration>
+<!--
+    <property name="TESTE_EXCEPTION" value="
+%boldMagenta( » SOURCE:)
+%n   •%replace(
+%replace(
+%replace(%throwable{0}){
+'(?m)^Caused by: .+(\r?\n)?',''}){
+'(?m)^\s*\n',''}){
+': ([A-Z][a-z])','${line.separator}   •  $1'} %n
+
+"/>
+
+    <property name="TESTE_EXCEPTION_2" value="
+%boldMagenta(» EXCEPTION %n throwable{0}:) %n
+%replace(
+%replace(
+%replace(%throwable{0}){
+'(?s)^.*?Caused by:', 'Caused by:'}){
+'(?&lt;=\\s)Caused by:', 'Caused by:'}){
+'Caused by:', '${line.separator}   • Cause: ${line.separator}       '} %n
+
+"/>
+%boldMagenta(  •LINE:) %boldRed(%throwable{0})
+%boldMagenta(  •CLASS:) %boldRed(%replace(%throwable{0}){'^([a-z\\.]+)([A-Z][a-zA-Z]+)(:.*)?$','$2'})
+%boldMagenta(  •MESSAGE:) %boldRed(%replace(%throwable{0}){'^([a-z\\.]+)([A-Z][a-zA-Z]+)(:.*)?$','$3'})
+%boldMagenta(  •PACKAGE:) %boldRed(%replace(%throwable{0}){'^([a-z\\.]+)(.[A-Z][a-zA-Z]+)(:.*)?$','$1'})
+
+%boldMagenta(  •SOURCE:) %n    •%boldRed(%replace(%replace(%throwable{0}){'^(.+?)(?=\n|$)','$1'}){'(?m)^Caused by: (.+?)(?=\n|$)','$1'}) %n
+%boldMagenta(  •CAUSES:) %n%boldRed(%replace(%replace(%throwable{0}){'^(.+?)(?=\n|$)','  • $1'}){'(?m)^Caused by: (.+?)(?=\n|$)','  • Caused by: $1'}) %n
+-->

@@ -1,0 +1,42 @@
+x-secrets-path: ../../../../../WORKBASE/DEV/vault/scaffold-entity-api/db
+
+services:
+  mongodb:
+    #container_name: db-mongo
+    image: mongo:4.4.4
+    ports:
+      - "27017:27017"
+    networks:
+      - api-db-net
+    environment:
+      # ROOT-DB ----------------------------------------------------------------
+      # MONGO-COMPASS-URL: mongodb://root:root@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+      MONGO_INITDB_DATABASE_FILE: /run/secrets/root_admin
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/root_username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/root_password
+
+      # API-DB -----------------------------------------------------------------
+      MONGO_DATABASE_FILE: /run/secrets/db_name
+      MONGO_USERNAME_FILE: /run/secrets/db_username
+      MONGO_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - root_admin
+      - root_username
+      - root_password
+      - db_name
+      - db_username
+      - db_password
+
+secrets:
+  root_admin:
+    file: ${x-secrets-path}/db_root_admin.txt
+  root_username:
+    file: ${x-secrets-path}/db_root_username.txt
+  root_password:
+    file: ${x-secrets-path}/db_root_password.txt
+  db_name:
+    file: ${x-secrets-path}/db_name.txt
+  db_username:
+    file: ${x-secrets-path}/db_username.txt
+  db_password:
+    file: ${x-secrets-path}/db_password.txt

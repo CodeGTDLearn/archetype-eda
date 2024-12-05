@@ -1,5 +1,35 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <logger name="org.springframework.test" level="DEBUG"/>
+
+    <include resource="logback-spring-config/logback-imports.xml" />
+    <include resource="logback-spring-config/appenders-file.xml" />
+    <include resource="logback-spring-config/appender-smtp.xml" />
+    <include resource="logback-spring-config/appender-tcp-logstash.xml" />
+    <include resource="logback-spring-config/appenders-console-layouts.xml" />
+    <include resource="logback-spring-config/appenders-console.xml" />
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="CONSOLE_BASE"/>
+        <appender-ref ref="CONSOLE_EXCEPTION"/>
+        <appender-ref ref="STANDARD_FILE_ROLLING"/>
+        <appender-ref ref="JSON_FILE_STANDARD"/>
+        <appender-ref ref="JSON_FILE_ROLLING"/>
+        <appender-ref ref="LOGSTASH-TCP-SOCKET"/>
+        <!-- <appender-ref ref="SMTP_EMAIL"/>-->
+    </root>
+
+    <!-- LOG "com.entity*" at TRACE level -->
+    <logger name="com.entity" level="trace" additivity="false">
+        <appender-ref ref="CONSOLE_BASE"/>
+        <appender-ref ref="CONSOLE_EXCEPTION"/>
+        <appender-ref ref="STANDARD_FILE_ROLLING"/>
+        <appender-ref ref="JSON_FILE_STANDARD"/>
+        <appender-ref ref="JSON_FILE_ROLLING"/>
+        <appender-ref ref="LOGSTASH-TCP-SOCKET"/>
+        <!-- <appender-ref ref="SMTP_EMAIL"/>-->
+    </logger>
+
+
 </configuration>

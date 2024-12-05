@@ -1,0 +1,22 @@
+# STAGE 01: Build the API
+FROM maven:3.8.4-openjdk-17-slim AS maven_builder
+WORKDIR /api
+COPY pom.xml .
+COPY src ./src
+COPY ELK ./ELK/
+RUN mvn -DskipTests clean install
+
+# STAGE 02: Run the API based in 'maven_builder'
+FROM openjdk:17-alpine
+WORKDIR /api
+COPY --from=maven_builder /api/target/*.jar ./api.jar
+SHELL ["/bin/sh", "-c"]
+EXPOSE ${API_PORT}
+EXPOSE ${DEBUG_PORT}
+CMD java ${DEBUG_OPTIONS} -jar api.jar
+#CMD ["java", ${DEBUG_OPTIONS}, "-jar", "api.jar"]
+
+# PROFILES ARE MANAGED BY APPLICATION.YML - WEBAPP IS MANAGING THE PROFILES
+# CMD java ${DEBUG_OPTIONS} -jar api.jar --spring.profiles.active=${PROFILE}
+# CMD java ${DEBUG_OPTIONS} ${JAVA_OPTIONS} -jar api.jar
+# CMD java -jar api.jar --spring.profiles.active=${PROFILE}

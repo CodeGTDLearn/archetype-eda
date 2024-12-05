@@ -1,0 +1,78 @@
+x-secrets-path: ../../../../../WORKBASE/DEV/vault/scaffold-entity-api/ELK
+
+volumes:
+  elasticsearch_data:
+
+services:
+
+  # 1) Sua aplicação(logback appender) envia logs para logstash:5000
+  # 2) Logstash processa os logs
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.16.0
+    restart: always
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    #ports: # Porta Fechada: Comunicacao c/ API e feita p/ network do compose
+    # - 'LOGSTASH-TCP-SOCKET' APPENDER/DESTINATION  in LOGBACK-SPRING.XML
+    #  - "5000:5000/tcp"
+    #  - "5000:5000/udp"
+    #  - "5044:5044"
+    #  - "9600:9600"
+    volumes:
+      - ../ELK/logstash_config/logstash.yml:/usr/share/logstash/config/logstash.yml:read-only
+      - ../ELK/logstash_config/pipeline:/usr/share/logstash/pipeline:read-only
+    networks:
+      - api-elk-net
+    depends_on:
+      - elasticsearch
+
+  # 3) Logstash envia para elasticsearch:9200(via network do compose)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.0
+    restart: always
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+    #    ports: # Porta Fechada: Comunicacao c/ API e feita p/ network do compose
+    #      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - api-elk-net
+
+  # 4) Kibana conecta e consome em elasticsearch, p/ exibira dos logs em Dashboard
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.16.0
+    restart: always
+    environment:
+      ELASTICSEARCH_URL_FILE: /run/secrets/elastic_url #http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS_FILE: /run/secrets/elastic_host #'["http://elasticsearch:9200"]'
+      SERVER_HOST_FILE: /run/secrets/sec_kb_host
+      SERVER_PORT_FILE: /run/secrets/sec_kb_port
+
+    ports: # Porta Fechada: Comunicacao c/ API e feita p/ network do compose
+      - "5601:5601"
+
+    networks:
+      - api-elk-net
+    depends_on:
+#      - elasticsearch
+      - logstash
+      - api
+    secrets:
+      - elastic_url
+      - elastic_host
+      - sec_kb_port
+      - sec_kb_host
+
+secrets:
+  elastic_url:
+    file: ${x-secrets-path}/elastic_url.txt
+  elastic_host:
+    file: ${x-secrets-path}/elastic_host.txt
+  sec_kb_port:
+    file: ${x-secrets-path}/kibana_host.txt
+  sec_kb_host:
+    file: ${x-secrets-path}/kibana_port.txt

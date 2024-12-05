@@ -1,7 +1,7 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.${project_name}Security.${project_name}SecurityConfig;
+package ${package}.${entity_name}.config.authentication;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -29,7 +29,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
 @EnableWebSecurity
-public class ${project_name}SecurityConfig {
+public class ${entity_name}SecurityConfig {
 
   @Value("${jwt.public.key}")
   private RSAPublicKey key;

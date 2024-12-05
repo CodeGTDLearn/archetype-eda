@@ -36,52 +36,42 @@ script_injection "${SCRIPT_FOLDER}" "config.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTOR_TOOL_LOG
 
 #-------------------------------------------------------------------------------
-#           C) 04 PASSOS P/ ADICAO DE 'NOVOS CRITERIOS', configurando:
+#           C) PASSOS P/ ADICAO DE 'NOVOS CRITERIOS', configurando:
 #                          ARCHETYPE-METADATA.XML
 #                       ARCHETYPE-POS-GENERATE.GROOVY
 #-------------------------------------------------------------------------------
-# C.1) INJECOES DE SCRIPTS DE INPUT
-# C.1.1) GENERAL INPUTS
+# C.1) INJECOES/EXECUCAO DE SCRIPTS DE INPUT/coleta de 'VARIAVEIS DE SWITCHES DO MVN CLI'
 script_injection "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
-
-# C.1.2) TEST INPUTS
-script_injection "${SCRIPT_FOLDER}" "user_test_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
-
-# C.1.3) SPECIFIC INPUTS
-script_injection "${SCRIPT_FOLDER}" "user_specific_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
-
-# C.1.4) SECURITY INPUTS
-script_injection "${SCRIPT_FOLDER}" "user_security_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
-
-# C.1.5) MODEL INPUTS
-script_injection "${SCRIPT_FOLDER}" "user_model_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
-
-# C.1.6) POM-DEPENDENCIES INPUTS
+script_injection "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTOR_TOOL_LOG
+script_injection "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTOR_TOOL_LOG
+script_injection "${SCRIPT_FOLDER}" "user_attributes_input.sh" $SHOW_INJECTOR_TOOL_LOG
+script_injection "${SCRIPT_FOLDER}" "user_logback_input.sh" $SHOW_INJECTOR_TOOL_LOG
+script_injection "${SCRIPT_FOLDER}" "user_jwt_authentication_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_dependencies_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
-
-# C.1.7) ARTIFACT-ID INPUTS
+script_injection "${SCRIPT_FOLDER}" "user_test_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
 
-# C.1.8) Input Combined Variables
-package=$groupid.$artifactId
+# C.2) Packages:
+# * 'Arvores de Pastas'(Pastas separadas por ".") onde a(s) classe(s) se encontra(m)
+project_package=$groupid
 
-# C.2) INJECAO: 'mvn command line'
-# Montagem de 'Switches -D' do 'Maven/Mvn command line'
-# usando-se as 'PROMPT-ANSWERS' acima
+# C.3) MONTAGEM da 'MVN COMMAND LINE' com SWITCHES DO MVN CLI
+# Montagem de 'Switches -D' do 'mvn cli' usando-se as 'PROMPT-ANSWERS' INPUTADAS
+# coletoras das 'VARIAVEIS DE SWITCHES DO MVN CLI' encontradas no script acima
 script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTOR_TOOL_LOG
 
-# C.3) Criar uma 'REQUIRED-PROPERTY' identica ao 'Switch -D DA Mvn command line', EM:
-# C.3.1) src\"MAIN"\resources\ "META-INF" \ "MAVEN" \ "archetype-metadata".XML
-# C.3.2) src\"TEST"\resources\ "PROJECTS" \ "BASIC" \ "archetype".PROPERTIES
+# C.4) Criar uma 'REQUIRED-PROPERTY' identica ao 'Switch -D DA Mvn command line', EM:
+# C.4.1) src\"MAIN"\resources\ "META-INF" \ "MAVEN" \ "archetype-metadata".XML
+# C.4.2) src\"TEST"\resources\ "PROJECTS" \ "BASIC" \ "archetype".PROPERTIES
 
-# C.4) Se 'novo Criterio' realizar "MANIPULACAO PASTAS OU ARQUIVOS":
-# C.4.1) Crie/Insira a 'pasta ou arquivo' dentro do 'ARCHETYPE', EM:
+# C.5) Se 'novo Criterio' realizar "MANIPULACAO PASTAS OU ARQUIVOS":
+# C.5.1) Crie/Insira a 'pasta ou arquivo' dentro do 'ARCHETYPE', EM:
 #   - src\"MAIN"\resources\ "ARCHETYPE-RESOURCES" \ src
 #
-# C.4.2) Especifique a 'pasta ou arquivo' no area "FILE-SET", EM:
+# C.5.2) Especifique a 'pasta ou arquivo' no area "FILE-SET", EM:
 #   - src\"MAIN"\resources\ "META-INF" \ "MAVEN" \ "archetype-metadata".XML
 #
-# C.4.3) Crie a 'FUNCAO PARA MANIPULACAO' da 'pasta ou arquivo', EM:
+# C.5.3) Crie a 'FUNCAO PARA MANIPULACAO' da 'pasta ou arquivo', EM:
 #   -  src\"MAIN"\resources\ "META-INF" \ "archetype-post-generate".groovy
 #-------------------------------------------------------------------------------
 

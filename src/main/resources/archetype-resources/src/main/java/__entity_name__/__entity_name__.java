@@ -1,7 +1,7 @@
 #set($symbol_pound = '#' )
 #set($symbol_dollar = '$' )
 #set($symbol_escape = '\' )
-package ${package}.${project_name};
+package ${package}.${entity_name};
 
 import jakarta.persistence.Entity;
 #if(${enable_custom_attributes} == "false")
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 #end
 @Entity
-public class ${project_name} {
+public class ${entity_name} {
 
 #if(${enable_custom_attributes} == "true")
 #set($attributes = [])
@@ -40,7 +40,7 @@ public class ${project_name} {
 #set($canonic_constructor_params = $$canonic_constructor_params.replaceAll(":"," "))
 #set($params = $$canonic_constructor_params.replaceAll(",$", ""))
 
-  public ${project_name}(#evaluate($params)){
+  public ${entity_name}(#evaluate($params)){
 #foreach($attrib in $attributes)
     this.${attrib.name} = ${attrib.name};
 #end
@@ -55,7 +55,7 @@ public class ${project_name} {
   private String password;
 
 #if(${enable_lombok} == "false")
-  public ${project_name}(Long id, String username, String password) {
+  public ${entity_name}(Long id, String username, String password) {
     this.id = id;
     this.username = username;
     this.password = password;
@@ -64,7 +64,7 @@ public class ${project_name} {
 #end
 
 #if(${enable_lombok} == "false")
-  public ${project_name}(){
+  public ${entity_name}(){
 
   }
 #end

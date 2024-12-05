@@ -103,16 +103,25 @@ match_input_pattern_with_regex() {
     #entity_list_attributes: Long:id, MyId:id, My_I8d:my_i9d, My_Id:my_id, Invalid:ID, notValid:id
     entity_list_attributes) input_patterns="^[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*$";;
 
-    #artifact: Letra maisc minusc/número/caracteres(_) sem espaços(ex: tes_123n)
-    artifact) input_patterns="^[a-z][a-z0-9_]+$";;
+    #artifact:
+    # - Letra maisc minusc/número/caracteres(_) sem espaços(ex: tes_123n)
+    # - Segundo a documentacao do Maven deve ser o PROJECT_NAME:
+    #   * "generally the name that the project is known by."
+    # - descricao de Artefato no MAVEN, na tag:
+    #   * <artifactId>MyArtifact</artifactId>
+    artifact) input_patterns="^[a-zA-Z][a-zA-Z0-9_]+$";;
 
-    #model: Letra/número/caracteres(_.) sem espaços(ex: tes_123.domain)
-    entity_project_name) input_patterns="^[A-Z][a-zA-Z0-9_]+$";;
+    #model/entity: Letra/número/caracteres(_.) sem espaços(ex: tes_123.domain)
+    entity_name) input_patterns="^[A-Z][a-zA-Z0-9_]+$";;
 
-    #package: Letra minuscula/número/caracteres(_.) sem espaços(ex: tes_123.domain)
-    package) input_patterns="^[a-z][a-z0-9_.]+$";;
+    #package:
+    # - Letra minuscula/número/caracteres(_.) sem espaços(ex: tes_123.domain)
+    # - 'Arvores de Pastas'(Pastas separadas por ".") onde a classe(s) se encontra(m)
+    #package) input_patterns="^[a-z][a-z0-9_.]+$";;
 
-    #groupid: Sequência de letras|números|pontos|hífens (ex: com.example.meu_pacote)
+    #groupid:
+    # - Letras minuscula|números|pontos|hífens (ex: com.example.meu_pacote)
+    # - Company-Domain 'invertido' "WITHOUT" the 'PROJECT-NAME'/'ARTIFACT_ID'
     groupid) input_patterns="^[a-z][a-z0-9]*(\.[a-z0-9]+)+$";;
 
     #dependency: Letra/número/caracteres(,:._-) sem espaços(ex: org.slf4j:slf4j-api:1.7.1:runtime)
@@ -362,7 +371,7 @@ open_ide_manager() {
 
 artifactId_input() {
 
-  local artifactId_text='O artifactId'
+  local artifactId_text='O artifactId[Nome do Projeto]'
 
   while true; do
 

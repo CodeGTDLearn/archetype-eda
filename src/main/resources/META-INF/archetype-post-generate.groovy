@@ -4,18 +4,19 @@ import java.nio.file.Paths
 Properties properties = request.properties
 
 // 1.0) capturando Variaveis oriundas do archetype-metadata.xml
-def project_name = "${properties?.project_name}"
+def entity_folder = "${properties?.entity_name}"
 def show_log = "${properties?.show_archetype_posprocessor_log}"
 def keep_test_folder = "${properties?.enable_folder_src_test_java}"
-def keep_resources_test_folder = "${properties?.enable_folder_src_test_resources}"
 def keep_logback_file = "${properties?.enable_logback}"
-def keep_security_folder = "${properties?.enable_security_authentication_support}"
+def keep_jwt_auth_folder = "${properties?.enable_jwt_authentication}"
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
+def keep_docker_folder = "${properties?.enable_docker}"
 
 
 // 2.0) Variaveis Operacionais exclusivas deste Script
-def security_folder_suffix = "Security"
-def project_security_folder = "${properties?.project_name}".concat(security_folder_suffix)
+def config_folder = "config"
+def authentication_folder = "authentication"
+//def project_security_folder = "${properties?.entity_name}".concat(config_folder)
 
 def log_text_header="\n\n\n"+
              "\n-------------------------------------------------------------------------------\n" +
@@ -33,23 +34,20 @@ def log_text=log_text_header
 def project_package = "${properties?.package}".replace('.', '/')
 
 if (keep_test_folder == 'false') {
-    Path folderPath =
+    Path folderTestPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java')
-    log_text += "\n1.0) FOLDER_SRC_TEST_JAVA location:\n $folderPath\n"
+    log_text += "\n1.0) FOLDER_SRC_TEST_JAVA location:\n $folderTestPath\n"
+    deleteFolder(folderTestPath.toFile())
 
-    deleteFolder(folderPath.toFile())
-}
-
-if (keep_resources_test_folder == 'false') {
-    Path folderPath =
+    Path folderTestResourcePath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources')
-    log_text += "\n2.0) FOLDER_SRC_TEST_RESOURCES location:\n $folderPath\n"
+    log_text += "\n2.0) FOLDER_SRC_TEST_RESOURCES location:\n $folderTestResourcePath\n"
 
-    deleteFolder(folderPath.toFile())
+    deleteFolder(folderTestResourcePath.toFile())
 }
 
 if (keep_logback_file == 'false') {
@@ -66,31 +64,43 @@ if (keep_logback_file == 'false') {
                     'src', 'test', 'resources', 'logback-test.xml')
     log_text += "\n3.2) logback-test.xml -> test-resources -> location:\n $testLogbackPath\n"
     deleteFile(testLogbackPath.toFile())
+
+    Path folderLogbackSpringConfigPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config')
+    log_text += "\n3.3) FOLDER_LOGBACK-SPRING-CONFIG location:\n $folderLogbackSpringConfigPath\n"
+    deleteFolder(folderLogbackSpringConfigPath.toFile())
+
+    Path folderELKPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'ELK')
+    log_text += "\n3.4) FOLDER_ELK location:\n $folderELKPath\n"
+    deleteFolder(folderELKPath.toFile())
 }
 
-if (keep_security_folder == 'false') {
+if (keep_jwt_auth_folder == 'false') {
     Path folderPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'java', project_package, project_security_folder)
-    log_text += "\n4.0) Security_folder_path location:\n $folderPath\n"
-
+                    'src', 'main', 'java',
+                    project_package, entity_folder, config_folder, authentication_folder)
+    log_text += "\n4.0) Jwt_authentication_folder_path location:\n $folderPath\n"
     deleteFolder(folderPath.toFile())
 
     Path filePathAppKey =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'app.key')
+                    'src', 'main', 'resources', 'appJwt.key')
     log_text.concat("\nsrc_main_resources_app_key:\n $filePathAppKey\n")
-
     deleteFile(filePathAppKey.toFile())
 
     Path filePathAppPub =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'app.pub')
+                    'src', 'main', 'resources', 'appJwt.pub')
     log_text.concat("\nsrc_main_resources_app_pub:\n $filePathAppPub\n")
-
     deleteFile(filePathAppPub.toFile())
 }
 
@@ -170,6 +180,15 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
         writer.write(sb.toString())
         writer.close()
     }
+}
+
+if (keep_docker_folder == 'false') {
+    Path folderPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'docker')
+    log_text += "\n6.0) FOLDER_DOCKER location:\n $folderPath\n"
+    deleteFolder(folderPath.toFile())
 }
 
 if (show_log == 'true') printf "\n$log_text $log_text_footer"

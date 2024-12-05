@@ -1,5 +1,47 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <logger name="org.springframework.test" level="DEBUG"/>
+
+    <!-- 1) APPENDERS IMPORTS _______________________________________________-->
+    <import class="ch.qos.logback.core.ConsoleAppender"/>
+    <import class="ch.qos.logback.core.FileAppender"/>
+    <import class="ch.qos.logback.classic.filter.ThresholdFilter"/>
+    <import class="ch.qos.logback.classic.net.SMTPAppender"/>
+    <import class="ch.qos.logback.classic.encoder.JsonEncoder"/>
+    <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+    <import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"/>
+    <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"/>
+    <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
+    <import class="net.logstash.logback.appender.LogstashTcpSocketAppender"/>
+    <import class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"/>
+
+
+    <!-- CONSOLE LOG ________________________________________________________-->
+    <!-- This pattern MUST faced the '0 Column' in IDE-Editor
+         Otherwise, the space will used damaging the log-output -->
+    <property name="CONSOLE_PATTERN_FORMAT" value="
+%n%highlight(%-6level) | %green(%-6d{dd-MM-yyyy}) | %red(%-6d{HH:mm:ss}) |
+%-40magenta(%thread) | %-75cyan(%logger)
+%n%highlight(%white(%-6caller))
+Class: %highlight(%red(%-6class{20})) %n
+Method: %highlight(%red(%-6method)) %n
+Message: %blue(%msg%n) %n
+Exception: %red(%throwable) - %red(%exception) %n"/>
+    <!--    %msg%n%throwable-->
+    <appender name="CONSOLE" class="ConsoleAppender">
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${CONSOLE_PATTERN_FORMAT}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- LOG "com.entity*" at TRACE level -->
+    <logger name="com.entity" level="trace" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
 </configuration>

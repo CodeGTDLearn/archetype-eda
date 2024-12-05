@@ -1,0 +1,49 @@
+x-secrets-path: ../../../../../WORKBASE/DEV/vault/scaffold-entity-api/credentials
+
+services:
+  api:
+    #container_name: api_core
+    #image: pauloportfolio/apisinglenode
+    build:
+      context: ..
+      dockerfile: /docker/api_Dockerfile
+    ports:
+      #- "${API_PORT}:${API_PORT}"
+      #- "${DEBUG_PORT}:${DEBUG_PORT}"
+      - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - ../docker/mongo-data-db:/data/db
+    depends_on:
+      - mongodb
+    networks:
+      - api-elk-net
+      - api-db-net
+    environment:
+      DEBUG_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xmx1G -Xms128m -XX:MaxMetaspaceSize=128m
+
+      DB_URI: mongodb://mongo1-db:27017
+
+      API_PORT_FILE: /run/secrets/api_port
+      DEBUG_PORT_FILE: /run/secrets/api_debug_port
+
+      SECRET_USER1_PASSWORD_FILE: /run/secrets/api_user1_password
+      SECRET_UNKNOWN_PASSWORD_FILE: /run/secrets/api_unknown_password
+      SECRET_USER_PASSWORD_NO_OWNER_FILE: /run/secrets/api_noowner_password
+
+      SECRET_ADMIN_PASSWORD_FILE: /run/secrets/api_admin_password
+
+
+secrets:
+  api_port:
+    file: ${x-secrets-path}/api_port.txt
+  api_debug_port:
+    file: ${x-secrets-path}/api_debug_port.txt
+  api_user1_password:
+    file: ${x-secrets-path}/user1_password.txt
+  api_unknown_password:
+    file: ${x-secrets-path}/unknown_password.txt
+  api_noowner_password:
+    file: ${x-secrets-path}/noowner_password.txt
+  api_admin_password:
+    file: ${x-secrets-path}/userAdminPassword.txt
