@@ -9,9 +9,9 @@
 
 
 
-
 // VARIABLE-BINDING-PROPERTIES.GROOVY ------------------------------------------
 
-
 def keep_binding_properties = "${properties?.enable_binding_properties}"
-def properties_filetype = "${properties?.properties_filetype}"
+def keep_default_binding_properties = "${properties?.default_binding_properties}"
+def keep_list_binding_properties = "${properties?.enable_list_binding_properties}"
+def keep_map_binding_properties = "${properties?.enable_map_binding_properties}"

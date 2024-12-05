@@ -1,9 +1,5 @@
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.FileVisitResult
-import java.nio.file.SimpleFileVisitor
-import java.nio.file.attribute.BasicFileAttributes
-import java.util.concurrent.atomic.AtomicInteger
 
 
 
@@ -19,14 +15,16 @@ Properties properties = request.properties
 
 
 
-// ARCHETYPE-GLOBAL-VARIABLES.GROOVY ------------------------------------------
+
+
+// -----------------------------------------------------------------------------
+
+// ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
 
 def entity_folder = "${properties?.entity_name}"
 def entity_name = "${properties?.entity_name}"
 
 def config_folder = "config"
-
-def binding_properties_folder = "properties"
 
 def project_package = "${properties?.package}".replace('.', '/')
 
@@ -61,12 +59,12 @@ def authentication_folder = "authentication"
 
 
 
-
 // VARIABLE-BINDING-PROPERTIES.GROOVY ------------------------------------------
 
-
 def keep_binding_properties = "${properties?.enable_binding_properties}"
-def properties_filetype = "${properties?.properties_filetype}"
+def keep_default_binding_properties = "${properties?.default_binding_properties}"
+def keep_list_binding_properties = "${properties?.enable_list_binding_properties}"
+def keep_map_binding_properties = "${properties?.enable_map_binding_properties}"
 
 
 
@@ -106,6 +104,14 @@ def keep_logback = "${properties?.enable_logback}"
 def console_type = "${properties?.logback_console_type}"
 def keep_appender_smtp = "${properties?.enable_logback_appender_smtp}"
 def keep_appender_file = "${properties?.enable_logback_appender_file}"
+
+
+
+
+
+// VARIABLE-PROPERTIES-FILETYPE.GROOVY -----------------------------------------
+
+def properties_filetype = "${properties?.properties_filetype}"
 
 
 
@@ -161,27 +167,19 @@ if (keep_jwt_authentication == 'false') {
 
 // SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
 
-
-
 if (keep_binding_properties == 'false') {
 
-    Path bindingPropertiesTestPath =
+    Path srcTestJava_bindingPropertiesTestFolder_path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
                     'binding_properties_test')
-    log_text += "\\nFOLDER_BINDING_PROPERTIES_TEST:\\n $bindingPropertiesTestPath\n"
-    deleteFolder(bindingPropertiesTestPath.toFile())
+    log_text += "\nFOLDER_BINDING_PROPERTIES_TEST:\n $srcTestJava_bindingPropertiesTestFolder_path\n"
+    deleteFolder(srcTestJava_bindingPropertiesTestFolder_path.toFile())
 
-
-    Path propertiesYmlTestPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources',
-                    'application.yml')
-    log_text += "\napplication.yml -> test-resources:\n $propertiesYmlTestPath\n"
-    deleteFile(propertiesYmlTestPath.toFile())
 }
+
+
 
 
 
@@ -192,54 +190,92 @@ if (keep_binding_properties == 'false') {
 
 if (keep_binding_properties == 'false') {
 
-    Path bindingPropertiesPath =
+    Path srcMainJava_bindingPropertiesFolder_path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'java',
                     project_package,
                     entity_folder,
                     config_folder,
-                    binding_properties_folder)
-    log_text += "\\nFOLDER_BINDING_PROPERTIES:\\n $bindingPropertiesPath\n"
-    deleteFolder(bindingPropertiesPath.toFile())
-
-
-    Path propertiesYmlPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources', 'application.yml')
-    log_text += "\napplication.yml -> resources:\n $propertiesYmlPath\n"
-    deleteFile(propertiesYmlPath.toFile())
+                    "properties")
+    log_text += "\nFOLDER_BINDING_PROPERTIES:\n $srcMainJava_bindingPropertiesFolder_path\n"
+    deleteFolder(srcMainJava_bindingPropertiesFolder_path.toFile())
 }
 
 
-if (keep_binding_properties == 'true') {
+if (keep_default_binding_properties == 'false') {
 
-    def fileType = (properties_filetype == '1') ? '.yml' : '.properties'
-    def fileTypeMessage = (properties_filetype == '1') ? 'Delete All YML-FILES' : 'Delete All PROPERTIES-FILES'
-    log_text += "\\nChosen FileType: " + fileType + " | " + fileTypeMessage
 
-    Path mainJavaYmlPathDeletion =
+    Path binding_properties_path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'java',
                     project_package,
                     entity_folder,
                     config_folder,
-                    binding_properties_folder)
-    log_text += "\\nFOLDER_BINDING_PROPERTIES - " + fileTypeMessage + "\\n $mainJavaYmlPathDeletion\n"
-//    deleteFolder(mainJavaYmlPathDeletion.toFile())
-    deleteFilesByExtension(mainJavaYmlPathDeletion, fileType, true)
+                    "properties"
+            )
 
 
-    Path mainResourcesYmlPathDeletion =
+    List<String> filesToDelete =
+            [
+                    "KeyProperties.java",
+                    "ApplicationProperties.java"
+            ]
+
+
+    deleteFilesFromList(binding_properties_path, filesToDelete)
+
+
+    log_text += "\nDEFAULT_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+}
+
+
+if (keep_list_binding_properties == 'false') {
+
+    Path binding_properties_path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources',
-                    fileType)
-    log_text += "\n" + fileTypeMessage + " -> resources:\n $mainResourcesYmlPathDeletion\n"
-//    deleteFile(mainResourcesYmlPathDeletion.toFile())
-    deleteFilesByExtension(mainJavaYmlPathDeletion, fileType, true)
+                    'src', 'main', 'java',
+                    project_package,
+                    entity_folder,
+                    config_folder,
+                    "properties"
+            )
+
+    List<String> filesToDelete =
+            [
+                    "ListPropertiesClass.java",
+                    "ListPropertiesRecord.java"
+            ]
+
+
+    log_text += "\nLIST_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+    deleteFilesFromList(filesToDelete, binding_properties_path)
+}
+
+
+if (keep_map_binding_properties == 'false') {
+
+    Path binding_properties_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'java',
+                    project_package,
+                    entity_folder,
+                    config_folder,
+                    "properties"
+            )
+
+    List<String> filesToDelete =
+            [
+                    "MapPropertiesClass.java",
+                    "MapPropertiesRecord.java"
+            ]
+
+
+    log_text += "\nMAP_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+    deleteFilesFromList(filesToDelete, binding_properties_path)
 }
 
 
@@ -379,6 +415,8 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 
 
 
+
+
 // SNIPPET-LOGBACK.GROOVY ------------------------------------------------------
 
 
@@ -415,6 +453,9 @@ if (keep_logback == 'false' ||
 
     deleteElkLogSystemStructure(log_text)
 }
+
+
+
 
 if (keep_logback == 'true' && console_type == '1') {
 
@@ -456,6 +497,9 @@ if (keep_logback == 'true' && console_type == '1') {
     deleteFile(logbackTestPath.toFile())
 }
 
+
+
+
 if (keep_logback == 'true' && console_type == '2') {
 
     Path consoleGranularFile =
@@ -474,6 +518,9 @@ if (keep_logback == 'true' && console_type == '2') {
     deleteFile(granularLayoutConsoleFile.toFile())
 }
 
+
+
+
 if (keep_logback == 'true' && console_type == '3') {
 
     Path consoleTabularFile =
@@ -483,6 +530,9 @@ if (keep_logback == 'true' && console_type == '3') {
     log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabularFile\n"
     deleteFile(consoleTabularFile.toFile())
 }
+
+
+
 
 if (keep_logback == 'true' && keep_appender_smtp == 'false') {
 
@@ -494,6 +544,9 @@ if (keep_logback == 'true' && keep_appender_smtp == 'false') {
     deleteFile(stmpPathFile.toFile())
 }
 
+
+
+
 if (keep_logback == 'true' && keep_appender_file == 'false') {
 
     Path rolFilePath =
@@ -503,6 +556,34 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
     log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $rolFilePath\n"
     deleteFile(rolFilePath.toFile())
 }
+
+
+
+
+
+
+
+// SNIPPET-PROPERTIES-FILETYPE.GROOVY ------------------------------------------
+
+def deleteFileType = (properties_filetype == '1') ? '.yml' : '.properties'
+def fileTypeMessage = (properties_filetype == '1') ? 'Delete All YML-FILES' : 'Delete All PROPERTIES-FILES'
+log_text += "\nBINDING_PROPERTIES:\n=> Chosen FileType: " + deleteFileType + " | " + fileTypeMessage
+
+
+Path srcMainJava_resourcesFolder_path =
+        Paths.get(request.outputDirectory,
+                request.artifactId,
+                'src', 'main', 'resources')
+log_text += "\n" + fileTypeMessage + " -> main-resources:\n $srcMainJava_resourcesFolder_path\n"
+deleteFilesByExtensionRecursively(srcMainJava_resourcesFolder_path, deleteFileType)
+
+
+Path srcTestJava_resourcesFolder_path =
+        Paths.get(request.outputDirectory,
+                request.artifactId,
+                'src', 'test', 'resources')
+log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestJava_resourcesFolder_path\n"
+deleteFilesByExtensionRecursively(srcTestJava_resourcesFolder_path, deleteFileType)
 
 
 
@@ -532,14 +613,75 @@ if (keep_src_test_java == 'false') {
 
 
 
+
+
+
 // ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
 
-
-// SNIPPET-POST-GENERATE-LOG.GROOVY --------------------------------------------
+// ARCHETYPE-POST-GENERATE-LOG -------------------------------------------------
 if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 
+// FOOTER ----------------------------------------------------------------------
+def deleteFile(File file) {
+    if (file.isFile()) file.delete()
+}
 
-// UTIL FUNCTIONS --------------------------------------------------------------
+
+/**
+ * Deleta recursivamente todos os arquivos com uma determinada extensão
+ * @param directory Path do diretório
+ * @param extension Extensão dos arquivos (exemplo: ".yml", ".properties")
+ */
+def deleteFilesByExtensionRecursively(Path path, String extension) {
+
+    def currentFolder = path.toFile()
+
+    if (!currentFolder.exists()) return
+
+    // Remove from 'Current Directory'
+    currentFolder.eachFile {
+        file -> if (file.isFile() && file.name.endsWith(extension)) file.delete()
+    }
+
+    // Remove from 'SubDirectories'
+    currentFolder.eachDir {
+        subDir -> deleteFilesByExtensionRecursively(subDir.toPath(), extension)
+    }
+}
+
+
+def deleteFilesFromList(Path directory, List<String> listFiles) {
+
+    // Valida se diretório existe
+    if (!directory.toFile().directory) {
+        println "Diretório não encontrado: $directory"
+        return
+    }
+
+    // Processa cada arquivo
+    listFiles.each {
+        fileName ->
+            try {
+                def fileToDelete = directory.resolve(fileName)
+
+                if (fileToDelete.toFile().exists()) {
+
+                    fileToDelete.toFile().delete()
+                    println "Arquivo deletado: $fileName"
+
+                }
+                else println "Arquivo não encontrado: $fileName em ${directory.absolutePath}"
+
+
+            } catch (Exception e) {
+                println "Erro ao deletar $fileName: ${e.message}"
+            }
+    }
+}
+
+
+// FOLDER MANAGEMENT FUNCTIONS -------------------------------------------------
+
 def deleteFolder(File dir) {
     if (dir.isDirectory()) {
         dir.listFiles().each { file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
@@ -549,65 +691,25 @@ def deleteFolder(File dir) {
 }
 
 
-def deleteFile(File file) {
-    if (file.isFile()) file.delete()
-//    FileOperations.deleteFile(file)
-}
-
-
-private void deleteElkLogSystemStructure(log_text) {
+def deleteElkLogSystemStructure(log_text) {
     Path folderELKPath =
-            Paths.get(request.outputDirectory,
+            Paths.get(
+                    request.outputDirectory,
                     request.artifactId,
                     'ELK')
     log_text += "\nFOLDER_ELK:\n $folderELKPath\n"
     deleteFolder(folderELKPath.toFile())
 
+
     Path dockerElkComposePath =
-            Paths.get(request.outputDirectory,
+            Paths.get(
+                    request.outputDirectory,
                     request.artifactId,
-                    'docker', 'elk-compose.yml')
+                    'docker',
+                    'elk-compose.yml')
     log_text += "\nelk-compose.xml -> docker:\n $dockerElkComposePath\n"
     deleteFile(dockerElkComposePath.toFile())
 }
 
 
-/**
- * Deletes all files with a specified extension in a directory and its subdirectories.
- *
- * @param directoryPath Path of the directory where files will be deleted
- * @param extension Extension of files to be deleted (e.g.: ".yml", ".properties")
- * @param recursive If true, deletes files in subdirectories as well
- * @return Number of files deleted
- * @throws IOException If an error occurs while accessing or deleting files
- * @example: deleteFilesByExtension(Paths.get(directoryPath), ".yml", true)   */
-private int deleteFilesByExtension(Path directoryPath, String extension, boolean recursive = true) {
-
-    if (!Files.exists(directoryPath)) return 0
-
-    final def deletedFiles = new AtomicInteger(0)
-
-    Files.walkFileTree(directoryPath, new SimpleFileVisitor<Path>() {
-        @Override
-        FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-            if (file.toString().endsWith(extension)) {
-                Files.delete(file)
-                deletedFiles.incrementAndGet()
-            }
-            return FileVisitResult.CONTINUE
-        }
-
-        @Override
-        FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-            return recursive || dir == directoryPath ?
-                    FileVisitResult.CONTINUE :
-                    FileVisitResult.SKIP_SUBTREE
-        }
-    })
-
-    return deletedFiles.get()
-}
-
-
-
-// FOOTER ----------------------------------------------------------------------
+// FUNCTIONS -------------------------------------------------------------------

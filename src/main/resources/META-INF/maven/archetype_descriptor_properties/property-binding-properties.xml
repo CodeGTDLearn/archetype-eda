@@ -10,12 +10,17 @@
             <defaultValue></defaultValue>
         </requiredProperty>
 
-
-        <requiredProperty key="properties_filetype">
+        <requiredProperty key="default_binding_properties">
             <defaultValue></defaultValue>
         </requiredProperty>
 
+        <requiredProperty key="list_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
 
+        <requiredProperty key="map_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
 
 
 <!-- ______________ -->

@@ -38,12 +38,17 @@
             <defaultValue></defaultValue>
         </requiredProperty>
 
-
-        <requiredProperty key="properties_filetype">
+        <requiredProperty key="default_binding_properties">
             <defaultValue></defaultValue>
         </requiredProperty>
 
+        <requiredProperty key="list_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
 
+        <requiredProperty key="map_binding_properties">
+            <defaultValue></defaultValue>
+        </requiredProperty>
 
 
 
@@ -163,6 +168,20 @@
 
 
 
+        <!--  PROPERTY-PROPERTIES-FILETYPE.XML   ___________________________ -->
+        <requiredProperty key="properties_filetype">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+
+
+
+
+
+
         <!--   PROPERTY-TEST.XML ___________________________________________ -->
         <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>
@@ -205,6 +224,7 @@
 
 
         <!--  FILESET-BINDING-PROPERTIES.XML _______________________________ -->
+
 
         <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
         <fileSet filtered="true" encoding="UTF-8">

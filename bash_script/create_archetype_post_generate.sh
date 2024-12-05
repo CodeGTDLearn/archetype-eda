@@ -13,6 +13,22 @@ create_archetype_post_generate_groovy() {
     return 1
   fi
 
+#  add_enters_around_content() {
+#    local var_name=$1
+#    local num_enters=$2
+#    local position=$3
+#    local content=$(cat "$var_name")
+#
+#    if [ "$position" = "before" ]; then
+#      printf "%*s%s\n" $num_enters "" "$content"
+#    elif [ "$position" = "after" ]; then
+#      printf "%s%*s\n" "$content" $num_enters ""
+#    else
+#      echo "Erro: posição inválida. Use 'before' ou 'after'."
+#      exit 1
+#    fi
+#  }
+
   local final_file_content_merged="${archetype_filepath_param}\\${archetype_filename_param}"
   local initial_lines_to_be_deleted_from_merged_groovy_files='6'
 
@@ -20,10 +36,11 @@ create_archetype_post_generate_groovy() {
   local variables_folder="${archetype_filepath_param}\\archetype_post_generate_variables"
   local snippets_folder="${archetype_filepath_param}\\archetype_post_generate_snippets"
 
-  local import_file="${body_folder}\\archetype-imports.groovy"
+  local imports_file="${body_folder}\\archetype-imports.groovy"
   local header_file="${body_folder}\\archetype-header.groovy"
-  local general_vars_file="${body_folder}\\archetype-global-variables.groovy"
+  local global_vars_file="${body_folder}\\archetype-global-variables.groovy"
   local footer_file="${body_folder}\\archetype-footer.groovy"
+  local function_file="${body_folder}\\archetype-functions.groovy"
 
   mapfile -t variable_filename_list_from_folder < <(ls -1 "${variables_folder}")
   mapfile -t snippets_filename_list_from_folder < <(ls -1 "${snippets_folder}")
@@ -37,14 +54,14 @@ create_archetype_post_generate_groovy() {
     local prefix_variable="variables-"
     local prefix_snippet="snippet-"
 
-    # 1. Add property files
+    # 1. Add "VARIABLES-FILES"
     for file in "${variable_filename_list_from_folder[@]}"; do
         if [[ "$file" =~ \."${file_type}"$ ]] && [[ "$file" =~ ${prefix_variable} ]]; then
            ordered_final_file_list+=("${variables_folder}/${file}")
         fi
     done
 
-    # 2. Add the fileset files
+    # 2. Add the "SNIPPET-FILES"
     for file in "${snippets_filename_list_from_folder[@]}"; do
         if [[ "$file" =~ \."${file_type}"$ ]] && [[ "$file" =~ ${prefix_snippet} ]]; then
            ordered_final_file_list+=("${snippets_folder}/${file}")
@@ -62,8 +79,9 @@ create_archetype_post_generate_groovy() {
 
   # Checks if necessary files exist
   if [[ ! -f "$header_file" ]] ||
-     [[ ! -f "$import_file" ]] ||
-     [[ ! -f "$general_vars_file" ]] ||
+     [[ ! -f "$imports_file" ]] ||
+     [[ ! -f "$global_vars_file" ]] ||
+     [[ ! -f "$function_file" ]] ||
      [[ ! -f "$footer_file" ]]; then
     echo "ERROR_BODY_FILES in ARCHETYPE_POST_GENERATE_GROOVY - NOT FOUND!"
     echo -e "\nType any 'key' to exit."
@@ -73,13 +91,14 @@ create_archetype_post_generate_groovy() {
 
 
   # 1) Create/Overwrite the output file and add the 'IMPORT_FILE'
-  cat "$import_file" | tr -d '/' > "$final_file_content_merged"
+  cat "$imports_file" | tr -d '/' > "$final_file_content_merged"
 
   # 2) Add the 'HEADER_FILE' to the final file
+#  printf '%*s' 10 $'\n' >> "$final_file_content_merged"
   sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$header_file" >> "$final_file_content_merged"
 
   # 3) Add the 'GENERAL_VARIABLES' to the final file
-  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$general_vars_file" >> "$final_file_content_merged"
+  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$global_vars_file" >> "$final_file_content_merged"
 
   # 4) Merging the "content of each file from ORDERED_FINAL_FILE_LIST" (without extra tags) to the final file
   for file in "${ordered_final_file_list[@]}"; do
@@ -89,20 +108,23 @@ create_archetype_post_generate_groovy() {
   # 5) Adds the 'FOOTER_FILE' to the final file
   sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$footer_file" >> "$final_file_content_merged"
 
+  # 6) Adds the 'FUNCTION_FILE' to the final file
+  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$function_file" >> "$final_file_content_merged"
+
   if [ "$show_debug_log_param" = "true" ]; then
 
     echo -e "$divider"
-    echo -e "\n\n-----> EXECUTING: 'create_archetype_post_generate_groovy function' - START \n\n"
+    echo -e "\n\n-----> EXECUTING: 'CREATE_ARCHETYPE_POST_GENERATE_GROOVY.SH function' - START \n\n"
 
-    echo -e "\n\n-----> FINAL FILES MERGED for 'ARCHETYPE_POST-GENERATE.GROOVY' CREATION ------------ \n"
+    echo -e "\n\n-----> Files MERGED for 'ARCHETYPE_POST-GENERATE.GROOVY' creation ------------ \n"
     for file in "${ordered_final_file_list[@]}"; do
       echo -e "${file}"
     done
 
-    echo -e "\n\n-----> ARCHETYPE_POST-GENERATE.GROOVY CREATED ------------ \n"
+    echo -e "\n\n-----> "ARCHETYPE_POST-GENERATE.GROOVY" created ------------ \n"
     cat "$final_file_content_merged"
 
-    echo -e "\n\n-----> EXECUTING: 'create_archetype_post_generate_groovy function' - END \n\n"
+    echo -e "\n\n-----> EXECUTING: 'CREATE_ARCHETYPE_POST_GENERATE_GROOVY.SH function' - END \n\n"
     echo -e "$divider"
 
   fi

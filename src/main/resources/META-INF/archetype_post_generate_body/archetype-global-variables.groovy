@@ -10,14 +10,16 @@
 
 
 
-// ARCHETYPE-GLOBAL-VARIABLES.GROOVY ------------------------------------------
+
+
+// -----------------------------------------------------------------------------
+
+// ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
 
 def entity_folder = "${properties?.entity_name}"
 def entity_name = "${properties?.entity_name}"
 
 def config_folder = "config"
-
-def binding_properties_folder = "properties"
 
 def project_package = "${properties?.package}".replace('.', '/')
 

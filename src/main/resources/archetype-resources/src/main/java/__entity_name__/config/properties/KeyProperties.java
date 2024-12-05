@@ -1,9 +1,9 @@
 package ${package}.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Component;
 
-@Configuration
+@Component
 @ConfigurationProperties(prefix = "my.key")
 public class KeyProperties {
 

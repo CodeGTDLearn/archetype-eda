@@ -68,6 +68,7 @@ script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTION_LOG
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
 script_injection "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_attributes_input.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_properties_filetype.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_binding_properties.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
