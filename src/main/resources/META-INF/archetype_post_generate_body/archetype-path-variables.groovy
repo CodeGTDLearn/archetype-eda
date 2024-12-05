@@ -22,7 +22,7 @@ Path projectRootFolder =
 
 Path rootGitFolder =
         projectRootFolder
-                .resolve(".git_temp")
+                .resolve("git_temp")
 
 Path rootDockerFolder =
         projectRootFolder

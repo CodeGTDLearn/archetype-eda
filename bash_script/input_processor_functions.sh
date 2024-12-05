@@ -218,7 +218,8 @@ get_user_numeric_selection_or_default_value() {
 
   while true; do
 
-    local prompt="${numeric_option_prompt}"
+    local chosen_option_prompt="\n'Type' an option OR 'Enter' for [${defaultValue_onEnterKey_press}]: "
+    local prompt="${numeric_option_prompt}${chosen_option_prompt}"
     local highlighted_prompt=$(colorize_delimited_text "$prompt" false "magenta")
     read -r -p "$highlighted_prompt" chosen_option
 

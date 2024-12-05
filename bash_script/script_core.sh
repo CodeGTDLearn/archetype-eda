@@ -5,23 +5,22 @@
 RECREATE_ARCHETYPE=true
 
 # A.1.2) LOG|DEBUG - ARCHETYPE RECREATION
-SHOW_RECREATE_ARCHETYPE_LOG=true
+SHOW_RECREATE_ARCHETYPE_LOG=false
 
 # A.2) LOG|DEBUG MANAGEMENT "PROCESSOR"
-SHOW_INJECTION_LOG=true
-SHOW_MAVEN_BASIC_LOG=true
-SHOW_MAVEN_DEBUG_LOG=true
-SHOW_ARCHETYPE_POS_PROCESSOR_LOG=true
+SHOW_INJECTION_LOG=false
+SHOW_MAVEN_BASIC_LOG=false
+SHOW_MAVEN_DEBUG_LOG=false
+SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
 
 # A.3) IDE EXECUTION AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
 IDE_EXEC_FILE='idea64.exe'
-USE_IDE_ACTIVATION_MANAGER=false
-OPEN_IDE_DIRECTLY=false
+USE_IDE_ACTIVATION_MANAGER=true
+OPEN_IDE_DIRECTLY=true
 
 # A.4) ENABLING PROGRESS_BAR
-# Progress_bar is executed inside the function 'execute_maven_command_line'
-# this function is found inside the script file: maven_functions.sh
+# Progress_bar runa inside the function 'execute_maven_command_line'(maven_functions.sh)
 ACTIVE_PROGRESS_BAR=true
 
 # A.5) ARCHETYPE FILES GENERATION:
@@ -46,7 +45,7 @@ execute_mvn_clean_install "${PROJECT_FOLDER_LINUX}" "${RECREATE_ARCHETYPE}" "${S
 
 # A.6) CHECKING PROJECT FOLDER VIABILITY
 source "${SCRIPT_FOLDER}\\project_viability_checker.sh"
-check_project_folder_viability
+check_project_folder_viability "true"
 
 # A.7) SCRIPT INITIALIZATION
 source "${SCRIPT_FOLDER}\\script_injection.sh"
@@ -68,9 +67,9 @@ inject_script "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECTION
 #             * Pos-Processador: "ARCHETYPE-POS-GENERATE".GROOVY
 #-------------------------------------------------------------------------------
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
-inject_script "${SCRIPT_FOLDER}" "user_api_general_inputs.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_api_general_inputs.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG

@@ -9,16 +9,16 @@ add_item_in_progress_bar() {
   fi
 
   # **************************************************************************
-  # ** O APOSTROFE É ESSENCIAL PARA ADICIONAR ITEM NA BARRA DE PROGRESSO **
+  # **  O ITEM ENTRE AS 'APOSTROFES' SERA ADICIONADO NA BARRA DE PROGRESSO  **
   # **************************************************************************
-  # This loop is responsible for extracting all occurrences of text between
-  # apostrophes (single quotes).
+  # This loop is responsible for extracting
+  # all occurrences of text between 'apostrophes' (single quotes).
   # The regular expression used in the while loop
   # will capture the text between the single quotes,
-  # so we can add, each item beetween those single quotes,
-  # it to the array PROGRESS_BAR_ITEMS.
-  # The Array PROGRESS_BAR_ITEMS is used to generate each item of the progression bar.
-  # Hence, eachitem in the array PROGRESS_BAR_ITEMS is a component of the progression bar.
+  # so we can add, each item between those single quotes,
+  # it to the 'array PROGRESS_BAR_ITEMS'.
+  # The PROGRESS_BAR_ITEMS has all individual items shown on the progress-bar.
+  # Hence, each item in the array PROGRESS_BAR_ITEMS is a component of the progression bar.
   while [[ $input_text_prompt =~ \'([^\']+)\' ]]; do
     PROGRESS_BAR_ITEMS+=("${BASH_REMATCH[1]}")
     input_text_prompt="${input_text_prompt#*${BASH_REMATCH[0]}}"

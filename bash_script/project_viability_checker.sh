@@ -2,13 +2,19 @@
 
 check_project_folder_viability() {
 
+  local proceed_with_function="$1"
+
+  if [ "$proceed_with_function" = "false" ]; then
+    return 1
+  fi
+
 # ATENCAO!!!
 # ESSA CONSTANTES DEVE FICAR NESTE LOCAL
 # POIS ELAS SAO USADAS 'ANTES' DA INJECAO DAS 'GENERAL_MESSAGES_CONSTANTS.SH'
 PRESS_KEY_MESSAGE="Pressione qualquer tecla para continuar..."
 PROJECT_FOLDER_NOT_ALLOWED_MESSAGE="Project creation FOLDER not allowed. Try elsewhere.\n"
 
-CURRENT_DIR=$(pwd)
+  CURRENT_DIR=$(pwd)
 
   if [ -d "$CURRENT_DIR/src" ] ||
      [ -f "$CURRENT_DIR/pom.xml" ] ||

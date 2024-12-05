@@ -67,7 +67,7 @@ Path projectRootFolder =
 
 Path rootGitFolder =
         projectRootFolder
-                .resolve(".git_temp")
+                .resolve("git_temp")
 
 Path rootDockerFolder =
         projectRootFolder
@@ -190,9 +190,19 @@ def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
 // GIT SUPPORT -----------------------------------------------------------------
 if (keep_git_support == 'false') {
 
-  log_text += "\\nFOLDER_.GIT:\\n $rootGitFolder\n"
+  log_text += "\\nRemovind FOLDER_.GIT:\\n $rootGitFolder\n"
   
   deleteFolder(rootGitFolder.toFile())
+}
+
+
+if (keep_git_support == 'true') {
+
+  log_text += "\\nRenaming FOLDER_.GIT:\\n $rootGitFolder\n"
+
+  listFolderContents(rootGitFolder.toFile())
+
+  renameFolder(rootGitFolder.toFile(), ".git")
 }
 
 
@@ -881,17 +891,6 @@ if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 // FOOTER ----------------------------------------------------------------------
 
 
-
-
-
-
-
-
-
-
-
-
-
 // ARCHETYPE-FUNCTIONS.GROOVY --------------------------------------------------
 
 // FILE MANAGEMENT FUNCTIONS ---------------------------------------------------
@@ -905,9 +904,9 @@ def deleteFile(File file) {
  * @param directory Path do diretório
  * @param extension Extensão dos arquivos (exemplo: ".yml", ".properties")
  */
-def deleteFilesByExtensionRecursively(Path path, String extension) {
+def deleteFilesByExtensionRecursively(Path pathToFiles, String extension) {
 
-    def currentFolder = path.toFile()
+    def currentFolder = pathToFiles.toFile()
 
     if (!currentFolder.exists()) return
 
@@ -923,15 +922,15 @@ def deleteFilesByExtensionRecursively(Path path, String extension) {
 }
 
 
-def deleteFilesFromList(Path directory, List<String> files) {
+def deleteFilesFromList(Path pathToFiles, List<String> files) {
 
     println "Entrou na funcao deleteFilesFromList"
 
     files.removeIf { it == null || it.trim() == "" }
 
     // Valida se diretório existe
-    if (!directory.toFile().isDirectory()) {
-        println "Diretório não encontrado: $directory"
+    if (!pathToFiles.toFile().isDirectory()) {
+        println "Pasta não encontrada: $pathToFiles"
         return
     }
 
@@ -939,7 +938,7 @@ def deleteFilesFromList(Path directory, List<String> files) {
     files.each {
         fileName ->
             try {
-                def fileToDelete = directory.resolve(fileName).toFile()
+                def fileToDelete = pathToFiles.resolve(fileName).toFile()
 
                 if (fileToDelete.exists()) {
 
@@ -947,7 +946,7 @@ def deleteFilesFromList(Path directory, List<String> files) {
                     println "File Found: $fileName"
                 } else {
 
-                    println "File Not Found: $fileName em ${directory.toAbsolutePath()}"
+                    println "File Not Found: $fileName em ${pathToFiles.toAbsolutePath()}"
                 }
             } catch (Exception e) {
                 println "Erro ao deletar $fileName: ${e.message}"
@@ -959,15 +958,15 @@ def deleteFilesFromList(Path directory, List<String> files) {
 
 
 // FOLDER MANAGEMENT FUNCTIONS -------------------------------------------------
-def deleteFolder(File dir) {
-    if (dir.isDirectory()) {
+def deleteFolder(File pathToFolder) {
+    if (pathToFolder.isDirectory()) {
 
-        dir.listFiles()
+        pathToFolder.listFiles()
                 .each {
                     file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
                 }
     }
-    dir.delete()
+    pathToFolder.delete()
 }
 
 
@@ -989,6 +988,31 @@ def deleteElkLogSystemStructure(log_text) {
                     'elk-compose.yml')
     log_text += "\nelk-compose.xml -> docker:\n $dockerElkComposePath\n"
     deleteFile(dockerElkComposePath.toFile())
+}
+
+
+def renameFolder(File pathToFolder, String newName) {
+    if (pathToFolder.isDirectory()) {
+        def newFolderPath = pathToFolder.parentFile.toPath().resolve(newName)
+        if (newFolderPath.toFile().exists()) {
+            println "Erro: Pasta com o nome $newName já existe."
+            return
+        }
+        pathToFolder.renameTo(newFolderPath.toFile())
+        println "Pasta renomeada com sucesso: $pathToFolder -> $newName"
+    } else {
+        println "Erro: $pathToFolder não é um diretório."
+    }
+}
+
+def listFolderContents(File folder) {
+    if (folder.isDirectory()) {
+        folder.listFiles().each { file ->
+            println file.name
+        }
+    } else {
+        println "Erro: ${folder} não é um diretório."
+    }
 }
 
 
