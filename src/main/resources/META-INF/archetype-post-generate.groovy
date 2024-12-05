@@ -3,7 +3,6 @@ import java.nio.file.Paths
 
 Properties properties = request.properties
 
-
 // 1.0) capturando Variaveis oriundas do archetype-metadata.xml
 def project_name = "${properties?.project_name}"
 def show_log = "${properties?.show_archetype_posprocessor_log}"
