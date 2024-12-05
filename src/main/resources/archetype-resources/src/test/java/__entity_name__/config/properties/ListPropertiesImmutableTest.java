@@ -1,4 +1,4 @@
-package ${package}.config.properties;
+package ${package}.${entity_name}.config.properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +9,12 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ListPropertiesRecordTest {
+class ListPropertiesImmutableTest {
 
   @Autowired
-  ListPropertiesRecord properties;
+  ListPropertiesImmutable properties;
 
   String expectedProperty;
 
@@ -34,21 +33,21 @@ class ListPropertiesRecordTest {
     expectedAllIndex0Properties = List.of("Brazil Test", "Canada Test");
     expectedAllIndex1Properties = List.of("Brazilian Real Test", "Canadian Dollar Test");
 
-    actualListObjects = properties.objects();
+    actualListObjects = properties.getObjects();
 
-    actualProperty = properties.task();
+    actualProperty = properties.getTask();
   }
 
   @Order(1)
   @Test
-  void givenTaskProperty_whenBindingToRecord_thenPropertyMatchesExpected() {
+  void givenPropertiesFile_whenBindingTaskProperty_thenValueIsSet() {
 
     assertEquals(expectedProperty, actualProperty);
   }
 
   @Order(2)
   @Test
-  void givenListOfObjects_whenBindingProperties_thenAllFieldsMatchExpectedValues() {
+  void givenPropertiesFile_whenBindingListObjects_thenAllFieldsAreSet() {
 
     IntStream
          .range(0, actualListObjects.size())
@@ -63,21 +62,21 @@ class ListPropertiesRecordTest {
                      () -> assertEquals(objectProperty1, actualObject.name()),
                      () -> assertEquals(objectProperty2, actualObject.currency())
            );
-
          });
   }
 
   @Order(3)
   @Test
-  void givenListOfObjects_whenGettingSize_thenHasExpectedNumberOfItems() {
+  void givenPropertiesFile_whenBindingListObjects_thenCorrectSizeIsSet() {
 
     int expectedTotalObjects = 2;
+
     assertEquals(expectedTotalObjects, actualListObjects.size());
   }
 
   @Order(4)
   @Test
-  void givenListObjects_whenAddingNewItem_thenThrowsUnmodifiableException() {
+  void givenPropertiesFile_whenAccessingListObjects_thenListIsImmutable() {
 
     assertThrows(
          UnsupportedOperationException.class,
@@ -87,7 +86,7 @@ class ListPropertiesRecordTest {
 
   @Order(5)
   @Test
-  void givenProperties_whenCheckingTypes_thenAllInstancesMatchExpectedClasses() {
+  void givenPropertiesFile_whenBindingProperties_thenVerifyTypes() {
 
     assertAll(() -> assertInstanceOf(String.class, actualProperty));
 

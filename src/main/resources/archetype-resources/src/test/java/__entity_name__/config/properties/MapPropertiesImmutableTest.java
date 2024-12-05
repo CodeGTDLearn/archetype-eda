@@ -1,22 +1,22 @@
-package ${package}.config.properties;
+package ${package}.${entity_name}.config.properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class MapPropertiesTest {
+class MapPropertiesImmutableTest {
 
   @Autowired
-  MapProperties properties;
+  MapPropertiesImmutable properties;
 
   List<String> expectedKeys;
   List<MapItem> expectedValues;
@@ -38,7 +38,7 @@ class MapPropertiesTest {
 
   @Order(1)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyKeyValuePairs() {
+  void givenMapProperties_whenBindingKeyValuePairs_thenAllPairsMatchExpected() {
 
     IntStream
          .range(0, actualMap.size())
@@ -60,21 +60,21 @@ class MapPropertiesTest {
 
   @Order(2)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyTotalSize() {
+  void givenMapProperties_whenCountingEntries_thenSizeMatchesExpected() {
 
     assertEquals(expectedKeys.size(), actualMap.size());
   }
 
   @Order(3)
   @Test
-  void givenMapProperties_whenInitialized_thenMapShouldNotBeNull() {
+  void givenMapProperties_whenInstantiated_thenMapIsNotNull() {
 
     assertNotNull(actualMap);
   }
 
   @Order(4)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyValueTypes() {
+  void givenMapValues_whenCheckingType_thenAllAreMapItemInstances() {
 
     assertTrue(actualMap.values()
                         .stream()
@@ -83,7 +83,7 @@ class MapPropertiesTest {
 
   @Order(5)
   @Test
-  void givenMapProperties_whenBindingData_thenVerifyKeyOrder() {
+  void givenMapKeys_whenCheckingOrder_thenMatchesExpectedSequence() {
 
     var keys = actualMap.keySet()
                         .toArray();
@@ -98,24 +98,11 @@ class MapPropertiesTest {
 
   @Order(6)
   @Test
-  void givenMapProperties_whenUsingGetter_thenMapShouldBeUnmodifiable() {
+  void givenImmutableMap_whenModifying_thenThrowsException() {
 
     assertThrows(
          UnsupportedOperationException.class,
          () -> actualMap.put("brazil", new MapItem("newLanguage"))
     );
-  }
-
-  @Order(7)
-  @Test
-  void givenMapProperties_whenUsingSetter_thenMapShouldBeModifiable() {
-
-    var newMap = new HashMap<String, MapItem>();
-    newMap.put("uruguai", new MapItem("espanhol-uruguaio"));
-    properties.setMap(newMap);
-
-    var uruguaiMap = properties.getMap()
-                               .get("uruguai");
-    assertEquals("espanhol-uruguaio", uruguaiMap.name());
   }
 }

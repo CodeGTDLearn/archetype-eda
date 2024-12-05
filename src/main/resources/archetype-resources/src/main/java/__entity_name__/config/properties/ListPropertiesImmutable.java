@@ -1,4 +1,4 @@
-package ${package}.config.properties;
+package ${package}.${entity_name}.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;

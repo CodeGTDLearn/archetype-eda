@@ -1,8 +1,9 @@
-package ${package}.config.properties;
+package ${package}.${entity_name}.config.properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -11,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ListPropertiesImmutableTest {
+class ListPropertiesTest {
 
   @Autowired
-  ListPropertiesImmutable properties;
+  ListProperties properties;
 
   String expectedProperty;
 
@@ -40,14 +41,14 @@ class ListPropertiesImmutableTest {
 
   @Order(1)
   @Test
-  void givenPropertiesFile_whenBindingTaskProperty_thenValueIsSet() {
+  void givenTaskProperty_whenBindingToClass_thenPropertyMatchesExpected() {
 
     assertEquals(expectedProperty, actualProperty);
   }
 
   @Order(2)
   @Test
-  void givenPropertiesFile_whenBindingListObjects_thenAllFieldsAreSet() {
+  void givenListOfObjects_whenBindingProperties_thenAllFieldsMatchExpectedValues() {
 
     IntStream
          .range(0, actualListObjects.size())
@@ -67,16 +68,15 @@ class ListPropertiesImmutableTest {
 
   @Order(3)
   @Test
-  void givenPropertiesFile_whenBindingListObjects_thenCorrectSizeIsSet() {
+  void givenListObjects_whenCountingItems_thenHasExpectedSize() {
 
     int expectedTotalObjects = 2;
-
     assertEquals(expectedTotalObjects, actualListObjects.size());
   }
 
   @Order(4)
   @Test
-  void givenPropertiesFile_whenAccessingListObjects_thenListIsImmutable() {
+  void givenListObjects_whenModifyingGetterResult_thenThrowsException() {
 
     assertThrows(
          UnsupportedOperationException.class,
@@ -86,11 +86,71 @@ class ListPropertiesImmutableTest {
 
   @Order(5)
   @Test
-  void givenPropertiesFile_whenBindingProperties_thenVerifyTypes() {
+  void givenProperties_whenCheckingTypes_thenMatchExpectedClasses() {
 
     assertAll(() -> assertInstanceOf(String.class, actualProperty));
 
     actualListObjects
-         .forEach(object -> assertInstanceOf(ListObjects.class, object));
+         .forEach(object -> {
+           assertInstanceOf(ListObjects.class, object);
+         });
+  }
+
+  @Order(6)
+  @Test
+  void givenNewTaskValue_whenUsingPropertySetter_thenValueIsUpdated() {
+
+    String newProperty = "New Binding Object Properties Test Changed";
+    properties.setTask(newProperty);
+    assertEquals(newProperty, properties.getTask());
+  }
+
+  @Order(7)
+  @Test
+  void givenNewObjectsList_whenUsingListSetter_thenListIsUpdated() {
+
+    var newObjects = List.of(new ListObjects("TestName", "TestCurrency"));
+    properties.setObjects(newObjects);
+    assertEquals(newObjects, properties.getObjects());
+  }
+
+  @Order(8)
+  @Test
+  void givenNullValue_whenSettingTask_thenAcceptsNull() {
+
+    properties.setTask(null);
+    assertNull(properties.getTask());
+  }
+
+  @Order(9)
+  @Test
+  void givenEmptyString_whenSettingTask_thenAcceptsEmpty() {
+
+    properties.setTask("");
+
+    assertEquals("", properties.getTask());
+  }
+
+  @Order(10)
+  @Test
+  void givenEmptyList_whenSettingObjects_thenAcceptsEmpty() {
+
+    properties.setObjects(List.of());
+    assertEquals(0, properties.getObjects()
+                              .size()
+    );
+  }
+
+  @Order(11)
+  @DirtiesContext
+  @Test
+  void givenNullList_whenSettingObjects_thenThrowsNPE() {
+
+    properties.setObjects(null);
+
+    assertThrows(
+         NullPointerException.class,
+         () -> properties.getObjects()
+    );
   }
 }

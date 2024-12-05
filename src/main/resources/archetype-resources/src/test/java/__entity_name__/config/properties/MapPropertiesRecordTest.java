@@ -1,4 +1,4 @@
-package ${package}.config.properties;
+package ${package}.${entity_name}.config.properties;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

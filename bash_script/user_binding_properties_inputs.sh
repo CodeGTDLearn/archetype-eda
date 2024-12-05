@@ -16,9 +16,23 @@ enable_binding_properties=$(user_input_or_default_value "boleana" "true" "$ENABL
 default_binding_properties=$(user_input_or_default_value "boleana" "true" "$DEFAULT_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
 list_binding_properties=$(user_input_or_default_value "boleana" "false" "$LIST_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
 map_binding_properties=$(user_input_or_default_value "boleana" "false" "$MAP_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
-validated_binding_properties=$(user_input_or_default_value "boleana" "false" "$VALIDATED_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
-mutable_binding_properties=$(user_numeric_selection_or_default_value "$MUTABLE_BINDING_PROPERTIES_PROMPT" "$MUTABLE_OPTIONS_INTERVAL" "$enable_binding_properties")
 
-if [[ "$enable_folder_src_test_java" = "true" ]]; then
+if [[ "$default_binding_properties" = "true" ||
+      "$list_binding_properties" = "true" ||
+      "$map_binding_properties" = "true" ]]; then
+          binding_properties_styles_enabled=1
+else
+          binding_properties_styles_enabled=0
+fi
+
+if [[ "$binding_properties_styles_enabled" -eq 1 ]]; then
+mutable_binding_properties=$(user_numeric_selection_or_default_value "$MUTABLE_BINDING_PROPERTIES_PROMPT" "$MUTABLE_OPTIONS_INTERVAL" "$enable_binding_properties")
+fi
+
+if [[ "$default_binding_properties" = "true" ]]; then
+validated_binding_properties=$(user_input_or_default_value "boleana" "false" "$VALIDATED_BINDING_PROPERTIES_PROMPT" "$enable_binding_properties")
+fi
+
+if [[ "$enable_folder_src_test_java" = "true" && "$binding_properties_styles_enabled" -eq 1 ]]; then
 enable_binding_properties_tests=$(user_input_or_default_value "boleana" "false" "$BINDING_PROPERTIES_TEST_PROMPT" "$enable_binding_properties")
 fi

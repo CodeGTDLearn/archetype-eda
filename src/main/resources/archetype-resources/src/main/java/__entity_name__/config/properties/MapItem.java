@@ -1,4 +1,4 @@
-package ${package}.config.properties;
+package ${package}.${entity_name}.config.properties;
 
 public record MapItem(String name) {
 }

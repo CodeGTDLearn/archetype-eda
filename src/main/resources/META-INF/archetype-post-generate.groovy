@@ -201,7 +201,6 @@ if (keep_binding_properties_tests == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
-                    project_package,
                     entity_folder,
                     config_folder,
                     'properties')
@@ -212,10 +211,10 @@ if (keep_binding_properties_tests == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources',
-                    "properties_test"
+                    "properties"
             )
     deleteFolder(binding_properties_resources_path.toFile())
-    log_text += "\nBINDING_PROPERTY_RESOURCES - " + "$binding_properties_resources_path\n"
+    log_text += "\nBINDING_PROPERTY_RESOURCES_TEST - " + "$binding_properties_resources_path\n"
 }
 
 
@@ -227,16 +226,9 @@ if (keep_binding_properties_tests == 'true' && keep_default_binding_properties =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
-                    project_package,
                     entity_folder,
                     config_folder,
                     'properties')
-
-//    List<String> filesToDelete;
-//
-//    if (mutable_binding_properties_choice == '1') {
-//
-//    }
 
         List<String> filesToDelete =
             [
@@ -259,7 +251,6 @@ if (keep_binding_properties_tests == 'true' && keep_list_binding_properties == '
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
-                    project_package,
                     entity_folder,
                     config_folder,
                     'properties')
@@ -278,7 +269,7 @@ if (keep_binding_properties_tests == 'true' && keep_list_binding_properties == '
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources',
-                    "properties_test"
+                    "properties"
             )
     List<String> filesToDeleteResources =
             [
@@ -300,7 +291,6 @@ if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'f
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
-                    project_package,
                     entity_folder,
                     config_folder,
                     'properties')
@@ -319,7 +309,7 @@ if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'f
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources',
-                    "properties_test"
+                    "properties"
             )
     List<String> filesToDeleteResources =
             [
@@ -342,15 +332,14 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
-                    project_package,
                     entity_folder,
                     config_folder,
                     'properties')
     List<String> filesToDelete =
             [
-                    "ApplicationProperties.java",
-                    "ListProperties.java",
-                    "MapProperties.java"
+                    "ApplicationPropertiesTest.java",
+                    "ListPropertiesTest.java",
+                    "MapPropertiesTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
 
@@ -366,17 +355,16 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
-                    project_package,
                     entity_folder,
                     config_folder,
                     'properties')
     List<String> filesToDelete =
             [
-                    "ApplicationPropertiesRecord.java",
-                    "ListPropertiesImmutable.java",
-                    "ListPropertiesRecord.java",
-                    "MapPropertiesImmutable.java",
-                    "MapPropertiesRecord.java"
+                    "ApplicationPropertiesRecordTest.java",
+                    "ListPropertiesImmutableTest.java",
+                    "ListPropertiesRecordTest.java",
+                    "MapPropertiesImmutableTest.java",
+                    "MapPropertiesRecordTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
 
@@ -394,10 +382,9 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java',
-                    project_package,
                     entity_folder,
                     config_folder,
-                    'properties_test')
+                    'properties')
     List<String> filesToDelete =
             [
                     "ApplicationPropertiesRecordValidationTest.java",
