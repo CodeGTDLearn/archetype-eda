@@ -13,7 +13,6 @@ import java.nio.file.Paths
 
 
 // SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
-
 if (keep_binding_properties == 'false') {
 
     Path srcMainJava_bindingPropertiesFolder_path =
@@ -40,6 +39,7 @@ if (keep_binding_properties == 'false') {
 
 
 
+// DEFAULTs --------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
 
     Path binding_properties_path =
@@ -64,6 +64,7 @@ if (keep_binding_properties == 'true' && keep_default_binding_properties == 'fal
 
 
 
+// LISTs -----------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false') {
 
     Path binding_properties_path =
@@ -109,6 +110,7 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
 
 
 
+// MAPs ------------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
 
     Path binding_properties_path =
@@ -149,4 +151,30 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
     log_text += "\nMAP_BINDING_PROPERTY_RESOURCES - " +
             filesToDeleteResources.toString() + "\\n " +
             "$binding_properties_resources_path\n"
+}
+
+
+
+// MUTABLES --------------------------------------------------------------------
+if (keep_binding_properties == 'true' && keep_mutable_binding_properties == 'false') {
+
+    Path binding_properties_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'java',
+                    project_package,
+                    entity_folder,
+                    config_folder,
+                    'properties')
+    List<String> filesToDelete =
+            [
+                    "ApplicationProperties.java",
+                    "ListProperties.java",
+                    "MapProperties.java"
+            ]
+    deleteFilesFromList(binding_properties_path, filesToDelete)
+    log_text += "\nMUTABLE_BINDING_PROPERTY - " +
+            filesToDelete.toString() + "\\n " +
+            "$binding_properties_path\n"
+
 }

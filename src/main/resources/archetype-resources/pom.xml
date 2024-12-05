@@ -87,7 +87,7 @@
             <scope>test</scope>
         </dependency>
 #end
-#if(${enable_binding_properties} == "true" and ${enable_binding_properties_tests} == "true")
+#if(${enable_binding_properties} == "true" and ${validated_binding_properties} == "true")
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>

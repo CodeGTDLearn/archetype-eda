@@ -22,7 +22,7 @@
             <defaultValue></defaultValue>
         </requiredProperty>
 
-        <requiredProperty key="immutable_binding_properties">
+        <requiredProperty key="mutable_binding_properties">
             <defaultValue></defaultValue>
         </requiredProperty>
 
