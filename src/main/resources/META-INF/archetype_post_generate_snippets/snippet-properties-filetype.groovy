@@ -1,8 +1,3 @@
-import java.nio.file.Path
-import java.nio.file.Paths
-
-
-
 // -----------------------------------------------------------------------------
 
 // SNIPPET-PROPERTIES-FILETYPE.GROOVY
@@ -12,17 +7,9 @@ def fileTypeMessage = (properties_filetype_choice == '1') ? 'Delete All YML-FILE
 log_text += "\nBINDING_PROPERTIES:\n=> Message: " +  fileTypeMessage
 
 
-Path srcMainJava_resourcesFolder_path =
-        Paths.get(request.outputDirectory,
-                request.artifactId,
-                'src', 'main', 'resources')
-log_text += "\n" + fileTypeMessage + " -> main-resources:\n $srcMainJava_resourcesFolder_path\n"
-deleteFilesByExtensionRecursively(srcMainJava_resourcesFolder_path, deleteFileType)
+log_text += "\n" + fileTypeMessage + " -> main-resources:\n $srcMainResources\n"
+deleteFilesByExtensionRecursivelyFromFolder(srcMainResources, deleteFileType)
 
 
-Path srcTestJava_resourcesFolder_path =
-        Paths.get(request.outputDirectory,
-                request.artifactId,
-                'src', 'test', 'resources')
-log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestJava_resourcesFolder_path\n"
-deleteFilesByExtensionRecursively(srcTestJava_resourcesFolder_path, deleteFileType)
+log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestResources\n"
+deleteFilesByExtensionRecursivelyFromFolder(srcTestResources, deleteFileType)

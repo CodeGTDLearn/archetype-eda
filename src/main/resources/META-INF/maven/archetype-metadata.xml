@@ -350,7 +350,7 @@
         <fileSet encoding="UTF-8">
             <directory></directory>
             <includes>
-                <include>.gitignore</include>
+                <include>gitignore</include>
             </includes>
         </fileSet>
 
@@ -403,22 +403,6 @@
                 <include>mvnw.cmd</include>
             </includes>
         </fileSet>
-
-
-
-
-
-
-
-        <!--  FILESET-ROOT.XML  ____________________________________________ -->
-        <!-- GENERAL FILES -->
-        <fileSet encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>HELP.md</include>
-            </includes>
-        </fileSet>
-
 
 
 

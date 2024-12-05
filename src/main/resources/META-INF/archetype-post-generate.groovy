@@ -1,5 +1,6 @@
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.Files
 
 
 
@@ -45,21 +46,12 @@ def log_text_footer =
 
 def log_text = log_text_header
 
-
-
-
-
-
-
-
-
-
+java.io.File
 
 
 // -----------------------------------------------------------------------------
 
-// ARCHETYPE-PATH-VARIABLES.GROOVY ---------------------------------------------
-
+// ARCHETYPE-PATH-ROOT-VARIABLES.GROOVY ----------------------------------------
 Path projectRootFolder =
         Paths.get(
                 request.outputDirectory,
@@ -69,9 +61,26 @@ Path rootGitFolder =
         projectRootFolder
                 .resolve("git_temp")
 
+Path rootGitIgnoreFile =
+        projectRootFolder
+                .resolve('gitignore')
+
 Path rootDockerFolder =
         projectRootFolder
                 .resolve("docker")
+
+Path rootELKFolder =
+        Paths.get(
+                request.outputDirectory,
+                request.artifactId,
+                'ELK')
+
+java.io.File
+
+
+// -----------------------------------------------------------------------------
+
+// ARCHETYPE-PATH-VARIABLES.GROOVY ---------------------------------------------
 
 Path srcMainJava =
         Paths.get(
@@ -98,9 +107,108 @@ Path srcMainJavaEntityConfigFolder =
         srcMainJavaEntityFolder
                 .resolve(config_folder)
 
-Path propertiesProjectFolder =
+Path srcMainJavaEntityConfigPropertiesFolder =
         srcMainJavaEntityConfigFolder
                 .resolve("properties")
+
+java.io.File
+
+
+// -----------------------------------------------------------------------------
+
+// ARCHETYPE-PATH-SRC-TEST-VARIABLES.GROOVY ---------------------------------------------
+Path srcTestJava =
+        Paths.get(request.outputDirectory,
+                request.artifactId,
+                'src', 'test', 'java')
+
+Path srcTestResources =
+        Paths.get(request.outputDirectory,
+                request.artifactId,
+                'src', 'test', 'resources')
+
+Path srcTestJavaEntityConfigPropertiesFolder =
+        srcTestJava
+                .resolve(entity_folder)
+                .resolve(config_folder)
+                .resolve("properties")
+
+Path srcTestResourcesPropertiesFolder =
+        srcTestResources
+                .resolve("properties")
+
+java.io.File
+
+
+// -----------------------------------------------------------------------------
+
+// ARCHETYPE-PATH-LOGBACK-VARIABLES.GROOVY -------------------------------------
+Path srcMainResourcesLogbackSpringConfigFolder =
+        srcMainResources
+                .resolve("logback-spring-config")
+
+Path logstachPath =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-tcp-elk-logstash.xml")
+
+Path logbackConsoleTabularFile =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-console-tabular.xml")
+
+Path logbackStmpPathFile =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-smtp-email.xml")
+
+Path logbackRolFilePath =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-rolfile-file.xml")
+
+
+Path logbackAppenderConsoleGranularFile =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-console-granular.xml")
+
+Path appenderGranularLayoutConsoleFile =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-console-layouts-granular.xml")
+
+Path srcTestResourceslogbackTestFile =
+        srcTestResources
+                .resolve("logback-test.xml")
+
+Path logbackConsoleGranularFile =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-console-granular.xml")
+
+Path logbackGranularLayoutConsoleFile =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-console-layouts-granular.xml")
+
+Path logbackConsoleTabularFile222 =
+        srcMainResourcesLogbackSpringConfigFolder
+                .resolve("appender-console-tabular.xml")
+
+Path srcMainResourcesLogbackSpringXmlFile =
+        srcMainResources
+                .resolve("logback-spring.xml")
+
+java.io.File
+
+
+// -----------------------------------------------------------------------------
+
+// ARCHETYPE-PATH-SECURITY-VARIABLES.GROOVY ------------------------------------
+Path folderJwtPath =
+        srcMainJavaEntityConfigFolder
+                .resolve(authentication_folder)
+
+Path filePathAppKey =
+        srcMainResources
+                .resolve("appJwt.key")
+
+Path filePathAppPub =
+        srcMainResources
+                .resolve("appJwt.pub")
 // -----------------------------------------------------------------------------
 
 
@@ -182,172 +290,97 @@ def properties_filetype_choice = "${properties?.properties_filetype}"
 // VARIABLES-SRC-TEST-JAVA.GROOVY ----------------------------------------------
 
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
-
-
 // -----------------------------------------------------------------------------
 // SNIPPET-AUTHENTICATION.GROOVY
 if (keep_jwt_authentication == 'false') {
 
-    Path folderJwtPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'java',
-                    project_package,
-                    entity_folder,
-                    config_folder,
-                    authentication_folder)
     log_text += "\nJwt_authentication_folder_path:\n $folderJwtPath\n"
     deleteFolder(folderJwtPath.toFile())
 
-
-    Path filePathAppKey =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'appJwt.key')
     log_text.concat("\nsrc_main_resources_app_key:\n $filePathAppKey\n")
     deleteFile(filePathAppKey.toFile())
 
-
-    Path filePathAppPub =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'appJwt.pub')
     log_text.concat("\nsrc_main_resources_app_pub:\n $filePathAppPub\n")
     deleteFile(filePathAppPub.toFile())
 }
-
-
 // -----------------------------------------------------------------------------
-
 
 
 // SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
 if (keep_binding_properties_tests == 'false') {
 
-    Path srcTestJava_bindingPropertiesTestFolder_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java',
-                    entity_folder,
-                    config_folder,
-                    'properties')
-    log_text += "\nFOLDER_BINDING_PROPERTIES_TEST:\n $srcTestJava_bindingPropertiesTestFolder_path\n"
-    deleteFolder(srcTestJava_bindingPropertiesTestFolder_path.toFile())
+    log_text += "\nFOLDER_BINDING_PROPERTIES_TEST:\n $srcTestJavaEntityConfigPropertiesFolder\n"
+    deleteFolder(srcTestJavaEntityConfigPropertiesFolder.toFile())
 
-    Path binding_properties_resources_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources',
-                    "properties"
-            )
-    deleteFolder(binding_properties_resources_path.toFile())
-    log_text += "\nBINDING_PROPERTY_RESOURCES_TEST:\n $binding_properties_resources_path\n"
+    deleteFolder(srcTestResourcesPropertiesFolder.toFile())
+    log_text += "\nBINDING_PROPERTY_RESOURCES_TEST:\n $srcTestResourcesPropertiesFolder\n"
 }
 
 if (keep_binding_properties_tests == 'true' && keep_default_binding_properties == 'false') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java',
-                    entity_folder,
-                    config_folder,
-                    'properties')
-
-        List<String> filesToDelete =
+    List<String> filesToDelete =
             [
                     "ApplicationPropertiesRecordTest.java",
                     "ApplicationPropertiesRecordValidationTest.java",
                     "ApplicationPropertiesTest.java",
                     "ApplicationPropertiesValidationTest.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
-    log_text += "\nDEFAULT_BINDING_PROPERTY_TEST:\n " + 
-            filesToDelete.toString() + "\n $binding_properties_path\n"
+
+    deleteFilesFromListFromFolder(srcTestJavaEntityConfigPropertiesFolder, filesToDelete)
+    log_text += "\nDEFAULT_BINDING_PROPERTY_TEST:\n " +
+            filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 
 }
 
 if (keep_binding_properties_tests == 'true' && keep_list_binding_properties == 'false') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java',
-                    entity_folder,
-                    config_folder,
-                    'properties')
     List<String> filesToDelete =
             [
                     "ListPropertiesTest.java",
                     "ListPropertiesImmutableTest.java",
                     "ListPropertiesRecordTest.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
-    log_text += "\nLIST_BINDING_PROPERTY_TEST:\n " +
-            filesToDelete.toString() + "\n $binding_properties_path\n"
 
-    Path binding_properties_resources_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources',
-                    "properties"
-            )
+    deleteFilesFromListFromFolder(srcTestJavaEntityConfigPropertiesFolder, filesToDelete)
+    log_text += "\nLIST_BINDING_PROPERTY_TEST:\n " +
+            filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
+
     List<String> filesToDeleteResources =
             [
                     "application_list_test.properties",
                     "application_list_test.yml"
             ]
-    deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+
+    deleteFilesFromListFromFolder(srcTestResourcesPropertiesFolder, filesToDeleteResources)
     log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $binding_properties_resources_path\n"
+            filesToDeleteResources.toString() + "\n $srcTestResourcesPropertiesFolder\n"
 }
 
 if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'false') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java',
-                    entity_folder,
-                    config_folder,
-                    'properties')
     List<String> filesToDelete =
             [
                     "MapPropertiesTest.java",
                     "MapPropertiesImmutableTest.java",
                     "MapPropertiesRecordTest.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromListFromFolder(srcTestJavaEntityConfigPropertiesFolder, filesToDelete)
     log_text += "\nLIST_BINDING_PROPERTY_TEST:\n " +
-            filesToDelete.toString() + "\n $binding_properties_path\n"
+            filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 
-    Path binding_properties_resources_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources',
-                    "properties"
-            )
     List<String> filesToDeleteResources =
             [
                     "application_map_test.properties",
                     "application_map_test.yml"
             ]
-    deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+
+    deleteFilesFromListFromFolder(srcTestResourcesPropertiesFolder, filesToDeleteResources)
     log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $binding_properties_resources_path\n"
+            filesToDeleteResources.toString() + "\n $srcTestResourcesPropertiesFolder\n"
 }
 
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java',
-                    entity_folder,
-                    config_folder,
-                    'properties')
     List<String> filesToDelete =
             [
                     "ApplicationPropertiesTest.java",
@@ -355,22 +388,14 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1
                     "ListPropertiesTest.java",
                     "MapPropertiesTest.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromListFromFolder(srcTestJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nIMMUTABLE_BINDING_PROPERTY_TESTE:\n " +
-            filesToDelete.toString() + "\n $binding_properties_path\n"
-
+            filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 }
 
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java',
-                    entity_folder,
-                    config_folder,
-                    'properties')
     List<String> filesToDelete =
             [
                     "ApplicationPropertiesRecordValidationTest.java",
@@ -380,32 +405,23 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
                     "MapPropertiesImmutableTest.java",
                     "MapPropertiesRecordTest.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromListFromFolder(srcTestJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nMUTABLE_BINDING_PROPERTY_TEST:\n " +
-            filesToDelete.toString() + "\n $binding_properties_path\n"
-
+            filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 }
 
 if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties == 'false') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java',
-                    entity_folder,
-                    config_folder,
-                    'properties')
     List<String> filesToDelete =
             [
                     "ApplicationPropertiesRecordValidationTest.java",
                     "ApplicationPropertiesValidationTest.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromListFromFolder(srcTestJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nVALIDATED_BINDING_PROPERTY_TEST:\n " +
-            filesToDelete.toString() + "\n $binding_properties_path\n"
-
+            filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 }
 
 
@@ -417,8 +433,8 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
 // SNIPPET-BINDING-PROPERTIES.GROOVY
 if (keep_binding_properties == 'false') {
 
-    deleteFolder(propertiesProjectFolder.toFile())
-    log_text += "\nFOLDER_BINDING_PROPERTIES:\n $propertiesProjectFolder\n"
+    deleteFolder(srcMainJavaEntityConfigPropertiesFolder.toFile())
+    log_text += "\nFOLDER_BINDING_PROPERTIES:\n $srcMainJavaEntityConfigPropertiesFolder\n"
 
     deleteFolder(srcMainResourcesProperties.toFile())
     log_text += "\nBINDING_PROPERTY_RESOURCES:\n $srcMainResourcesProperties\n"
@@ -431,10 +447,10 @@ if (keep_binding_properties == 'true' && keep_default_binding_properties == 'fal
                     "ApplicationProperties.java",
                     "ApplicationPropertiesRecord.java"
             ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
+    deleteFilesFromListFromFolder(srcMainJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nDEFAULT_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
+            filesToDelete.toString() + "\n $srcMainJavaEntityConfigPropertiesFolder\n"
 }
 
 if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false') {
@@ -446,10 +462,10 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
                     "ListPropertiesImmutable.java",
                     "ListPropertiesRecord.java"
             ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
+    deleteFilesFromListFromFolder(srcMainJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nLIST_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
+            filesToDelete.toString() + "\n $srcMainJavaEntityConfigPropertiesFolder\n"
 
 
     List<String> filesToDeleteResources =
@@ -457,7 +473,7 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
                     "application_list.properties",
                     "application_list.yml"
             ]
-    deleteFilesFromList(srcMainResourcesProperties, filesToDeleteResources)
+    deleteFilesFromListFromFolder(srcMainResourcesProperties, filesToDeleteResources)
 
     log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
             filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
@@ -472,17 +488,17 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
                     "MapPropertiesImmutable.java",
                     "MapPropertiesRecord.java"
             ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
+    deleteFilesFromListFromFolder(srcMainJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nMAP_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
+            filesToDelete.toString() + "\n $srcMainJavaEntityConfigPropertiesFolder\n"
 
     List<String> filesToDeleteResources =
             [
                     "application_map.properties",
                     "application_map.yml"
             ]
-    deleteFilesFromList(srcMainResourcesProperties, filesToDeleteResources)
+    deleteFilesFromListFromFolder(srcMainResourcesProperties, filesToDeleteResources)
 
     log_text += "\nMAP_BINDING_PROPERTY_RESOURCES:\n " +
             filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
@@ -496,10 +512,10 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1
                     "ListProperties.java",
                     "MapProperties.java"
             ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
+    deleteFilesFromListFromFolder(srcMainJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nIMMUTABLE_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
+            filesToDelete.toString() + "\n $srcMainJavaEntityConfigPropertiesFolder\n"
 
 }
 
@@ -513,25 +529,18 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
                     "MapPropertiesImmutable.java",
                     "MapPropertiesRecord.java"
             ]
-    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
+    deleteFilesFromListFromFolder(srcMainJavaEntityConfigPropertiesFolder, filesToDelete)
 
     log_text += "\nMUTABLE_BINDING_PROPERTY:\n " +
-            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
+            filesToDelete.toString() + "\n $srcMainJavaEntityConfigPropertiesFolder\n"
 
 }
-
-
 // -----------------------------------------------------------------------------
 
 // SNIPPET-CPANEL.GROOVY
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
-    Path logstachPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-tcp-elk-logstash.xml')
+
     log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logstachPath\n"
     deleteFile(logstachPath.toFile())
 
@@ -639,32 +648,26 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
         writer.close()
     }
 }
-
-
-
-
-
-
 // -----------------------------------------------------------------------------
 // SNIPPET-GITHUB.GROOVY
 if (keep_git_support == 'false') {
 
-  log_text += "\\nRemovind FOLDER_.GIT:\\n $rootGitFolder\n"
-  
-  deleteFolder(rootGitFolder.toFile())
+    log_text += "\\nRemoving FOLDER_.GIT:\\n $rootGitFolder\n"
+    deleteFolder(rootGitFolder.toFile())
+
+    log_text += "\nRemoving 'GIT_IGNORE FILE' -> Root Folder:\n $rootGitIgnoreFile\n"
+    deleteFile(rootGitIgnoreFile.toFile())
 }
 
 
 if (keep_git_support == 'true') {
 
-  log_text += "\\nRenaming FOLDER_.GIT:\\n $rootGitFolder\n"
+    log_text += "\\nRenaming FOLDER_.GIT:\\n $rootGitFolder\n"
+    renameFolder(rootGitFolder.toFile(), ".git")
 
-  listFolderContents(rootGitFolder.toFile())
-
-  renameFolder(rootGitFolder.toFile(), ".git")
+    log_text += "\nRenaming 'GIT_IGNORE FILE' to: .gitignore\n Root Folder: $rootGitIgnoreFile\n"
+    renameFile(rootGitIgnoreFile.toFile(), ".gitignore")
 }
-
-
 // -----------------------------------------------------------------------------
 
 // SNIPPET-LOGBACK.GROOVY
@@ -676,66 +679,27 @@ if (keep_logback == 'false' ||
                 keep_cpanel_elk_log_system == 'false'
         )
 ) {
-    Path logbackSpring_Path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring.xml')
-    log_text += "\nlogback-spring.xml -> resources:\n $logbackSpring_Path\n"
-    deleteFile(logbackSpring_Path.toFile())
+    log_text += "\nlogback-spring.xml -> resources:\n $srcMainResourcesLogbackSpringXmlFile\n"
+    deleteFile(srcMainResourcesLogbackSpringXmlFile.toFile())
 
+    log_text += "\nlogback-test.xml -> test-resources:\n $srcTestResourceslogbackTestFile\n"
+    deleteFile(srcTestResourceslogbackTestFile.toFile())
 
-    Path logbackTest_Path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources',
-                    'logback-test.xml')
-    log_text += "\nlogback-test.xml -> test-resources:\n $logbackTest_Path\n"
-    deleteFile(logbackTest_Path.toFile())
-
-
-    Path logbackSpringConfig_Path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config')
-    log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $logbackSpringConfig_Path\n"
-    deleteFolder(logbackSpringConfig_Path.toFile())
+    log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $srcMainResourcesLogbackSpringConfigFolder\n"
+    deleteFolder(srcMainResourcesLogbackSpringConfigFolder.toFile())
 
     deleteElkLogSystemStructure(log_text)
 }
 
-
 if (keep_logback == 'true' && console_type == '1') {
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $logbackConsoleGranularFile\n"
+    deleteFile(logbackConsoleGranularFile.toFile())
 
-    Path consoleGranularFile =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-console-granular.xml')
-    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
-    deleteFile(consoleGranularFile.toFile())
+    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $logbackGranularLayoutConsoleFile\n"
+    deleteFile(logbackGranularLayoutConsoleFile.toFile())
 
-
-    Path granularLayoutConsoleFile =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-console-layouts-granular.xml')
-    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
-    deleteFile(granularLayoutConsoleFile.toFile())
-
-
-    Path consoleTabularFile =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-console-tabular.xml')
-    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabularFile\n"
-    deleteFile(consoleTabularFile.toFile())
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $logbackConsoleTabularFile\n"
+    deleteFile(logbackConsoleTabularFile.toFile())
 
 //        O Arquivo "LOGBACK-SPRING.XML" continua existindo E sendo usado
 //        MAS SEM NENHUMA ESTRUTURA de CUSTOM-CONSOLE(tabular ou granular),
@@ -744,79 +708,32 @@ if (keep_logback == 'true' && console_type == '1') {
 //        o CONSOLE-DEFAULT-INTERNO do Spring Boot AUTOMATICAMENTE
 //        NO CASO DE TESTE("LOGBACK-TEST.XML") o arquivo e removido
 //        E O console do Spring Boot sera acionado
-    Path logbackTestPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources',
-                    'logback-test.xml')
-    log_text += "\nlogback-test.xml -> test-resources:\n $logbackTestPath\n"
-    deleteFile(logbackTestPath.toFile())
+    log_text += "\nlogback-test.xml -> test-resources:\n $srcTestResourcesLogbackTestFile\n"
+    deleteFile(srcTestResourcesLogbackTestFile.toFile())
 }
-
 
 if (keep_logback == 'true' && console_type == '2') {
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleGranularFile\n"
+    deleteFile(logbackAppenderConsoleGranularFile.toFile())
 
-    Path consoleGranularFile =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-console-granular.xml')
-    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
-    deleteFile(consoleGranularFile.toFile())
-
-
-    Path granularLayoutConsoleFile =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-console-layouts-granular.xml')
-    log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
-    deleteFile(granularLayoutConsoleFile.toFile())
+    log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $appenderGranularLayoutConsoleFile\n"
+    deleteFile(appenderGranularLayoutConsoleFile.toFile())
 }
-
 
 if (keep_logback == 'true' && console_type == '3') {
-
-    Path consoleTabularFile =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-console-tabular.xml')
-    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabularFile\n"
-    deleteFile(consoleTabularFile.toFile())
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $logbackConsoleTabularFile\n"
+    deleteFile(logbackConsoleTabularFile.toFile())
 }
-
 
 if (keep_logback == 'true' && keep_appender_smtp == 'false') {
-
-    Path stmpPathFile =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-smtp-email.xml')
-    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPathFile\n"
-    deleteFile(stmpPathFile.toFile())
+    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $logbackStmpPathFile\n"
+    deleteFile(logbackStmpPathFile.toFile())
 }
-
 
 if (keep_logback == 'true' && keep_appender_file == 'false') {
-
-    Path rolFilePath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    'logback-spring-config',
-                    'appender-rolfile-file.xml')
-    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $rolFilePath\n"
-    deleteFile(rolFilePath.toFile())
+    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $logbackRolFilePath\n"
+    deleteFile(logbackRolFilePath.toFile())
 }
-
-
-
 // -----------------------------------------------------------------------------
 
 // SNIPPET-PROPERTIES-FILETYPE.GROOVY
@@ -826,40 +743,23 @@ def fileTypeMessage = (properties_filetype_choice == '1') ? 'Delete All YML-FILE
 log_text += "\nBINDING_PROPERTIES:\n=> Message: " +  fileTypeMessage
 
 
-Path srcMainJava_resourcesFolder_path =
-        Paths.get(request.outputDirectory,
-                request.artifactId,
-                'src', 'main', 'resources')
-log_text += "\n" + fileTypeMessage + " -> main-resources:\n $srcMainJava_resourcesFolder_path\n"
-deleteFilesByExtensionRecursively(srcMainJava_resourcesFolder_path, deleteFileType)
+log_text += "\n" + fileTypeMessage + " -> main-resources:\n $srcMainResources\n"
+deleteFilesByExtensionRecursivelyFromFolder(srcMainResources, deleteFileType)
 
 
-Path srcTestJava_resourcesFolder_path =
-        Paths.get(request.outputDirectory,
-                request.artifactId,
-                'src', 'test', 'resources')
-log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestJava_resourcesFolder_path\n"
-deleteFilesByExtensionRecursively(srcTestJava_resourcesFolder_path, deleteFileType)
-
-
+log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestResources\n"
+deleteFilesByExtensionRecursivelyFromFolder(srcTestResources, deleteFileType)
 // -----------------------------------------------------------------------------
 
 // SNIPPET-SRC-TEST-JAVA.GROOVY
 if (keep_src_test_java == 'false') {
-    Path folderTestPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'java')
-    log_text += "\nFOLDER_SRC_TEST_JAVA:\n $folderTestPath\n"
-    deleteFolder(folderTestPath.toFile())
+
+    log_text += "\nFOLDER_SRC_TEST_JAVA:\n $srcTestJava\n"
+    deleteFolder(srcTestJava.toFile())
 
 
-    Path folderTestResourcePath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'test', 'resources')
-    log_text += "\nFOLDER_SRC_TEST_RESOURCES:\n $folderTestResourcePath\n"
-    deleteFolder(folderTestResourcePath.toFile())
+    log_text += "\nFOLDER_SRC_TEST_RESOURCES:\n $srcTestResources\n"
+    deleteFolder(srcTestResources.toFile())
 }
 
 
@@ -881,13 +781,81 @@ if (keep_src_test_java == 'false') {
 if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 
 // FOOTER ----------------------------------------------------------------------
+// ARCHETYPE-FILE-FUNCTIONS.GROOVY ---------------------------------------------
 
-
-// ARCHETYPE-FUNCTIONS.GROOVY --------------------------------------------------
-
-// FILE MANAGEMENT FUNCTIONS ---------------------------------------------------
 def deleteFile(File file) {
     if (file.isFile()) file.delete()
+}
+
+
+def renameFile(File file, String newName) {
+
+    println "File: $file"
+
+    def newFile = new File(file.getParent(), newName)
+
+    println "newFile: $newFile"
+
+    if (!file.exists() || !file.isFile()) {
+        println "Error: File $file invalid or inexistent."
+        return
+    }
+
+    if (newFile.exists()) {
+        println "Error: File $newName already exists in the path"
+        return
+    }
+
+    if (file.renameTo(newFile)) {
+        println "File renamed: $file -> $newName"
+    } else {
+        println "Error: Unable to rename $file to $newFile"
+    }
+}
+
+
+// FUNCTIONS -------------------------------------------------------------------
+
+
+// ARCHETYPE-FOLDER-FUNCTIONS.GROOVY -------------------------------------------
+def deleteFolder(File pathToFolder) {
+    if (pathToFolder.isDirectory()) {
+
+        pathToFolder.listFiles()
+                .each {
+                    file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
+                }
+    }
+    pathToFolder.delete()
+}
+
+
+def deleteElkLogSystemStructure(log_text) {
+
+    log_text += "\nFOLDER_ELK:\n $rootELKFolder\n"
+    deleteFolder(rootELKFolder.toFile())
+
+    Path dockerElkComposePath =
+            rootDockerFolder
+                    .resolve("elk-compose.yml")
+
+    log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
+    deleteFile(dockerElkComposePath.toFile())
+}
+
+def renameFolder(File pathToFolder, String newName) {
+
+    if (pathToFolder.isDirectory()) {
+        def newFolderPath = pathToFolder.parentFile.toPath().resolve(newName)
+        if (newFolderPath.toFile().exists()) {
+            println "Erro: Pasta com o nome $newName já existe."
+            return
+        }
+        pathToFolder.renameTo(newFolderPath.toFile())
+        println "Pasta renomeada com sucesso: $pathToFolder -> $newName"
+    } else {
+        println "Erro: $pathToFolder não é um diretório."
+    }
 }
 
 
@@ -896,7 +864,7 @@ def deleteFile(File file) {
  * @param directory Path do diretório
  * @param extension Extensão dos arquivos (exemplo: ".yml", ".properties")
  */
-def deleteFilesByExtensionRecursively(Path pathToFiles, String extension) {
+def deleteFilesByExtensionRecursivelyFromFolder(Path pathToFiles, String extension) {
 
     def currentFolder = pathToFiles.toFile()
 
@@ -909,14 +877,14 @@ def deleteFilesByExtensionRecursively(Path pathToFiles, String extension) {
 
     // Remove from 'SubDirectories'
     currentFolder.eachDir {
-        subDir -> deleteFilesByExtensionRecursively(subDir.toPath(), extension)
+        subDir -> deleteFilesByExtensionRecursivelyFromFolder(subDir.toPath(), extension)
     }
 }
 
 
-def deleteFilesFromList(Path pathToFiles, List<String> files) {
+def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
 
-    println "Entrou na funcao deleteFilesFromList"
+    println "Entrou na funcao deleteFilesFromListFromFolder"
 
     files.removeIf { it == null || it.trim() == "" }
 
@@ -945,68 +913,7 @@ def deleteFilesFromList(Path pathToFiles, List<String> files) {
             }
     }
 
-    println "Saiu da funcao deleteFilesFromList"
+    println "Saiu da funcao deleteFilesFromListFromFolder"
 }
-
-
-// FOLDER MANAGEMENT FUNCTIONS -------------------------------------------------
-def deleteFolder(File pathToFolder) {
-    if (pathToFolder.isDirectory()) {
-
-        pathToFolder.listFiles()
-                .each {
-                    file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
-                }
-    }
-    pathToFolder.delete()
-}
-
-
-def deleteElkLogSystemStructure(log_text) {
-    Path folderELKPath =
-            Paths.get(
-                    request.outputDirectory,
-                    request.artifactId,
-                    'ELK')
-    log_text += "\nFOLDER_ELK:\n $folderELKPath\n"
-    deleteFolder(folderELKPath.toFile())
-
-
-    Path dockerElkComposePath =
-            Paths.get(
-                    request.outputDirectory,
-                    request.artifactId,
-                    'docker',
-                    'elk-compose.yml')
-    log_text += "\nelk-compose.xml -> docker:\n $dockerElkComposePath\n"
-    deleteFile(dockerElkComposePath.toFile())
-}
-
-
-def renameFolder(File pathToFolder, String newName) {
-    if (pathToFolder.isDirectory()) {
-        def newFolderPath = pathToFolder.parentFile.toPath().resolve(newName)
-        if (newFolderPath.toFile().exists()) {
-            println "Erro: Pasta com o nome $newName já existe."
-            return
-        }
-        pathToFolder.renameTo(newFolderPath.toFile())
-        println "Pasta renomeada com sucesso: $pathToFolder -> $newName"
-    } else {
-        println "Erro: $pathToFolder não é um diretório."
-    }
-}
-
-
-def listFolderContents(File folder) {
-    if (folder.isDirectory()) {
-        folder.listFiles().each { file ->
-            println file.name
-        }
-    } else {
-        println "Erro: ${folder} não é um diretório."
-    }
-}
-
 
 // FUNCTIONS -------------------------------------------------------------------

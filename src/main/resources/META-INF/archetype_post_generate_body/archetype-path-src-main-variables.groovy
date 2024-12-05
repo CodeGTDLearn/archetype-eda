@@ -1,32 +1,12 @@
 import java.nio.file.Path
+import java.nio.file.Paths
 
-
-
-
-
-
-
-
-
-
+java.io.File
 
 
 // -----------------------------------------------------------------------------
 
 // ARCHETYPE-PATH-VARIABLES.GROOVY ---------------------------------------------
-
-Path projectRootFolder =
-        Paths.get(
-                request.outputDirectory,
-                request.artifactId)
-
-Path rootGitFolder =
-        projectRootFolder
-                .resolve("git_temp")
-
-Path rootDockerFolder =
-        projectRootFolder
-                .resolve("docker")
 
 Path srcMainJava =
         Paths.get(
@@ -53,6 +33,6 @@ Path srcMainJavaEntityConfigFolder =
         srcMainJavaEntityFolder
                 .resolve(config_folder)
 
-Path propertiesProjectFolder =
+Path srcMainJavaEntityConfigPropertiesFolder =
         srcMainJavaEntityConfigFolder
                 .resolve("properties")

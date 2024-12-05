@@ -5,10 +5,84 @@
 <h2> 1 Description </h2>
 <p> ${project_description} </p>
 
-<h2> 2 System Design </h2>
-<p>
-  This project implements a secure webservice with emphasis on credential protection, comprehensive logging, and type-safe configuration management. It follows best practices for security and maintainability.
-</p>
+<h2 id="system-design">2 System Design</h2>
+<details>
+  <p>
+    This project is based on the concept of <a href="https://www.devsecops.org/">DevSecOps</a>, which is a set of practices that combines software development (Dev) and security (Sec) teams with IT operations (Ops). 
+    The main goal of DevSecOps is to produce secure software faster and more reliably.
+    <ul>
+      <li><b>Dev:</b>
+        <ul>
+          <li>Code:
+            <ul>
+              <li>WebService structure.</li>
+              <li>Written in Java, Spring Boot and Vaadin.</li>
+            </ul>
+          </li>
+          <li>Performance:
+            <ul>
+              <li>EhCache</li>
+              <li>Virtual Threads</li>
+            </ul>
+          </li>
+          <li>CI/CD:
+            <ul>
+              <li>GitOps</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><b>Sec:</b>
+        <ul>
+          <li>The security of the project is ensured by the use of secure protocols.</li>
+        </ul>
+      </li>
+      <li><b>Ops:</b>
+        <ul>
+          <li>Test:
+            <ul>
+              <li>Units Tests</li>
+              <li>Integration Tests</li>
+              <li>Contract Tests</li>
+              <li>Schema Tests</li>
+              <li>Functional Tests</li>
+            </ul>
+          </li>
+          <li>Documentation:
+            <ul>
+              <li>Swagger</li>
+            </ul>
+          </li>
+          <li>Log Management:
+            <ul>
+              <li>ELK</li>
+            </ul>
+          </li>
+          <li>Health Check:
+            <ul>
+              <li>Graphana</li>
+              <li>Spring Actuator</li>
+            </ul>
+          </li>
+          <li>Contenairization:
+            <ul>
+              <li>Docker</li>
+              <li>Docker Compose</li>
+            </ul>
+          </li>
+          <li>Maintenance CPanel:
+            <ul>
+              <li>Health Check - Graphana</li>
+              <li>DBA Client (Robo3T, MongoCompass, PhpMyAdmin, Adminer)</li>
+              <li>Log Management Client - Kibana</li>
+              <li>Dockerization Client - Portainer</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </p>
+</details>
 
 <h2 id="technical-specifications">3 Technical Specifications</h2>
 <ul>

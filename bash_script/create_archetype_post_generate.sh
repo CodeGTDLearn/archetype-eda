@@ -22,10 +22,15 @@ create_archetype_post_generate_groovy() {
 
   local imports_file="${body_folder}\\archetype-imports.groovy"
   local header_file="${body_folder}\\archetype-header.groovy"
-  local global_vars_file="${body_folder}\\archetype-global-variables.groovy"
-  local path_vars_file="${body_folder}\\archetype-path-variables.groovy"
   local footer_file="${body_folder}\\archetype-footer.groovy"
-  local functions_file="${body_folder}\\archetype-functions.groovy"
+  local file_functions="${body_folder}\\archetype-file-functions.groovy"
+  local folder_functions="${body_folder}\\archetype-folder-functions.groovy"
+  local global_vars_file="${body_folder}\\archetype-global-variables.groovy"
+  local path_vars_root="${body_folder}\\archetype-path-root-variables.groovy"
+  local path_vars_logback="${body_folder}\\archetype-path-logback-variables.groovy"
+  local path_vars_security="${body_folder}\\archetype-path-security-variables.groovy"
+  local path_vars_src_main="${body_folder}\\archetype-path-src-main-variables.groovy"
+  local path_vars_src_test="${body_folder}\\archetype-path-src-test-variables.groovy"
 
   mapfile -t variable_filename_list_from_folder < <(ls -1 "${variables_folder}")
   mapfile -t snippets_filename_list_from_folder < <(ls -1 "${snippets_folder}")
@@ -66,8 +71,13 @@ create_archetype_post_generate_groovy() {
   if [[ ! -f "$header_file" ]] ||
      [[ ! -f "$imports_file" ]] ||
      [[ ! -f "$global_vars_file" ]] ||
-     [[ ! -f "$path_vars_file" ]] ||
-     [[ ! -f "$functions_file" ]] ||
+     [[ ! -f "$path_vars_root" ]] ||
+     [[ ! -f "$path_vars_logback" ]] ||
+     [[ ! -f "$path_vars_security" ]] ||
+     [[ ! -f "$path_vars_src_main" ]] ||
+     [[ ! -f "$path_vars_src_test" ]] ||
+     [[ ! -f "$file_functions" ]] ||
+     [[ ! -f "$folder_functions" ]] ||
      [[ ! -f "$footer_file" ]]; then
     echo "ERROR_BODY_FILES in ARCHETYPE_POST_GENERATE_GROOVY - NOT FOUND!"
     echo -e "\nType any 'key' to exit."
@@ -81,8 +91,12 @@ create_archetype_post_generate_groovy() {
   # 2) Add the 'GLOBAL_VARIABLES' to the 'final file'
   sed -i -e '$r '"$global_vars_file" "$final_file_content_merged"
 
-  # 2) Add the 'PATH_VARIABLES' to the 'final file'
-  sed -i -e '$r '"$path_vars_file" "$final_file_content_merged"
+  # 3.1) Add the 'PATH_VARIABLES' to the 'final file'
+  sed -i -e '$r '"$path_vars_root" "$final_file_content_merged"
+  sed -i -e '$r '"$path_vars_src_main" "$final_file_content_merged"
+  sed -i -e '$r '"$path_vars_src_test" "$final_file_content_merged"
+  sed -i -e '$r '"$path_vars_logback" "$final_file_content_merged"
+  sed -i -e '$r '"$path_vars_security" "$final_file_content_merged"
 
   # 4) Add the "content of each file from ORDERED_FINAL_FILE_LIST"
   #    to the 'final file' APPENDING
@@ -93,8 +107,11 @@ create_archetype_post_generate_groovy() {
   # 5) Adds the 'FOOTER_FILE' to the 'final file' (APPENDING)
   sed -i -e '$r '"$footer_file" "$final_file_content_merged"
 
-  # 6) Adds the 'FUNCTION_FILE' to the 'final file' (APPENDING)
-  sed -i -e '$r '"$functions_file" "$final_file_content_merged"
+  # 6) Adds the 'FILE_FUNCTIONS' to the 'final file' (APPENDING)
+  sed -i -e '$r '"$file_functions" "$final_file_content_merged"
+
+  # 7) Adds the 'FOLDER_FUNCTIONS' to the 'final file' (APPENDING)
+  sed -i -e '$r '"$folder_functions" "$final_file_content_merged"
 
   #NAO DELETAR ESTE LOG COMENTADO - ELE PODE SER UTILIZADO
 #  if [ "$show_debug_log_param" = "true" ]; then
