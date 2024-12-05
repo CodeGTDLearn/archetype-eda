@@ -3,6 +3,7 @@
 
 
 
+
 <archetype-descriptor
         xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.1.0
         http://maven.apache.org/xsd/archetype-catalog-1.1.0.xsd"
@@ -11,6 +12,7 @@
         name="arch">
 
     <requiredProperties>
+
 
 
 
@@ -136,6 +138,8 @@
 
         <!--  PROPERTY-ENTITY.XML  _________________________________________ -->
         <requiredProperty key="entity_name"/>
+
+        <requiredProperty key="entity_name_package"/>
 
         <requiredProperty key="enable_custom_attributes">
             <defaultValue></defaultValue>
@@ -278,7 +282,6 @@
 
 
 
-
     <!--  ARCHETYPE-TRANSITION.XML  _______________________________________  -->
     </requiredProperties>
     <fileSets>
@@ -370,7 +373,6 @@
 
 
 
-
         <!--   FILESET-LOGBACK.XML   _______________________________________ -->
         <!-- LOGBACK SUPPORT -->
         <fileSet filtered="true" encoding="UTF-8">
@@ -379,7 +381,6 @@
                 <include>**/*.xml</include>
             </includes>
         </fileSet>
-
 
 
 
@@ -419,6 +420,12 @@
             <directory>src/main/java</directory>
             <includes>
                 <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+        <fileSet filtered="false" encoding="UTF-8">
+            <directory>src/main/java</directory>
+            <includes>
                 <include>AppStarter.java</include>
             </includes>
         </fileSet>
@@ -435,20 +442,14 @@
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources</directory>
             <includes>
-
                 <include>data.sql</include>
                 <include>schema.sql</include>
-
                 <include>app.key</include>
                 <include>app.pub</include>
-
                 <include>application.yml</include>
                 <include>application.properties</include>
-
                 <include>logback-spring.xml</include>
-
                 <include>banner.txt</include>
-
             </includes>
         </fileSet>
 
@@ -496,7 +497,6 @@
 
 
 
-
         <!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
 
         <!-- SRC\TEST\RESOURCES  -->
@@ -525,11 +525,11 @@
 
 
 
-
-
     <!--    ARCHETYPE-FOOTER.XML  _________________________________________  -->
     </fileSets>
 </archetype-descriptor>
+
+
 
 
 <!-- ______________ -->

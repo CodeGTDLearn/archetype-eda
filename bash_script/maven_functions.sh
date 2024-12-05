@@ -26,13 +26,14 @@ execute_maven_command_line() {
 
   local show_progress_bar=$ACTIVE_PROGRESS_BAR
   local maven_output
-  local debug_command_line
+  local maven_command_line_for_debug
 
   local divider="\n--------------------------------------------------------------------->\n"
 
   print_maven_command_line() {
     local mvn_cli=$1
 
+    echo -e "$divider\n"
     echo -e "\n\n\n\n-----> MVN-COMMAND GENERATED: maven_command_line\n"
     echo -e "$mvn_cli" | sed 's/ -D/\n-D/g'
     echo -e "$divider\n"
@@ -40,15 +41,21 @@ execute_maven_command_line() {
 
   if [ "$show_basic_log" = "true" ]; then
     echo -e "$divider"
+    echo -e "$divider"
+    echo -e "$divider"
+    echo -e "$divider"
     echo -e "\n-----> EXECUTING: 'execute_maven_command_line function' - START \n"
   fi
 
   local output_header="\n\n\n\n"
        output_header+="$divider"
        output_header+="\n------------------------- LOG/DEBUG PROCESS - STARTING ------------------------\n"
+       output_header+="\n-------------------------  execute_maven_command_line  ------------------------\n"
+       output_header+="\n-------------------------    exec archetype:generate   ------------------------\n"
        output_header+="$divider"
 
   local output_footer="\n$divider"
+         output_footer+="\n--------------------------- execute_maven_command_line ------------------------\n"
          output_footer+="\n--------------------------- LOG/DEBUG PROCESS - ENDING ------------------------\n"
          output_footer+="$divider"
          output_footer+="\n\n\n\n\n"
@@ -66,9 +73,9 @@ execute_maven_command_line() {
     mvn_cli_switches="--batch-mode --debug"
     before_batch_switch=${maven_command_line_param%%--batch-mode*}
     after_batch_switch=${maven_command_line_param#*--batch-mode}
-    debug_command_line="$before_batch_switch $mvn_cli_switches $after_batch_switch"
+    maven_command_line_for_debug="$before_batch_switch $mvn_cli_switches $after_batch_switch"
 
-    maven_output=$(eval "$debug_command_line" | tee /dev/tty)
+    maven_output=$(eval "$maven_command_line_for_debug" | tee /dev/tty)
 
     print_maven_command_line "$maven_command_line_param"
     check_empty_switches_in_maven_command_line "$maven_command_line_param"
@@ -104,6 +111,9 @@ execute_maven_command_line() {
 
   if [ "$show_basic_log" = "true" ]; then
     echo -e "\n-----> EXECUTING: 'execute_maven_command_line function' - END \n"
+    echo -e "$divider"
+    echo -e "$divider"
+    echo -e "$divider"
     echo -e "$divider"
   fi
 }
@@ -141,13 +151,13 @@ execute_mvn_clean_install() {
 
     echo -e "${spacer}Maven DEBUG - STARTING ${divider}\n"
 
-    echo -e "${spacer}Maven DEBUG - CLEAN ${divider}\n"
+    echo -e "${spacer}Maven DEBUG - MAVEN CLEAN ${divider}\n"
     mvn clean
 
-    echo -e "${spacer}Maven DEBUG - VERIFY ${divider}\n"
+    echo -e "${spacer}Maven DEBUG - MAVEN VERIFY ${divider}\n"
     mvn verify
 
-    echo -e "${spacer}Maven DEBUG - CLEAN INSTALL ${divider}\n"
+    echo -e "${spacer}Maven DEBUG - MAVEN CLEAN INSTALL ${divider}\n"
     mvn clean install -X
 
     echo -e "${spacer}Maven DEBUG - ENDING ${divider}\n"

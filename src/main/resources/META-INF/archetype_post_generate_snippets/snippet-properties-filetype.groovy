@@ -1,5 +1,11 @@
 // -----------------------------------------------------------------------------
 
+
+
+
+
+
+
 // SNIPPET-PROPERTIES-FILETYPE.GROOVY
 // properties_filetype_choice:        1 - yml          2 - properties
 def deleteFileType = (properties_filetype_choice == '1') ? '.yml' : '.properties'

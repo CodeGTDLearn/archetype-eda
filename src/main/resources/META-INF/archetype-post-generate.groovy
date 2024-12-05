@@ -1,11 +1,24 @@
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.Files// ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
+import java.nio.file.Files
+
+// -----------------------------------------------------------------------------
+
+
+
+
+
+
+// ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
 
 Properties properties = request.properties
+// -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+
+
+
+
+
 
 // ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
 
@@ -35,7 +48,10 @@ def log_text = log_text_header
 
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+
+
+
+
 
 // ARCHETYPE-PATH-ROOT-VARIABLES.GROOVY ----------------------------------------
 
@@ -49,7 +65,11 @@ Path rootGitIgnoreFile = projectRootFolder.resolve(".gitignore")
 
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+
+
+
+
+
 
 // ARCHETYPE-PATH-SRC-MAIN-VARIABLES.GROOVY -----------------------------------
 
@@ -68,7 +88,10 @@ Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.res
 
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+
+
+
+
 
 // ARCHETYPE-PATH-SRC-TEST-VARIABLES.GROOVY -----------------------------------
 
@@ -86,26 +109,33 @@ Path srcTestResourcesPropertiesFolder = srcTestResources.resolve(testResourcePro
 
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+
+
+
+
 
 // ARCHETYPE-PATH-LOGBACK-VARIABLES.GROOVY -------------------------------------
-
 Path srcMainResourcesLogbackSpringConfigFolder = srcMainResources.resolve("logback-spring-config")
 
-Path logstashPath = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-tcp-elk-logstash.xml")
-Path logbackSmtpPathFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-smtp-email.xml")
-Path logbackRolFilePath = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-rolfile-file.xml")
-Path logbackConsoleTabularFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-console-tabular.xml")
-Path logbackAppenderConsoleGranularFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-console-granular.xml")
-Path appenderGranularLayoutConsoleFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-console-layouts-granular.xml")
+Path logbackAppenderLogstashPathFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-tcp-elk-logstash.xml")
+
+Path logbackAppenderSmtpPathFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-smtp-email.xml")
+Path logbackAppenderRolFilePathFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-rolfile-file.xml")
+
+Path logbackAppenderConsoleTabularPathFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-console-tabular.xml")
+Path logbackAppenderConsoleGranularPathFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-console-granular.xml")
+Path logbackAppenderConsoleLayoutGranularPathFile = srcMainResourcesLogbackSpringConfigFolder.resolve("appender-console-layouts-granular.xml")
 
 Path srcTestResourcesLogbackTestFile = srcTestResources.resolve("logback-test.xml")
 Path srcMainResourcesLogbackSpringXmlFile = srcMainResources.resolve("logback-spring.xml")
 
+
 // -----------------------------------------------------------------------------
 
 
-// -----------------------------------------------------------------------------
+
+
+
 
 // ARCHETYPE-PATH-SECURITY-VARIABLES.GROOVY ------------------------------------
 def authentication_folder = "authentication"
@@ -114,14 +144,15 @@ def authentication_folder = "authentication"
 Path filePathAppKey = srcMainResources.resolve("appJwt.key")
 Path filePathAppPub = srcMainResources.resolve("appJwt.pub")
 Path folderJwtPath = srcMainJavaEntityConfigFolder.resolve(authentication_folder)
+// -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+
+
+
 
 
 
 // VARIABLES-AUTHENTICATION.GROOVY ---------------------------------------------
-
 def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
 
 //def project_security_folder = "${properties?.entity_name}".concat(config_folder)
@@ -129,15 +160,21 @@ def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
 
 
 
-// VARIABLES-BINDING-PROPERTIES-TESTS.GROOVY -----------------------------------
 
+
+
+
+// VARIABLES-BINDING-PROPERTIES-TESTS.GROOVY -----------------------------------
 def keep_binding_properties_tests = "${properties?.enable_binding_properties_tests}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLES-BINDING-PROPERTIES.GROOVY -----------------------------------------
 
+
+
+
+// VARIABLES-BINDING-PROPERTIES.GROOVY -----------------------------------------
 def keep_binding_properties = "${properties?.enable_binding_properties}"
 def keep_map_binding_properties = "${properties?.map_binding_properties}"
 def keep_list_binding_properties = "${properties?.list_binding_properties}"
@@ -148,36 +185,52 @@ def keep_validated_binding_properties = "${properties?.validated_binding_propert
 
 
 
-// VARIABLES-CPANEL.GROOVY -----------------------------------------------------
 
+
+
+
+// VARIABLES-CPANEL.GROOVY -----------------------------------------------------
 def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLES-DOCKER.GROOVY -----------------------------------------------------
 
+
+
+
+// VARIABLES-DOCKER.GROOVY -----------------------------------------------------
 def keep_docker = "${properties?.enable_docker}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLES-EXTRA-POM-DEPENDENCIES.GROOVY -------------------------------------
 
+
+
+
+// VARIABLES-EXTRA-POM-DEPENDENCIES.GROOVY -------------------------------------
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 // -----------------------------------------------------------------------------
 
 
-// VARIABLES-GITHUB.GROOVY -----------------------------------------------------
 
+
+
+
+
+// VARIABLES-GITHUB.GROOVY -----------------------------------------------------
 // GIT SUPPORT -----------------------------------------------------------------
 def keep_git_support= "${properties?.enable_git_support}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLES-LOGBACK.GROOVY ----------------------------------------------------
 
+
+
+
+// VARIABLES-LOGBACK.GROOVY ----------------------------------------------------
 def keep_logback = "${properties?.enable_logback}"
 def console_type = "${properties?.logback_console_type}"
 def keep_appender_smtp = "${properties?.enable_logback_appender_smtp}"
@@ -186,17 +239,29 @@ def keep_appender_file = "${properties?.enable_logback_appender_file}"
 
 
 
-// VARIABLES-PROPERTIES-FILETYPE.GROOVY ----------------------------------------
 
+
+
+
+// VARIABLES-PROPERTIES-FILETYPE.GROOVY ----------------------------------------
 def properties_filetype_choice = "${properties?.properties_filetype}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLES-SRC-TEST-JAVA.GROOVY ----------------------------------------------
 
+
+
+
+// VARIABLES-SRC-TEST-JAVA.GROOVY ----------------------------------------------
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
 // SNIPPET-AUTHENTICATION.GROOVY
 if (keep_jwt_authentication == 'false') {
 
@@ -210,6 +275,11 @@ if (keep_jwt_authentication == 'false') {
     deleteFile(filePathAppPub.toFile())
 }
 // -----------------------------------------------------------------------------
+
+
+
+
+
 
 
 // SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
@@ -329,13 +399,14 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
     log_text += "\nVALIDATED_BINDING_PROPERTY_TEST:\n " +
             filesToDelete.toString() + "\n $srcTestJavaEntityConfigPropertiesFolder\n"
 }
-
-
-
-
-
-
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
+
 // SNIPPET-BINDING-PROPERTIES.GROOVY
 if (keep_binding_properties == 'false') {
 
@@ -441,19 +512,40 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
             filesToDelete.toString() + "\n $srcMainJavaEntityConfigPropertiesFolder\n"
 
 }
+
 // -----------------------------------------------------------------------------
+
+
+
+
+
 
 // SNIPPET-CPANEL.GROOVY
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
 
-    log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logstachPath\n"
-    deleteFile(logstachPath.toFile())
+    log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logbackAppenderLogstashPathFile\n"
+    deleteFile(logbackAppenderLogstashPathFile.toFile())
 
 
-    deleteElkLogSystemStructure(log_text)
+//    deleteElkLogSystemStructure(log_text)
+    log_text += "\nFOLDER_ELK:\n $rootELKFolder\n"
+    deleteFolder(rootELKFolder.toFile())
+
+    Path dockerElkComposePath =
+            rootDockerFolder
+                    .resolve("elk-compose.yml")
+
+    log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
+    deleteFile(dockerElkComposePath.toFile())
 }
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
 
 // SNIPPET-DOCKER.GROOVY
 if (keep_docker == 'false') {
@@ -463,6 +555,11 @@ if (keep_docker == 'false') {
 
 
 // -----------------------------------------------------------------------------
+
+
+
+
+
 
 // SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
@@ -555,6 +652,13 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
     }
 }
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
+
 // SNIPPET-GITHUB.GROOVY
 if (keep_git_support == 'false') {
 
@@ -574,7 +678,14 @@ if (keep_git_support == 'true') {
     log_text += "\nRenaming 'GIT_IGNORE FILE' to: .gitignore\n Root Folder: $rootGitIgnoreFile\n"
     renameFile(rootGitIgnoreFile.toFile(), ".gitignore")
 }
+
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
 
 // SNIPPET-LOGBACK.GROOVY
 if (keep_logback == 'false' ||
@@ -588,24 +699,34 @@ if (keep_logback == 'false' ||
     log_text += "\nlogback-spring.xml -> resources:\n $srcMainResourcesLogbackSpringXmlFile\n"
     deleteFile(srcMainResourcesLogbackSpringXmlFile.toFile())
 
-    log_text += "\nlogback-test.xml -> test-resources:\n $srcTestResourceslogbackTestFile\n"
-    deleteFile(srcTestResourceslogbackTestFile.toFile())
+    log_text += "\nlogback-test.xml -> test-resources:\n $srcTestResourcesLogbackTestFile\n"
+    deleteFile(srcTestResourcesLogbackTestFile.toFile())
 
     log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $srcMainResourcesLogbackSpringConfigFolder\n"
     deleteFolder(srcMainResourcesLogbackSpringConfigFolder.toFile())
 
-    deleteElkLogSystemStructure(log_text)
+//    deleteElkLogSystemStructure(log_text)
+    log_text += "\nFOLDER_ELK:\n $rootELKFolder\n"
+    deleteFolder(rootELKFolder.toFile())
+
+    Path dockerElkComposePath =
+            rootDockerFolder
+                    .resolve("elk-compose.yml")
+
+    log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
+    deleteFile(dockerElkComposePath.toFile())
+
 }
 
 if (keep_logback == 'true' && console_type == '1') {
-    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $logbackConsoleGranularFile\n"
-    deleteFile(logbackConsoleGranularFile.toFile())
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleGranularPathFile\n"
+    deleteFile(logbackAppenderConsoleGranularPathFile.toFile())
 
-    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $logbackGranularLayoutConsoleFile\n"
-    deleteFile(logbackGranularLayoutConsoleFile.toFile())
+    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleLayoutGranularPathFile\n"
+    deleteFile(logbackAppenderConsoleLayoutGranularPathFile.toFile())
 
-    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $logbackConsoleTabularFile\n"
-    deleteFile(logbackConsoleTabularFile.toFile())
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleTabularPathFile\n"
+    deleteFile(logbackAppenderConsoleTabularPathFile.toFile())
 
 //        O Arquivo "LOGBACK-SPRING.XML" continua existindo E sendo usado
 //        MAS SEM NENHUMA ESTRUTURA de CUSTOM-CONSOLE(tabular ou granular),
@@ -619,28 +740,34 @@ if (keep_logback == 'true' && console_type == '1') {
 }
 
 if (keep_logback == 'true' && console_type == '2') {
-    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleGranularFile\n"
-    deleteFile(logbackAppenderConsoleGranularFile.toFile())
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleGranularPathFile\n"
+    deleteFile(logbackAppenderConsoleGranularPathFile.toFile())
 
-    log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $appenderGranularLayoutConsoleFile\n"
-    deleteFile(appenderGranularLayoutConsoleFile.toFile())
+    log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleLayoutGranularPathFile\n"
+    deleteFile(logbackAppenderConsoleLayoutGranularPathFile.toFile())
 }
 
 if (keep_logback == 'true' && console_type == '3') {
-    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $logbackConsoleTabularFile\n"
-    deleteFile(logbackConsoleTabularFile.toFile())
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $logbackAppenderConsoleTabularPathFile\n"
+    deleteFile(logbackAppenderConsoleTabularPathFile.toFile())
 }
 
 if (keep_logback == 'true' && keep_appender_smtp == 'false') {
-    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $logbackStmpPathFile\n"
-    deleteFile(logbackStmpPathFile.toFile())
+    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $logbackAppenderSmtpPathFile\n"
+    deleteFile(logbackAppenderSmtpPathFile.toFile())
 }
 
 if (keep_logback == 'true' && keep_appender_file == 'false') {
-    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $logbackRolFilePath\n"
-    deleteFile(logbackRolFilePath.toFile())
+    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $logbackAppenderRolFilePathFile\n"
+    deleteFile(logbackAppenderRolFilePathFile.toFile())
 }
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
 
 // SNIPPET-PROPERTIES-FILETYPE.GROOVY
 // properties_filetype_choice:        1 - yml          2 - properties
@@ -657,6 +784,12 @@ log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestResources\n"
 deleteFilesByExtensionRecursivelyFromFolder(srcTestResources, deleteFileType)
 // -----------------------------------------------------------------------------
 
+
+
+
+
+
+
 // SNIPPET-SRC-TEST-JAVA.GROOVY
 if (keep_src_test_java == 'false') {
 
@@ -667,13 +800,24 @@ if (keep_src_test_java == 'false') {
     log_text += "\nFOLDER_SRC_TEST_RESOURCES:\n $srcTestResources\n"
     deleteFolder(srcTestResources.toFile())
 }
+// -----------------------------------------------------------------------------
+
+
+
+
+
+
 // ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
 
 // ARCHETYPE-POST-GENERATE-LOG -------------------------------------------------
 if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
+// -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+
+
+
+
+
 // ARCHETYPE-FILE-FUNCTIONS.GROOVY ---------------------------------------------
 
 def deleteFile(File file) {
@@ -706,10 +850,13 @@ def renameFile(File file, String newName) {
     }
 }
 
-
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+
+
+
+
+
 // ARCHETYPE-FOLDER-FUNCTIONS.GROOVY -------------------------------------------
 def deleteFolder(File pathToFolder) {
     if (pathToFolder.isDirectory()) {
@@ -723,18 +870,18 @@ def deleteFolder(File pathToFolder) {
 }
 
 
-def deleteElkLogSystemStructure(log_text) {
-
-    log_text += "\nFOLDER_ELK:\n $rootELKFolder\n"
-    deleteFolder(rootELKFolder.toFile())
-
-    Path dockerElkComposePath =
-            rootDockerFolder
-                    .resolve("elk-compose.yml")
-
-    log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
-    deleteFile(dockerElkComposePath.toFile())
-}
+//def deleteElkLogSystemStructure(log_text) {
+//
+//    log_text += "\nFOLDER_ELK:\n $rootELKFolder\n"
+//    deleteFolder(rootELKFolder.toFile())
+//
+//    Path dockerElkComposePath =
+//            rootDockerFolder
+//                    .resolve("elk-compose.yml")
+//
+//    log_text += "\nelk-compose.yml -> docker:\n $dockerElkComposePath\n"
+//    deleteFile(dockerElkComposePath.toFile())
+//}
 
 
 def renameFolder(File pathToFolder, String newName) {
@@ -809,5 +956,3 @@ def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
 
     println "Saiu da funcao deleteFilesFromListFromFolder"
 }
-
-// -----------------------------------------------------------------------------

@@ -1,4 +1,10 @@
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
 // SNIPPET-AUTHENTICATION.GROOVY
 if (keep_jwt_authentication == 'false') {
 

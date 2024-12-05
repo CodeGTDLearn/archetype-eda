@@ -1,4 +1,10 @@
 // -----------------------------------------------------------------------------
+
+
+
+
+
+
 // ARCHETYPE-FILE-FUNCTIONS.GROOVY ---------------------------------------------
 
 def deleteFile(File file) {
@@ -30,6 +36,3 @@ def renameFile(File file, String newName) {
         println "Error: Unable to rename $file to $newFile"
     }
 }
-
-
-// -----------------------------------------------------------------------------

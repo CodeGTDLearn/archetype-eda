@@ -23,8 +23,8 @@ OPEN_IDE_DIRECTLY=false
 # Progress_bar runa inside the function 'execute_maven_command_line'(maven_functions.sh)
 ACTIVE_PROGRESS_BAR=false
 
-# A.5) ARCHETYPE FILES GENERATION:
-# A.5.1) PATH DEFINITIONS
+# A.5) 'ARCHETYPE FILES' GENERATION:
+# A.5.1) 'ARCHETYPE FILES' PATH
 PROJECT_FOLDER="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda"
 PROJECT_FOLDER_LINUX="/c/WORKBASE/DEV/SCRIPTS/archetype-v2-eda"
 META_INF_FOLDER="${PROJECT_FOLDER}\\src\\main\\resources\\META-INF"
@@ -32,15 +32,17 @@ MAVEN_FOLDER="${META_INF_FOLDER}\\maven"
 SCRIPT_FOLDER="${PROJECT_FOLDER}\\bash_script"
 source "${SCRIPT_FOLDER}\\maven_functions.sh"
 
-# A.5.2) ARCHETYPE-FILES GENERATION ('archetype-metadata.xml', 'archetype-post-generate.groovy')
+# A.5.2) RE-CREATING ARCHETYPE-METADATA.XML
 source "${SCRIPT_FOLDER}\\create_archetype_metadata.sh"
 create_archetype_metadata_xml "${RECREATE_ARCHETYPE}" "${MAVEN_FOLDER}" "archetype-metadata.xml" "$SHOW_RECREATE_ARCHETYPE_LOG"
 
-# A.5.3) ARCHETYPE-METADATA.XML
+# A.5.3) RE-CREATING ARCHETYPE-POST-GENERATE.GROOVY
 source "${SCRIPT_FOLDER}\\create_archetype_post_generate.sh"
 create_archetype_post_generate_groovy "${RECREATE_ARCHETYPE}" "${META_INF_FOLDER}" "archetype-post-generate.groovy" "$SHOW_RECREATE_ARCHETYPE_LOG"
 
-# A.5.4) ARCHETYPE-POST-GENERATE.GROOVY
+# A.5.4) INSTALLING THE ARCHETYPE BASED ON THE NEWLY FILES CREATED ABOVE:
+# - ARCHETYPE-POST-GENERATE.GROOVY
+# - ARCHETYPE-METADATA.XML
 execute_mvn_clean_install "${PROJECT_FOLDER_LINUX}" "${RECREATE_ARCHETYPE}" "${SHOW_RECREATE_ARCHETYPE_LOG}"
 
 # A.6) CHECKING PROJECT FOLDER VIABILITY
@@ -87,7 +89,7 @@ inject_script "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
 project_package=$groupId.$artifactId
 
 # C.3) MONTAGEM das 'SWITCHES -D' para o MVN-CLI
-inject_script "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "mvn_command_line_archetype_generate.sh" $SHOW_INJECTION_LOG
 
 # C.4) 'REQUIRED-PROPERTY':
 # C.5) 'PROPERTY DE TESTE' do archetype
@@ -97,8 +99,9 @@ inject_script "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTION_LOG
 # C.9) FUNCAO P/ "MANIPULACAO DE PASTAS OU ARQUIVOS" (se necessario)
 #-------------------------------------------------------------------------------
 
+# D) Progression_Bar is executed inside the function 'execute_maven_command_line'
 # Progression_Bar is executed inside the function 'execute_maven_command_line'
 # which is found inside the script: maven_functions.sh
-execute_maven_command_line $SHOW_MAVEN_BASIC_LOG $SHOW_MAVEN_DEBUG_LOG "$maven_command_line"
+execute_maven_command_line $SHOW_MAVEN_BASIC_LOG $SHOW_MAVEN_DEBUG_LOG "$maven_command_line_arch_generate_var"
 
 open_ide_manager $USE_IDE_ACTIVATION_MANAGER $OPEN_IDE_DIRECTLY "$IDE_EXEC_FILE_FOLDER" "$IDE_EXEC_FILE" $SHOW_INJECTION_LOG

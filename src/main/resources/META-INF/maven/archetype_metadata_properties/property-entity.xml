@@ -8,6 +8,8 @@
         <!--  PROPERTY-ENTITY.XML  _________________________________________ -->
         <requiredProperty key="entity_name"/>
 
+        <requiredProperty key="entity_name_package"/>
+
         <requiredProperty key="enable_custom_attributes">
             <defaultValue></defaultValue>
         </requiredProperty>

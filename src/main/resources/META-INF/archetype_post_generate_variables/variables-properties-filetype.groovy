@@ -2,6 +2,9 @@
 
 
 
-// VARIABLES-PROPERTIES-FILETYPE.GROOVY ----------------------------------------
 
+
+
+
+// VARIABLES-PROPERTIES-FILETYPE.GROOVY ----------------------------------------
 def properties_filetype_choice = "${properties?.properties_filetype}"

@@ -2,6 +2,12 @@ import java.nio.file.Path
 
 // -----------------------------------------------------------------------------
 
+
+
+
+
+
+
 // ARCHETYPE-PATH-SRC-MAIN-VARIABLES.GROOVY -----------------------------------
 
 Path srcMainJava = projectRootFolder.resolve("src").resolve("main").resolve("java")
@@ -16,5 +22,3 @@ Path srcMainJavaEntityConfigFolder = srcMainJavaEntityFolder.resolve(config_fold
 
 
 Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(resourcePropertiesFolder)
-
-// -----------------------------------------------------------------------------

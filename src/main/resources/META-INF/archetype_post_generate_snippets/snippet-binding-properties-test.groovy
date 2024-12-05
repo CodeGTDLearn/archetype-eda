@@ -1,6 +1,11 @@
 // -----------------------------------------------------------------------------
 
 
+
+
+
+
+
 // SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
 if (keep_binding_properties_tests == 'false') {
 
