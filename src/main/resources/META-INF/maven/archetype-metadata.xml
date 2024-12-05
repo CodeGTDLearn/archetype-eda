@@ -25,7 +25,9 @@
             <defaultValue></defaultValue>
         </requiredProperty>
 
-<!--        <include resource="archetype-metadata-logback.xml" />-->
+        <extends>base-logback</extends>
+<!--
+
         <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>
         </requiredProperty>
@@ -38,6 +40,7 @@
         <requiredProperty key="enable_logback_appender_file">
             <defaultValue></defaultValue>
         </requiredProperty>
+-->
 
         <requiredProperty key="enable_api_cpanel">
             <defaultValue></defaultValue>
@@ -57,8 +60,8 @@
         <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>
         </requiredProperty>
-    </requiredProperties>
 
+    </requiredProperties>
     <fileSets>
         <!-- SRC\MAIN -->
         <fileSet filtered="true" packaged="true" encoding="UTF-8">

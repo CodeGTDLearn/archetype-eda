@@ -1,0 +1,19 @@
+        <!-- SRC\MAIN -->
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.sql</include>
+                <include>app.key</include>
+                <include>app.pub</include>
+                <include>application.yml</include>
+                <include>logback-spring.xml</include>
+                <include>banner.txt</include>
+            </includes>
+        </fileSet>

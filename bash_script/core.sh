@@ -1,26 +1,33 @@
 #!/bin/bash
 
 # A) GENERAL OPTIONS------------------------------------------------------------
-# A.1) LOG|DEBUG MANAGEMENT
+# A.1) GENERATE ARCHETYPE-METADATA PROCESSOR
+CREATE_ARCHETYPE=true
+
+# A.2) LOG|DEBUG MANAGEMENT
 SHOW_MAVEN_BASIC_LOG=true
 SHOW_MAVEN_DEBUG_LOG=false
 SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
 SHOW_INJECTION_LOG=false
 
-# A.2) IDE EXECUTION AFTER SCRIPT EXECUTION
+# A.3) IDE EXECUTION AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
 IDE_EXEC_FILE='idea64.exe'
 USE_IDE_ACTIVATION_MANAGER=true
 OPEN_IDE_DIRECTLY=false
 
-# A.3) ENABLING PROGRESS_BAR
+# A.4) ENABLING PROGRESS_BAR
 ACTIVE_PROGRESS_BAR=false
 
-# A.4) SCRIPT INITIALIZATION
+# A.5) SCRIPT INITIALIZATION
 SCRIPT_FOLDER="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\bash_script"
-source "${SCRIPT_FOLDER}\\script_injection.sh"
+source "${SCRIPT_FOLDER}\\create_archetype_metadata.sh"
+create_archetype_metadata "${CREATE_ARCHETYPE}" "../src/main/resources/META-INF/maven" "archetype-metadata.xml"
+
 source "${SCRIPT_FOLDER}\\project_viability_checker.sh"
 project_folder_viability_checking
+
+source "${SCRIPT_FOLDER}\\script_injection.sh"
 
 # B) INJECOES DE FUNCOES/SCRIPTS OPERACIONAIS-------------------------------------------
 # B.1) FUNCOES ESPECIAIS
