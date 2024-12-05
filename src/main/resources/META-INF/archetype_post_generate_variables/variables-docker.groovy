@@ -1,0 +1,5 @@
+
+
+
+// VARIABLE --------------------------------------------------------------------
+def keep_docker = "${properties?.enable_docker}"

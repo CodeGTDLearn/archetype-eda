@@ -3,14 +3,14 @@
 # A) GENERAL OPTIONS------------------------------------------------------------
 # A.1) ATUALIZA o ARCHETYPE-METADATA 'PROCESSOR'
 # qdo o 'ARCHETYPE_METADATA.XML' for alterado
-RECREATE_ARCHETYPE=false
-SHOW_RECREATE_ARCHETYPE_LOG=false
+RECREATE_ARCHETYPE=true
+SHOW_RECREATE_ARCHETYPE_LOG=true
 
 # A.2) LOG|DEBUG MANAGEMENT
 SHOW_MAVEN_BASIC_LOG=true
-SHOW_MAVEN_DEBUG_LOG=false
-SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
-SHOW_INJECTION_LOG=false
+SHOW_MAVEN_DEBUG_LOG=true
+SHOW_ARCHETYPE_POS_PROCESSOR_LOG=true
+SHOW_INJECTION_LOG=true
 
 # A.3) IDE EXECUTION AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
@@ -23,30 +23,27 @@ ACTIVE_PROGRESS_BAR=false
 
 # A.5) SCRIPT INITIALIZATION
 PROJECT_FOLDER="c:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda"
-META_INF_MAVEN_FOLDER="${PROJECT_FOLDER}\\src\\main\\resources\\META-INF\\maven"
+PROJECT_FOLDER_LINUX="/c/WORKBASE/DEV/SCRIPTS/archetype-v2-eda"
+META_INF_FOLDER="${PROJECT_FOLDER}\\src\\main\\resources\\META-INF"
+MAVEN_FOLDER="${META_INF_FOLDER}\\maven"
 SCRIPT_FOLDER="${PROJECT_FOLDER}\\bash_script"
-source "${SCRIPT_FOLDER}\\generate_archetype_metadata.sh"
-create_archetype_metadata "${RECREATE_ARCHETYPE}" "${META_INF_MAVEN_FOLDER}" "archetype-metadata.xml" "$SHOW_RECREATE_ARCHETYPE_LOG"
+source "${SCRIPT_FOLDER}\\maven_functions.sh"
+source "${SCRIPT_FOLDER}\\create_archetype_metadata.sh"
+create_archetype_metadata_xml "${RECREATE_ARCHETYPE}" "${MAVEN_FOLDER}" "archetype-metadata.xml" "$SHOW_RECREATE_ARCHETYPE_LOG"
+source "${SCRIPT_FOLDER}\\create_archetype_post_generate.sh"
+create_archetype_post_generate_groovy "${RECREATE_ARCHETYPE}" "${META_INF_FOLDER}" "archetype-post-generate.groovy" "$SHOW_RECREATE_ARCHETYPE_LOG"
+execute_mvn_clean_install "${PROJECT_FOLDER_LINUX}" "${RECREATE_ARCHETYPE}"
 
 source "${SCRIPT_FOLDER}\\project_viability_checker.sh"
 project_folder_viability_checking
 
 source "${SCRIPT_FOLDER}\\script_injection.sh"
 
-# B) INJECOES DE FUNCOES/SCRIPTS OPERACIONAIS-----------------------------------
-# B.1) FUNCOES ESPECIAIS
+# B) INJECOES DE FUNCOES -------------------------------------------------------
 script_injection "${SCRIPT_FOLDER}" "progress_bar.sh" $SHOW_INJECTION_LOG
-
-# B.2) FUNCOES GERAIS
 script_injection "${SCRIPT_FOLDER}" "general_functions.sh" $SHOW_INJECTION_LOG
-
-# B.3) FUNCOES DE USER-INPUT-DATA
-script_injection "${SCRIPT_FOLDER}" "input_processor.sh" $SHOW_INJECTION_LOG
-
-# B.4) FUNCAO DE CONFIGURACAO GERAL
-script_injection "${SCRIPT_FOLDER}" "config.sh" $SHOW_INJECTION_LOG
-
-# B.5) FUNCAO DE MENSAGENS GERAIS
+script_injection "${SCRIPT_FOLDER}" "user_input_processor.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "config_constants.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTION_LOG
 
 #-------------------------------------------------------------------------------
