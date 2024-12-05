@@ -1,3 +1,6 @@
+<!-- ______________ -->
+
+
         <!-- SRC\MAIN -->
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/main/java</directory>
@@ -5,6 +8,8 @@
                 <include>**/*.java</include>
             </includes>
         </fileSet>
+
+
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources</directory>
             <includes>
@@ -17,3 +22,6 @@
                 <include>banner.txt</include>
             </includes>
         </fileSet>
+
+
+<!-- ______________ -->

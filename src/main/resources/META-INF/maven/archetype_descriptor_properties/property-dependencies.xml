@@ -1,9 +1,19 @@
+<!-- ______________ -->
+
+
         <requiredProperty key="enable_docker">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
         <requiredProperty key="enable_lombok">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
         <requiredProperty key="extra_POM_dependencies">
         <defaultValue></defaultValue>
         </requiredProperty>
+
+
+<!-- ______________ -->

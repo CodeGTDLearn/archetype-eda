@@ -1,4 +1,12 @@
+<!-- ______________ -->
+
+
         <requiredProperty key="project_description"/>
+
+
         <requiredProperty key="show_archetype_pos_processor_log">
-        <defaultValue></defaultValue>
+            <defaultValue></defaultValue>
         </requiredProperty>
+
+
+<!-- ______________ -->

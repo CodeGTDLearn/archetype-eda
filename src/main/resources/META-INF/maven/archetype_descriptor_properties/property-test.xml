@@ -1,3 +1,9 @@
+<!-- ______________ -->
+
+
         <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
+<!-- ______________ -->

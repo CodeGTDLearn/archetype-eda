@@ -1,12 +1,24 @@
+<!-- ______________ -->
+
+
         <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
         <requiredProperty key="logback_console_type">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
         <requiredProperty key="enable_logback_appender_smtp">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
         <requiredProperty key="enable_logback_appender_file">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
+<!-- ______________ -->

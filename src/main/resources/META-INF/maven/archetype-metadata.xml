@@ -1,68 +1,188 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <archetype-descriptor
-        xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.1.0 http://maven.apache.org/xsd/archetype-catalog-1.1.0.xsd"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.1.0
+        http://maven.apache.org/xsd/archetype-catalog-1.1.0.xsd"
         xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.1.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         name="arch">
 
     <requiredProperties>
-        <requiredProperty key="entity_name"/>
-        <requiredProperty key="enable_custom_attributes">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-        <requiredProperty key="custom_attributes_list"/>
 
-        <requiredProperty key="project_description"/>
 
-        <requiredProperty key="enable_docker">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-        <requiredProperty key="enable_lombok">
-            <defaultValue></defaultValue>
-        </requiredProperty>
+<!-- ______________ -->
+
         <requiredProperty key="enable_jwt_authentication">
             <defaultValue></defaultValue>
         </requiredProperty>
 
-        <extends>base-logback</extends>
-<!--
 
-        <requiredProperty key="enable_logback">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-        <requiredProperty key="logback_console_type">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-        <requiredProperty key="enable_logback_appender_smtp">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-        <requiredProperty key="enable_logback_appender_file">
-            <defaultValue></defaultValue>
-        </requiredProperty>
--->
+
 
         <requiredProperty key="enable_api_cpanel">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
         <requiredProperty key="enable_api_cpanel_elk_log_system">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
+
+
+        <requiredProperty key="enable_docker">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+        <requiredProperty key="enable_lombok">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+        <requiredProperty key="extra_POM_dependencies">
+        <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+        <requiredProperty key="entity_name"/>
+
+        <requiredProperty key="enable_custom_attributes">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+        <requiredProperty key="custom_attributes_list"/>
+
+
+
+
+        <requiredProperty key="project_description"/>
+
 
         <requiredProperty key="show_archetype_pos_processor_log">
             <defaultValue></defaultValue>
         </requiredProperty>
 
-        <requiredProperty key="extra_POM_dependencies">
+
+
+
+        <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>
         </requiredProperty>
+
+
+        <requiredProperty key="logback_console_type">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+        <requiredProperty key="enable_logback_appender_smtp">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+        <requiredProperty key="enable_logback_appender_file">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
 
         <requiredProperty key="enable_folder_src_test_java">
             <defaultValue></defaultValue>
         </requiredProperty>
 
+
+
+
     </requiredProperties>
     <fileSets>
+
+
+
+
+        <!-- CPANEL / ELK SUPPORT -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>ELK</directory>
+            <includes>
+                <include>**/*.*</include>
+            </includes>
+        </fileSet>
+
+
+
+
+        <!-- DOCKER SUPPORT -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>docker</directory>
+            <includes>
+                <include>**/*compose*.yml</include>
+                <include>**/*compose*.yaml</include>
+                <include>**/*Dockerfile*</include>
+            </includes>
+        </fileSet>
+
+
+
+
+        <!-- MAVEN -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>.mvn/wrapper</directory>
+            <includes>
+                <include>**/*.properties</include>
+            </includes>
+        </fileSet>
+
+
+        <!-- GENERAL FILES -->
+        <fileSet encoding="UTF-8">
+            <directory></directory>
+            <includes>
+                <include>.gitignore</include>
+                <include>HELP.md</include>
+                <include>mvnw</include>
+                <include>mvnw.cmd</include>
+            </includes>
+        </fileSet>
+
+
+
+
+        <!-- LOGBACK SUPPORT -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources/logback-spring-config</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </fileSet>
+
+
+
+
+        <!-- SRC\TEST -->
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/test/java</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>logback-test.xml</include>
+                <include>banner.txt</include>
+            </includes>
+        </fileSet>
+
+
+
+
         <!-- SRC\MAIN -->
         <fileSet filtered="true" packaged="true" encoding="UTF-8">
             <directory>src/main/java</directory>
@@ -70,6 +190,8 @@
                 <include>**/*.java</include>
             </includes>
         </fileSet>
+
+
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources</directory>
             <includes>
@@ -83,64 +205,12 @@
             </includes>
         </fileSet>
 
-        <!-- SRC\TEST -->
-        <fileSet filtered="true" packaged="true" encoding="UTF-8">
-            <directory>src/test/java</directory>
-            <includes>
-                <include>**/*.java</include>
-            </includes>
-        </fileSet>
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>logback-test.xml</include>
-                <include>banner.txt</include>
-            </includes>
-        </fileSet>
 
-        <!-- DOCKER SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>docker</directory>
-            <includes>
-                <include>**/*compose*.yml</include>
-                <include>**/*compose*.yaml</include>
-                <include>**/*Dockerfile*</include>
-            </includes>
-        </fileSet>
+<!-- ______________ -->
 
-        <!-- LOGBACK SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/logback-spring-config</directory>
-            <includes>
-                <include>**/*.xml</include>
-            </includes>
-        </fileSet>
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>ELK</directory>
-            <includes>
-                <include>**/*.*</include>
-            </includes>
-        </fileSet>
 
-        <!-- MAVEN -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>.mvn/wrapper</directory>
-            <includes>
-                <include>**/*.properties</include>
-            </includes>
-        </fileSet>
-
-        <!-- GENERAL FILES -->
-        <fileSet encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>.gitignore</include>
-                <include>HELP.md</include>
-                <include>mvnw</include>
-                <include>mvnw.cmd</include>
-            </includes>
-        </fileSet>
     </fileSets>
-
 </archetype-descriptor>
+
+
+<!-- ______________ -->
