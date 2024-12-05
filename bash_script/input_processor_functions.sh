@@ -65,6 +65,9 @@ match_input_pattern_with_regex() {
     #hora_minuto_segundo: Hora, minuto e segundo no formato "HH:MM:SS" (ex: 12:30:45)
     hora_minuto_segundo) input_patterns="^(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$";;
 
+    #url do git: URL do git (ex: https://github.com/username/repo.git)
+    git_url) input_patterns="^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)\.git$";;
+
   esac
 
   if [ "$matching_pattern" != "entity_list_attributes" ] &&
@@ -131,7 +134,7 @@ is_java_reserved_word() {
   echo "false"
 }
 
-user_input_or_default_value() {
+get_user_input_or_default_value() {
 
   local matching_pattern=$1
   local defaultValue_onEnterKey_press=$2
@@ -182,13 +185,13 @@ user_input_or_default_value() {
   esac
 }
 
-user_numeric_selection_or_default_value() {
+get_user_numeric_selection_or_default_value() {
 
   local numeric_option_prompt=$1
   local numeric_option_interval_from_min_to_max=$2
   local proceed_with_function=${3:-true}
+  local defaultValue_onEnterKey_press=$4
 
-  local default_option=1
   local matching_pattern="numero"
   local chosen_option
   local is_numeric_option_allowed
@@ -200,7 +203,7 @@ user_numeric_selection_or_default_value() {
   intervalMax=$(echo "$numeric_option_interval_from_min_to_max" | cut -d'-' -f2)
 
   if [ "$proceed_with_function" = "false" ]; then
-    echo "$default_option"
+    echo "$defaultValue_onEnterKey_press"
     exit 1
   fi
 
@@ -222,7 +225,7 @@ user_numeric_selection_or_default_value() {
     # Checa se o valor é vazio ('enter' foi pressionado),
     # Se sim, finaliza o loop e atribui o valor default
     if [ -z "$chosen_option" ]; then
-      chosen_option=$default_option
+      chosen_option=$defaultValue_onEnterKey_press
     fi
 
     if (( chosen_option >= intervalMin && chosen_option <= intervalMax )); then

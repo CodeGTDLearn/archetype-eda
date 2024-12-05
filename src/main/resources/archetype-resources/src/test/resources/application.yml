@@ -6,6 +6,9 @@
 properties_folder: classpath:properties_test
 #end
 
+server:
+  port: ${api_port}
+
 spring:
   application:
     name: ${artifactId}

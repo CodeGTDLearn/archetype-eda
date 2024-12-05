@@ -5,7 +5,6 @@ import java.nio.file.Paths
 // -----------------------------------------------------------------------------
 
 // SNIPPET-LOGBACK.GROOVY
-
 if (keep_logback == 'false' ||
         (keep_logback == 'true' &&
                 console_type == '1' &&

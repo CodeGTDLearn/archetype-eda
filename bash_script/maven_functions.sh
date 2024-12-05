@@ -96,7 +96,7 @@ execute_maven_command_line() {
     # a) Symbol types options: ▮ █ ■ ▪ * + -
     # b) ProgressBar types:   percentual_mult_layer,    percentual,    random
     maven_output=$(eval "$maven_command_line_param") &
-    progression_bar $! "▪" '20' $show_progress_bar
+    show_progression_bar $! "▪" '20' $show_progress_bar
     wait $!
 
     check_maven_build_result "$maven_output"
@@ -161,12 +161,12 @@ execute_mvn_clean_install() {
   cd $current_dir || return 1
 }
 
-extra_pom_dependencies_addition_input() {
+get_extra_pom_dependencies_addition_input() {
 
   local input_example="org.aa:aa-api:1.7:test, org.bb:bb-api:1.8:runtime"
 
   if [[ "${enable_extra_pom_dependencies_addition,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
-     extra_POM_dependencies=$(user_input_or_default_value "dependency" "$input_example" "$EXTRA_POM_DEPENDENCIES_PROMPT")
+     extra_POM_dependencies=$(get_user_input_or_default_value "dependency" "$input_example" "$EXTRA_POM_DEPENDENCIES_PROMPT")
   else
      extra_POM_dependencies="false"
   fi

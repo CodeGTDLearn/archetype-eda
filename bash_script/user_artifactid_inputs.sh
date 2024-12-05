@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# PROMPT
+# 1) PROMPT
 ARTIFACT_ID_PROMPT="${ITEM_MARK}Digite o 'ArtifactId' (Nome do Projeto)"
 
-# VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
-artifactId_input
+# 2) VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
+get_artifactId_input

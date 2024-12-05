@@ -2,16 +2,16 @@
 
 # A.1) ARCHETYPE UPDATE - "PRE-PROCESSOR" --------------------------------------
 # A.1.1) RECRIA o "ARCHETYPE-METADATA.XML" e "ARCHETYPE-POST-GENERATE.GROOVY"
-RECREATE_ARCHETYPE=false
+RECREATE_ARCHETYPE=true
 
 # A.1.2) LOG|DEBUG - ARCHETYPE RECREATION
-SHOW_RECREATE_ARCHETYPE_LOG=false
+SHOW_RECREATE_ARCHETYPE_LOG=true
 
 # A.2) LOG|DEBUG MANAGEMENT "PROCESSOR"
-SHOW_MAVEN_BASIC_LOG=false
-SHOW_MAVEN_DEBUG_LOG=false
-SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
-SHOW_INJECTION_LOG=false
+SHOW_INJECTION_LOG=true
+SHOW_MAVEN_BASIC_LOG=true
+SHOW_MAVEN_DEBUG_LOG=true
+SHOW_ARCHETYPE_POS_PROCESSOR_LOG=true
 
 # A.3) IDE EXECUTION AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
@@ -46,18 +46,18 @@ execute_mvn_clean_install "${PROJECT_FOLDER_LINUX}" "${RECREATE_ARCHETYPE}" "${S
 
 # A.6) CHECKING PROJECT FOLDER VIABILITY
 source "${SCRIPT_FOLDER}\\project_viability_checker.sh"
-project_folder_viability_checking
+check_project_folder_viability
 
 # A.7) SCRIPT INITIALIZATION
 source "${SCRIPT_FOLDER}\\script_injection.sh"
 
 
 # B) INJECOES DE FUNCOES -------------------------------------------------------
-script_injection "${SCRIPT_FOLDER}" "progress_bar_functions.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "general_functions.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "config_constants.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "progress_bar_functions.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "general_functions.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "config_constants.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
 
 
 #-------------------------------------------------------------------------------
@@ -68,24 +68,25 @@ script_injection "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECT
 #             * Pos-Processador: "ARCHETYPE-POS-GENERATE".GROOVY
 #-------------------------------------------------------------------------------
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
-script_injection "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_binding_properties_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_logback_manager_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_cpanel_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_jwt_authentication_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_api_general_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_binding_properties_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_logback_manager_inputs.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_cpanel_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_jwt_authentication_input.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
 
 # C.2) Packages: 'Arvores de Pastas separadas por ".", onde a(s) classe(s) se encontra(m)
 project_package=$groupid
 
 # C.3) MONTAGEM das 'SWITCHES -D' para o MVN-CLI
-script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTION_LOG
 
 # C.4) 'REQUIRED-PROPERTY':
 # C.5) 'PROPERTY DE TESTE' do archetype

@@ -16,7 +16,7 @@ is_compound_input_valid() {
   echo "true"
 }
 
-os_path_provider() {
+provide_os_path() {
 
   local pwd=$(pwd)
    #echo -e "DEBUG LINE - Initial pwd $pwd"
@@ -81,7 +81,7 @@ open_ide_manager() {
   local options_prompt='Choose an option (1/2): '
   local invalid_option_message='Invalid option. Please try again.'
 
-  local current_path=$(os_path_provider)
+  local current_path=$(provide_os_path)
 #  echo -e "DEBUG LINE - current_path $current_path\n"
 
   local OPEN_IDE_CMD
@@ -126,13 +126,13 @@ open_ide_manager() {
   # read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
 }
 
-artifactId_input() {
+get_artifactId_input() {
 
   local artifactId_text='O artifactId[Nome do Projeto]'
 
   while true; do
 
-    artifactId=$(user_input_or_default_value "artifact" "my_archetype" "$ARTIFACT_ID_PROMPT")
+    artifactId=$(get_user_input_or_default_value "artifact" "my_archetype" "$ARTIFACT_ID_PROMPT")
 
     if [ -d "$artifactId" ]; then
        echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_MESSAGE \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
@@ -147,10 +147,10 @@ artifactId_input() {
   done
 }
 
-custom_attributes_list_input() {
+get_custom_attributes_list_input() {
 
   if [[ "${enable_custom_attributes,,}" =~ ^(true|t|T|TRUE|True)$ ]]; then
-     custom_attributes_list=$(user_input_or_default_value "entity_list_attributes" "Long:id, MyId:id, My_Id:my_id" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
+     custom_attributes_list=$(get_user_input_or_default_value "entity_list_attributes" "Long:id, MyId:id, My_Id:my_id" "$CUSTOM_ATTRIBUTES_LIST_PROMPT")
 
   else
      custom_attributes_list="false"
@@ -197,19 +197,4 @@ colorize_delimited_text() {
         result=$(echo -e "$input_string" | sed "s/\[\([^]]*\)\]/$COLOR\0$RESET/g")
     fi
     printf "%s" "$result"
-}
-
-add_item_in_progress_bar() {
-  local input_text_prompt="$1"
-  local proceed_with_function="$2"
-
-  if [ "$proceed_with_function" = "false" ]; then
-    return 1
-  fi
-
-  # Loop to extract all occurrences of text between apostrophes
-  while [[ $input_text_prompt =~ \'([^\']+)\' ]]; do
-    PROGRESS_BAR_ITEMS+=("${BASH_REMATCH[1]}")
-    input_text_prompt="${input_text_prompt#*${BASH_REMATCH[0]}}"
-  done
 }

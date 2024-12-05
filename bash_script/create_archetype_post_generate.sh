@@ -23,6 +23,7 @@ create_archetype_post_generate_groovy() {
   local imports_file="${body_folder}\\archetype-imports.groovy"
   local header_file="${body_folder}\\archetype-header.groovy"
   local global_vars_file="${body_folder}\\archetype-global-variables.groovy"
+  local path_vars_file="${body_folder}\\archetype-path-variables.groovy"
   local footer_file="${body_folder}\\archetype-footer.groovy"
   local functions_file="${body_folder}\\archetype-functions.groovy"
 
@@ -65,6 +66,7 @@ create_archetype_post_generate_groovy() {
   if [[ ! -f "$header_file" ]] ||
      [[ ! -f "$imports_file" ]] ||
      [[ ! -f "$global_vars_file" ]] ||
+     [[ ! -f "$path_vars_file" ]] ||
      [[ ! -f "$functions_file" ]] ||
      [[ ! -f "$footer_file" ]]; then
     echo "ERROR_BODY_FILES in ARCHETYPE_POST_GENERATE_GROOVY - NOT FOUND!"
@@ -76,19 +78,22 @@ create_archetype_post_generate_groovy() {
   # 1) Create/Overriding '$final_file_content_merged file', adding the 'HEADER_FILE'
   cat "$header_file" > "$final_file_content_merged"
 
-  # 2) Add the 'GENERAL_VARIABLES' to the 'final file'
+  # 2) Add the 'GLOBAL_VARIABLES' to the 'final file'
   sed -i -e '$r '"$global_vars_file" "$final_file_content_merged"
 
-  # 3) Add the "content of each file from ORDERED_FINAL_FILE_LIST"
+  # 2) Add the 'PATH_VARIABLES' to the 'final file'
+  sed -i -e '$r '"$path_vars_file" "$final_file_content_merged"
+
+  # 4) Add the "content of each file from ORDERED_FINAL_FILE_LIST"
   #    to the 'final file' APPENDING
   for file in "${ordered_final_file_list[@]}"; do
       sed -i -e '$r '"$file" "$final_file_content_merged"
   done
 
-  # 4) Adds the 'FOOTER_FILE' to the 'final file' (APPENDING)
+  # 5) Adds the 'FOOTER_FILE' to the 'final file' (APPENDING)
   sed -i -e '$r '"$footer_file" "$final_file_content_merged"
 
-  # 5) Adds the 'FUNCTION_FILE' to the 'final file' (APPENDING)
+  # 6) Adds the 'FUNCTION_FILE' to the 'final file' (APPENDING)
   sed -i -e '$r '"$functions_file" "$final_file_content_merged"
 
   #NAO DELETAR ESTE LOG COMENTADO - ELE PODE SER UTILIZADO
@@ -98,7 +103,7 @@ create_archetype_post_generate_groovy() {
 #     echo "END   ---- FINAL-CONTENT 'BEFORE' 'REMOVING IMPORTS KEYWORD':"
 #  fi
 
-  # 6) Removing 'IMPORT KEYWORD' lines from the 'final file'
+  # 7) Removing 'IMPORT KEYWORD' lines from the 'final file'
   #    and storing the result in 'free_imports_content'
   free_imports_content=$(remove_lines_with_import_keyword "$final_file_content_merged" "$show_debug_log_param")
 
@@ -109,10 +114,10 @@ create_archetype_post_generate_groovy() {
 #     echo "END   ---- FINAL-CONTENT 'AFTER' 'REMOVING IMPORTS KEYWORD':"
 #  fi
 
-  # 7) Adding 'IMPORT KEYWORD FILE' in 'final file' "OVERRIDING THE FINAL FILE"
+  # 8) Adding 'IMPORT KEYWORD FILE' in 'final file' "OVERRIDING THE FINAL FILE"
   cat "$imports_file" | tr -d '/' > "$final_file_content_merged"
 
-  # 8) Adding 'FREE IMPORTS CONTENT' APPENDING in the 'final file' above overrided
+  # 9) Adding 'FREE IMPORTS CONTENT' APPENDING in the 'final file' above overrided
   echo "$free_imports_content" >> "$final_file_content_merged"
 
   if [ "$show_debug_log_param" = "true" ]; then

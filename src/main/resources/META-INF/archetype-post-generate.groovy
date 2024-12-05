@@ -16,18 +16,6 @@ import java.nio.file.Paths
 // ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
 
 Properties properties = request.properties
-
-
-
-
-
-
-
-
-
-
-
-
 // -----------------------------------------------------------------------------
 
 // ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
@@ -57,6 +45,34 @@ def log_text_footer =
 
 def log_text = log_text_header
 
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// ARCHETYPE-PATH-VARIABLES.GROOVY ---------------------------------------------
+
+Path projectRootFolder =
+        Paths.get(
+                request.outputDirectory,
+                request.artifactId)
+
+Path rootGitFolder =
+        projectRootFolder
+                .resolve(".git_temp")
+
+Path rootDockerFolder =
+        projectRootFolder
+                .resolve("docker")
+
 Path srcMainJava =
         Paths.get(
                 request.outputDirectory,
@@ -69,25 +85,34 @@ Path srcMainResources =
                 request.artifactId,
                 'src', 'main', 'resources')
 
-Path propertiesResourcesFolder = srcMainResources.resolve("properties")
+Path srcMainResourcesProperties =
+        srcMainResources
+                .resolve("properties")
 
-Path srcMainJava_EntityFolder_path =
+Path srcMainJavaEntityFolder =
         srcMainJava
                 .resolve(project_package)
                 .resolve(entity_folder)
 
-Path srcMainJava_entityConfigFolder_path =
-        srcMainJava_EntityFolder_path
+Path srcMainJavaEntityConfigFolder =
+        srcMainJavaEntityFolder
                 .resolve(config_folder)
 
 Path propertiesProjectFolder =
-        srcMainJava_entityConfigFolder_path
+        srcMainJavaEntityConfigFolder
                 .resolve("properties")
 // -----------------------------------------------------------------------------
 
 
+// VARIABLES-API-GENERAL.GROOVY ------------------------------------------------
 
-// VARIABLE-AUTHENTICATION.GROOVY
+// GIT SUPPORT -----------------------------------------------------------------
+def keep_git_support= "${properties?.enable_git_support}"
+// -----------------------------------------------------------------------------
+
+
+
+// VARIABLES-AUTHENTICATION.GROOVY ---------------------------------------------
 
 def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
 
@@ -97,14 +122,14 @@ def authentication_folder = "authentication"
 
 
 
-// VARIABLE-BINDING-PROPERTIES-TESTS.GROOVY
+// VARIABLES-BINDING-PROPERTIES-TESTS.GROOVY -----------------------------------
 
 def keep_binding_properties_tests = "${properties?.enable_binding_properties_tests}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLE-BINDING-PROPERTIES.GROOVY
+// VARIABLES-BINDING-PROPERTIES.GROOVY -----------------------------------------
 
 def keep_binding_properties = "${properties?.enable_binding_properties}"
 def keep_map_binding_properties = "${properties?.map_binding_properties}"
@@ -116,28 +141,28 @@ def keep_validated_binding_properties = "${properties?.validated_binding_propert
 
 
 
-// VARIABLE-CPANEL.GROOVY
+// VARIABLES-CPANEL.GROOVY -----------------------------------------------------
 
 def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLE-DOCKER.GROOVY
+// VARIABLES-DOCKER.GROOVY -----------------------------------------------------
 
 def keep_docker = "${properties?.enable_docker}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLE-EXTRA-POM-DEPENDENCIES.GROOVY
+// VARIABLES-EXTRA-POM-DEPENDENCIES.GROOVY -------------------------------------
 
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLE-LOGBACK.GROOVY
+// VARIABLES-LOGBACK.GROOVY ----------------------------------------------------
 
 def keep_logback = "${properties?.enable_logback}"
 def console_type = "${properties?.logback_console_type}"
@@ -147,24 +172,35 @@ def keep_appender_file = "${properties?.enable_logback_appender_file}"
 
 
 
-// VARIABLE-PROPERTIES-FILETYPE.GROOVY
+// VARIABLES-PROPERTIES-FILETYPE.GROOVY ----------------------------------------
 
 def properties_filetype_choice = "${properties?.properties_filetype}"
 // -----------------------------------------------------------------------------
 
 
 
-// VARIABLE-SRC-TEST-JAVA.GROOVY
+// VARIABLES-SRC-TEST-JAVA.GROOVY ----------------------------------------------
 
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
+// -----------------------------------------------------------------------------
+
+
+// SNIPPET-API-GENERAL.GROOVY --------------------------------------------------
+
+// GIT SUPPORT -----------------------------------------------------------------
+if (keep_git_support == 'false') {
+
+  log_text += "\\nFOLDER_.GIT:\\n $rootGitFolder\n"
+  
+  deleteFolder(rootGitFolder.toFile())
+}
 
 
 // -----------------------------------------------------------------------------
 
 
 
-// SNIPPET-AUTHENTICATION.GROOVY
-
+// SNIPPET-AUTHENTICATION.GROOVY -----------------------------------------------
 if (keep_jwt_authentication == 'false') {
 
     Path folderJwtPath =
@@ -202,8 +238,7 @@ if (keep_jwt_authentication == 'false') {
 
 
 
-// SNIPPET-BINDING-PROPERTIES-TEST.GROOVY
-
+// SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
 if (keep_binding_properties_tests == 'false') {
 
     Path srcTestJava_bindingPropertiesTestFolder_path =
@@ -391,15 +426,14 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
 
 
 
-// SNIPPET-BINDING-PROPERTIES.GROOVY
-
+// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
 if (keep_binding_properties == 'false') {
 
     deleteFolder(propertiesProjectFolder.toFile())
     log_text += "\nFOLDER_BINDING_PROPERTIES:\n $propertiesProjectFolder\n"
 
-    deleteFolder(propertiesResourcesFolder.toFile())
-    log_text += "\nBINDING_PROPERTY_RESOURCES:\n $propertiesResourcesFolder\n"
+    deleteFolder(srcMainResourcesProperties.toFile())
+    log_text += "\nBINDING_PROPERTY_RESOURCES:\n $srcMainResourcesProperties\n"
 }
 
 if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
@@ -435,10 +469,10 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
                     "application_list.properties",
                     "application_list.yml"
             ]
-    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
+    deleteFilesFromList(srcMainResourcesProperties, filesToDeleteResources)
 
     log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
+            filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
 }
 
 if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
@@ -460,10 +494,10 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
                     "application_map.properties",
                     "application_map.yml"
             ]
-    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
+    deleteFilesFromList(srcMainResourcesProperties, filesToDeleteResources)
 
     log_text += "\nMAP_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
+            filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
 }
 
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
@@ -502,7 +536,6 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
 // -----------------------------------------------------------------------------
 
 // SNIPPET-CPANEL.GROOVY
-
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     Path logstachPath =
@@ -517,26 +550,18 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     deleteElkLogSystemStructure(log_text)
 }
-
-
 // -----------------------------------------------------------------------------
 
 // SNIPPET-DOCKER.GROOVY
-
 if (keep_docker == 'false') {
-    Path folderDockerPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'docker')
-    log_text += "\nFOLDER_DOCKER:\n $folderDockerPath\n"
-    deleteFolder(folderDockerPath.toFile())
+    log_text += "\nFOLDER_DOCKER:\n $rootDockerFolder\n"
+    deleteFolder(rootDockerFolder.toFile())
 }
 
 
 // -----------------------------------------------------------------------------
 
 // SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY
-
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 
     def additional_dependencies_splitter = ','
@@ -631,7 +656,6 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 // -----------------------------------------------------------------------------
 
 // SNIPPET-LOGBACK.GROOVY
-
 if (keep_logback == 'false' ||
         (keep_logback == 'true' &&
                 console_type == '1' &&
@@ -795,7 +819,6 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
 
 // SNIPPET-PROPERTIES-FILETYPE.GROOVY ------------------------------------------
 // properties_filetype_choice:        1 - yml          2 - properties
-
 def deleteFileType = (properties_filetype_choice == '1') ? '.yml' : '.properties'
 def fileTypeMessage = (properties_filetype_choice == '1') ? 'Delete All YML-FILES' : 'Delete All PROPERTIES-FILES'
 log_text += "\nBINDING_PROPERTIES:\n=> Message: " +  fileTypeMessage
@@ -820,7 +843,6 @@ deleteFilesByExtensionRecursively(srcTestJava_resourcesFolder_path, deleteFileTy
 // -----------------------------------------------------------------------------
 
 // SNIPPET-SRC-TEST-JAVA.GROOVY
-
 if (keep_src_test_java == 'false') {
     Path folderTestPath =
             Paths.get(request.outputDirectory,

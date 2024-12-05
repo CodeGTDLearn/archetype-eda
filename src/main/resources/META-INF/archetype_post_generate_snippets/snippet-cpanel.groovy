@@ -5,7 +5,6 @@ import java.nio.file.Paths
 // -----------------------------------------------------------------------------
 
 // SNIPPET-CPANEL.GROOVY
-
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     Path logstachPath =

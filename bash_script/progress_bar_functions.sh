@@ -1,8 +1,31 @@
 #!/bin/bash
 
-#!/bin/bash
+add_item_in_progress_bar() {
+  local input_text_prompt="$1"
+  local proceed_with_function="$2"
 
-progression_bar() {
+  if [ "$proceed_with_function" = "false" ]; then
+    return 1
+  fi
+
+  # **************************************************************************
+  # ** O APOSTROFE É ESSENCIAL PARA ADICIONAR ITEM NA BARRA DE PROGRESSO **
+  # **************************************************************************
+  # This loop is responsible for extracting all occurrences of text between
+  # apostrophes (single quotes).
+  # The regular expression used in the while loop
+  # will capture the text between the single quotes,
+  # so we can add, each item beetween those single quotes,
+  # it to the array PROGRESS_BAR_ITEMS.
+  # The Array PROGRESS_BAR_ITEMS is used to generate each item of the progression bar.
+  # Hence, eachitem in the array PROGRESS_BAR_ITEMS is a component of the progression bar.
+  while [[ $input_text_prompt =~ \'([^\']+)\' ]]; do
+    PROGRESS_BAR_ITEMS+=("${BASH_REMATCH[1]}")
+    input_text_prompt="${input_text_prompt#*${BASH_REMATCH[0]}}"
+  done
+}
+
+show_progression_bar() {
 
   local pid=$1
   local symbol=$2
@@ -15,11 +38,11 @@ progression_bar() {
   printf "\n"
 
   if $active == true; then
-    percentual_mult_layer_progression_bar "$symbol" "$size_bar"
+    generate_percentual_mult_layer_progression_bar "$symbol" "$size_bar"
   fi
 }
 
-percentual_mult_layer_progression_bar() {
+generate_percentual_mult_layer_progression_bar() {
 
   local symbol=$1
   local size_bar=$2

@@ -9,12 +9,17 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -DgroupId=\"$groupid\" \
 -Dversion=\"$version\" \
 -DartifactId=\"$artifactId\" \
--Dentity_name=\"$entity_name\" \
 -Dproject_description=\"$project_description\" \
 -Djava_version=\"$java_version\" \
 \
--Dproperties_filetype=\"$properties_filetype\" \
+-Dentity_name=\"$entity_name\" \
 \
+-Dapi_port=\"$api_port\" \
+-Denable_git_support=\"$enable_git_support\" \
+-Dgit_url_repo=\"$git_url_repo\" \
+-Dgit_branch_repo=\"$git_branch_repo\" \
+\
+-Dproperties_filetype=\"$properties_filetype\" \
 -Denable_binding_properties=\"$enable_binding_properties\" \
 -Ddefault_binding_properties=\"$default_binding_properties\" \
 -Dlist_binding_properties=\"$list_binding_properties\" \

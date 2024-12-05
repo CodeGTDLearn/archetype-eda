@@ -5,7 +5,6 @@ import java.nio.file.Paths
 // -----------------------------------------------------------------------------
 
 // SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY
-
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 
     def additional_dependencies_splitter = ','

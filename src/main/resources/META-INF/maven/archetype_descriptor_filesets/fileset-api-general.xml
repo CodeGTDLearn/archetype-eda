@@ -1,0 +1,24 @@
+<!-- ______________ -->
+
+
+
+
+
+
+
+
+
+        <!--  FILESET-API-GENERAL.XML ______________________________________ -->
+        <!-- GIT SUPPORT -->
+        <fileSet filtered="true" packaged="false" encoding="UTF-8">
+          <directory>.git_temp</directory>
+          <includes>
+            <include>**/*.*</include>
+          </includes>
+        </fileSet>
+
+
+
+
+
+<!-- ______________ -->

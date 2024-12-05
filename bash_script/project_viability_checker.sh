@@ -1,6 +1,6 @@
 #!/bin/bash
 
-project_folder_viability_checking() {
+check_project_folder_viability() {
 
 # ATENCAO!!!
 # ESSA CONSTANTES DEVE FICAR NESTE LOCAL

@@ -4,6 +4,9 @@
 properties_folder: classpath:properties
 protected_properties_folder: classpath:protected_properties
 
+server:
+  port: ${api_port}
+
 spring:
   application:
     name: ${artifactId}

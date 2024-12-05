@@ -2,15 +2,14 @@
 
 
 
-// SNIPPET-BINDING-PROPERTIES.GROOVY
-
+// SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
 if (keep_binding_properties == 'false') {
 
     deleteFolder(propertiesProjectFolder.toFile())
     log_text += "\nFOLDER_BINDING_PROPERTIES:\n $propertiesProjectFolder\n"
 
-    deleteFolder(propertiesResourcesFolder.toFile())
-    log_text += "\nBINDING_PROPERTY_RESOURCES:\n $propertiesResourcesFolder\n"
+    deleteFolder(srcMainResourcesProperties.toFile())
+    log_text += "\nBINDING_PROPERTY_RESOURCES:\n $srcMainResourcesProperties\n"
 }
 
 if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
@@ -46,10 +45,10 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
                     "application_list.properties",
                     "application_list.yml"
             ]
-    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
+    deleteFilesFromList(srcMainResourcesProperties, filesToDeleteResources)
 
     log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
+            filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
 }
 
 if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
@@ -71,10 +70,10 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
                     "application_map.properties",
                     "application_map.yml"
             ]
-    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
+    deleteFilesFromList(srcMainResourcesProperties, filesToDeleteResources)
 
     log_text += "\nMAP_BINDING_PROPERTY_RESOURCES:\n " +
-            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
+            filesToDeleteResources.toString() + "\n $srcMainResourcesProperties\n"
 }
 
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {

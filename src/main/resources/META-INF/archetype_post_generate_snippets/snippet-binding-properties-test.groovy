@@ -6,8 +6,7 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET-BINDING-PROPERTIES-TEST.GROOVY
-
+// SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
 if (keep_binding_properties_tests == 'false') {
 
     Path srcTestJava_bindingPropertiesTestFolder_path =

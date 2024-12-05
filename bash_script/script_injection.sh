@@ -1,6 +1,6 @@
 #!/bin/bash
 
-script_injection() {
+inject_script() {
 
   local FOLDER="$1"
   local FILE="$2"
