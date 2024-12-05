@@ -38,7 +38,6 @@ percentual_progression_bar() {
 
   while [ -d /proc/$pid ]; do
 
-    #printf "\r[%-${size_bar}s]%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
     printf "\r%-${size_bar}s%3d%%" "$(printf "%*s" $progress | tr ' ' "$symbol")" $((progress * 100 / size_bar))
     printf "\033[0G"  # move o cursor para a posição 0 da linha atual
     sleep 0.1
@@ -51,7 +50,6 @@ percentual_progression_bar() {
 
   done
 
-     #printf "\r[%-${size_bar}s]100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
      printf "\r%-${size_bar}s 100%%" "$(printf "%*s" "${size_bar}" | tr ' ' "$symbol")"
 }
 
@@ -59,7 +57,6 @@ random_progression_bar() {
 
     while [ -d /proc/$pid ]; do
 
-      #printf "\r[%-${size_bar}s]" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
       printf "\r%-${size_bar}s" "$(printf "%*s" $(( RANDOM % size_bar )) | tr ' ' "$symbol")"
       printf "\033[0G"
       sleep 0.1

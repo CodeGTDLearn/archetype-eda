@@ -77,7 +77,7 @@ open_ide_manager() {
   fi
 
   local options_question='\n\nDo you want to:'
-  local options_alternatives=' 1. Open project in IDE\n 2. Exit\n'
+  local options_alternatives=' 1. Open IDE\n 2. Exit\n'
   local options_prompt='Choose an option (1/2): '
   local invalid_option_message='Invalid option. Please try again.'
 
@@ -118,7 +118,7 @@ open_ide_manager() {
 
     case $option in
        1) eval "$OPEN_IDE_CMD";;
-       2) break ;;
+       2) exit 0 ;;
        *) echo "$invalid_option_message" ;;
     esac
   done

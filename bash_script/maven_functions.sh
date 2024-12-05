@@ -1,5 +1,23 @@
 #!/bin/bash
 
+check_empty_switches_in_maven_command_line() {
+  local mvn_cli="$1"
+  local empty_switches=""
+
+ # Divide os argumentos em linhas e processa cada switch -D
+  while read -r param; do
+      if [[ "$param" =~ =\"\"$ ]]; then
+          empty_switches+="${param%%=\"\"}\n"
+      fi
+  done < <(echo "$mvn_cli" | tr ' ' '\n' | grep '^-D')
+
+ # Exibe apenas se encontrar switches vazias
+  if [[ -n "$empty_switches" ]]; then
+      echo -e "\n\n-----> MVN-COMMAND ANOMALIES FOUND:\n"
+      echo -e "$empty_switches"
+  fi
+}
+
 execute_maven_command_line() {
 
   local show_basic_log=$1
@@ -14,9 +32,10 @@ execute_maven_command_line() {
 
   print_maven_command_line() {
     local mvn_cli=$1
+
     echo -e "\n\n\n\n-----> MVN-COMMAND GENERATED: maven_command_line\n"
     echo -e "$mvn_cli" | sed 's/ -D/\n-D/g'
-    echo -e "\n----------------------------------->\n\n"
+    echo -e "$divider\n"
   }
 
   if [ "$show_basic_log" = "true" ]; then
@@ -25,13 +44,13 @@ execute_maven_command_line() {
   fi
 
   local output_header="\n\n\n\n"
-       output_header+="\n-------------------------------------------------------------------------------\n"
+       output_header+="$divider"
        output_header+="\n------------------------- LOG/DEBUG PROCESS - STARTING ------------------------\n"
-       output_header+="\n-------------------------------------------------------------------------------\n"
+       output_header+="$divider"
 
-  local output_footer="\n\n-------------------------------------------------------------------------------\n"
+  local output_footer="\n$divider"
          output_footer+="\n--------------------------- LOG/DEBUG PROCESS - ENDING ------------------------\n"
-         output_footer+="\n-------------------------------------------------------------------------------\n"
+         output_footer+="$divider"
          output_footer+="\n\n\n\n\n"
 
   local output=""
@@ -52,6 +71,7 @@ execute_maven_command_line() {
     maven_output=$(eval "$debug_command_line" | tee /dev/tty)
 
     print_maven_command_line "$maven_command_line_param"
+    check_empty_switches_in_maven_command_line "$maven_command_line_param"
 
     echo -e "$output"
     echo -e "$output_footer"
@@ -59,13 +79,13 @@ execute_maven_command_line() {
 
 # basic_log: "NAO POSSUI" o "DEBUG_LOG" implicitamente
   if [ "$show_basic_log" = "true" ] && [ "$show_debug_log" = "false" ]; then
-    #output+="-------------------------------------------------------------------------------\n\n"
     output+="\n\n$SHOW_MAVEN_BASIC_LOG_MESSAGE"
     echo -e "\n\n$output\n\n"
 
     maven_output=$(eval "$maven_command_line_param" | tee /dev/tty)
 
     print_maven_command_line "$maven_command_line_param"
+    check_empty_switches_in_maven_command_line "$maven_command_line_param"
 
     echo -e "$output"
     echo -e "$output_footer"

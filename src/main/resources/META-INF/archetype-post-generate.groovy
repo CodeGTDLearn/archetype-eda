@@ -16,12 +16,12 @@ Properties properties = request.properties
 
 
 
-
 // -----------------------------------------------------------------------------
 
 // ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
 
 def entity_folder = "${properties?.entity_name}"
+
 def entity_name = "${properties?.entity_name}"
 
 def config_folder = "config"
@@ -42,7 +42,35 @@ def log_text_footer =
                 "\n-------------------------------------------------------------------------------\n" +
                 "\n\n\n\n\n"
 
+
 def log_text = log_text_header
+
+Path srcMainJava =
+        Paths.get(
+                request.outputDirectory,
+                request.artifactId,
+                'src', 'main', 'java')
+
+Path srcMainResources =
+        Paths.get(
+                request.outputDirectory,
+                request.artifactId,
+                'src', 'main', 'resources')
+
+Path propertiesResourcesFolder = srcMainResources.resolve("properties")
+
+Path srcMainJava_EntityFolder_path =
+        srcMainJava
+                .resolve(project_package)
+                .resolve(entity_folder)
+
+Path srcMainJava_entityConfigFolder_path =
+        srcMainJava_EntityFolder_path
+                .resolve(config_folder)
+
+Path propertiesProjectFolder =
+        srcMainJava_entityConfigFolder_path
+                .resolve("properties")
 
 
 
@@ -214,7 +242,7 @@ if (keep_binding_properties_tests == 'false') {
                     "properties"
             )
     deleteFolder(binding_properties_resources_path.toFile())
-    log_text += "\nBINDING_PROPERTY_RESOURCES_TEST - " + "$binding_properties_resources_path\n"
+    log_text += "\nBINDING_PROPERTY_RESOURCES_TEST:\n $binding_properties_resources_path\n"
 }
 
 
@@ -238,7 +266,8 @@ if (keep_binding_properties_tests == 'true' && keep_default_binding_properties =
                     "ApplicationPropertiesValidationTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
-    log_text += "\nDEFAULT_BINDING_PROPERTY_TEST - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+    log_text += "\nDEFAULT_BINDING_PROPERTY_TEST:\n " + 
+            filesToDelete.toString() + "\n $binding_properties_path\n"
 
 }
 
@@ -261,9 +290,8 @@ if (keep_binding_properties_tests == 'true' && keep_list_binding_properties == '
                     "ListPropertiesRecordTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
-    log_text += "\nLIST_BINDING_PROPERTY_TEST - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nLIST_BINDING_PROPERTY_TEST:\n " +
+            filesToDelete.toString() + "\n $binding_properties_path\n"
 
     Path binding_properties_resources_path =
             Paths.get(request.outputDirectory,
@@ -277,9 +305,8 @@ if (keep_binding_properties_tests == 'true' && keep_list_binding_properties == '
                     "application_list_test.yml"
             ]
     deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
-    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES - " +
-            filesToDeleteResources.toString() + "\\n " +
-            "$binding_properties_resources_path\n"
+    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
+            filesToDeleteResources.toString() + "\n $binding_properties_resources_path\n"
 }
 
 
@@ -301,9 +328,8 @@ if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'f
                     "MapPropertiesRecordTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
-    log_text += "\nLIST_BINDING_PROPERTY_TEST - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nLIST_BINDING_PROPERTY_TEST:\n " +
+            filesToDelete.toString() + "\n $binding_properties_path\n"
 
     Path binding_properties_resources_path =
             Paths.get(request.outputDirectory,
@@ -317,14 +343,13 @@ if (keep_binding_properties_tests == 'true' && keep_map_binding_properties == 'f
                     "application_map_test.yml"
             ]
     deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
-    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES - " +
-            filesToDeleteResources.toString() + "\\n " +
-            "$binding_properties_resources_path\n"
+    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
+            filesToDeleteResources.toString() + "\n $binding_properties_resources_path\n"
 }
 
 
 
-// MUTABLEs --------------------------------------------------------------------
+// MUTABILITY ------------------------------------------------------------------
 // mutable_binding_properties_choice:   1 - Immutable;   2 - Mutable;   3 - Both
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
@@ -338,14 +363,14 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1
     List<String> filesToDelete =
             [
                     "ApplicationPropertiesTest.java",
+                    "ApplicationPropertiesValidationTest.java",
                     "ListPropertiesTest.java",
                     "MapPropertiesTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
 
-    log_text += "\nIMMUTABLE_BINDING_PROPERTY_TESTE - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nIMMUTABLE_BINDING_PROPERTY_TESTE:\n " +
+            filesToDelete.toString() + "\n $binding_properties_path\n"
 
 }
 
@@ -360,6 +385,7 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
                     'properties')
     List<String> filesToDelete =
             [
+                    "ApplicationPropertiesRecordValidationTest.java",
                     "ApplicationPropertiesRecordTest.java",
                     "ListPropertiesImmutableTest.java",
                     "ListPropertiesRecordTest.java",
@@ -368,9 +394,8 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
 
-    log_text += "\nMUTABLE_BINDING_PROPERTY_TEST - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nMUTABLE_BINDING_PROPERTY_TEST:\n " +
+            filesToDelete.toString() + "\n $binding_properties_path\n"
 
 }
 
@@ -392,12 +417,10 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
 
-    log_text += "\nVALIDATED_BINDING_PROPERTY_TEST - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nVALIDATED_BINDING_PROPERTY_TEST:\n " +
+            filesToDelete.toString() + "\n $binding_properties_path\n"
 
 }
-
 
 
 
@@ -407,70 +430,32 @@ if (keep_binding_properties_tests == 'true' && keep_validated_binding_properties
 // SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
 if (keep_binding_properties == 'false') {
 
-    Path srcMainJava_bindingPropertiesFolder_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'java',
-                    project_package,
-                    entity_folder,
-                    config_folder,
-                    "properties")
-    log_text += "\nFOLDER_BINDING_PROPERTIES:\n $srcMainJava_bindingPropertiesFolder_path\n"
-    deleteFolder(srcMainJava_bindingPropertiesFolder_path.toFile())
+    deleteFolder(propertiesProjectFolder.toFile())
+    log_text += "\nFOLDER_BINDING_PROPERTIES:\n $propertiesProjectFolder\n"
 
-
-    Path binding_properties_resources_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    "properties"
-            )
-    deleteFolder(binding_properties_resources_path.toFile())
-    log_text += "\nBINDING_PROPERTY_RESOURCES - " + "$binding_properties_resources_path\n"
+    deleteFolder(propertiesResourcesFolder.toFile())
+    log_text += "\nBINDING_PROPERTY_RESOURCES:\n $propertiesResourcesFolder\n"
 }
-
 
 
 // DEFAULTs --------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
-
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'java',
-                    project_package,
-                    entity_folder,
-                    config_folder,
-                    "properties"
-            )
 
     List<String> filesToDelete =
             [
                     "ApplicationProperties.java",
                     "ApplicationPropertiesRecord.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
 
-    log_text += "\nDEFAULT_BINDING_PROPERTY - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
-
+    log_text += "\nDEFAULT_BINDING_PROPERTY:\n " +
+            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
 }
-
 
 
 // LISTs -----------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'java',
-                    project_package,
-                    entity_folder,
-                    config_folder,
-                    "properties"
-            )
     List<String> filesToDelete =
             [
                     "ListObjects.java",
@@ -478,47 +463,27 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
                     "ListPropertiesImmutable.java",
                     "ListPropertiesRecord.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
 
-    log_text += "\nLIST_BINDING_PROPERTY - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
-
+    log_text += "\nLIST_BINDING_PROPERTY:\n " +
+            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
 
 
-
-    Path binding_properties_resources_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    "properties"
-            )
     List<String> filesToDeleteResources =
             [
                     "application_list.properties",
                     "application_list.yml"
             ]
-    deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
 
-    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES - " +
-            filesToDeleteResources.toString() + "\\n " +
-            "$binding_properties_resources_path\n"
+    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES:\n " +
+            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
 }
-
 
 
 // MAPs ------------------------------------------------------------------------
 if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'java',
-                    project_package,
-                    entity_folder,
-                    config_folder,
-                    "properties"
-            )
     List<String> filesToDelete =
             [
                     "MapItem.java",
@@ -526,72 +491,42 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
                     "MapPropertiesImmutable.java",
                     "MapPropertiesRecord.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
 
-    log_text += "\nMAP_BINDING_PROPERTY - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nMAP_BINDING_PROPERTY:\n " +
+            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
 
-
-
-
-
-    Path binding_properties_resources_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'resources',
-                    "properties"
-            )
     List<String> filesToDeleteResources =
             [
                     "application_map.properties",
                     "application_map.yml"
             ]
-    deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+    deleteFilesFromList(propertiesResourcesFolder, filesToDeleteResources)
 
-    log_text += "\nMAP_BINDING_PROPERTY_RESOURCES - " +
-            filesToDeleteResources.toString() + "\\n " +
-            "$binding_properties_resources_path\n"
+    log_text += "\nMAP_BINDING_PROPERTY_RESOURCES:\n " +
+            filesToDeleteResources.toString() + "\n $propertiesResourcesFolder\n"
 }
 
 
-
-// MUTABLEs --------------------------------------------------------------------
+// MUTABILITY ------------------------------------------------------------------
 // mutable_binding_properties_choice:   1 - Immutable;   2 - Mutable;   3 - Both
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '1') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'java',
-                    project_package,
-                    entity_folder,
-                    config_folder,
-                    'properties')
     List<String> filesToDelete =
             [
                     "ApplicationProperties.java",
                     "ListProperties.java",
                     "MapProperties.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
 
-    log_text += "\nIMMUTABLE_BINDING_PROPERTY - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nIMMUTABLE_BINDING_PROPERTY:\n " +
+            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
 
 }
 
 if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2') {
 
-    Path binding_properties_path =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'src', 'main', 'java',
-                    project_package,
-                    entity_folder,
-                    config_folder,
-                    'properties')
     List<String> filesToDelete =
             [
                     "ApplicationPropertiesRecord.java",
@@ -600,11 +535,10 @@ if (keep_binding_properties == 'true' && mutable_binding_properties_choice == '2
                     "MapPropertiesImmutable.java",
                     "MapPropertiesRecord.java"
             ]
-    deleteFilesFromList(binding_properties_path, filesToDelete)
+    deleteFilesFromList(propertiesProjectFolder, filesToDelete)
 
-    log_text += "\nMUTABLE_BINDING_PROPERTY - " +
-            filesToDelete.toString() + "\\n " +
-            "$binding_properties_path\n"
+    log_text += "\nMUTABLE_BINDING_PROPERTY:\n " +
+            filesToDelete.toString() + "\n $propertiesProjectFolder\n"
 
 }
 
