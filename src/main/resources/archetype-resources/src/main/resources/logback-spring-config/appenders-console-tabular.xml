@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <property name="CONSOLE_PATTERN_LAYOUT_TABULAR" value="
+%highlight(%-6level) |
+%green(%-6d{dd-MM-yyyy HH:mm:ss}) |
+%-35magenta(%thread) |
+%-75cyan(%logger) : %msg%n%throwable"/>
+
+    <appender name="CONSOLE_BASE_TABULAR" class="ConsoleAppender">
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${CONSOLE_PATTERN_LAYOUT_TABULAR}</pattern>
+        </encoder>
+    </appender>
+
+</configuration>

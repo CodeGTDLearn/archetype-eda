@@ -18,6 +18,7 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -Denable_lombok=\"$enable_lombok\" \
 \
 -Denable_logback=\"$enable_logback\" \
+-Dlogback_console_type=\"$logback_console_type\" \
 \
 -Denable_docker=\"$enable_docker\" \
 \

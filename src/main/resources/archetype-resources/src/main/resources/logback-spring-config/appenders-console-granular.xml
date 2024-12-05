@@ -2,13 +2,13 @@
 
 <configuration>
 
-    <appender name="CONSOLE_BASE" class="ConsoleAppender">
+    <appender name="CONSOLE_BASE_GRANULAR" class="ConsoleAppender">
         <encoder class="PatternLayoutEncoder">
             <pattern>${CONSOLE_PATTERN_LAYOUT_BASE}</pattern>
         </encoder>
     </appender>
 
-    <appender name="CONSOLE_EXCEPTION" class="ConsoleAppender">
+    <appender name="CONSOLE_EXCEPTION_GRANULAR" class="ConsoleAppender">
         <filter class="EvaluatorFilter">
             <evaluator>
                 <expression>return event.getThrowableProxy() != null;</expression>

@@ -45,14 +45,14 @@ script_injection "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTOR_TOOL
 script_injection "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_attributes_input.sh" $SHOW_INJECTOR_TOOL_LOG
-script_injection "${SCRIPT_FOLDER}" "user_logback_input.sh" $SHOW_INJECTOR_TOOL_LOG
+script_injection "${SCRIPT_FOLDER}" "user_logback_manager_input.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_jwt_authentication_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_dependencies_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_test_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
 script_injection "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTOR_TOOL_LOG
 
 # C.2) Packages:
-# * 'Arvores de Pastas'(Pastas separadas por ".") onde a(s) classe(s) se encontra(m)
+# * 'Arvores de Pastas separadas por ".", onde a(s) classe(s) se encontra(m)
 project_package=$groupid
 
 # C.3) MONTAGEM da 'MVN COMMAND LINE' com SWITCHES DO MVN CLI
@@ -63,15 +63,16 @@ script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTOR_TOOL_LO
 # C.4) Criar uma 'REQUIRED-PROPERTY' identica ao 'Switch -D DA Mvn command line', EM:
 # C.4.1) src\"MAIN"\resources\ "META-INF" \ "MAVEN" \ "archetype-metadata".XML
 # C.4.2) src\"TEST"\resources\ "PROJECTS" \ "BASIC" \ "archetype".PROPERTIES
+# C.4.3) Use a 'REQUIRED-PROPERTY' criada, com o 'VELOCITY' no 'arquivo' de codigo, se necessario
 
 # C.5) Se 'novo Criterio' realizar "MANIPULACAO PASTAS OU ARQUIVOS":
-# C.5.1) Crie/Insira a 'pasta ou arquivo' dentro do 'ARCHETYPE', EM:
+# C.5.1) Crie/Insira a 'pasta/arquivo' dentro do 'ARCHETYPE', no local correto, EM:
 #   - src\"MAIN"\resources\ "ARCHETYPE-RESOURCES" \ src
 #
-# C.5.2) Especifique a 'pasta ou arquivo' no area "FILE-SET", EM:
+# C.5.2) Especifique a 'pasta/arquivo' no area "FILE-SET", EM:
 #   - src\"MAIN"\resources\ "META-INF" \ "MAVEN" \ "archetype-metadata".XML
 #
-# C.5.3) Crie a 'FUNCAO PARA MANIPULACAO' da 'pasta ou arquivo', EM:
+# C.5.3) Crie a 'FUNCAO PARA MANIPULACAO' da 'pasta/arquivo', EM:
 #   -  src\"MAIN"\resources\ "META-INF" \ "archetype-post-generate".groovy
 #-------------------------------------------------------------------------------
 

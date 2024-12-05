@@ -251,7 +251,6 @@ user_input_or_default_value() {
     fi
 
     # Checar se o 'pattern-regex' da 'match' E checar é uma palavra reservada do Java
-    # if [ "$(match_input_pattern_with_regex "$input_pattern" "$input_value")" = "true" ]; then
     if [ "$(match_input_pattern_with_regex "$input_pattern" "$input_value")" = "true" ] &&
        [ "$(is_java_reserved_word "$input_pattern" "$input_value")" = "false" ]; then
       break
@@ -270,6 +269,64 @@ user_input_or_default_value() {
     false|f) echo "false";;
     *) echo "$input_value";;
   esac
+}
+
+user_numeric_options_or_default_value() {
+
+  local active=$1
+  local default_numeric_option=$2
+  local numeric_options_prompt=$3
+  local numeric_options_interval=$4
+
+  local input_pattern="numero"
+  local pattern_not_matched_message="$INVALID_INPUT_MESSAGE"
+  local interval_not_matched_message="$INVALID_INPUT_OPTIONS_INTERVAL_MESSAGE"
+  local chosen_numeric_option_value
+  local is_numeric_option_allowed
+
+  if [ "$active" = "false" ]; then
+    read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
+    exit 1
+  fi
+
+  while true; do
+
+    #read -p "$numeric_options_prompt [$default_numeric_option]: " chosen_numeric_option_value
+    read -r -p "$(echo -e "$numeric_options_prompt (ex: $default_numeric_option): ")" chosen_numeric_option_value
+
+    # Checa se o valor é vazio ('enter' foi pressionado),
+    # Se sim, finaliza o loop e atribui o valor default
+    if [ -z "$chosen_numeric_option_value" ]; then
+      chosen_numeric_option_value=$default_numeric_option
+      #break
+    fi
+
+    interval=(${numeric_options_interval//-/ })
+    min=${interval[0]}
+    max=${interval[1]}
+
+    echo -e "DEBUG LINE - min $min\n"
+    echo -e "DEBUG LINE - max $max\n"
+    echo -e "INVERVAL LINE - max $interval\n"
+
+    if (( chosen_numeric_option_value >= min && chosen_numeric_option_value <= max )); then
+      is_numeric_option_allowed="true"
+    else
+      echo -e "\n$interval_not_matched_message"
+    fi
+
+    # Checar se o 'pattern-regex' da 'match' E checar é uma palavra reservada do Java
+    if [ "$is_numeric_option_allowed" = "true" ] &&
+       [ "$(match_input_pattern_with_regex "$input_pattern" "$chosen_numeric_option_value")" = "true" ] &&
+       [ "$(is_java_reserved_word "$input_pattern" "$chosen_numeric_option_value")" = "false" ]; then
+      break
+    else
+      echo -e "$pattern_not_matched_message\n" >&2
+      sync
+    fi
+
+  done
+
 }
 
 os_path_provider() {

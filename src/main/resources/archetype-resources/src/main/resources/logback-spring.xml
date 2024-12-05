@@ -6,29 +6,52 @@
     <include resource="logback-spring-config/appenders-file.xml" />
     <include resource="logback-spring-config/appender-smtp.xml" />
     <include resource="logback-spring-config/appender-tcp-logstash.xml" />
-    <include resource="logback-spring-config/appenders-console-layouts.xml" />
-    <include resource="logback-spring-config/appenders-console.xml" />
+#if(${logback_console_type} == "2")
+    <include resource="logback-spring-config/appenders-console-tabular.xml" />
+#end
+#if(${logback_console_type} == "3")
+    <include resource="logback-spring-config/appenders-console-layouts-granular.xml" />
+    <include resource="logback-spring-config/appenders-console-granular.xml" />
+#end
 
     <!-- LOG everything at INFO level -->
     <root level="info">
-        <appender-ref ref="CONSOLE_BASE"/>
-        <appender-ref ref="CONSOLE_EXCEPTION"/>
+#if(${logback_console_type} == "2")
+        <appender-ref ref="CONSOLE_BASE_TABULAR"/>
+#end
+#if(${logback_console_type} == "3")
+        <appender-ref ref="CONSOLE_BASE_GRANULAR"/>
+        <appender-ref ref="CONSOLE_EXCEPTION_GRANULAR"/>
+#end
+
         <appender-ref ref="STANDARD_FILE_ROLLING"/>
         <appender-ref ref="JSON_FILE_STANDARD"/>
         <appender-ref ref="JSON_FILE_ROLLING"/>
+
         <appender-ref ref="LOGSTASH-TCP-SOCKET"/>
+
         <!-- <appender-ref ref="SMTP_EMAIL"/>-->
+
     </root>
 
     <!-- LOG "com.entity*" at TRACE level -->
     <logger name="com.entity" level="trace" additivity="false">
-        <appender-ref ref="CONSOLE_BASE"/>
-        <appender-ref ref="CONSOLE_EXCEPTION"/>
+#if(${logback_console_type} == "2")
+        <appender-ref ref="CONSOLE_BASE_TABULAR"/>
+#end
+#if(${logback_console_type} == "3")
+        <appender-ref ref="CONSOLE_BASE_GRANULAR"/>
+        <appender-ref ref="CONSOLE_EXCEPTION_GRANULAR"/>
+#end
+
         <appender-ref ref="STANDARD_FILE_ROLLING"/>
         <appender-ref ref="JSON_FILE_STANDARD"/>
         <appender-ref ref="JSON_FILE_ROLLING"/>
+
         <appender-ref ref="LOGSTASH-TCP-SOCKET"/>
+
         <!-- <appender-ref ref="SMTP_EMAIL"/>-->
+
     </logger>
 
 

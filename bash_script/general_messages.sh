@@ -3,6 +3,7 @@
 #CONFIRMATION_PROMPT="Deseja continuar? (s/n): "
 #OPERATION_CANCELLED_MESSAGE="Operação cancelada pelo usuário."
 INVALID_INPUT_MESSAGE="Incorrect input. Follow the example above."
+INVALID_INPUT_OPTIONS_INTERVAL_MESSAGE="The option chosen is not allowed. Try again."
 FINISH_PROMPT_MESSAGE="Pressione Enter para fechar a tela..."
 BUILD_FAILURE_MESSAGE="Ocorreu um ERRO. Sua solicitação nao foi processada."
 BUILD_SUCCESS_MESSAGE="Solicitação processada com SUCESSO."

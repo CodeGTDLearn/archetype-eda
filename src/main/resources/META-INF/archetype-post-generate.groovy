@@ -8,6 +8,7 @@ def entity_folder = "${properties?.entity_name}"
 def show_log = "${properties?.show_archetype_posprocessor_log}"
 def keep_test_folder = "${properties?.enable_folder_src_test_java}"
 def keep_logback_file = "${properties?.enable_logback}"
+def logback_console_type = "${properties?.logback_console_type}"
 def keep_jwt_auth_folder = "${properties?.enable_jwt_authentication}"
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 def keep_docker_folder = "${properties?.enable_docker}"
@@ -38,14 +39,14 @@ if (keep_test_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'java')
-    log_text += "\n1.0) FOLDER_SRC_TEST_JAVA location:\n $folderTestPath\n"
+    log_text += "\nFOLDER_SRC_TEST_JAVA:\n $folderTestPath\n"
     deleteFolder(folderTestPath.toFile())
 
     Path folderTestResourcePath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources')
-    log_text += "\n2.0) FOLDER_SRC_TEST_RESOURCES location:\n $folderTestResourcePath\n"
+    log_text += "\nFOLDER_SRC_TEST_RESOURCES:\n $folderTestResourcePath\n"
 
     deleteFolder(folderTestResourcePath.toFile())
 }
@@ -55,29 +56,94 @@ if (keep_logback_file == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring.xml')
-    log_text += "\n3.1) logback-spring.xml -> resources -> location:\n $logbackPath\n"
+    log_text += "\nlogback-spring.xml -> resources:\n $logbackPath\n"
     deleteFile(logbackPath.toFile())
 
     Path testLogbackPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'test', 'resources', 'logback-test.xml')
-    log_text += "\n3.2) logback-test.xml -> test-resources -> location:\n $testLogbackPath\n"
+    log_text += "\nlogback-test.xml -> test-resources:\n $testLogbackPath\n"
     deleteFile(testLogbackPath.toFile())
 
     Path folderLogbackSpringConfigPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'src', 'main', 'resources', 'logback-spring-config')
-    log_text += "\n3.3) FOLDER_LOGBACK-SPRING-CONFIG location:\n $folderLogbackSpringConfigPath\n"
+    log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $folderLogbackSpringConfigPath\n"
     deleteFolder(folderLogbackSpringConfigPath.toFile())
 
     Path folderELKPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'ELK')
-    log_text += "\n3.4) FOLDER_ELK location:\n $folderELKPath\n"
+    log_text += "\nFOLDER_ELK:\n $folderELKPath\n"
     deleteFolder(folderELKPath.toFile())
+}
+
+if (keep_logback_file == 'true' && logback_console_type == '1') {
+
+    Path logbackPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring.xml')
+    log_text += "\nlogback-spring.xml -> resources:\n $logbackPath\n"
+    deleteFile(logbackPath.toFile())
+
+    Path testLogbackPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'resources', 'logback-test.xml')
+    log_text += "\nlogback-test.xml -> test-resources:\n $testLogbackPath\n"
+    deleteFile(testLogbackPath.toFile())
+
+    Path consoleGranular =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-granular.xml')
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
+    deleteFile(consoleGranular.toFile())
+
+    Path granularLayoutConsole =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-layouts-granular.xml')
+    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
+    deleteFile(granularLayoutConsole.toFile())
+
+    Path consoleTabular =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-tabular.xml')
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
+    deleteFile(consoleTabular.toFile())
+}
+
+if (keep_logback_file == 'true' && logback_console_type == '2') {
+
+    Path consoleGranular =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-granular.xml')
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
+    deleteFile(consoleGranular.toFile())
+
+    Path granularLayoutConsole =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-layouts-granular.xml')
+    log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
+    deleteFile(granularLayoutConsole.toFile())
+}
+
+if (keep_logback_file == 'true' && logback_console_type == '3') {
+
+    Path consoleTabular =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-console-tabular.xml')
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
+    deleteFile(consoleTabular.toFile())
 }
 
 if (keep_jwt_auth_folder == 'false') {
@@ -86,7 +152,7 @@ if (keep_jwt_auth_folder == 'false') {
                     request.artifactId,
                     'src', 'main', 'java',
                     project_package, entity_folder, config_folder, authentication_folder)
-    log_text += "\n4.0) Jwt_authentication_folder_path location:\n $folderPath\n"
+    log_text += "\nJwt_authentication_folder_path:\n $folderPath\n"
     deleteFolder(folderPath.toFile())
 
     Path filePathAppKey =
@@ -109,7 +175,7 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
     String[] dependencies = extra_POM_dependencies.split(',')
 
     Path pomFile = Paths.get(request.outputDirectory, request.artifactId, 'pom.xml')
-    log_text += "\n5.0) POM.XML"
+    log_text += "\nPOM.XML"
     log_text += "\n - Location: $pomFile"
     log_text += "\n - Added Dependencies: $dependencies\n"
 
@@ -187,7 +253,7 @@ if (keep_docker_folder == 'false') {
             Paths.get(request.outputDirectory,
                     request.artifactId,
                     'docker')
-    log_text += "\n6.0) FOLDER_DOCKER location:\n $folderPath\n"
+    log_text += "\nFOLDER_DOCKER:\n $folderPath\n"
     deleteFolder(folderPath.toFile())
 }
 
