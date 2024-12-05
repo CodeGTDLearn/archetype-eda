@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<properties>
+    <requiredProperty key="enable_logback">
+        <defaultValue></defaultValue>
+    </requiredProperty>
+    <requiredProperty key="logback_console_type">
+        <defaultValue></defaultValue>
+    </requiredProperty>
+    <requiredProperty key="enable_logback_appender_smtp">
+        <defaultValue></defaultValue>
+    </requiredProperty>
+    <requiredProperty key="enable_logback_appender_file">
+        <defaultValue></defaultValue>
+    </requiredProperty>
+</properties>

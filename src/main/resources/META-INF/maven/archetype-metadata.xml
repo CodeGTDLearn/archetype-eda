@@ -25,6 +25,7 @@
             <defaultValue></defaultValue>
         </requiredProperty>
 
+<!--        <include resource="archetype-metadata-logback.xml" />-->
         <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>
         </requiredProperty>

@@ -26,9 +26,14 @@ def config_folder = "config"
 def authentication_folder = "authentication"
 //def project_security_folder = "${properties?.entity_name}".concat(config_folder)
 
-def log_text_header = "\n\n\n" + "\n-------------------------------------------------------------------------------\n" + "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" + "\n-------------------------------------------------------------------------------\n\n\n"
-
-def log_text_footer = "\n\n" + "\n-------------------------------------------------------------------------------\n" + "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" + "\n-------------------------------------------------------------------------------\n" + "\n\n\n\n\n"
+def log_text_header =
+        "\n\n\n-------------------------------------------------------------------------------\n" +
+                "\n---------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  STARTING -----------\n" +
+                "\n-------------------------------------------------------------------------------\n\n\n"
+def log_text_footer =
+        "\n\n\n-------------------------------------------------------------------------------\n" +
+                "\n----------- POS-PROCESSOR  -  ARCHETYPE-POST-GENERATE LOG:  ENDING ------------\n" +
+                "\n-------------------------------------------------------------------------------\n\n\n\n\n\n"
 
 def log_text = log_text_header
 
@@ -51,7 +56,7 @@ if (keep_api_test_structure == 'false') {
     deleteFolder(folderTestResourcePath.toFile())
 }
 
-processLogback(
+processLogbackFeatures(
         keep_logback_structure,
         console_type,
         keep_appender_smtp,
@@ -206,14 +211,22 @@ private void deleteElkLogSystemStructure(log_text) {
     deleteFile(dockerElkComposePath.toFile())
 }
 
-private void processLogback(
+private void processLogbackFeatures(
         keep_logback_structure,
         console_type,
         keep_appender_smtp,
         keep_appender_file,
         keep_elk_log_structure,
         log_text) {
-    if (keep_logback_structure == 'false') {
+
+    if (keep_logback_structure == 'false' ||
+            (keep_logback_structure == 'true' &&
+                    console_type == '1' &&
+                    keep_appender_smtp == 'false' &&
+                    keep_appender_file == 'false' &&
+                    keep_elk_log_structure == 'false'
+            )
+    ) {
         Path logbackSpring_Path =
                 Paths.get(request.outputDirectory,
                         request.artifactId,
@@ -261,6 +274,12 @@ private void processLogback(
         log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
         deleteFile(consoleTabular.toFile())
 
+//        O Arquivo "LOGBACK-SPRING.XML" continua existindo E sendo usado,
+//        MAS SEM NENHUMA ESTRUTURA de CUSTOM-CONSOLE(tabular ou granular),
+//        pois sem estrutura de  CUSTOM-CONSOLE, apesar da existencia do "LOGBACK-SPRING.XML"
+//        CONSOLE-DEFAULT do Spring Boot sera acionado
+//        NO CASO DE TESTE("LOGBACK-TEST.XML") o arquivo e removido
+//        E O console do Spring Boot sera acionado
         Path logbackTest_Path =
                 Paths.get(request.outputDirectory,
                         request.artifactId,
@@ -301,7 +320,7 @@ private void processLogback(
         Path stmpPath =
                 Paths.get(request.outputDirectory,
                         request.artifactId,
-                        'src', 'main', 'resources', 'logback-spring-config', 'appender-smtp.xml')
+                        'src', 'main', 'resources', 'logback-spring-config', 'appender-smtp-email.xml')
         log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPath\n"
         deleteFile(stmpPath.toFile())
     }
@@ -311,7 +330,7 @@ private void processLogback(
         Path filePath =
                 Paths.get(request.outputDirectory,
                         request.artifactId,
-                        'src', 'main', 'resources', 'logback-spring-config', 'appender-file.xml')
+                        'src', 'main', 'resources', 'logback-spring-config', 'appender-rolfile-file.xml')
         log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
         deleteFile(filePath.toFile())
     }
@@ -321,7 +340,7 @@ private void processLogback(
         Path logstachPath =
                 Paths.get(request.outputDirectory,
                         request.artifactId,
-                        'src', 'main', 'resources', 'logback-spring-config', 'appender-tcp-logstash.xml')
+                        'src', 'main', 'resources', 'logback-spring-config', 'appender-tcp-elk-logstash.xml')
         log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logstachPath\n"
         deleteFile(logstachPath.toFile())
 
