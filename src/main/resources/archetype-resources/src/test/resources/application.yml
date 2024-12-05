@@ -2,15 +2,19 @@
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
 
-properties_folder: classpath:properties
-protected_properties_folder: classpath:protected_properties
-schemas_contracts_path: classpath:schemas_contracts_paths
+#if(${enable_binding_properties} == "true" and ${enable_binding_properties_tests} == "true")
+properties_folder: classpath:properties_test
+#end
 
 spring:
+  application:
+    name: ${artifactId}
+    version: ${version}
   config:
     import:
-      - ${properties_folder}/i18n_messages.properties
-      - ${schemas_contracts_path}/contracts_entities.properties
-      - ${schemas_contracts_path}/schemas_entities.properties
-      - ${schemas_contracts_path}/schemas_exceptions.properties
-      - ${protected_properties_folder}/authentication_credentials.properties
+#if(${enable_binding_properties} == "true" and ${enable_binding_properties_tests} == "true" and ${list_binding_properties} == "true")
+      - ${properties_folder}/application_list_test.yml
+#end
+#if(${enable_binding_properties} == "true" and ${enable_binding_properties_tests} == "true" and ${map_binding_properties} == "true")
+      - ${properties_folder}/application_map_test.yml
+#end

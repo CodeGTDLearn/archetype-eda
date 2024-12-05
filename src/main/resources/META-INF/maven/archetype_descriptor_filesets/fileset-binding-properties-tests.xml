@@ -1,0 +1,27 @@
+<!-- ______________ -->
+
+
+
+
+
+
+        <!--  FILESET-BINDING-PROPERTIES-TEST.XML __________________________ -->
+        <!-- SRC\TEST\PROPERTIES -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/java/config/properties</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/java/resources/properties_test</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.properties</include>
+            </includes>
+        </fileSet>
+
+
+<!-- ______________ -->

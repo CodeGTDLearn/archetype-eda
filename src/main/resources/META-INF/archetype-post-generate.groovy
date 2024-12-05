@@ -204,7 +204,6 @@ if (keep_binding_properties == 'true' && keep_default_binding_properties == 'fal
             )
     List<String> filesToDelete =
             [
-                    "KeyPropertiesTest.java",
                     "ApplicationPropertiesTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
@@ -224,6 +223,7 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
     List<String> filesToDelete =
             [
                     "ListPropertiesClassTest.java",
+                    "ListPropertiesImmutableClassTest.java",
                     "ListPropertiesRecordTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
@@ -242,6 +242,7 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
     List<String> filesToDelete =
             [
                     "MapPropertiesClassTest.java",
+                    "MapPropertiesImmutableClassTest.java",
                     "MapPropertiesRecordTest.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
@@ -296,7 +297,6 @@ if (keep_binding_properties == 'true' && keep_default_binding_properties == 'fal
 
     List<String> filesToDelete =
             [
-                    "KeyProperties.java",
                     "ApplicationProperties.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
@@ -321,6 +321,7 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
             [
                     "Country.java",
                     "ListPropertiesClass.java",
+                    "ListPropertiesImmutableClass.java",
                     "ListPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
@@ -365,6 +366,7 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
             [
                     "Language.java",
                     "MapPropertiesClass.java",
+                    "MapPropertiesImmutableClass.java",
                     "MapPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)

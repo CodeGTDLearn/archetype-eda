@@ -1,7 +1,7 @@
-nation:
+application:
   property:
-    strategy: Country
-    country:
+    task: Binding Object Properties
+    objects:
       - name: Brazil
         currency: Brazilian Real
       - name: Canada

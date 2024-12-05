@@ -117,6 +117,21 @@
 
 
 
+
+        <!-- PROPERTY-JAVA-VERSION.XML _____________________________________ -->
+        <requiredProperty key="java_version">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+
+
+
+
+
+
+
+
+
+
         <!--  PROPERTY-LOGBACK.XML _________________________________________ -->
         <requiredProperty key="enable_logback">
             <defaultValue></defaultValue>

@@ -11,6 +11,7 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -DartifactId=\"$artifactId\" \
 -Dentity_name=\"$entity_name\" \
 -Dproject_description=\"$project_description\" \
+-Djava_version=\"$java_version\" \
 \
 -Dproperties_filetype=\"$properties_filetype\" \
 \
@@ -18,6 +19,8 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -Ddefault_binding_properties=\"$default_binding_properties\" \
 -Dlist_binding_properties=\"$list_binding_properties\" \
 -Dmap_binding_properties=\"$map_binding_properties\" \
+-Denable_binding_properties_tests=\"$enable_binding_properties_tests\" \
+-Dimmutable_binding_properties=\"$immutable_binding_properties\" \
 \
 -Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
 \

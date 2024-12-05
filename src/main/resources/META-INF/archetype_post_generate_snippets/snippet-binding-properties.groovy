@@ -54,7 +54,8 @@ if (keep_binding_properties == 'true' && keep_default_binding_properties == 'fal
 
     List<String> filesToDelete =
             [
-                    "ApplicationProperties.java"
+                    "ApplicationProperties.java",
+                    "ApplicationPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
     log_text += "\nDEFAULT_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
@@ -76,9 +77,9 @@ if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false'
             )
     List<String> filesToDelete =
             [
-                    "Country.java",
-                    "ListPropertiesClass.java",
-                    "ListPropertiesImmutableClass.java",
+                    "ListObjects.java",
+                    "ListProperties.java",
+                    "ListPropertiesImmutable.java",
                     "ListPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)
@@ -121,9 +122,9 @@ if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false')
             )
     List<String> filesToDelete =
             [
-                    "Language.java",
-                    "MapPropertiesClass.java",
-                    "MapPropertiesImmutableClass.java",
+                    "MapItem.java",
+                    "MapProperties.java",
+                    "MapPropertiesImmutable.java",
                     "MapPropertiesRecord.java"
             ]
     deleteFilesFromList(binding_properties_path, filesToDelete)

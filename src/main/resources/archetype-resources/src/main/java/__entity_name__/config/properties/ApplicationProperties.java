@@ -1,33 +1,28 @@
 package ${package}.config.properties;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Component;
-
-#if(${enable_lombok} == "true")
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 
-@NoArgsConstructor
-@Getter
-@Setter
-#end
 @Component
+@Validated
 @ConfigurationProperties(prefix = "spring.application")
 public class ApplicationProperties {
 
+  @NotEmpty(message = "Property can not be empty")
   private String name;
+
+  @Pattern(
+       message = "Pattern must be N.N.N format",
+       regexp = "^[0-9]+\\.[0-9]+(\\.[0-9])?$")
   private String version;
 
-#if(${enable_lombok} == "false")
   public String getName() {
 
     return name;
-  }
-
-  public String getVersion() {
-    return version;
   }
 
   public void setName(String name) {
@@ -35,9 +30,13 @@ public class ApplicationProperties {
     this.name = name;
   }
 
+  public String getVersion() {
+
+    return version;
+  }
+
   public void setVersion(String version) {
 
     this.version = version;
   }
-#end
 }

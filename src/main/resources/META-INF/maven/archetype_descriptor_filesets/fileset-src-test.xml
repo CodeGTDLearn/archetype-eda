@@ -17,6 +17,7 @@
                 <include>logback-test.xml</include>
 
                 <include>banner.txt</include>
+
             </includes>
         </fileSet>
 

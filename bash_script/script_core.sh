@@ -51,11 +51,11 @@ source "${SCRIPT_FOLDER}\\script_injection.sh"
 
 
 # B) INJECOES DE FUNCOES -------------------------------------------------------
-script_injection "${SCRIPT_FOLDER}" "progress_bar.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "progress_bar_functions.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "general_functions.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_input_processor.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "config_constants.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
 
 
 #-------------------------------------------------------------------------------
@@ -67,16 +67,16 @@ script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTION_LOG
 #-------------------------------------------------------------------------------
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
 script_injection "${SCRIPT_FOLDER}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_attributes_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_properties_filetype.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_binding_properties.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_attributes_inputs.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_binding_properties_inputs.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_logback_manager_inputs.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_docker_input.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_logback_manager_input.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_cpanel_input.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_jwt_authentication_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
-script_injection "${SCRIPT_FOLDER}" "user_test_inputs.sh" $SHOW_INJECTION_LOG
+script_injection "${SCRIPT_FOLDER}" "user_jwt_authentication_input.sh" $SHOW_INJECTION_LOG
 script_injection "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
 
 # C.2) Packages: 'Arvores de Pastas separadas por ".", onde a(s) classe(s) se encontra(m)

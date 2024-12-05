@@ -4,7 +4,7 @@ project_folder_viability_checking() {
 
 # ATENCAO!!!
 # ESSA CONSTANTES DEVE FICAR NESTE LOCAL
-# POIS ELAS SAO USADAS 'ANTES' DA INJECAO DAS 'GENERAL_MESSAGES.SH'
+# POIS ELAS SAO USADAS 'ANTES' DA INJECAO DAS 'GENERAL_MESSAGES_CONSTANTS.SH'
 PRESS_KEY_MESSAGE="Pressione qualquer tecla para continuar..."
 PROJECT_FOLDER_NOT_ALLOWED_MESSAGE="Project creation FOLDER not allowed. Try elsewhere.\n"
 
