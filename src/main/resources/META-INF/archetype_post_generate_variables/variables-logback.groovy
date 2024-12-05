@@ -10,8 +10,9 @@
 
 
 
-// VARIABLE-LOGBACK.GROOVY -----------------------------------------------------
 
+
+// VARIABLE-LOGBACK.GROOVY -----------------------------------------------------
 
 def keep_logback = "${properties?.enable_logback}"
 def console_type = "${properties?.logback_console_type}"

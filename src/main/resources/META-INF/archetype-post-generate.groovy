@@ -48,8 +48,9 @@ def log_text = log_text_header
 
 
 
-// VARIABLE-AUTHENTICATION.GROOVY ----------------------------------------------
 
+
+// VARIABLE-AUTHENTICATION.GROOVY ----------------------------------------------
 
 def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
 
@@ -59,12 +60,17 @@ def authentication_folder = "authentication"
 
 
 
+
+
+
 // VARIABLE-BINDING-PROPERTIES.GROOVY ------------------------------------------
 
 def keep_binding_properties = "${properties?.enable_binding_properties}"
+def keep_map_binding_properties = "${properties?.map_binding_properties}"
+def keep_list_binding_properties = "${properties?.list_binding_properties}"
 def keep_default_binding_properties = "${properties?.default_binding_properties}"
-def keep_list_binding_properties = "${properties?.enable_list_binding_properties}"
-def keep_map_binding_properties = "${properties?.enable_map_binding_properties}"
+
+
 
 
 
@@ -72,8 +78,9 @@ def keep_map_binding_properties = "${properties?.enable_map_binding_properties}"
 
 // VARIABLE-CPANEL.GROOVY ------------------------------------------------------
 
-
 def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system}"
+
+
 
 
 
@@ -81,8 +88,9 @@ def keep_cpanel_elk_log_system = "${properties?.enable_api_cpanel_elk_log_system
 
 // VARIABLE-DOCKER.GROOVY ------------------------------------------------------
 
-
 def keep_docker = "${properties?.enable_docker}"
+
+
 
 
 
@@ -90,8 +98,9 @@ def keep_docker = "${properties?.enable_docker}"
 
 // VARIABLE-EXTRA-POM-DEPENDENCIES.GROOVY --------------------------------------
 
-
 def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
+
+
 
 
 
@@ -99,11 +108,12 @@ def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 
 // VARIABLE-LOGBACK.GROOVY -----------------------------------------------------
 
-
 def keep_logback = "${properties?.enable_logback}"
 def console_type = "${properties?.logback_console_type}"
 def keep_appender_smtp = "${properties?.enable_logback_appender_smtp}"
 def keep_appender_file = "${properties?.enable_logback_appender_file}"
+
+
 
 
 
@@ -117,8 +127,9 @@ def properties_filetype = "${properties?.properties_filetype}"
 
 
 
-// VARIABLE-SRC-TEST-JAVA.GROOVY -----------------------------------------------
 
+
+// VARIABLE-SRC-TEST-JAVA.GROOVY -----------------------------------------------
 
 def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
 
@@ -126,8 +137,9 @@ def keep_src_test_java = "${properties?.enable_folder_src_test_java}"
 
 
 
-// SNIPPET-AUTHENTICATION.GROOVY -----------------------------------------------
 
+
+// SNIPPET-AUTHENTICATION.GROOVY -----------------------------------------------
 
 if (keep_jwt_authentication == 'false') {
 
@@ -165,6 +177,8 @@ if (keep_jwt_authentication == 'false') {
 
 
 
+
+
 // SNIPPET-BINDING-PROPERTIES-TEST.GROOVY --------------------------------------
 
 if (keep_binding_properties == 'false') {
@@ -176,7 +190,62 @@ if (keep_binding_properties == 'false') {
                     'binding_properties_test')
     log_text += "\nFOLDER_BINDING_PROPERTIES_TEST:\n $srcTestJava_bindingPropertiesTestFolder_path\n"
     deleteFolder(srcTestJava_bindingPropertiesTestFolder_path.toFile())
+}
 
+
+
+if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
+
+    Path binding_properties_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'java',
+                    'binding_properties_test'
+            )
+    List<String> filesToDelete =
+            [
+                    "KeyPropertiesTest.java",
+                    "ApplicationPropertiesTest.java"
+            ]
+    deleteFilesFromList(binding_properties_path, filesToDelete)
+    log_text += "\nDEFAULT_BINDING_PROPERTY_TEST - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+
+}
+
+
+
+if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false') {
+
+    Path binding_properties_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'java',
+                    'binding_properties_test')
+    List<String> filesToDelete =
+            [
+                    "ListPropertiesClassTest.java",
+                    "ListPropertiesRecordTest.java"
+            ]
+    deleteFilesFromList(binding_properties_path, filesToDelete)
+    log_text += "\nLIST_BINDING_PROPERTY_TEST - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+}
+
+
+
+if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
+
+    Path binding_properties_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'java',
+                    'binding_properties_test')
+    List<String> filesToDelete =
+            [
+                    "MapPropertiesClassTest.java",
+                    "MapPropertiesRecordTest.java"
+            ]
+    deleteFilesFromList(binding_properties_path, filesToDelete)
+    log_text += "\nMAP_BINDING_PROPERTY_TEST - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
 }
 
 
@@ -186,7 +255,6 @@ if (keep_binding_properties == 'false') {
 
 
 // SNIPPET-BINDING-PROPERTIES.GROOVY -------------------------------------------
-
 
 if (keep_binding_properties == 'false') {
 
@@ -200,11 +268,21 @@ if (keep_binding_properties == 'false') {
                     "properties")
     log_text += "\nFOLDER_BINDING_PROPERTIES:\n $srcMainJava_bindingPropertiesFolder_path\n"
     deleteFolder(srcMainJava_bindingPropertiesFolder_path.toFile())
+
+
+    Path binding_properties_resources_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources',
+                    "properties"
+            )
+    deleteFolder(binding_properties_resources_path.toFile())
+    log_text += "\nBINDING_PROPERTY_RESOURCES - " + "$binding_properties_resources_path\n"
 }
 
 
-if (keep_default_binding_properties == 'false') {
 
+if (keep_binding_properties == 'true' && keep_default_binding_properties == 'false') {
 
     Path binding_properties_path =
             Paths.get(request.outputDirectory,
@@ -215,23 +293,20 @@ if (keep_default_binding_properties == 'false') {
                     config_folder,
                     "properties"
             )
-
 
     List<String> filesToDelete =
             [
                     "KeyProperties.java",
                     "ApplicationProperties.java"
             ]
-
-
     deleteFilesFromList(binding_properties_path, filesToDelete)
-
-
     log_text += "\nDEFAULT_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
+
 }
 
 
-if (keep_list_binding_properties == 'false') {
+
+if (keep_binding_properties == 'true' && keep_list_binding_properties == 'false') {
 
     Path binding_properties_path =
             Paths.get(request.outputDirectory,
@@ -242,20 +317,40 @@ if (keep_list_binding_properties == 'false') {
                     config_folder,
                     "properties"
             )
-
     List<String> filesToDelete =
             [
+                    "Country.java",
                     "ListPropertiesClass.java",
                     "ListPropertiesRecord.java"
             ]
+    deleteFilesFromList(binding_properties_path, filesToDelete)
+    log_text += "\nLIST_BINDING_PROPERTY - " +
+            filesToDelete.toString() + "\\n " +
+            "$binding_properties_path\n"
 
 
-    log_text += "\nLIST_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
-    deleteFilesFromList(filesToDelete, binding_properties_path)
+
+
+    Path binding_properties_resources_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources',
+                    "properties"
+            )
+    List<String> filesToDeleteResources =
+            [
+                    "application_list.properties",
+                    "application_list.yml"
+            ]
+    deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+    log_text += "\nLIST_BINDING_PROPERTY_RESOURCES - " +
+            filesToDeleteResources.toString() + "\\n " +
+            "$binding_properties_resources_path\n"
 }
 
 
-if (keep_map_binding_properties == 'false') {
+
+if (keep_binding_properties == 'true' && keep_map_binding_properties == 'false') {
 
     Path binding_properties_path =
             Paths.get(request.outputDirectory,
@@ -266,24 +361,43 @@ if (keep_map_binding_properties == 'false') {
                     config_folder,
                     "properties"
             )
-
     List<String> filesToDelete =
             [
+                    "Language.java",
                     "MapPropertiesClass.java",
                     "MapPropertiesRecord.java"
             ]
-
-
+    deleteFilesFromList(binding_properties_path, filesToDelete)
     log_text += "\nMAP_BINDING_PROPERTY - " + filesToDelete.toString() + "\\n " + "$binding_properties_path\n"
-    deleteFilesFromList(filesToDelete, binding_properties_path)
+
+
+
+
+
+    Path binding_properties_resources_path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources',
+                    "properties"
+            )
+    List<String> filesToDeleteResources =
+            [
+                    "application_map.properties",
+                    "application_map.yml"
+            ]
+    deleteFilesFromList(binding_properties_resources_path, filesToDeleteResources)
+    log_text += "\nMAP_BINDING_PROPERTY_RESOURCES - " +
+            filesToDeleteResources.toString() + "\\n " +
+            "$binding_properties_resources_path\n"
 }
+
+
 
 
 
 
 
 // SNIPPET-CPANEL.GROOVY -------------------------------------------------------
-
 
 if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
@@ -302,8 +416,9 @@ if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
 
 
 
-// SNIPPET-DOCKER.GROOVY -------------------------------------------------------
 
+
+// SNIPPET-DOCKER.GROOVY -------------------------------------------------------
 
 if (keep_docker == 'false') {
     Path folderDockerPath =
@@ -318,8 +433,9 @@ if (keep_docker == 'false') {
 
 
 
-// SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY ---------------------------------------
 
+
+// SNIPPET-EXTRA-POM-DEPENDENCIES.GROOVY ---------------------------------------
 
 if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 'false') {
 
@@ -419,7 +535,6 @@ if (extra_POM_dependencies.length() > 0 && extra_POM_dependencies.toString() != 
 
 // SNIPPET-LOGBACK.GROOVY ------------------------------------------------------
 
-
 if (keep_logback == 'false' ||
         (keep_logback == 'true' &&
                 console_type == '1' &&
@@ -431,7 +546,8 @@ if (keep_logback == 'false' ||
     Path logbackSpring_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring.xml')
     log_text += "\nlogback-spring.xml -> resources:\n $logbackSpring_Path\n"
     deleteFile(logbackSpring_Path.toFile())
 
@@ -447,7 +563,8 @@ if (keep_logback == 'false' ||
     Path logbackSpringConfig_Path =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config')
+                    'src', 'main', 'resources',
+                    'logback-spring-config')
     log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $logbackSpringConfig_Path\n"
     deleteFolder(logbackSpringConfig_Path.toFile())
 
@@ -462,7 +579,9 @@ if (keep_logback == 'true' && console_type == '1') {
     Path consoleGranularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-console-granular.xml')
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
     deleteFile(consoleGranularFile.toFile())
 
@@ -470,7 +589,9 @@ if (keep_logback == 'true' && console_type == '1') {
     Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-console-layouts-granular.xml')
     log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
     deleteFile(granularLayoutConsoleFile.toFile())
 
@@ -478,7 +599,9 @@ if (keep_logback == 'true' && console_type == '1') {
     Path consoleTabularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-tabular.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-console-tabular.xml')
     log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabularFile\n"
     deleteFile(consoleTabularFile.toFile())
 
@@ -492,7 +615,8 @@ if (keep_logback == 'true' && console_type == '1') {
     Path logbackTestPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'test', 'resources', 'logback-test.xml')
+                    'src', 'test', 'resources',
+                    'logback-test.xml')
     log_text += "\nlogback-test.xml -> test-resources:\n $logbackTestPath\n"
     deleteFile(logbackTestPath.toFile())
 }
@@ -505,7 +629,9 @@ if (keep_logback == 'true' && console_type == '2') {
     Path consoleGranularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-console-granular.xml')
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranularFile\n"
     deleteFile(consoleGranularFile.toFile())
 
@@ -513,7 +639,9 @@ if (keep_logback == 'true' && console_type == '2') {
     Path granularLayoutConsoleFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-console-layouts-granular.xml')
     log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsoleFile\n"
     deleteFile(granularLayoutConsoleFile.toFile())
 }
@@ -526,7 +654,9 @@ if (keep_logback == 'true' && console_type == '3') {
     Path consoleTabularFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-tabular.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-console-tabular.xml')
     log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabularFile\n"
     deleteFile(consoleTabularFile.toFile())
 }
@@ -539,7 +669,9 @@ if (keep_logback == 'true' && keep_appender_smtp == 'false') {
     Path stmpPathFile =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-smtp-email.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-smtp-email.xml')
     log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPathFile\n"
     deleteFile(stmpPathFile.toFile())
 }
@@ -552,7 +684,9 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
     Path rolFilePath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appender-rolfile-file.xml')
+                    'src', 'main', 'resources',
+                    'logback-spring-config',
+                    'appender-rolfile-file.xml')
     log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $rolFilePath\n"
     deleteFile(rolFilePath.toFile())
 }
@@ -567,7 +701,7 @@ if (keep_logback == 'true' && keep_appender_file == 'false') {
 
 def deleteFileType = (properties_filetype == '1') ? '.yml' : '.properties'
 def fileTypeMessage = (properties_filetype == '1') ? 'Delete All YML-FILES' : 'Delete All PROPERTIES-FILES'
-log_text += "\nBINDING_PROPERTIES:\n=> Chosen FileType: " + deleteFileType + " | " + fileTypeMessage
+log_text += "\nBINDING_PROPERTIES:\n=> Message: " +  fileTypeMessage
 
 
 Path srcMainJava_resourcesFolder_path =
@@ -584,6 +718,8 @@ Path srcTestJava_resourcesFolder_path =
                 'src', 'test', 'resources')
 log_text += "\n" + fileTypeMessage + " -> test-resources:\n $srcTestJava_resourcesFolder_path\n"
 deleteFilesByExtensionRecursively(srcTestJava_resourcesFolder_path, deleteFileType)
+
+
 
 
 
@@ -622,6 +758,16 @@ if (keep_src_test_java == 'false') {
 if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 
 // FOOTER ----------------------------------------------------------------------
+
+
+
+
+
+
+
+// ARCHETYPE-FUNCTIONS.GROOVY --------------------------------------------------
+
+// FILE MANAGEMENT FUNCTIONS ---------------------------------------------------
 def deleteFile(File file) {
     if (file.isFile()) file.delete()
 }
@@ -650,42 +796,49 @@ def deleteFilesByExtensionRecursively(Path path, String extension) {
 }
 
 
-def deleteFilesFromList(Path directory, List<String> listFiles) {
+def deleteFilesFromList(Path directory, List<String> files) {
+
+    println "Entrou na funcao deleteFilesFromList"
+
+    files.removeIf { it == null || it.trim() == "" }
 
     // Valida se diretório existe
-    if (!directory.toFile().directory) {
+    if (!directory.toFile().isDirectory()) {
         println "Diretório não encontrado: $directory"
         return
     }
 
     // Processa cada arquivo
-    listFiles.each {
+    files.each {
         fileName ->
             try {
-                def fileToDelete = directory.resolve(fileName)
+                def fileToDelete = directory.resolve(fileName).toFile()
 
-                if (fileToDelete.toFile().exists()) {
+                if (fileToDelete.exists()) {
 
-                    fileToDelete.toFile().delete()
-                    println "Arquivo deletado: $fileName"
+                    fileToDelete.delete()
+                    println "File Found: $fileName"
+                } else {
 
+                    println "File Not Found: $fileName em ${directory.toAbsolutePath()}"
                 }
-                else println "Arquivo não encontrado: $fileName em ${directory.absolutePath}"
-
-
             } catch (Exception e) {
                 println "Erro ao deletar $fileName: ${e.message}"
             }
     }
+
+    println "Saiu da funcao deleteFilesFromList"
 }
 
 
 // FOLDER MANAGEMENT FUNCTIONS -------------------------------------------------
-
 def deleteFolder(File dir) {
     if (dir.isDirectory()) {
-        dir.listFiles().each { file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
-        }
+
+        dir.listFiles()
+                .each {
+                    file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
+                }
     }
     dir.delete()
 }

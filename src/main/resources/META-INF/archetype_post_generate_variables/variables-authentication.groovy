@@ -10,8 +10,9 @@
 
 
 
-// VARIABLE-AUTHENTICATION.GROOVY ----------------------------------------------
 
+
+// VARIABLE-AUTHENTICATION.GROOVY ----------------------------------------------
 
 def keep_jwt_authentication = "${properties?.enable_jwt_authentication}"
 

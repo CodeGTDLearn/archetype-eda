@@ -1,25 +1,27 @@
-package ${package}.config.properties;
+package dev.danvega.props.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
 
+@Component
 @ConfigurationProperties(prefix = "nation.property")
 public class ListPropertiesClass {
 
-  private final String strategy;
-  private final List<Country> country;
+  private String strategy;
+  private List<Country> country;
 
-
-  @ConstructorBinding
-  public ListPropertiesClass(String strategy, List<Country> country) {
+  public void setStrategy(String strategy) {
 
     this.strategy = strategy;
-    this.country = country;
   }
 
+  public void setCountry(List<Country> country) {
+
+    this.country = country;
+  }
 
   public String getStrategy() {
 

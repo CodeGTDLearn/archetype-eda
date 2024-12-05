@@ -12,11 +12,9 @@ import java.nio.file.Path
 
 
 
-
 // ARCHETYPE-FUNCTIONS.GROOVY --------------------------------------------------
 
 // FILE MANAGEMENT FUNCTIONS ---------------------------------------------------
-
 def deleteFile(File file) {
     if (file.isFile()) file.delete()
 }
@@ -45,42 +43,49 @@ def deleteFilesByExtensionRecursively(Path path, String extension) {
 }
 
 
-def deleteFilesFromList(Path directory, List<String> listFiles) {
+def deleteFilesFromList(Path directory, List<String> files) {
+
+    println "Entrou na funcao deleteFilesFromList"
+
+    files.removeIf { it == null || it.trim() == "" }
 
     // Valida se diretório existe
-    if (!directory.toFile().directory) {
+    if (!directory.toFile().isDirectory()) {
         println "Diretório não encontrado: $directory"
         return
     }
 
     // Processa cada arquivo
-    listFiles.each {
+    files.each {
         fileName ->
             try {
-                def fileToDelete = directory.resolve(fileName)
+                def fileToDelete = directory.resolve(fileName).toFile()
 
-                if (fileToDelete.toFile().exists()) {
+                if (fileToDelete.exists()) {
 
-                    fileToDelete.toFile().delete()
-                    println "Arquivo deletado: $fileName"
+                    fileToDelete.delete()
+                    println "File Found: $fileName"
+                } else {
 
+                    println "File Not Found: $fileName em ${directory.toAbsolutePath()}"
                 }
-                else println "Arquivo não encontrado: $fileName em ${directory.absolutePath}"
-
-
             } catch (Exception e) {
                 println "Erro ao deletar $fileName: ${e.message}"
             }
     }
+
+    println "Saiu da funcao deleteFilesFromList"
 }
 
 
 // FOLDER MANAGEMENT FUNCTIONS -------------------------------------------------
-
 def deleteFolder(File dir) {
     if (dir.isDirectory()) {
-        dir.listFiles().each { file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
-        }
+
+        dir.listFiles()
+                .each {
+                    file -> if (file.isDirectory()) deleteFolder(file) else file.delete()
+                }
     }
     dir.delete()
 }

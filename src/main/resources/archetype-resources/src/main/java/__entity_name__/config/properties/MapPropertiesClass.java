@@ -1,22 +1,31 @@
-package ${package}.config.properties;
+package dev.danvega.props.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
 @ConfigurationProperties("languages")
 public class MapPropertiesClass {
 
-  private Map<String, Language> map_country_language;
+  private Map<String, Language> mapCountryLanguage;
 
 
-  public MapPropertiesClass(Map<String, Language> map_country_language) {
+  public MapPropertiesClass(Map<String, Language> mapCountryLanguage) {
 
-    this.map_country_language = map_country_language;
+    this.mapCountryLanguage = mapCountryLanguage;
   }
 
-  public Map<String, Language> getMap_country_language() {
+  public void setMapCountryLanguage(Map<String, Language> mapCountryLanguage) {
 
-    return map_country_language;
+    this.mapCountryLanguage = mapCountryLanguage;
   }
+
+  public Map<String, Language> getMapCountryLanguage() {
+
+    return mapCountryLanguage;
+  }
+
+
 }

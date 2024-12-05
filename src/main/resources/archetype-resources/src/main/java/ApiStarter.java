@@ -6,15 +6,14 @@ package ${package};
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@EnableConfigurationProperties({
-//     ListPropertiesClass.class,
-//     ListPropertiesRecord.class,
-//     MapPropertiesClass.class,
-//     MapPropertiesRecord.class
-//})
-@ConfigurationPropertiesScan(basePackages = "dev.danvega.props.properties")
+#if(${enable_binding_properties} == "true" &&
+   (${list_binding_properties} == "true" ||
+    ${map_binding_properties} == "true"))
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 
+@ConfigurationPropertiesScan(basePackages = "${package}.config.properties")
+#end
 @SpringBootApplication
 public class ApiStarter {
 

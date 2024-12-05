@@ -10,7 +10,8 @@
 
 
 
-// VARIABLE-DOCKER.GROOVY ------------------------------------------------------
 
+
+// VARIABLE-DOCKER.GROOVY ------------------------------------------------------
 
 def keep_docker = "${properties?.enable_docker}"

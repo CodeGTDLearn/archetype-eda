@@ -1,6 +1,5 @@
-package dev.danvega.props.list;
+package dev.danvega.props.properties;
 
-import dev.danvega.props.properties.ListPropertiesClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

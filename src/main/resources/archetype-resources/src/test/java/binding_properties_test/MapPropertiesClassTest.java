@@ -1,7 +1,5 @@
-package dev.danvega.props.list;
+package dev.danvega.props.properties;
 
-import dev.danvega.props.properties.Language;
-import dev.danvega.props.properties.MapPropertiesClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -38,7 +36,7 @@ class MapPropertiesClassTest {
   void shouldGet_mapProperty() {
 
 
-    Map<String, Language> actual_map_items = properties.getMap_country_language();
+    Map<String, Language> actual_map_items = properties.getMapCountryLanguage();
 
 
     IntStream.range(0, actual_map_items.size())

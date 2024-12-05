@@ -30,7 +30,7 @@ create_archetype_post_generate_groovy() {
 #  }
 
   local final_file_content_merged="${archetype_filepath_param}\\${archetype_filename_param}"
-  local initial_lines_to_be_deleted_from_merged_groovy_files='6'
+  local initial_lines_qtde_to_trim_in_merging_groovy_files='6'
 
   local body_folder="${archetype_filepath_param}\\archetype_post_generate_body"
   local variables_folder="${archetype_filepath_param}\\archetype_post_generate_variables"
@@ -95,21 +95,22 @@ create_archetype_post_generate_groovy() {
 
   # 2) Add the 'HEADER_FILE' to the final file
 #  printf '%*s' 10 $'\n' >> "$final_file_content_merged"
-  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$header_file" >> "$final_file_content_merged"
+#
+  sed '1,'${initial_lines_qtde_to_trim_in_merging_groovy_files}'d' "$header_file" >> "$final_file_content_merged"
 
   # 3) Add the 'GENERAL_VARIABLES' to the final file
-  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$global_vars_file" >> "$final_file_content_merged"
+  sed '1,'${initial_lines_qtde_to_trim_in_merging_groovy_files}'d' "$global_vars_file" >> "$final_file_content_merged"
 
   # 4) Merging the "content of each file from ORDERED_FINAL_FILE_LIST" (without extra tags) to the final file
   for file in "${ordered_final_file_list[@]}"; do
-      sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$file" >> "$final_file_content_merged"
+      sed '1,'${initial_lines_qtde_to_trim_in_merging_groovy_files}'d' "$file" >> "$final_file_content_merged"
   done
 
   # 5) Adds the 'FOOTER_FILE' to the final file
-  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$footer_file" >> "$final_file_content_merged"
+  sed '1,'${initial_lines_qtde_to_trim_in_merging_groovy_files}'d' "$footer_file" >> "$final_file_content_merged"
 
   # 6) Adds the 'FUNCTION_FILE' to the final file
-  sed '1,'${initial_lines_to_be_deleted_from_merged_groovy_files}'d' "$function_file" >> "$final_file_content_merged"
+  sed '1,'${initial_lines_qtde_to_trim_in_merging_groovy_files}'d' "$function_file" >> "$final_file_content_merged"
 
   if [ "$show_debug_log_param" = "true" ]; then
 
