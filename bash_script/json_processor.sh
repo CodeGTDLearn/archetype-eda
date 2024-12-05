@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Função principal para analisar um arquivo JSON
 get_json_properties_and_types() {
     local file_path="$1"
 
@@ -26,29 +25,21 @@ get_json_properties_and_types() {
     local result=""
     local first=true
 
-    # Processar as propriedades do primeiro nível
-    while IFS= read -r property; do
-        # Garantir que a chave seja extraída corretamente
-        local key=$(echo "$property" | cut -d ':' -f1 | tr -d '"')
+    # Usar jq para listar todas as chaves e seus tipos diretamente
+    while IFS= read -r line; do
+        # Extrair chave e tipo do resultado do jq
+        local key=$(echo "$line" | cut -d '|' -f1)
+        local value_type=$(echo "$line" | cut -d '|' -f2)
 
         # Ignorar chaves vazias
         if [ -z "$key" ]; then
             continue
         fi
 
-        # Obter o tipo do valor com tratamento de erro
-        local value_type
-        value_type=$(jq -r ".$key | type" "$file_path" 2>/dev/null)
-
-        # Verificar se o tipo foi obtido corretamente
-        if [ -z "$value_type" ] || [ "$value_type" = "null" ]; then
-            value_type="null"
-        fi
-
         case "$value_type" in
             "array")
                 # Verificar se o array está vazio
-                local array_length=$(jq -r ".$key | length" "$file_path")
+                local array_length=$(jq -r ".[\"$key\"] | length" "$file_path")
 
                 if [ "$array_length" -eq 0 ]; then
                     # Array vazio - assumir List<String> como padrão
@@ -60,7 +51,7 @@ get_json_properties_and_types() {
                     fi
                 else
                     # Verificar se contém objetos
-                    local has_objects=$(jq -r ".$key | map(type) | map(. == \"object\") | any" "$file_path" 2>/dev/null)
+                    local has_objects=$(jq -r ".[\"$key\"] | map(type) | map(. == \"object\") | any" "$file_path" 2>/dev/null)
 
                     if [ "$has_objects" = "true" ]; then
                         # Array de objetos - obter nome singular da chave
@@ -80,9 +71,9 @@ get_json_properties_and_types() {
                             result="$result, List<$capitalized>:$key"
                         fi
                     else
-                        # Array de tipos primitivos - verificar primeiro elemento com tratamento de erro
+                        # Array de tipos primitivos
                         local first_elem_type
-                        first_elem_type=$(jq -r ".$key | .[0] | type" "$file_path" 2>/dev/null)
+                        first_elem_type=$(jq -r ".[\"$key\"] | .[0] | type" "$file_path" 2>/dev/null)
 
                         # Se não conseguir determinar o tipo, assumir String
                         if [ -z "$first_elem_type" ] || [ "$first_elem_type" = "null" ]; then
@@ -93,8 +84,8 @@ get_json_properties_and_types() {
                         local java_type
                         case "$first_elem_type" in
                             "number")
-                                # Verificar se é decimal com tratamento de erro
-                                if jq -e ".$key | .[0] | tostring | test(\"\\\\.\") " "$file_path" > /dev/null 2>&1; then
+                                # Verificar se é decimal
+                                if jq -e ".[\"$key\"] | .[0] | tostring | test(\"\\\\.\") " "$file_path" > /dev/null 2>&1; then
                                     java_type="Double"
                                 else
                                     java_type="Integer"
@@ -119,7 +110,7 @@ get_json_properties_and_types() {
                 ;;
 
             "object")
-                # Objeto aninhado - capitalizar nome da propriedade para o tipo com verificação de segurança
+                # Objeto aninhado - capitalizar nome da propriedade para o tipo
                 local obj_name
                 obj_name=$(echo "$key" | sed 's/^./\U&/g')
 
@@ -146,9 +137,9 @@ get_json_properties_and_types() {
                 ;;
 
             "number")
-                # Determinar se é inteiro ou decimal com tratamento de erro
+                # Determinar se é inteiro ou decimal
                 local is_decimal
-                is_decimal=$(jq -e ".$key | tostring | test(\"\\\\.\") " "$file_path" 2>/dev/null)
+                is_decimal=$(jq -e ".[\"$key\"] | tostring | test(\"\\\\.\") " "$file_path" 2>/dev/null)
 
                 if [ "$?" -eq 0 ] && [ "$is_decimal" = "true" ]; then
                     if [ "$first" = true ]; then
@@ -168,9 +159,9 @@ get_json_properties_and_types() {
                 ;;
 
             "string")
-                # Verificar se é um formato especial (data, hora, etc.) com tratamento de erro
+                # Verificar se é um formato especial (data, hora, etc.)
                 local value
-                value=$(jq -r ".$key" "$file_path" 2>/dev/null)
+                value=$(jq -r ".[\"$key\"]" "$file_path" 2>/dev/null)
 
                 # Garantir que value não esteja vazio
                 if [ -z "$value" ]; then
@@ -183,7 +174,7 @@ get_json_properties_and_types() {
                     continue
                 fi
 
-                # Verificar padrões de data/hora/UUID com cuidado extra para evitar falsos positivos
+                # Verificar padrões
                 if [[ "$value" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2} ]]; then
                     if [ "$first" = true ]; then
                         result="LocalDateTime:$key"
@@ -223,7 +214,7 @@ get_json_properties_and_types() {
                 ;;
 
             *)
-                # Null ou outros tipos não reconhecidos - usar String como padrão
+                # Null ou outros tipos não reconhecidos
                 if [ "$first" = true ]; then
                     result="String:$key"
                     first=false
@@ -232,7 +223,7 @@ get_json_properties_and_types() {
                 fi
                 ;;
         esac
-    done < <(jq -r 'keys[] | . + ":"' "$file_path" 2>/dev/null)
+    done < <(jq -r 'to_entries[] | .key + "|" + (.value | type)' "$file_path" 2>/dev/null)
 
     # Verificar se algum resultado foi gerado
     if [ -z "$result" ]; then

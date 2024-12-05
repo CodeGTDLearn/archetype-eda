@@ -7,10 +7,13 @@
 
 
 // ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
-
 def project_package = "${properties?.package}".replace('.', '/')
 
 def entity_name = "${properties?.entity_name}"
+
+def keep_json_entity_contracts = "${properties?.enable_json_entity_contracts}"
+def absolute_path_jsonfile_contract = "${properties?.absolute_path_jsonfile_contract}"
+def json_entity_contracts_folder = "contracts"
 
 def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"

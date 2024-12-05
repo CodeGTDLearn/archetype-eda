@@ -8,5 +8,4 @@
 
 
 // ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
-
 Properties properties = request.properties

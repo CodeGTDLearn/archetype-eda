@@ -2,16 +2,16 @@
 
 # A.1) ARCHETYPE UPDATE - "PRE-PROCESSOR" --------------------------------------
 # A.1.1) RECRIA o "ARCHETYPE-METADATA.XML" e "ARCHETYPE-POST-GENERATE.GROOVY"
-RECREATE_ARCHETYPE=true
+RECREATE_ARCHETYPE=false
 
 # A.1.2) LOG|DEBUG - ARCHETYPE RECREATION
-SHOW_RECREATE_ARCHETYPE_LOG=true
+SHOW_RECREATE_ARCHETYPE_LOG=false
 
 # A.2) LOG|DEBUG MANAGEMENT "PROCESSOR"
-SHOW_INJECTION_LOG=true
-SHOW_MAVEN_BASIC_LOG=true
-SHOW_MAVEN_DEBUG_LOG=true
-SHOW_ARCHETYPE_POS_PROCESSOR_LOG=true
+SHOW_INJECTION_LOG=false
+SHOW_MAVEN_BASIC_LOG=false
+SHOW_MAVEN_DEBUG_LOG=false
+SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
 
 # A.3) PHASES EXECUTED AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
@@ -92,7 +92,7 @@ inject_script "${SCRIPT_FOLDER_WIN}" "user_artifactid_inputs.sh" $SHOW_INJECTION
 project_package=$groupId.$artifactId
 
 # C.3) MONTAGEM das 'SWITCHES -D' para o MVN-CLI
-inject_script "${SCRIPT_FOLDER_WIN}" "mvn_command_line_archetype_generate.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "maven_command_line_archetype_generate.sh" $SHOW_INJECTION_LOG
 
 # C.4) 'REQUIRED-PROPERTY':
 # C.5) 'PROPERTY DE TESTE' do archetype

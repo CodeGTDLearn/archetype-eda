@@ -194,3 +194,72 @@ get_filename_checking_path() {
     # Apenas um echo para retornar o valor
     echo "$nome_arquivo"
 }
+
+display_verticalized_entity_attributes_output() {
+
+    local input="$1"
+    local espacamento=${2:-2}  # Padrão: 2 espaços se não especificado
+
+    local margem=4
+
+    # Remove espaços extras e quebras de linha da entrada
+    input=$(echo "$input" | tr -d '\n' | sed 's/\s\+/ /g')
+
+    # Divide a string em campos individuais
+    # Substitui ', ' por ',' e depois divide por ','
+    local IFS=','
+    local campos
+    read -ra campos <<< "${input//,\ /,}"
+
+    # Cria um array temporário para armazenar os pares tipo-nome
+    local pares=()
+
+    # Processa cada campo
+    for campo in "${campos[@]}"; do
+        # Remove espaços extras
+        campo=$(echo "$campo" | sed 's/^\s*//;s/\s*$//')
+
+        # Divide o campo em tipo e nome
+        if [[ "$campo" =~ : ]]; then
+            local tipo="${campo%%:*}"
+            local nome="${campo#*:}"
+
+            # Adiciona o par tipo-nome ao array
+            pares+=("$tipo:$nome")
+        fi
+    done
+
+    # Calcula o tamanho total de cada par (tipo + nome) e armazena em um novo array
+    local tamanhos_totais=()
+    for ((i=0; i<${#pares[@]}; i++)); do
+        local par="${pares[$i]}"
+        local tipo="${par%%:*}"
+        local nome="${par#*:}"
+        local tamanho_total=$((${#tipo} + ${#nome}))
+        tamanhos_totais+=("$tamanho_total:$i")
+    done
+
+    # Ordena o array de tamanhos totais
+    local IFS=$'\n'
+    local tamanhos_ordenados=($(sort -n <<<"${tamanhos_totais[*]}"))
+    unset IFS
+
+    # Imprime os pares ordenados por tamanho total
+    local resultado=""
+    for tam_idx in "${tamanhos_ordenados[@]}"; do
+        local idx="${tam_idx#*:}"
+        local par="${pares[$idx]}"
+
+        local tipo="${par%%:*}"
+        local nome="${par#*:}"
+
+        # Cria os espaços diretamente aqui em vez de usar uma função aninhada
+        local marcador=${CHECKLIST_MARK}
+        local espacos_margem=$(printf "%${margem}s" "")
+        local espacos=$(printf "%${espacamento}s" "")
+        resultado+="$espacos_margem$marcador$tipo$espacos$nome;\n"
+    done
+
+    #echo -e "$resultado"
+    echo -e "$(echo "$resultado" | sed 's/\\n$//')"
+}

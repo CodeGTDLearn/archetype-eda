@@ -16,5 +16,8 @@
 
         <requiredProperty key="custom_attributes_list"/>
 
+        <requiredProperty key="enable_json_entity_contracts"/>
+
+        <requiredProperty key="absolute_path_jsonfile_contract"/>
 
 <!-- ______________ -->

@@ -29,8 +29,8 @@ validar_json() {
 
     # Validar JSON usando jq
     if jq empty "$arquivo" 2>/dev/null; then
-        echo "  •Validating... $arquivo... $VALID_JSON_FILE_FORMAT_MESSAGE"
-        echo -e "\n"
+        echo "  •Validating '$arquivo'... $VALID_JSON_FILE_FORMAT_MESSAGE"
+        #echo -e "\n"
         return 0
     else
         echo "$INVALID_JSON_FILE_FORMAT_MESSAGE"

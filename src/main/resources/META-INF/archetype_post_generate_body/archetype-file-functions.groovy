@@ -44,3 +44,28 @@ def renameFile(File pathToFile, String newName) {
 
     println "\nSaiu da funcao renameFile - File: $pathToFile"
 }
+
+
+def copyFile(File sourceFile, File destinationFolder) {
+    println "\nEntrou na funcao copyFile - Source: $sourceFile, Destination Folder: $destinationFolder"
+
+    if (!sourceFile.exists() || !sourceFile.isFile()) {
+        println "\nError: Source file $sourceFile invalid or inexistent."
+        return
+    }
+
+    if (!destinationFolder.exists()) {
+        destinationFolder.mkdirs()
+    }
+
+    def destinationFile = new File(destinationFolder, sourceFile.getName())
+
+    try {
+        destinationFile << sourceFile.bytes
+        println "\nFile copied successfully: $sourceFile -> $destinationFile"
+    } catch (Exception e) {
+        println "\nError copying file: ${e.message}"
+    }
+
+    println "\nSaiu da funcao copyFile - Source: $sourceFile, Destination: $destinationFile"
+}

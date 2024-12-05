@@ -10,7 +10,6 @@ import java.nio.file.Files
 
 
 // ARCHETYPE-HEADER.GROOVY -----------------------------------------------------
-
 Properties properties = request.properties
 // -----------------------------------------------------------------------------
 
@@ -21,10 +20,13 @@ Properties properties = request.properties
 
 
 // ARCHETYPE-GLOBAL-VARIABLES.GROOVY -------------------------------------------
-
 def project_package = "${properties?.package}".replace('.', '/')
 
 def entity_name = "${properties?.entity_name}"
+
+def keep_json_entity_contracts = "${properties?.enable_json_entity_contracts}"
+def absolute_path_jsonfile_contract = "${properties?.absolute_path_jsonfile_contract}"
+def json_entity_contracts_folder = "contracts"
 
 def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"
@@ -73,20 +75,23 @@ Path rootGitIgnoreFile = projectRootFolder.resolve(".gitignore")
 
 
 
-// ARCHETYPE-PATH-SRC-MAIN-VARIABLES.GROOVY -----------------------------------
+// ARCHETYPE-PATH-SRC-MAIN-VARIABLES.GROOVY ------------------------------------
 
+// ARCHETYPE-PATH-SRC-MAIN-JAVA ------------------------------------------------
 Path srcMainJava = projectRootFolder.resolve("src").resolve("main").resolve("java")
-Path srcMainResources = projectRootFolder.resolve("src").resolve("main").resolve("resources")
-
-Path srcMainResourcesProperties = srcMainResources.resolve(properties_folder)
 
 Path srcMainJavaEntityFolder = srcMainJava.resolve(project_package).resolve(entity_folder)
 Path srcMainJavaEntityConfigFolder = srcMainJavaEntityFolder.resolve(config_folder)
 
-
 Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(properties_folder)
 Path srcMainJavaEntityConfigPropertiesListFolder = srcMainJavaEntityConfigPropertiesFolder.resolve(list_properties_folder)
 Path srcMainJavaEntityConfigPropertiesMapFolder = srcMainJavaEntityConfigPropertiesFolder.resolve(map_properties_folder)
+
+// ARCHETYPE-PATH-SRC-MAIN-RESOURCES -------------------------------------------
+Path srcMainResources = projectRootFolder.resolve("src").resolve("main").resolve("resources")
+Path srcMainResourcesProperties = srcMainResources.resolve(properties_folder)
+Path srcMainResourcesContracts = srcMainResources.resolve(json_entity_contracts_folder)
+Path jsonfileEntityContractSourcePath = Paths.get(absolute_path_jsonfile_contract)
 
 // -----------------------------------------------------------------------------
 
@@ -95,19 +100,22 @@ Path srcMainJavaEntityConfigPropertiesMapFolder = srcMainJavaEntityConfigPropert
 
 
 
-// ARCHETYPE-PATH-SRC-TEST-VARIABLES.GROOVY -----------------------------------
+// ARCHETYPE-PATH-SRC-TEST-VARIABLES.GROOVY ------------------------------------
 
+// ARCHETYPE-PATH-SRC-TEST-JAVA ------------------------------------------------
 Path srcTestJava = projectRootFolder.resolve("src").resolve("test").resolve("java")
-Path srcTestResources = projectRootFolder.resolve("src").resolve("test").resolve("resources")
 
 Path srcTestJavaEntityConfigPropertiesFolder = srcTestJava
         .resolve(entity_folder)
         .resolve(config_folder)
         .resolve(properties_folder)
 
-Path srcTestResourcesPropertiesFolder = srcTestResources.resolve(properties_folder)
 Path srcTestJavaEntityConfigPropertiesListFolder = srcTestJavaEntityConfigPropertiesFolder.resolve(list_properties_folder)
 Path srcTestJavaEntityConfigPropertiesMapFolder = srcTestJavaEntityConfigPropertiesFolder.resolve(map_properties_folder)
+
+// ARCHETYPE-PATH-SRC-TEST-RESOURCES -------------------------------------------
+Path srcTestResources = projectRootFolder.resolve("src").resolve("test").resolve("resources")
+Path srcTestResourcesPropertiesFolder = srcTestResources.resolve(properties_folder)
 
 // -----------------------------------------------------------------------------
 
@@ -829,6 +837,28 @@ deleteFilesByExtensionRecursivelyFromFolder(srcTestResources, deleteFileType)
 
 
 
+// SNIPPET-SRC-MAIN-RESOURCES.GROOVY
+if (keep_json_entity_contracts == 'false') {
+
+    log_text += "\nFOLDER_SRC_MAIN_RESOURCES_CONTRACTS:\n $srcMainResourcesContracts\n"
+    deleteFolder(srcMainResourcesContracts.toFile())
+}
+
+if (keep_json_entity_contracts == 'true') {
+
+    log_text += "\nCopy contract toFOLDER_SRC_MAIN_RESOURCES_CONTRACTS:\n" +
+            " from: $absolute_path_jsonfile_contract\n"+
+            " to: $srcMainResourcesContracts\n"
+    copyFile(jsonfileEntityContractSourcePath.toFile(),srcMainResourcesContracts.toFile())
+}
+// -----------------------------------------------------------------------------
+
+
+
+
+
+
+
 // SNIPPET-SRC-TEST-JAVA.GROOVY
 if (keep_src_test_java == 'false') {
 
@@ -895,6 +925,31 @@ def renameFile(File pathToFile, String newName) {
     }
 
     println "\nSaiu da funcao renameFile - File: $pathToFile"
+}
+
+
+def copyFile(File sourceFile, File destinationFolder) {
+    println "\nEntrou na funcao copyFile - Source: $sourceFile, Destination Folder: $destinationFolder"
+
+    if (!sourceFile.exists() || !sourceFile.isFile()) {
+        println "\nError: Source file $sourceFile invalid or inexistent."
+        return
+    }
+
+    if (!destinationFolder.exists()) {
+        destinationFolder.mkdirs()
+    }
+
+    def destinationFile = new File(destinationFolder, sourceFile.getName())
+
+    try {
+        destinationFile << sourceFile.bytes
+        println "\nFile copied successfully: $sourceFile -> $destinationFile"
+    } catch (Exception e) {
+        println "\nError copying file: ${e.message}"
+    }
+
+    println "\nSaiu da funcao copyFile - Source: $sourceFile, Destination: $destinationFile"
 }
 
 // -----------------------------------------------------------------------------

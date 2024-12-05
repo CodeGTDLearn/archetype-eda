@@ -147,6 +147,9 @@
 
         <requiredProperty key="custom_attributes_list"/>
 
+        <requiredProperty key="enable_json_entity_contracts"/>
+
+        <requiredProperty key="absolute_path_jsonfile_contract"/>
 
 
 
@@ -486,6 +489,15 @@
             <includes>
                 <include>app.key</include>
                 <include>app.pub</include>
+            </includes>
+        </fileSet>
+
+
+        <!-- SRC\MAIN\RESOURCES\CONTRACTS -->
+        <fileSet filtered="false" encoding="UTF-8">
+            <directory>src/main/resources/contracts</directory>
+            <includes>
+                <include>**/*.json</include>
             </includes>
         </fileSet>
 

@@ -2,7 +2,7 @@
 
 # 1) PROMPT
 # 1.1) ENTITY CREATION OPTIONS
-ENTITY_OPTIONS="${TOPIC_MARK}1)Manual\n${TOPIC_MARK}2)JSON Converter\n"
+ENTITY_OPTIONS="${TOPIC_MARK}1)Manual\n${TOPIC_MARK}2)JSON file\n"
 ENTITY_CREATION_OPTIONS_PROMPT="${ITEM_MARK}'Entity Creation':\n${ENTITY_OPTIONS}"
 ENTITY_OPT_INTERVAL="1-2"
 
@@ -12,17 +12,19 @@ ENABLE_CUSTOM_ATTRIBUTES_PROMPT="${TOPIC_MARK}Add 'Custom Attributes'"
 CUSTOM_ATTRIBUTES_LIST_PROMPT="${OPTION_MARK}Provide the 'Attributes'"
 
 # 1.3) JSON CONVERTER ENTITY
-JSON_PATH_PROMPT="\n${TOPIC_MARK}Enter 'JSON' file location"
+JSON_PATH_PROMPT="\n${TOPIC_MARK}Enter file location"
+JSON_PROCESSING_PROMPT="${TOPIC_MARK}Creating 'Entity from JSON':"
 
 # 2) VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
 # 2.1) CREATION SPECIFIC VARIABLES
 custom_attributes_list="false"
 entity_creation_option="1"
 entity_name=""
-enable_custom_attributes=""
+enable_custom_attributes="false"
+enable_json_entity_contracts="false"
 json_file_path=""
-absolute_path_jsonfile=""
-RESULTADO="false"
+absolute_path_jsonfile_contract=""
+json_file_found="false"
 
 
 # 2.2) ENTITY CREATION OPTIONS
@@ -47,22 +49,27 @@ fi
 # 2.4) JSON CONVERTER ENTITY
 if [[ "$entity_creation_option" -eq 2 ]]; then
 
-  while [ "$RESULTADO" = "false" ]; do
+  while [ "$json_file_found" = "false" ]; do
     json_file_path=$(get_user_input_or_default_value "path_linux_json" "/json/model.json" "$JSON_PATH_PROMPT")
-    absolute_path_jsonfile=$(pwd)$json_file_path
-    RESULTADO=$(check_file_existence "$absolute_path_jsonfile" "Invalid Path or File not found. Try again\n")
+    absolute_path_jsonfile_contract=$(pwd)$json_file_path
+    json_file_found=$(check_file_existence "$absolute_path_jsonfile_contract" "Invalid Path or File not found. Try again\n")
   done
+  validar_json "$absolute_path_jsonfile_contract"
 
-  validar_json "$absolute_path_jsonfile"
-  entity_name=$(get_filename_checking_path "$absolute_path_jsonfile")
-  echo -e "${OPTION_MARK}Entity Name: ${entity_name}"
-  custom_attributes_list=$(get_json_properties_and_types "$absolute_path_jsonfile" "false")
-  echo -e "${OPTION_MARK}Entity Attributes: ${custom_attributes_list}\n"
+  echo -e "${JSON_PROCESSING_PROMPT}"
+  entity_name=$(get_filename_checking_path "$absolute_path_jsonfile_contract")
+  echo -e " ${OPTION_MARK}Name: ${entity_name}"
+
+  enable_custom_attributes="true"
+  custom_attributes_list=$(get_json_properties_and_types "$absolute_path_jsonfile_contract" "false")
+  echo -e " ${OPTION_MARK}Attributes:"
+  display_verticalized_entity_attributes_output "${custom_attributes_list}" "3"
+
+  enable_json_entity_contracts="true"
 
   # 2.4.1)ADD PROMPT IN PROGRESS_BAR
-  add_apostrophe_item_in_progress_bar "${DENORMALIZE_EXPLANATION_PROMPT}" "true"
+  add_apostrophe_item_in_progress_bar "${JSON_PROCESSING_PROMPT}" "true"
 fi
-
 
 
 #carrega 'entity_name_package' com um versao 'lowercase' de 'entity_name'

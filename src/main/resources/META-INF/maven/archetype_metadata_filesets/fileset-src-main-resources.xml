@@ -58,4 +58,13 @@
             </includes>
         </fileSet>
 
+
+        <!-- SRC\MAIN\RESOURCES\CONTRACTS -->
+        <fileSet filtered="false" encoding="UTF-8">
+            <directory>src/main/resources/contracts</directory>
+            <includes>
+                <include>**/*.json</include>
+            </includes>
+        </fileSet>
+
 <!-- ______________ -->
