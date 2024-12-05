@@ -30,6 +30,15 @@
         <requiredProperty key="logback_console_type">
             <defaultValue></defaultValue>
         </requiredProperty>
+        <requiredProperty key="enable_logback_appender_logstash">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+        <requiredProperty key="enable_logback_appender_smtp">
+            <defaultValue></defaultValue>
+        </requiredProperty>
+        <requiredProperty key="enable_logback_appender_file">
+            <defaultValue></defaultValue>
+        </requiredProperty>
         <requiredProperty key="custom_attributes_list"/>
         <requiredProperty key="show_archetype_posprocessor_log">
             <defaultValue></defaultValue>

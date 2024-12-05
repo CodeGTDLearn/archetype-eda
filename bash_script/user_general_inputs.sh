@@ -12,10 +12,8 @@ PROJECT_DESCRIPTION_PROMPT="Descricao do projeto"
 # groupid: (https://maven.apache.org/pom.html#Maven_Coordinates)
 # * Company-Domain Invertido "WITHOUT" the 'PROJECT-NAME'/'ARTIFACT_ID'
 groupid=$(user_input_or_default_value "groupid" "com.domain" "$GROUPID_PROMPT")
-cd ..
+project_description=$(user_input_or_default_value "texto" "This is my description" "$PROJECT_DESCRIPTION_PROMPT")
+version=$(user_input_or_default_value "numero" "1.17.1" "$VERSION_PROMPT")
 
 # OBSERVACAO 2
 entity_name=$(user_input_or_default_value "entity_name" "EntityName" "$ENTITY_NAME_PROMPT")
-
-project_description=$(user_input_or_default_value "texto" "This is my description" "$PROJECT_DESCRIPTION_PROMPT")
-version=$(user_input_or_default_value "numero" "1.17.1" "$VERSION_PROMPT")

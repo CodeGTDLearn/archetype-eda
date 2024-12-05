@@ -4,17 +4,7 @@
 
     <!-- 1) APPENDERS IMPORTS _______________________________________________-->
     <import class="ch.qos.logback.core.ConsoleAppender"/>
-    <import class="ch.qos.logback.core.FileAppender"/>
-    <import class="ch.qos.logback.classic.filter.ThresholdFilter"/>
-    <import class="ch.qos.logback.classic.net.SMTPAppender"/>
-    <import class="ch.qos.logback.classic.encoder.JsonEncoder"/>
     <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
-    <import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"/>
-    <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"/>
-    <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
-    <import class="net.logstash.logback.appender.LogstashTcpSocketAppender"/>
-    <import class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"/>
-
 
     <!-- CONSOLE LOG ________________________________________________________-->
     <!-- This pattern MUST faced the '0 Column' in IDE-Editor
@@ -27,7 +17,7 @@ Class: %highlight(%red(%-6class{20})) %n
 Method: %highlight(%red(%-6method)) %n
 Message: %blue(%msg%n) %n
 Exception: %red(%throwable) - %red(%exception) %n"/>
-    <!--    %msg%n%throwable-->
+<!--    %msg%n%throwable-->
     <appender name="CONSOLE" class="ConsoleAppender">
         <encoder class="PatternLayoutEncoder">
             <pattern>${CONSOLE_PATTERN_FORMAT}</pattern>

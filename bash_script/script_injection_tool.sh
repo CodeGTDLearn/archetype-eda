@@ -4,9 +4,9 @@ script_injection() {
 
   local FOLDER="$1"
   local FILE="$2"
-  local DEBUG_LOG="$3"
+  local SHOW_DEBUG_LOG="$3"
 
-  if [ "$DEBUG_LOG" = "true" ]; then
+  if [ "$SHOW_DEBUG_LOG" = "true" ]; then
     echo -e "\n-----> INJECTING: $FILE\n"
   fi
 

@@ -62,7 +62,7 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
 
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        <encoder class="LogstashEncoder"/>
     </appender>
 
 </configuration>

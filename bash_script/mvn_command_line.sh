@@ -19,6 +19,9 @@ maven_command_line="mvn archetype:generate --batch-mode \
 \
 -Denable_logback=\"$enable_logback\" \
 -Dlogback_console_type=\"$logback_console_type\" \
+-Denable_logback_appender_logstash=\"$enable_logback_appender_logstash\" \
+-Denable_logback_appender_smtp=\"$enable_logback_appender_smtp\" \
+-Denable_logback_appender_file=\"$enable_logback_appender_file\" \
 \
 -Denable_docker=\"$enable_docker\" \
 \

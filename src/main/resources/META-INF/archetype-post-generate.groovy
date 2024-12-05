@@ -3,15 +3,18 @@ import java.nio.file.Paths
 
 Properties properties = request.properties
 
-// 1.0) capturando Variaveis oriundas do archetype-metadata.xml
+// 1.0) capturando Variaveis/Properties vindas do "ARCHETYPE-METADATA".xml
 def entity_folder = "${properties?.entity_name}"
-def show_log = "${properties?.show_archetype_posprocessor_log}"
-def keep_test_folder = "${properties?.enable_folder_src_test_java}"
-def keep_logback_file = "${properties?.enable_logback}"
-def logback_console_type = "${properties?.logback_console_type}"
-def keep_jwt_auth_folder = "${properties?.enable_jwt_authentication}"
-def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
+def enable_logback = "${properties?.enable_logback}"
 def keep_docker_folder = "${properties?.enable_docker}"
+def show_log = "${properties?.show_archetype_posprocessor_log}"
+def logback_console_type = "${properties?.logback_console_type}"
+def keep_test_folder = "${properties?.enable_folder_src_test_java}"
+def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
+def keep_jwt_auth_folder = "${properties?.enable_jwt_authentication}"
+def enable_logback_appender_smtp = "${properties?.enable_logback_appender_smtp}"
+def enable_logback_appender_file = "${properties?.enable_logback_appender_file}"
+def enable_logback_appender_logstash = "${properties?.enable_logback_appender_logstash}"
 
 
 // 2.0) Variaveis Operacionais exclusivas deste Script
@@ -51,7 +54,7 @@ if (keep_test_folder == 'false') {
     deleteFolder(folderTestResourcePath.toFile())
 }
 
-if (keep_logback_file == 'false') {
+if (enable_logback == 'false') {
     Path logbackPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
@@ -72,16 +75,9 @@ if (keep_logback_file == 'false') {
                     'src', 'main', 'resources', 'logback-spring-config')
     log_text += "\nFOLDER_LOGBACK-SPRING-CONFIG:\n $folderLogbackSpringConfigPath\n"
     deleteFolder(folderLogbackSpringConfigPath.toFile())
-
-    Path folderELKPath =
-            Paths.get(request.outputDirectory,
-                    request.artifactId,
-                    'ELK')
-    log_text += "\nFOLDER_ELK:\n $folderELKPath\n"
-    deleteFolder(folderELKPath.toFile())
 }
 
-if (keep_logback_file == 'true' && logback_console_type == '1') {
+if (enable_logback == 'true' && logback_console_type == '1') {
 
     Path logbackPath =
             Paths.get(request.outputDirectory,
@@ -119,7 +115,7 @@ if (keep_logback_file == 'true' && logback_console_type == '1') {
     deleteFile(consoleTabular.toFile())
 }
 
-if (keep_logback_file == 'true' && logback_console_type == '2') {
+if (enable_logback == 'true' && logback_console_type == '2') {
 
     Path consoleGranular =
             Paths.get(request.outputDirectory,
@@ -136,7 +132,7 @@ if (keep_logback_file == 'true' && logback_console_type == '2') {
     deleteFile(granularLayoutConsole.toFile())
 }
 
-if (keep_logback_file == 'true' && logback_console_type == '3') {
+if (enable_logback == 'true' && logback_console_type == '3') {
 
     Path consoleTabular =
             Paths.get(request.outputDirectory,
@@ -144,6 +140,50 @@ if (keep_logback_file == 'true' && logback_console_type == '3') {
                     'src', 'main', 'resources', 'logback-spring-config','appenders-console-tabular.xml')
     log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
     deleteFile(consoleTabular.toFile())
+}
+
+if (enable_logback == 'true' && enable_logback_appender_logstash == 'false') {
+
+    Path logstachPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-tcp-logstash.xml')
+    log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logstachPath\n"
+    deleteFile(logstachPath.toFile())
+
+    Path folderELKPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'ELK')
+    log_text += "\nFOLDER_ELK:\n $folderELKPath\n"
+    deleteFolder(folderELKPath.toFile())
+
+    Path dockerElkComposePath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'docker', 'elk-compose.yml')
+    log_text += "\nelk-compose.xml -> docker:\n $dockerElkComposePath\n"
+    deleteFile(dockerElkComposePath.toFile())
+}
+
+if (enable_logback == 'true' && enable_logback_appender_smtp == 'false') {
+
+    Path stmpPath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-smtp.xml')
+    log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPath\n"
+    deleteFile(stmpPath.toFile())
+}
+
+if (enable_logback == 'true' && enable_logback_appender_file == 'false') {
+
+    Path filePath =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config','appenders-file.xml')
+    log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
+    deleteFile(filePath.toFile())
 }
 
 if (keep_jwt_auth_folder == 'false') {

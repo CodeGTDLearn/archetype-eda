@@ -274,24 +274,36 @@ user_input_or_default_value() {
 user_numeric_options_or_default_value() {
 
   local active=$1
-  local default_numeric_option=$2
-  local numeric_options_prompt=$3
-  local numeric_options_interval=$4
+  local numeric_options_prompt=$2
+  local numeric_options_interval=$3
 
+  local default_numeric_option=1
   local input_pattern="numero"
-  local pattern_not_matched_message="$INVALID_INPUT_MESSAGE"
-  local interval_not_matched_message="$INVALID_INPUT_OPTIONS_INTERVAL_MESSAGE"
   local chosen_numeric_option_value
   local is_numeric_option_allowed
+  local intervalMin intervalMax
+  local FUNCTION_INTERNAL_DEBUG="false"
+
+  intervalMin=$(echo "$numeric_options_interval" | cut -d'-' -f1)
+  intervalMax=$(echo "$numeric_options_interval" | cut -d'-' -f2)
 
   if [ "$active" = "false" ]; then
-    read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
+    echo "$default_numeric_option"
     exit 1
+  fi
+
+  #if [ "$FUNCTION_INTERNAL_DEBUG" = "true" ]; then
+  if [[ "${FUNCTION_INTERNAL_DEBUG,,}" = "true" ]]; then
+    echo -e "\n\n\n-----> FUNCTION INTERNAL DEBUG <-----" >&2
+    echo -e "\nFunction: user_numeric_options_or_default_value" >&2
+    echo -e "IntervalMin: $intervalMin" >&2
+    echo -e "IntervalMax: $intervalMax" >&2
+    echo -e "Active: $active" >&2
+    echo -e "\n-------------------------------------\n" >&2
   fi
 
   while true; do
 
-    #read -p "$numeric_options_prompt [$default_numeric_option]: " chosen_numeric_option_value
     read -r -p "$(echo -e "$numeric_options_prompt (ex: $default_numeric_option): ")" chosen_numeric_option_value
 
     # Checa se o valor é vazio ('enter' foi pressionado),
@@ -301,28 +313,21 @@ user_numeric_options_or_default_value() {
       #break
     fi
 
-    interval=(${numeric_options_interval//-/ })
-    min=${interval[0]}
-    max=${interval[1]}
-
-    echo -e "DEBUG LINE - min $min\n"
-    echo -e "DEBUG LINE - max $max\n"
-    echo -e "INVERVAL LINE - max $interval\n"
-
-    if (( chosen_numeric_option_value >= min && chosen_numeric_option_value <= max )); then
+    if (( chosen_numeric_option_value >= intervalMin && chosen_numeric_option_value <= intervalMax )); then
       is_numeric_option_allowed="true"
     else
-      echo -e "\n$interval_not_matched_message"
+      echo -e "\n$$INVALID_INPUT_OPTIONS_INTERVAL_MESSAGE"
     fi
 
     # Checar se o 'pattern-regex' da 'match' E checar é uma palavra reservada do Java
     if [ "$is_numeric_option_allowed" = "true" ] &&
        [ "$(match_input_pattern_with_regex "$input_pattern" "$chosen_numeric_option_value")" = "true" ] &&
        [ "$(is_java_reserved_word "$input_pattern" "$chosen_numeric_option_value")" = "false" ]; then
-      break
+         echo "$chosen_numeric_option_value"
+         break
     else
-      echo -e "$pattern_not_matched_message\n" >&2
-      sync
+         echo -e "$INVALID_INPUT_MESSAGE\n" >&2
+         sync
     fi
 
   done
@@ -436,6 +441,8 @@ artifactId_input() {
 
     if [ -d "$artifactId" ]; then
        echo -e "\n$artifactId_text \"$artifactId\" $ARTIFACT_ID_EXISTS_MESSAGE \n\n$FOLDER_ALREADY_EXISTENT_MESSAGE\n"
+       pwd
+
        ls -l
        echo
     else
