@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration>
-
     <include resource="logback-spring-config/logback-imports.xml" />
-
-    <include resource="logback-spring-config/appenders-file.xml" />
-    <include resource="logback-spring-config/appender-smtp.xml" />
-#if(${enable_logback_appender_logstash} == "true")
-    <include resource="logback-spring-config/appender-tcp-logstash.xml" />
-#end
-    #if(${logback_console_type} == "2")
+#if(${logback_console_type} == "2")
     <include resource="logback-spring-config/appenders-console-tabular.xml" />
 #end
 #if(${logback_console_type} == "3")
     <include resource="logback-spring-config/appenders-console-layouts-granular.xml" />
     <include resource="logback-spring-config/appenders-console-granular.xml" />
+#end
+#if(${enable_api_cpanel_elk_log_system} == "true")
+    <include resource="logback-spring-config/appender-tcp-elk-logstash.xml" />
+#end
+#if(${enable_logback_appender_file} == "true")
+    <include resource="logback-spring-config/appenders-rolfile-file.xml" />
+#end
+#if(${enable_logback_appender_smtp} == "true")
+    <include resource="logback-spring-config/appender-smtp-email.xml" />
 #end
 
     <!-- LOG everything at INFO level -->
@@ -26,38 +28,38 @@
         <appender-ref ref="CONSOLE_BASE_GRANULAR"/>
         <appender-ref ref="CONSOLE_EXCEPTION_GRANULAR"/>
 #end
-#if(${enable_logback_appender_logstash} == "true")
-        <appender-ref ref="LOGSTASH-TCP-SOCKET"/>
-#end
-
-        <appender-ref ref="STANDARD_FILE_ROLLING"/>
-        <appender-ref ref="JSON_FILE_STANDARD"/>
-        <appender-ref ref="JSON_FILE_ROLLING"/>
-
-        <!-- <appender-ref ref="SMTP_EMAIL"/>-->
-
-    </root>
-
-    <!-- LOG "com.entity*" at TRACE level -->
-    <logger name="com.entity" level="trace" additivity="false">
-#if(${logback_console_type} == "2")
-        <appender-ref ref="CONSOLE_BASE_TABULAR"/>
-#end
-#if(${logback_console_type} == "3")
-        <appender-ref ref="CONSOLE_BASE_GRANULAR"/>
-        <appender-ref ref="CONSOLE_EXCEPTION_GRANULAR"/>
-#end
-#if(${enable_logback_appender_logstash} == "true")
-        <appender-ref ref="LOGSTASH-TCP-SOCKET"/>
-#end
-#if(${enable_logback_appender_smtp} == "true")
-       <!-- <appender-ref ref="SMTP_EMAIL"/>-->
+#if(${enable_api_cpanel_elk_log_system} == "true")
+        <appender-ref ref="LOGSTASH-TCP-ELK-LOGSTASH-SOCKET"/>
 #end
 #if(${enable_logback_appender_file} == "true")
         <appender-ref ref="STANDARD_FILE_ROLLING"/>
         <appender-ref ref="JSON_FILE_STANDARD"/>
         <appender-ref ref="JSON_FILE_ROLLING"/>
 #end
-    </logger>
+#if(${enable_logback_appender_smtp} == "true")
+        <!-- <appender-ref ref="SMTP_EMAIL"/>-->
+#end
+    </root>
 
+    <!-- LOG "com.entity*" at TRACE level -->
+    <logger name="com.entity" level="trace" additivity="false">
+#if(${logback_console_type} == "2")
+    <appender-ref ref="CONSOLE_BASE_TABULAR"/>
+#end
+#if(${logback_console_type} == "3")
+        <appender-ref ref="CONSOLE_BASE_GRANULAR"/>
+        <appender-ref ref="CONSOLE_EXCEPTION_GRANULAR"/>
+#end
+#if(${enable_api_cpanel_elk_log_system} == "true")
+        <appender-ref ref="LOGSTASH-TCP-ELK-LOGSTASH-SOCKET"/>
+#end
+#if(${enable_logback_appender_file} == "true")
+        <appender-ref ref="STANDARD_FILE_ROLLING"/>
+        <appender-ref ref="JSON_FILE_STANDARD"/>
+        <appender-ref ref="JSON_FILE_ROLLING"/>
+#end
+#if(${enable_logback_appender_smtp} == "true")
+       <!-- <appender-ref ref="SMTP_EMAIL"/>-->
+#end
+    </logger>
 </configuration>

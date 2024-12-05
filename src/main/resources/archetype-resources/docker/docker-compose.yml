@@ -7,7 +7,7 @@ networks:
 include:
   - db-mongo-compose.yml
   - api-compose.yml
-#if(${enable_logback} == "true" and ${enable_logback_appender_logstash} == "true")
+#if(${enable_logback} == "true" and ${enable_api_cpanel_elk_log_system} == "true")
   - elk-compose.yml
 #end
 #  - nginx-compose.yml

@@ -6,7 +6,7 @@
     <property name="DESTINY_IP" value="logstash"/> <!-- Logstash Compose Service -->
     <property name="DESTINY_PORT" value="5000"/> <!-- Logstash Compose Service Port -->
     <property name="MANDATORY_LOGSTASH_LOWERCASE_PATTERN" value="mylog"/>
-    <appender name="LOGSTASH-TCP-SOCKET" class="LogstashTcpSocketAppender">
+    <appender name="LOGSTASH-TCP-ELK-LOGSTASH-SOCKET" class="LogstashTcpSocketAppender">
 
         <destination>${DESTINY_IP}:${DESTINY_PORT}</destination>
 

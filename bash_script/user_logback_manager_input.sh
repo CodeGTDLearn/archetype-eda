@@ -2,9 +2,9 @@
 
 # PROMPT
 ENABLE_LOGBACK_PROMPT="Enable Custom Logback"
-OPTIONS_PROMPT="-> Select 'Console Style':\n   1)Tabular; 2)Granular"
-NUMERIC_OPTIONS_INTERVAL="1-2"
-ENABLE_SMTP_PROMPT="-> Enable SMTP Appender"
+OPTIONS_PROMPT="-> Select 'Console Style':\n   1)Spring Default; 2)Tabular; 3)Granular"
+NUMERIC_OPTIONS_INTERVAL="1-3"
+ENABLE_SMTP_PROMPT="-> Enable SMTP/Email Appender"
 ENABLE_FILE_PROMPT="-> Enable FILE Appender"
 
 # VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS

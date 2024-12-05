@@ -4,23 +4,26 @@
 #if(${logback_console_type} == "2" ||
     ${logback_console_type} == "3" ||
     ${enable_api_cpanel_elk_log_system} == "true")
+    <!--    Appenders: Custom-Console + ELK Logstash -->
     <import class="ch.qos.logback.core.ConsoleAppender"/>
     <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
     <import class="ch.qos.logback.core.filter.EvaluatorFilter"/>
 #end
 #if(${enable_api_cpanel_elk_log_system} == "true")
+    <!--    Appenders: ELK Logstash -->
     <import class="net.logstash.logback.appender.LogstashTcpSocketAppender"/>
     <import class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"/>
 #end
-#if(${enable_logback_appender_smtp} == "true")
-    <import class="ch.qos.logback.classic.net.SMTPAppender"/>
-    <import class="ch.qos.logback.classic.filter.ThresholdFilter"/>
-#end
 #if(${enable_logback_appender_file} == "true")
+    <!--    Appenders: File/RollingFile -->
     <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
     <import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"/>
     <import class="ch.qos.logback.core.FileAppender"/>
     <import class="ch.qos.logback.classic.encoder.JsonEncoder"/>
 #end
+#if(${enable_logback_appender_smtp} == "true")
+    <!--    Appenders: SMTP/Email -->
+    <import class="ch.qos.logback.classic.net.SMTPAppender"/>
+    <import class="ch.qos.logback.classic.filter.ThresholdFilter"/>
+#end
 </configuration>
-<!--    <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"/>-->

@@ -13,7 +13,6 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -Dproject_description=\"$project_description\" \
 \
 -Denable_folder_src_test_java=\"$enable_folder_src_test_java\" \
--Denable_folder_src_test_resources=\"$enable_folder_src_test_resources\" \
 \
 -Denable_lombok=\"$enable_lombok\" \
 \
@@ -22,8 +21,8 @@ maven_command_line="mvn archetype:generate --batch-mode \
 -Denable_logback_appender_smtp=\"$enable_logback_appender_smtp\" \
 -Denable_logback_appender_file=\"$enable_logback_appender_file\" \
 \
--Denable_api_control_panel=\"$enable_api_control_panel\" \
--Denable_elk_log_system=\"$enable_elk_log_system\" \
+-Denable_api_cpanel=\"$enable_api_cpanel\" \
+-Denable_api_cpanel_elk_log_system=\"$enable_api_cpanel_elk_log_system\" \
 \
 -Denable_docker=\"$enable_docker\" \
 \

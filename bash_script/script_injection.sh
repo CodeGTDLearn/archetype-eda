@@ -6,8 +6,11 @@ script_injection() {
   local FILE="$2"
   local SHOW_DEBUG_LOG="$3"
 
+  local divider="\n--------------------------------------------------------------------->\n"
+
   if [ "$SHOW_DEBUG_LOG" = "true" ]; then
-    echo -e "\n-----> INJECTING: $FILE\n"
+    echo -e "$divider"
+    echo -e "\n-----> INJECTING: $FILE ------ START\n"
   fi
 
   local FOLDER_NOT_FOUND_MESSAGE="Script Folder \'$FOLDER\' NOT FOUND.\n"
@@ -24,4 +27,9 @@ script_injection() {
   fi
 
   source "${FOLDER}\\${FILE}"
+
+    if [ "$SHOW_DEBUG_LOG" = "true" ]; then
+      echo -e "\n-----> INJECTING: $FILE ------ END\n"
+      echo -e "$divider"
+    fi
 }

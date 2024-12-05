@@ -21,7 +21,6 @@ def extra_POM_dependencies = "${properties?.extra_POM_dependencies}"
 
 def keep_jwt_auth_structure = "${properties?.enable_jwt_authentication}"
 
-
 // 2.0) Variaveis Operacionais exclusivas deste Script
 def config_folder = "config"
 def authentication_folder = "authentication"
@@ -58,6 +57,15 @@ if (keep_api_test_structure == 'false') {
 
     deleteFolder(folderTestResourcePath.toFile())
 }
+/*
+
+def conditionalsFile = new File('logback-management.groovy')
+if (conditionalsFile.exists()) {
+    evaluate(conditionalsFile)
+} else {
+    println "Arquivo de condicionais não encontrado!"
+}
+*/
 
 if (keep_logback_structure == 'false') {
     Path logbackSpring_Path =
@@ -89,24 +97,55 @@ if (keep_logback_structure == 'true' && logback_console_type == '1') {
     Path consoleGranular =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-console-granular.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
     log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
     deleteFile(consoleGranular.toFile())
 
     Path granularLayoutConsole =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-console-layouts-granular.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
     log_text += "\nappenders-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
     deleteFile(granularLayoutConsole.toFile())
-}
-
-if (keep_logback_structure == 'true' && logback_console_type == '2') {
 
     Path consoleTabular =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-console-tabular.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-tabular.xml')
+    log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
+    deleteFile(consoleTabular.toFile())
+
+    Path logbackTest_Path =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'test', 'resources', 'logback-test.xml')
+    log_text += "\nlogback-test.xml -> test-resources:\n $logbackTest_Path\n"
+    deleteFile(logbackTest_Path.toFile())
+}
+
+if (keep_logback_structure == 'true' && logback_console_type == '2') {
+
+    Path consoleGranular =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-granular.xml')
+    log_text += "\nAppenders-console-granular.xml -> resources -> logback-spring-config:\n $consoleGranular\n"
+    deleteFile(consoleGranular.toFile())
+
+    Path granularLayoutConsole =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-layouts-granular.xml')
+    log_text += "\nappender-console-layouts-granular.xml -> resources -> logback-spring-config:\n $granularLayoutConsole\n"
+    deleteFile(granularLayoutConsole.toFile())
+}
+
+if (keep_logback_structure == 'true' && logback_console_type == '3') {
+
+    Path consoleTabular =
+            Paths.get(request.outputDirectory,
+                    request.artifactId,
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-console-tabular.xml')
     log_text += "\nAppenders-console-tabular.xml -> resources -> logback-spring-config:\n $consoleTabular\n"
     deleteFile(consoleTabular.toFile())
 }
@@ -116,7 +155,7 @@ if (keep_logback_structure == 'true' && keep_appender_smtp == 'false') {
     Path stmpPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-smtp.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-smtp.xml')
     log_text += "\nAppenders-smtp.xml -> resources -> logback-spring-config:\n $stmpPath\n"
     deleteFile(stmpPath.toFile())
 }
@@ -126,7 +165,7 @@ if (keep_logback_structure == 'true' && keep_appender_file == 'false') {
     Path filePath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-file.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-file.xml')
     log_text += "\nAppenders-file.xml -> resources -> logback-spring-config:\n $filePath\n"
     deleteFile(filePath.toFile())
 }
@@ -136,7 +175,7 @@ if (keep_logback_structure == 'true' && keep_elk_log_system_structure == 'false'
     Path logstachPath =
             Paths.get(request.outputDirectory,
                     request.artifactId,
-                    'src', 'main', 'resources', 'logback-spring-config', 'appenders-tcp-logstash.xml')
+                    'src', 'main', 'resources', 'logback-spring-config', 'appender-tcp-logstash.xml')
     log_text += "\nAppenders-tcp-logstash.xml -> resources -> logback-spring-config:\n $logstachPath\n"
     deleteFile(logstachPath.toFile())
 
@@ -150,6 +189,7 @@ private void deleteElkLogSystemStructure(log_text) {
                     'ELK')
     log_text += "\nFOLDER_ELK:\n $folderELKPath\n"
     deleteFolder(folderELKPath.toFile())
+
 
     Path dockerElkComposePath =
             Paths.get(request.outputDirectory,
