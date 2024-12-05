@@ -44,8 +44,14 @@ match_input_pattern_with_regex() {
     # (ex: org.aa:aa-api:1.7:test, org.bb:bb-api:1.8:runtime)
     dependency) input_patterns="^[a-zA-Z][a-zA-Z0-9,:._-]+$";;
 
-    #path: Path de arquivo/pasta (ex: /home/arquivo.txt ou c:\home\arquivo.txt)
+    #path generico: Path de arquivo/pasta (ex: /home/arquivo.txt ou c:\home\arquivo.txt)
     path) input_patterns="^([a-zA-Z]:)?[\/\\][a-zA-Z0-9._-\/\\]+\/?$";;
+
+    # path_windows_json: Path do Windows terminado com arquivo JSON (ex: C:\arquivo.json)
+    path_windows_json) input_patterns="^[a-zA-Z]:[\/\\].*\.json$";;
+
+    # path_linux_json: Path do Linux terminado com arquivo JSON (ex: /home/arquivo.json)
+    path_linux_json) input_patterns="^\/.*\.json$";;
 
     #boleana: Palavras "true"|"false" em diversos formatos (ex: true|False|TRUE)
     boleana) input_patterns="^(true|false|t|f|T|F|TRUE|FALSE|True|False|tRUE|fALSE|tRuE|fALsE)$";;
@@ -162,6 +168,12 @@ get_user_input_or_default_value() {
       input_value=$defaultValue_onEnterKey_press
       break
     fi
+
+#    result=$(match_input_pattern_with_regex "$matching_pattern" "$input_value")
+#    echo -e "$result deu match????\n" >&2
+#
+#    result=$(is_java_reserved_word "$matching_pattern" "$input_value")
+#    echo -e "$result e reservada???\n" >&2
 
     # Checar se:
     # - o 'pattern-regex' da 'match' E

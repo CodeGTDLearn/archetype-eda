@@ -15,4 +15,4 @@ enable_logback_appender_smtp=$(get_user_input_or_default_value "boleana" "false"
 enable_logback_appender_file=$(get_user_input_or_default_value "boleana" "false" "$ENABLE_FILE_PROMPT" "$enable_logback")
 
 # 3) ADD PROMPT IN PROGRESS_BAR
-add_item_in_progress_bar "${ENABLE_LOGBACK_PROMPT}" "${enable_logback}"
+add_apostrophe_item_in_progress_bar "${ENABLE_LOGBACK_PROMPT}" "${enable_logback}"

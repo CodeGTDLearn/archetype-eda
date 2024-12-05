@@ -7,4 +7,4 @@ ENABLE_LOMBOK_PROMPT="${ITEM_MARK}Enable 'Lombok'"
 enable_lombok=$(get_user_input_or_default_value "boleana" "true" "$ENABLE_LOMBOK_PROMPT")
 
 # 3) ADD PROMPT IN PROGRESS_BAR
-add_item_in_progress_bar "${ENABLE_LOMBOK_PROMPT}" "${enable_lombok}"
+add_apostrophe_item_in_progress_bar "${ENABLE_LOMBOK_PROMPT}" "${enable_lombok}"

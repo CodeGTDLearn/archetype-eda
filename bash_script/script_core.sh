@@ -16,8 +16,8 @@ SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
 # A.3) PHASES EXECUTED AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
 IDE_EXEC_FILE='idea64.exe'
-USE_IDE_ACTIVATION_MANAGER=false
-OPEN_IDE_DIRECTLY=true
+USE_IDE_ACTIVATION_MANAGER=true
+OPEN_IDE_DIRECTLY=false
 EXECUTE_API_TESTS=false
 
 # A.4) ENABLING PROGRESS_BAR
@@ -61,6 +61,7 @@ inject_script "${SCRIPT_FOLDER_WIN}" "general_functions_for_inputs.sh" $SHOW_INJ
 inject_script "${SCRIPT_FOLDER_WIN}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "config_constants.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "json_processor_main_entity.sh" $SHOW_INJECTION_LOG
 
 
 #-------------------------------------------------------------------------------

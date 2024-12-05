@@ -42,4 +42,4 @@ enable_binding_properties_tests=$(get_user_input_or_default_value "boleana" "tru
 fi
 
 # 3) ADD PROMPT IN PROGRESS_BAR
-add_item_in_progress_bar "${ENABLE_BINDING_PROPERTIES_PROMPT}" "${enable_binding_properties}"
+add_apostrophe_item_in_progress_bar "${ENABLE_BINDING_PROPERTIES_PROMPT}" "${enable_binding_properties}"

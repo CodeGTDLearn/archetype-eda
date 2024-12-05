@@ -3,6 +3,10 @@
 #set( $symbol_escape = '\' )
 package ${package}.${entity_name_package};
 
+#if(${enable_denormalization} == "true")
+import ${package}.${entity_name_package}.model.${entity_name};
+#end
+##
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

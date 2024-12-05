@@ -9,4 +9,4 @@ enable_extra_pom_dependencies_addition=$(get_user_input_or_default_value "bolean
 get_extra_pom_dependencies_addition_input
 
 # 3) ADD PROMPT IN PROGRESS_BAR
-add_item_in_progress_bar "${ENABLE_EXTRA_POM_DEPENDENCIES_PROMPT}" "${enable_extra_pom_dependencies_addition}"
+add_apostrophe_item_in_progress_bar "${ENABLE_EXTRA_POM_DEPENDENCIES_PROMPT}" "${enable_extra_pom_dependencies_addition}"

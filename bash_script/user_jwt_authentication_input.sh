@@ -7,4 +7,4 @@ ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT="${ITEM_MARK}Enable Security 'JWT 
 enable_jwt_authentication=$(get_user_input_or_default_value "boleana" "false" "$ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT")
 
 # 3) ADD PROMPT IN PROGRESS_BAR
-add_item_in_progress_bar "${ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT}" "${enable_jwt_authentication}"
+add_apostrophe_item_in_progress_bar "${ENABLE_SECURITY_AUTHENTICATION_SUPPORT_PROMPT}" "${enable_jwt_authentication}"

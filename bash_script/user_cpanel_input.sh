@@ -13,4 +13,4 @@ if [[ "$enable_logback" = "true" && "$enable_api_cpanel" = "true" ]]; then ENABL
 enable_api_cpanel_elk_log_system=$(get_user_input_or_default_value "boleana" "false" "$ENABLE_CPANEL_ELK_OPTION_PROMPT" "$ENABLE_ELK_OPTION")
 
 # 3) ADD PROMPT IN PROGRESS_BAR
-add_item_in_progress_bar "${ENABLE_API_CONTROL_PANEL_PROMPT}" "${enable_api_cpanel}"
+add_apostrophe_item_in_progress_bar "${ENABLE_API_CONTROL_PANEL_PROMPT}" "${enable_api_cpanel}"

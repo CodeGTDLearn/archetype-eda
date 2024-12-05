@@ -42,6 +42,8 @@ open_ide_manager() {
   local ide_execution_file=$4
   local show_basic_log=$5
 
+#  local maximizeWindows=" -WindowStyle Maximized"
+
   local ide_full_path=$ide_execution_folder$ide_execution_file
 
   local divider="\n--------------------------------------------------------------------->\n"
@@ -68,15 +70,15 @@ open_ide_manager() {
   local current_path=$(provide_os_path)
 #  echo -e "DEBUG LINE - current_path $current_path\n"
 
-  local ARCHETYPE_PATH
+  local OPEN_IDE_TARGETING_ARCHETYPE_PATH
 
   if [ -f "$ide_full_path" ]; then
-#       echo -e "DEBUG LINE - ide_Exec_path+file ${ide_execution_folder}${ide_execution_file}\n"
-      # read -p "Pressione Enter para continuar..."
+     #echo -e "DEBUG LINE - ide_Exec_path+file ${ide_execution_folder}${ide_execution_file}\n"
+     #read -p "Pressione Enter para continuar..."
 
-      ARCHETYPE_PATH="$ide_execution_file \"$current_path\\$artifactId\" ; exit"
-#      echo -e "DEBUG LINE - ARCHETYPE_PATH $ARCHETYPE_PATH\n"
-      #read -p "Pressione Enter para continuar..."
+    OPEN_IDE_TARGETING_ARCHETYPE_PATH="$ide_execution_file \"$current_path\\$artifactId\" ; exit"
+    #echo -e "DEBUG LINE - OPEN_IDE_TARGETING_ARCHETYPE_PATH $OPEN_IDE_TARGETING_ARCHETYPE_PATH\n"
+    #read -p "Pressione Enter para continuar..."
 
   else
       echo -e "\n\nERROR in ${ide_execution_folder}${ide_execution_file}, \nplease check it out. IDE execution aborted
@@ -86,7 +88,7 @@ open_ide_manager() {
   fi
 
   if [ "$open_ide_directly_no_option" = "true" ]; then
-    eval "$ARCHETYPE_PATH"
+    eval "$OPEN_IDE_TARGETING_ARCHETYPE_PATH"
     # read -p "$(echo -e "\n$FINISH_PROMPT_MESSAGE")"
     exit 1
   fi
@@ -101,7 +103,7 @@ open_ide_manager() {
     read -p "$options_prompt" option
 
     case $option in
-       1) eval "$ARCHETYPE_PATH";;
+       1) eval "$OPEN_IDE_TARGETING_ARCHETYPE_PATH";;
        2) exit 0 ;;
        *) echo "$invalid_option_message" ;;
     esac
@@ -159,4 +161,36 @@ colorize_delimited_text() {
     fi
 
     printf "%s" "$result"
+}
+
+check_file_existence() {
+    local full_absolute_path="$1"
+    local mensagem_erro="$2"
+
+    local retorno="true"
+
+    if [[ ! -f "$full_absolute_path" ]]; then
+        echo -e "$mensagem_erro" >&2  # Erro para stderr
+        retorno="false"
+    fi
+
+    # Apenas um echo para retornar o valor
+    echo "$retorno"
+}
+
+get_filename() {
+    local full_absolute_path="$1"
+
+    local nome_arquivo="null"
+
+    RESULTADO=$(check_file_existence "$full_absolute_path" "Invalid Path or File not found. Try again\n")
+
+    if [ "$RESULTADO" = "true" ]; then
+      nome_arquivo=$(basename -- "$full_absolute_path")
+      nome_arquivo=${nome_arquivo%.*}
+      nome_arquivo=${nome_arquivo^}
+    fi
+
+    # Apenas um echo para retornar o valor
+    echo "$nome_arquivo"
 }

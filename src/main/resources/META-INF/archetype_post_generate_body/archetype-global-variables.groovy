@@ -11,6 +11,7 @@
 def project_package = "${properties?.package}".replace('.', '/')
 
 def entity_name = "${properties?.entity_name}"
+def enable_denormalization = "${properties?.enable_denormalization}"
 
 def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-add_item_in_progress_bar() {
+add_apostrophe_item_in_progress_bar() {
   local input_text_prompt="$1"
   local proceed_with_function="$2"
 

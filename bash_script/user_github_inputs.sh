@@ -13,4 +13,4 @@ git_url_repo=$(get_user_input_or_default_value "git_url" "https://github.com/you
 git_branch_repo=$(get_user_input_or_default_value "texto" "main" "$GIT_BRANCH_PROMPT" "$enable_git_support")
 
 # 3) ADD PROMPT IN PROGRESS_BAR
-add_item_in_progress_bar "${GIT_REPO_PROMPT}" "${enable_git_support}"
+add_apostrophe_item_in_progress_bar "${GIT_REPO_PROMPT}" "${enable_git_support}"

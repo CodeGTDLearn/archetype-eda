@@ -16,5 +16,7 @@
 
         <requiredProperty key="custom_attributes_list"/>
 
+        <requiredProperty key="enable_denormalization"/>
+
 
 <!-- ______________ -->
