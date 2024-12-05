@@ -4,10 +4,6 @@
 package ${package}.${entity_name_package};
 
 
-#if(${enable_denormalization} == "true")
-import ${package}.${entity_name_package}.model.${entity_name};
-#end
-##
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

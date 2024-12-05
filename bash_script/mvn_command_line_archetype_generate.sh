@@ -14,7 +14,6 @@ maven_command_line_arch_generate_var="mvn archetype:generate --batch-mode \
 \
 -Dentity_name=\"$entity_name\" \
 -Dentity_name_package=\"$entity_name_package\" \
--Denable_denormalization=\"$enable_denormalization\" \
 \
 -Dapi_port=\"$api_port\" \
 -Denable_git_support=\"$enable_git_support\" \

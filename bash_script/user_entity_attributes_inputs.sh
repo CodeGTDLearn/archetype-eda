@@ -13,7 +13,6 @@ CUSTOM_ATTRIBUTES_LIST_PROMPT="${OPTION_MARK}Provide the 'Attributes'"
 
 # 1.3) JSON CONVERTER ENTITY
 JSON_PATH_PROMPT="\n${TOPIC_MARK}Enter 'JSON' file location"
-ENABLE_DENORMALIZATION_PROMPT="${TOPIC_MARK}Adicionar entidades colecionadas/aninhadas ('Denormalizar')"
 
 # 2) VARIAVEIS DE SWITCHES DO MVN CLI + INPUTS
 # 2.1) CREATION SPECIFIC VARIABLES
@@ -22,7 +21,6 @@ entity_creation_option="1"
 entity_name=""
 enable_custom_attributes=""
 json_file_path=""
-enable_denormalization="false"
 absolute_path_jsonfile=""
 RESULTADO="false"
 
@@ -57,17 +55,9 @@ if [[ "$entity_creation_option" -eq 2 ]]; then
 
   validar_json "$absolute_path_jsonfile"
   entity_name=$(get_filename_checking_path "$absolute_path_jsonfile")
-  echo -e "  ${OPTION_MARK}Entity Name extracted: ${entity_name}"
-
-#  if [[ $(validar_json "$absolute_path_jsonfile") -eq 0 ]]; then
-#    echo -e "JSON-File is invalid.\n"
-#    exit 1
-#  fi
-
-#  custom_attributes_list=$(get_json_properties_and_types "$absolute_path_jsonfile" "false")
-#  echo -e "  ${OPTION_MARK}Entity Attributes extracted: ${custom_attributes_list}\n"
-
-  enable_denormalization=$(get_user_input_or_default_value "boleana" "false" "$ENABLE_DENORMALIZATION_PROMPT")
+  echo -e "${OPTION_MARK}Entity Name: ${entity_name}"
+  custom_attributes_list=$(get_json_properties_and_types "$absolute_path_jsonfile" "false")
+  echo -e "${OPTION_MARK}Entity Attributes: ${custom_attributes_list}\n"
 
   # 2.4.1)ADD PROMPT IN PROGRESS_BAR
   add_apostrophe_item_in_progress_bar "${DENORMALIZE_EXPLANATION_PROMPT}" "true"

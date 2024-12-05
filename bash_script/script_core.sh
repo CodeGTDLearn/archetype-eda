@@ -2,16 +2,16 @@
 
 # A.1) ARCHETYPE UPDATE - "PRE-PROCESSOR" --------------------------------------
 # A.1.1) RECRIA o "ARCHETYPE-METADATA.XML" e "ARCHETYPE-POST-GENERATE.GROOVY"
-RECREATE_ARCHETYPE=false
+RECREATE_ARCHETYPE=true
 
 # A.1.2) LOG|DEBUG - ARCHETYPE RECREATION
-SHOW_RECREATE_ARCHETYPE_LOG=false
+SHOW_RECREATE_ARCHETYPE_LOG=true
 
 # A.2) LOG|DEBUG MANAGEMENT "PROCESSOR"
-SHOW_INJECTION_LOG=false
-SHOW_MAVEN_BASIC_LOG=false
-SHOW_MAVEN_DEBUG_LOG=false
-SHOW_ARCHETYPE_POS_PROCESSOR_LOG=false
+SHOW_INJECTION_LOG=true
+SHOW_MAVEN_BASIC_LOG=true
+SHOW_MAVEN_DEBUG_LOG=true
+SHOW_ARCHETYPE_POS_PROCESSOR_LOG=true
 
 # A.3) PHASES EXECUTED AFTER SCRIPT EXECUTION
 IDE_EXEC_FILE_FOLDER='C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3\bin\'
@@ -62,7 +62,7 @@ inject_script "${SCRIPT_FOLDER_WIN}" "input_processor_functions.sh" $SHOW_INJECT
 inject_script "${SCRIPT_FOLDER_WIN}" "config_constants.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "general_messages_constants.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "json_validator.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "json_processor_main_entity.sh" $SHOW_INJECTION_LOG
+inject_script "${SCRIPT_FOLDER_WIN}" "json_processor.sh" $SHOW_INJECTION_LOG
 
 
 #-------------------------------------------------------------------------------
