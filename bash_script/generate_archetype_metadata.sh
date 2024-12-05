@@ -8,14 +8,13 @@ create_archetype_metadata() {
   local show_debug_log_param=$4
 
   local divider="\n--------------------------------------------------------------------->\n"
-  local log_file_text=""
 
   if [ "$proceed_with_function_param" = "false" ]; then
     return 1
   fi
 
   local archetype_body_folder="${archetype_metadata_file_path_param}\\archetype_descriptor_body"
-  local division_properties_filesets_file="${archetype_body_folder}\\archetype-transition.xml"
+  local transition_properties_filesets_file="${archetype_body_folder}\\archetype-transition.xml"
   local header_file="${archetype_body_folder}\\archetype-header.xml"
   local footer_file="${archetype_body_folder}\\archetype-footer.xml"
 
@@ -24,80 +23,90 @@ create_archetype_metadata() {
 
   mapfile -t file_sets_files < <(ls -1 "${file_sets_folder}")
   mapfile -t req_properties_files < <(ls -1 "${req_properties_folder}")
-  local ordered_intermediate_files=("${req_properties_files[@]}" "${division_properties_filesets_file}" "${file_sets_files[@]}")
+  local ordered_intermediate_files=("${req_properties_files[@]}" "${transition_properties_filesets_file}" "${file_sets_files[@]}")
 
-  # Criando o array combinado
+  # Creating the combined array
   local ordered_intermediate_files=()
 
-  # 1. Adiciona os arquivos de propriedades
+  # 1. Add property files
   for file in "${req_properties_files[@]}"; do
-      ordered_intermediate_files+=("${req_properties_folder}/${file}")
+      if [[ "$file" =~ \.xml$ ]] &&
+         ( [[ "$file" =~ property- ]] ||
+           [[ "$file" =~ fileset- ]] ||
+           [[ "$file" =~ transition ]] ||
+           [[ "$file" =~ header ]] ||
+           [[ "$file" =~ footer ]]
+         ); then
+         ordered_intermediate_files+=("${req_properties_folder}/${file}")
+      fi
   done
 
-  # 2. Adiciona o arquivo de transição
-  ordered_intermediate_files+=("${division_properties_filesets_file}")
+  # 2. Add the transition file
+  ordered_intermediate_files+=("${transition_properties_filesets_file}")
 
-  # 3. Adiciona os arquivos de filesets
+  # 3. Add the fileset files
   for file in "${file_sets_files[@]}"; do
-      ordered_intermediate_files+=("${file_sets_folder}/${file}")
+      if [[ "$file" =~ \.xml$ ]] &&
+         ( [[ "$file" =~ property- ]] ||
+           [[ "$file" =~ fileset- ]] ||
+           [[ "$file" =~ transition ]] ||
+           [[ "$file" =~ header ]] ||
+           [[ "$file" =~ footer ]]
+         ); then
+         ordered_intermediate_files+=("${file_sets_folder}/${file}")
+      fi
   done
 
-  # Debug para verificar o conteúdo de cada array antes do merge
+  # Debug to check the content of each array before merging
   if [ "$show_debug_log_param" = "true" ]; then
-    echo "Conteúdo de req_properties_files:"
+    echo "Req_properties_files content:"
     printf '%s\n' "${req_properties_files[@]}"
 
-    echo -e "\nArquivo de transição:"
-    echo "$division_properties_filesets_file"
+    echo -e "\nTransition File:"
+    echo "$transition_properties_filesets_file"
 
-    echo -e "\nConteúdo de file_sets_files:"
+    echo -e "\nFile_sets_files content:"
     printf '%s\n' "${file_sets_files[@]}"
 
-    echo -e "\nArray final ordenado:"
+    echo -e "\nOrdered Final Array:"
     printf '%s\n' "${ordered_intermediate_files[@]}"
   fi
 
   local output_file="${archetype_metadata_file_path_param}\\${archetype_metadata_file_name_param}"
 
-  # Verifica existencia dos arquivos necessários existem
-  if [[ ! -f "$header_file" ]] || [[ ! -f "$footer_file" ]]; then
-    echo "ERROR_BODY_FILES - NOT FOUND - ${ARCHETYPE_HEADER_OR_FOOTER_NOT_FOUND_MESSAGE}${archetype_metadata_file_path_param}!"
+  # Checks if necessary files exist
+  if [[ ! -f "$header_file" ]] ||
+     [[ ! -f "$transition_properties_filesets_file" ]] ||
+     [[ ! -f "$footer_file" ]]; then
+    echo "ERROR_BODY_FILES - NOT FOUND - ${ARCHETYPE_BODY_ITEMS_NOT_FOUND_MESSAGE}${archetype_metadata_file_path_param}!"
     echo -e "\nType any 'key' to exit."
     read -n 1 -s
     exit 1
   fi
 
-  for file in "${ordered_intermediate_files[@]}"; do
-    if [[ ! -f "$file" ]]; then
-      echo "ERROR_INTERMEDIATE_FILES - NOT FOUND - ${ARCHETYPE_PROPERTY_OR_FILESET_NOT_FOUND_MESSAGE}$file"
-      echo -e "\nType any 'key' to exit."
-      read -n 1 -s
-      exit 1
-    fi
-  done
-
-  # Cria/Sobreescreve o arquivo de saída e adiciona o cabeçalho
+  # Create/Overwrite the output file and add the header
   cat "$header_file" > "$output_file"
-  log_file_text+="BODY ITEM - HEADER:\n ${header_file} \n \n"
 
-  # Mergeando o conteúdo de cada arquivo intermediário (sem tags extras)
+  # Merging the content of each intermediate file (without extra tags)
   for file in "${ordered_intermediate_files[@]}"; do
-    log_file_text+="INTERMEDIATE ITEMS - MERGED: ${file} \n"
-    sed '1d; /^<.*>$/d' "$file" >> "$output_file"
+      sed '1d; /^<.*>$/d' "$file" >> "$output_file"
   done
 
-  # Adiciona o rodapé ao arquivo final
+  # Adds the footer to the final file
   cat "$footer_file" >> "$output_file"
-  log_file_text+="\n\nBODY ITEM - FOOTER: ${footer_file} \n\n\n"
-  log_file_text+="FINAL FILE MERGED - "Archetype-Metadata.xml" FINISHED:\n $output_file\n"
 
   if [ "$show_debug_log_param" = "true" ]; then
     echo -e "$divider"
     echo -e "\n\n-----> EXECUTING: 'create_archetype_metadata function' - START \n\n"
-    log_file_text=$(sed 's/\\\(\\[^n]\)/\1/g' <<< "${log_file_text}")
-    echo -e "${log_file_text}"
-    echo -e "\n\n-----> FINAL FILE CREATED: ARCHETYPE_METADATA.XML ------------ \n"
+
+    echo -e "\n\n-----> FINAL FILES MERGED FOR ARCHETYPE_METADATA.XML CREATION ------------ \n"
+    for file in "${ordered_intermediate_files[@]}"; do
+      echo -e "${file} \n"
+    done
+
+    echo -e "\n\n-----> ARCHETYPE_METADATA.XML CREATED ------------ \n"
     cat "$output_file"
+
     echo -e "\n\n-----> EXECUTING: 'create_archetype_metadata function' - END \n\n"
     echo -e "$divider"
   fi
@@ -106,4 +115,5 @@ create_archetype_metadata() {
   cd /c/WORKBASE/DEV/SCRIPTS/archetype-v2-eda || return 1
   mvn clean install
   cd $current_dir || return 1
+
 }

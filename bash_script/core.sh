@@ -3,8 +3,8 @@
 # A) GENERAL OPTIONS------------------------------------------------------------
 # A.1) ATUALIZA o ARCHETYPE-METADATA 'PROCESSOR'
 # qdo o 'ARCHETYPE_METADATA.XML' for alterado
-RECREATE_ARCHETYPE=true
-SHOW_RECREATE_ARCHETYPE_LOG=true
+RECREATE_ARCHETYPE=false
+SHOW_RECREATE_ARCHETYPE_LOG=false
 
 # A.2) LOG|DEBUG MANAGEMENT
 SHOW_MAVEN_BASIC_LOG=true
@@ -52,7 +52,8 @@ script_injection "${SCRIPT_FOLDER}" "general_messages.sh" $SHOW_INJECTION_LOG
 #-------------------------------------------------------------------------------
 #            C) PASSOS P/ ADICAO DE 'NOVOS CRITERIOS', configurando:
 #           * Pre-Processador: BASH_SCRIPTs (folder: "bash_script")
-#    * Processador: "ARCHETYPE-METADATA".XML + "ARCHETYPE".PROPERTIES(test)
+#                 * Processador: "ARCHETYPE-METADATA".XML
+#              * Processador-Test: "ARCHETYPE".PROPERTIES(test)
 #             * Pos-Processador: "ARCHETYPE-POS-GENERATE".GROOVY
 #-------------------------------------------------------------------------------
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
@@ -71,62 +72,13 @@ script_injection "${SCRIPT_FOLDER}" "user_artifactid_inputs.sh" $SHOW_INJECTION_
 project_package=$groupid
 
 # C.3) MONTAGEM das 'SWITCHES -D' para o MVN-CLI
-# C.3.1) Montagem de 'Switches -D' usando-se as 'PROMPT-ANSWERS' INPUTADAS
-#        e coletadas nas 'VARIAVEIS' processadas no 'script injetado' acima
-#
-# C.3.2) A 'Switch -D' tera MESMO NOME da 'variavel coletada' no 'SCRIPT DE INPUT' acima
-#
-# C.3.3) INSERIR/CRIAR A 'SWITCH -D' no 'mvn_command_line.sh'
 script_injection "${SCRIPT_FOLDER}" "mvn_command_line.sh" $SHOW_INJECTION_LOG
 
-# C.4) Criar uma 'REQUIRED-PROPERTY':
-# C.4.1) Nomeia-a de forma identica(mesmo nome) ao 'SWITCH -D', EM:
-#
-# C.4.2) Coloque o 'XML' criado, em 'src/main/resources/META-INF/maven/archetype_descriptor_properties'
-#
-# C.4.3) EXEMPLO:
-#        - ex: property-cpanel.xml, contendo:
-#              <requiredProperty key="enable_api_cpanel">
-#                  <defaultValue></defaultValue>
-#              </requiredProperty>
-#
-# C.4.4) RECRIAR o 'archetype-metadata.xml' setando a constante 'RECREATE_ARCHETYPE=true'
-#        - Setar com 'RECREATE_ARCHETYPE=false', logo apos a 'recriacao'
-#
-# C.4.5) Use a 'REQUIRED-PROPERTY' c/ o VELOCITY, no 'CODIGO' (onde necessario)
-
-# C.5) Criar a 'PROPERTY DE TESTE' do archetype, identica(mesmo nome) ao 'REQUIRED-PROPERTY', EM:
-# C.5.1) src\"TEST"\resources\ "PROJECTS" \ "BASIC" \ "archetype".PROPERTIES
-
-# C.6) Se o 'novo Criterio' realizar "MANIPULACAO DE PASTAS OU ARQUIVOS":
-# C.6.1) Crie/Insira a 'pasta/arquivo' dentro do 'ARCHETYPE', no local correto, EM:
-#   - src\"MAIN"\resources\ "ARCHETYPE-RESOURCES" \ src
-#
-# C.7) Criar um 'FILE-SET':
-# C.7.1) criar o 'file-set' num 'xml'
-#
-# C.7.2) Coloque o 'XML' criado, em 'src/main/resources/META-INF/maven/archetype_descriptor_filesets'
-#
-# C.7.3) EXEMPLO:
-#        - ex: fileset-cpanel.xml, contendo:
-#              <fileSet filtered="true" encoding="UTF-8">
-#                  <directory>ELK</directory>
-#                  <includes>
-#                      <include>**/*.*</include>
-#                  </includes>
-#              </fileSet>
-#
-# C.7.4) RECRIAR o 'archetype-metadata.xml' c/ a constante 'RECREATE_ARCHETYPE=true' deste script
-#        - Setar com 'RECREATE_ARCHETYPE=false', logo apos a 'recriacao'
-
-# C.8) Crie uma 'FUNCAO PARA MANIPULACAO' (se necessario)
-# C.8.1) Dentro de 'src\"MAIN"\resources\ "META-INF" \ "archetype-post-generate".groovy'
-
-# C.8.2) A VARIAVEL 'DEF' criada:
-#            * ex.: def keep_docker_folder = "${properties?.enable_docker}"
-#        Nomeie de form "SEMELHANTE" que as VARIAVEL:
-#            * 'coletada' no 'SCRIPT DE INPUT' +
-#            * 'inserida' no 'SWITCH -D' criado no 'MVN-CLI SCRIPT' (mvn_command_line.sh)
+# C.4) 'REQUIRED-PROPERTY':
+# C.5) 'PROPERTY DE TESTE' do archetype
+# C.6) "MANIPULACAO DE PASTAS OU ARQUIVOS"
+# C.7) 'FILE-SET':
+# C.8) FUNCAO PARA "MANIPULACAO DE PASTAS OU ARQUIVOS" (se necessario)
 #-------------------------------------------------------------------------------
 
 execute_maven_command_line $SHOW_MAVEN_BASIC_LOG $SHOW_MAVEN_DEBUG_LOG "$maven_command_line"
