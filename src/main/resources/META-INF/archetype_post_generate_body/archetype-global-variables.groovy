@@ -14,8 +14,9 @@ def entity_name = "${properties?.entity_name}"
 
 def entity_folder = "${properties?.entity_name}"
 def config_folder = "config"
-
 def properties_folder = "properties"
+def map_properties_folder = "map_properties"
+def list_properties_folder = "list_properties"
 
 def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
 

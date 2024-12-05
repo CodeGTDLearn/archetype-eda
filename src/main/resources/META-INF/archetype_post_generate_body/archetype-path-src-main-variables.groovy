@@ -20,3 +20,5 @@ Path srcMainJavaEntityConfigFolder = srcMainJavaEntityFolder.resolve(config_fold
 
 
 Path srcMainJavaEntityConfigPropertiesFolder = srcMainJavaEntityConfigFolder.resolve(properties_folder)
+Path srcMainJavaEntityConfigPropertiesListFolder = srcMainJavaEntityConfigPropertiesFolder.resolve(list_properties_folder)
+Path srcMainJavaEntityConfigPropertiesMapFolder = srcMainJavaEntityConfigPropertiesFolder.resolve(map_properties_folder)

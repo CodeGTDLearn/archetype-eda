@@ -18,3 +18,5 @@ Path srcTestJavaEntityConfigPropertiesFolder = srcTestJava
         .resolve(properties_folder)
 
 Path srcTestResourcesPropertiesFolder = srcTestResources.resolve(properties_folder)
+Path srcTestJavaEntityConfigPropertiesListFolder = srcTestJavaEntityConfigPropertiesFolder.resolve(list_properties_folder)
+Path srcTestJavaEntityConfigPropertiesMapFolder = srcTestJavaEntityConfigPropertiesFolder.resolve(map_properties_folder)
