@@ -1,14 +1,4 @@
-<!-- ______________ -->
-
-
-
-
-
-
-
-
-
-        <!--  FILESET-GITHUB.XML ___________________________________________ -->
+<!--  FILESET-GITHUB.XML ___________________________________________ -->
         <fileSet filtered="false" encoding="UTF-8">
           <directory>git_temp</directory>
           <includes>
@@ -19,14 +9,12 @@
           </excludes>
         </fileSet>
 
-
         <fileSet filtered="true" encoding="UTF-8">
           <directory>git_temp</directory>
           <includes>
             <include>config</include>
           </includes>
         </fileSet>
-
 
         <fileSet encoding="UTF-8">
             <directory></directory>
@@ -35,12 +23,9 @@
             </includes>
         </fileSet>
 
-
         <fileSet filtered="true" encoding="UTF-8">
             <directory></directory>
             <includes>
                 <include>README.md</include>
             </includes>
         </fileSet>
-
-<!-- ______________ -->

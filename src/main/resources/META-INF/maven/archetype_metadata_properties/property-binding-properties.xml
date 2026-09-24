@@ -1,40 +1,87 @@
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-BINDING-PROPERTIES.XML ____________________________ -->
+<!-- FLAG: enable_binding_properties -->
+<!--   DESCRIPTION : Habilita o sistema de binding properties -->
+<!--                 (sub-modulos default/list/map em runtime). -->
+<!--   PROMPT      : Enable 'Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : true -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_binding_properties">
+    <defaultValue>true</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
+<!-- FLAG: default_binding_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo default (carrega .properties fixo). -->
+<!--   PROMPT      : Enable 'Default Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="default_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
+<!-- FLAG: list_binding_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo list (carrega lista de arquivos .properties). -->
+<!--   PROMPT      : Enable 'List Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="list_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
+<!-- FLAG: map_binding_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo map (carrega mapa chave->arquivo). -->
+<!--   PROMPT      : Enable 'Map Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="map_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
+<!-- FLAG: mutable_binding_properties -->
+<!--   DESCRIPTION : Define se e quantas propriedades customizadas podem ser mutaveis. -->
+<!--                 Observacao: pode ser o literal "false" (quando desabilitado) -->
+<!--                 ou um numero 1..3 (quantidade de propriedades mutaveis). -->
+<!--                 NAO TROCAR - Groovy/templates dependem. -->
+<!--   PROMPT      : Enter 'Mutable Binding Properties' -->
+<!--   TYPE        : mixed (string|number) -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : false | 1..3 -->
+<!--   DEPENDS_ON  : So faz sentido perguntar se a flag de sistema -->
+<!--                  enable_binding_properties estiver ligada como true -->
+<!--                  E pelo menos um dos tres sub-modulos (default, list, -->
+<!--                  map) tambem estiver ligado como true. Caso contrario, -->
+<!--                  o proprio sistema ja fixa o valor como false. -->
+<!--   VALIDATION  : ^(false|([1-3]))$ -->
+<requiredProperty key="mutable_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(false|([1-3]))$</validationRegex>
+</requiredProperty>
 
-
-
-        <!--  PROPERTY-BINDING-PROPERTIES.XML   ____________________________ -->
-        <requiredProperty key="enable_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="default_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="list_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="map_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="mutable_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="validated_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+<!-- FLAG: validated_binding_properties -->
+<!--   DESCRIPTION : Habilita validacao automatica de schemas das properties. -->
+<!--   PROMPT      : Enable 'Validated Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : default_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="validated_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

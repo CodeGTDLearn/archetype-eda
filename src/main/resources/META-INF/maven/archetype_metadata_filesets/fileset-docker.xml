@@ -1,11 +1,4 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--  FILESET-DOCKER.XML  __________________________________________ -->
+<!--  FILESET-DOCKER.XML  __________________________________________ -->
         <!-- DOCKER SUPPORT -->
         <fileSet filtered="true" encoding="UTF-8">
             <directory>docker</directory>
@@ -15,6 +8,3 @@
                 <include>**/*Dockerfile*</include>
             </includes>
         </fileSet>
-
-
-<!-- ______________ -->

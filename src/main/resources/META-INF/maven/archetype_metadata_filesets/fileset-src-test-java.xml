@@ -1,11 +1,4 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
+<!--  FILESET-SRC-TEST.XML   _______________________________________ -->
 
         <!-- SRC\TEST -->
         <fileSet filtered="true" encoding="UTF-8">
@@ -14,5 +7,3 @@
                 <include>**/*.java</include>
             </includes>
         </fileSet>
-
-<!-- ______________ -->

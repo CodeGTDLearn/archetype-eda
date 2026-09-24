@@ -1,24 +1,27 @@
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-API-GENERAL.XML ___________________________________ -->
+<!-- FLAG: enable_api_cpanel -->
+<!--   DESCRIPTION : Habilita a API cPanel (endpoints auxiliares). -->
+<!--   PROMPT      : Enable 'API cPanel' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_api_cpanel">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
-
-
-
-
-
-
-
-        <!-- PROPERTY-API-GENERAL.XML ______________________________________ -->
-
-        <!-- PORT __________________________________________________________ -->
-        <requiredProperty key="api_port">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="project_description"/>
-
-
-
-
-
-<!-- ______________ -->
+<!-- FLAG: api_port -->
+<!--   DESCRIPTION : Porta HTTP da aplicacao Spring Boot. -->
+<!--   PROMPT      : Enter 'API Port' -->
+<!--   TYPE        : number -->
+<!--   DEFAULT     : 8080 -->
+<!--   DOMAIN      : 1024..65535 -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^([1-9][0-9]{3,4})$ -->
+<requiredProperty key="api_port">
+    <defaultValue>8080</defaultValue>
+    <validationRegex>^([1-9][0-9]{3,4})$</validationRegex>
+</requiredProperty>

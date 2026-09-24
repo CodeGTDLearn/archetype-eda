@@ -1,13 +1,4 @@
-<!-- ______________ -->
-
-
-
-
-
-
-
-
-        <!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
+<!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
 
         <!-- SRC\TEST\RESOURCES  -->
         <fileSet filtered="true" encoding="UTF-8">
@@ -29,5 +20,3 @@
                 <include>**/*.properties</include>
             </includes>
         </fileSet>
-
-<!-- ______________ -->

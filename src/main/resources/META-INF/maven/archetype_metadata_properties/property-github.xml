@@ -1,27 +1,40 @@
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-GITHUB.XML _______________________________________ -->
+<!-- FLAG: enable_git_support -->
+<!--   DESCRIPTION : Habilita o suporte a Git no projeto (init + remote + branch principal). -->
+<!--   PROMPT      : Enable 'Git Support' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : true -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_git_support">
+    <defaultValue>true</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
+<!-- FLAG: git_url_repo -->
+<!--   DESCRIPTION : URL do repositorio Git remoto (formato https ou git). -->
+<!--   PROMPT      : Enter 'Git URL Repository' -->
+<!--   TYPE        : url (git_url) -->
+<!--   DEFAULT     : https://github.com/your-git-user/your-repo.git -->
+<!--   DOMAIN      : ^(https?://|git@).+\.git$ -->
+<!--   DEPENDS_ON  : enable_git_support = true -->
+<!--   VALIDATION  : ^(https?://|git@).+\.git$ -->
+<requiredProperty key="git_url_repo">
+    <defaultValue>https://github.com/your-git-user/your-repo.git</defaultValue>
+    <validationRegex>^(https?://|git@).+\.git$</validationRegex>
+</requiredProperty>
 
-
-
-
-
-
-
-        <!-- PROPERTY-GITHUB.XML ___________________________________________ -->
-        <requiredProperty key="enable_git_support">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-        <requiredProperty key="git_url_repo">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-        <requiredProperty key="git_branch_repo">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-<!-- ______________ -->
+<!-- FLAG: git_branch_repo -->
+<!--   DESCRIPTION : Branch principal do repositorio Git remoto. -->
+<!--   PROMPT      : Enter 'Git Branch' -->
+<!--   TYPE        : text -->
+<!--   DEFAULT     : master -->
+<!--   DOMAIN      : ^[A-Za-z0-9._/-]+$ -->
+<!--   DEPENDS_ON  : enable_git_support = true -->
+<!--   VALIDATION  : ^[A-Za-z0-9._/-]+$ -->
+<requiredProperty key="git_branch_repo">
+    <defaultValue>master</defaultValue>
+    <validationRegex>^[A-Za-z0-9._/-]+$</validationRegex>
+</requiredProperty>

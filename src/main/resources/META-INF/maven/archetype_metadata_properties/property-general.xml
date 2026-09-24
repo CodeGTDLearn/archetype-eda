@@ -1,14 +1,28 @@
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-GENERAL.XML ______________________________________ -->
+<!-- FLAG: project_description -->
+<!--   DESCRIPTION : Descricao livre do projeto (uso geral / documentacao). -->
+<!--   PROMPT      : Project description -->
+<!--   TYPE        : text -->
+<!--   DEFAULT     : This is my Archetype -->
+<!--   DOMAIN      : texto livre (sem quebras de linha) -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^.{1,255}$ -->
+<requiredProperty key="project_description">
+    <defaultValue>This is my Archetype</defaultValue>
+    <validationRegex>^.{1,255}$</validationRegex>
+</requiredProperty>
 
-
-
-
-
-
-        <!--  PROPERTY-GENERAL.XML  _______________________________________  -->
-        <requiredProperty key="show_archetype_pos_processor_log">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+<!-- FLAG: show_archetype_pos_processor_log -->
+<!--   DESCRIPTION : Exibe o log detalhado do pos-processador (archetype-post-generate.groovy) -->
+<!--                 durante a geracao do projeto. -->
+<!--   PROMPT      : Show 'Archetype Pos Processor Log' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="show_archetype_pos_processor_log">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

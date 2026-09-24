@@ -23,6 +23,43 @@
       </extension>
     </extensions>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>META-INF/maven/archetype-metadata.xml</exclude>
+        </excludes>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <transformationSets>
+            <transformationSet>
+              <dir>src/main/resources/META-INF/maven</dir>
+              <includes>
+                <include>archetype-metadata.xml</include>
+              </includes>
+              <stylesheet>src/main/resources/META-INF/maven/identity.xsl</stylesheet>
+              <outputDir>${project.build.outputDirectory}/META-INF/maven</outputDir>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
+      </plugin>
+    </plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>

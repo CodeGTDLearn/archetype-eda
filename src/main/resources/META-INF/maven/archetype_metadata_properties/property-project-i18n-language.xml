@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-PROJECT-I18N-LANGUAGE.XML __________________________ -->
+<!-- FLAG: project_language -->
+<!--   DESCRIPTION : Idioma do I18N aplicado no projeto gerado -->
+<!--                 (mensagens, comentarios, classes de i18n). -->
+<!--   PROMPT      : Selecione o idioma do projeto / Choose project language -->
+<!--   TYPE        : enum -->
+<!--   DEFAULT     : pt -->
+<!--   DOMAIN      : pt | en -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(pt|en)$ -->
+<requiredProperty key="project_language">
+    <defaultValue>pt</defaultValue>
+    <validationRegex>^(pt|en)$</validationRegex>
+</requiredProperty>

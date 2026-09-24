@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  ARCHETYPE-HEADER.XML  _______________________________________________  -->
 
-
-
+<!DOCTYPE archetype-descriptor [
+    <!ENTITY property-api-general SYSTEM "archetype_metadata_properties/property-api-general.xml">
+    <!ENTITY property-authentication SYSTEM "archetype_metadata_properties/property-authentication.xml">
+    <!ENTITY property-binding-properties-tests SYSTEM "archetype_metadata_properties/property-binding-properties-tests.xml">
+    <!ENTITY property-binding-properties SYSTEM "archetype_metadata_properties/property-binding-properties.xml">
+    <!ENTITY property-cpanel SYSTEM "archetype_metadata_properties/property-cpanel.xml">
+    <!ENTITY property-docker SYSTEM "archetype_metadata_properties/property-docker.xml">
+    <!ENTITY property-entity SYSTEM "archetype_metadata_properties/property-entity.xml">
+    <!ENTITY property-general SYSTEM "archetype_metadata_properties/property-general.xml">
+    <!ENTITY property-github SYSTEM "archetype_metadata_properties/property-github.xml">
+    <!ENTITY property-java-version SYSTEM "archetype_metadata_properties/property-java-version.xml">
+    <!ENTITY property-language SYSTEM "archetype_metadata_properties/property-language.xml">
+    <!ENTITY property-logback SYSTEM "archetype_metadata_properties/property-logback.xml">
+    <!ENTITY property-lombok SYSTEM "archetype_metadata_properties/property-lombok.xml">
+    <!ENTITY property-pom-dependencies SYSTEM "archetype_metadata_properties/property-pom-dependencies.xml">
+    <!ENTITY property-properties-filetype SYSTEM "archetype_metadata_properties/property-properties-filetype.xml">
+    <!ENTITY property-project-i18n-language SYSTEM "archetype_metadata_properties/property-project-i18n-language.xml">
+    <!ENTITY property-src-test SYSTEM "archetype_metadata_properties/property-src-test.xml">
+    <!ENTITY fileset-cpanel SYSTEM "archetype_metadata_filesets/fileset-cpanel.xml">
+    <!ENTITY fileset-docker SYSTEM "archetype_metadata_filesets/fileset-docker.xml">
+    <!ENTITY fileset-github SYSTEM "archetype_metadata_filesets/fileset-github.xml">
+    <!ENTITY fileset-logback SYSTEM "archetype_metadata_filesets/fileset-logback.xml">
+    <!ENTITY fileset-maven SYSTEM "archetype_metadata_filesets/fileset-maven.xml">
+    <!ENTITY fileset-src-main-java SYSTEM "archetype_metadata_filesets/fileset-src-main-java.xml">
+    <!ENTITY fileset-src-main-resources SYSTEM "archetype_metadata_filesets/fileset-src-main-resources.xml">
+    <!ENTITY fileset-src-test-java SYSTEM "archetype_metadata_filesets/fileset-src-test-java.xml">
+    <!ENTITY fileset-src-test-resources SYSTEM "archetype_metadata_filesets/fileset-src-test-resources.xml">
+]>
 
 <archetype-descriptor
         xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.1.0
@@ -12,552 +37,34 @@
         name="arch">
 
     <requiredProperties>
-
-
-
-
-<!-- ______________ -->
-
-
-
-
-
-
-
-        <!-- PROPERTY-API-GENERAL.XML ______________________________________ -->
-
-        <!-- PORT __________________________________________________________ -->
-        <requiredProperty key="api_port">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="project_description"/>
-
-
-
-
-
-
-
-
-
-
-
-        <!--   PROPERTY-AUTHENTICATION.XML   ______________________________  -->
-        <!-- JWT-AUTHENTICATION -->
-        <requiredProperty key="enable_jwt_authentication">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-BINDING-PROPERTIES-TESTS.XML  _______________________ -->
-        <requiredProperty key="enable_binding_properties_tests">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-BINDING-PROPERTIES.XML   ____________________________ -->
-        <requiredProperty key="enable_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="default_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="list_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="map_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="mutable_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="validated_binding_properties">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-CPANEL.XML __________________________________________ -->
-        <requiredProperty key="enable_api_cpanel">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="enable_api_cpanel_elk_log_system">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-DOCKER.XML  ________________________________________  -->
-        <requiredProperty key="enable_docker">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-ENTITY.XML  _________________________________________ -->
-        <requiredProperty key="entity_name"/>
-
-        <requiredProperty key="entity_name_package"/>
-
-        <requiredProperty key="enable_custom_attributes">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-        <requiredProperty key="custom_attributes_list"/>
-
-        <requiredProperty key="enable_json_entity_contracts"/>
-
-        <requiredProperty key="absolute_path_jsonfile_contract"/>
-
-
-
-
-
-
-
-        <!--  PROPERTY-GENERAL.XML  _______________________________________  -->
-        <requiredProperty key="show_archetype_pos_processor_log">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-
-
-        <!-- PROPERTY-GITHUB.XML ___________________________________________ -->
-        <requiredProperty key="enable_git_support">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-        <requiredProperty key="git_url_repo">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-        <requiredProperty key="git_branch_repo">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- PROPERTY-JAVA-VERSION.XML _____________________________________ -->
-        <requiredProperty key="java_version">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-LOGBACK.XML _________________________________________ -->
-        <requiredProperty key="enable_logback">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="logback_console_type">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="enable_logback_appender_smtp">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="enable_logback_appender_file">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-LOMBOK.XML  ________________________________________  -->
-        <requiredProperty key="enable_lombok">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-POM-DEPENDENCIES.XML  ______________________________  -->
-        <requiredProperty key="extra_POM_dependencies">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-        <!--  PROPERTY-PROPERTIES-FILETYPE.XML   ___________________________ -->
-        <requiredProperty key="properties_filetype">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-
-
-
-        <!--   PROPERTY-SRC-TEST.XML ___________________________________________ -->
-        <requiredProperty key="enable_folder_src_test_java">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-
-
-
-
-
-    <!--  ARCHETYPE-TRANSITION.XML  _______________________________________  -->
+        &property-api-general;
+        &property-authentication;
+        &property-binding-properties-tests;
+        &property-binding-properties;
+        &property-cpanel;
+        &property-docker;
+        &property-entity;
+        &property-general;
+        &property-github;
+        &property-java-version;
+        &property-language;
+        &property-logback;
+        &property-lombok;
+        &property-pom-dependencies;
+        &property-properties-filetype;
+        &property-project-i18n-language;
+        &property-src-test;
     </requiredProperties>
+
     <fileSets>
-
-
-
-
-
-
-
-
-
-
-        <!--  FILESET-CPANEL.XML ___________________________________________ -->
-        <!-- CPANEL / ELK SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>ELK</directory>
-            <includes>
-                <include>**/*.*</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-
-        <!--  FILESET-DOCKER.XML  __________________________________________ -->
-        <!-- DOCKER SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>docker</directory>
-            <includes>
-                <include>**/*compose*.yml</include>
-                <include>**/*compose*.yaml</include>
-                <include>**/*Dockerfile*</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-
-
-
-
-        <!--  FILESET-GITHUB.XML ___________________________________________ -->
-        <fileSet filtered="false" encoding="UTF-8">
-          <directory>git_temp</directory>
-          <includes>
-              <include>**/*</include>
-          </includes>
-          <excludes>
-            <exclude>config</exclude>
-          </excludes>
-        </fileSet>
-
-
-        <fileSet filtered="true" encoding="UTF-8">
-          <directory>git_temp</directory>
-          <includes>
-            <include>config</include>
-          </includes>
-        </fileSet>
-
-
-        <fileSet encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>gitignore</include>
-            </includes>
-        </fileSet>
-
-
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>README.md</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-        <!--   FILESET-LOGBACK.XML   _______________________________________ -->
-        <!-- LOGBACK SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/logback-spring-config</directory>
-            <includes>
-                <include>**/*.xml</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-        <!--  FILESET-ROOT-MVN.XML  ________________________________________ -->
-        <!-- MAVEN -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>.mvn/wrapper</directory>
-            <includes>
-                <include>**/*.properties</include>
-            </includes>
-        </fileSet>
-
-
-        <fileSet encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>pom.xml</include>
-                <include>mvnw</include>
-                <include>mvnw.cmd</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-        <!--  FILESET-SRC-MAIN-JAVA.XML  ___________________________________ -->
-
-        <!-- SRC\MAIN -->
-        <fileSet filtered="true" packaged="true" encoding="UTF-8">
-            <directory>src/main/java</directory>
-            <includes>
-                <include>**/*.java</include>
-            </includes>
-        </fileSet>
-
-        <fileSet filtered="false" encoding="UTF-8">
-            <directory>src/main/java</directory>
-            <includes>
-                <include>AppStarter.java</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-        <!--  FILESET-SRC-MAIN-RSCS.XML  ___________________________________ -->
-
-        <!-- SRC\MAIN\RESOURCES FILES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources</directory>
-            <includes>
-                <include>application.yml</include>
-                <include>application.properties</include>
-                <include>logback-spring.xml</include>
-                <include>banner.txt</include>
-            </includes>
-        </fileSet>
-
-
-        <!-- SRC\MAIN\RESOURCES\PROPERTIES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/properties</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>**/*.yml</include>
-            </includes>
-        </fileSet>
-
-
-        <!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/protected_properties</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>**/*.yml</include>
-            </includes>
-        </fileSet>
-
-
-        <!-- SRC\MAIN\RESOURCES\DB_SCRIPTS -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/db_scripts</directory>
-            <includes>
-                <include>data.sql</include>
-                <include>schema.sql</include>
-            </includes>
-        </fileSet>
-
-
-        <!-- SRC\MAIN\RESOURCES\SECURITY -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/security</directory>
-            <includes>
-                <include>app.key</include>
-                <include>app.pub</include>
-            </includes>
-        </fileSet>
-
-
-        <!-- SRC\MAIN\RESOURCES\CONTRACTS -->
-        <fileSet filtered="false" encoding="UTF-8">
-            <directory>src/main/resources/contracts</directory>
-            <includes>
-                <include>**/*.json</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-        <!--  FILESET-SRC-TEST.XML   _______________________________________ -->
-
-        <!-- SRC\TEST -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/java</directory>
-            <includes>
-                <include>**/*.java</include>
-            </includes>
-        </fileSet>
-
-
-
-
-
-
-
-
-
-        <!--  FILESET-SRC-TEST-RSCS.XML   __________________________________ -->
-
-        <!-- SRC\TEST\RESOURCES  -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources</directory>
-            <includes>
-                <include>application.yml</include>
-                <include>application.properties</include>
-                <include>logback-test.xml</include>
-                <include>banner.txt</include>
-            </includes>
-        </fileSet>
-
-
-        <!--  FILESET-SRC-TEST-RESOURCES-PROPERTIES.XML ____________________ -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources/properties</directory>
-            <includes>
-                <include>**/*.yml</include>
-                <include>**/*.properties</include>
-            </includes>
-        </fileSet>
-
-<!-- ______________ -->
-
-
-
-
-    <!--    ARCHETYPE-FOOTER.XML  _________________________________________  -->
+        &fileset-cpanel;
+        &fileset-docker;
+        &fileset-github;
+        &fileset-logback;
+        &fileset-maven;
+        &fileset-src-main-java;
+        &fileset-src-main-resources;
+        &fileset-src-test-java;
+        &fileset-src-test-resources;
     </fileSets>
 </archetype-descriptor>
-
-
-
-
-<!-- ______________ -->

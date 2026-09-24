@@ -1,29 +1,53 @@
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-LOGBACK.XML ______________________________________ -->
+<!-- FLAG: enable_logback -->
+<!--   DESCRIPTION : Habilita o uso de Logback como sistema de log (logback-spring.xml). -->
+<!--   PROMPT      : Enable 'Logback' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_logback">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
+<!-- FLAG: logback_console_type -->
+<!--   DESCRIPTION : Tipo de console Logback: 1=simples, 2=colorido, 3=padrao Spring. -->
+<!--   PROMPT      : Enter 'Logback Console Type' -->
+<!--   TYPE        : enum (number) -->
+<!--   DEFAULT     : 1 -->
+<!--   DOMAIN      : 1 | 2 | 3 -->
+<!--   DEPENDS_ON  : enable_logback = true -->
+<!--   VALIDATION  : ^[1-3]$ -->
+<requiredProperty key="logback_console_type">
+    <defaultValue>1</defaultValue>
+    <validationRegex>^[1-3]$</validationRegex>
+</requiredProperty>
 
+<!-- FLAG: enable_logback_appender_smtp -->
+<!--   DESCRIPTION : Habilita o appender SMTP do Logback (envio de logs por e-mail). -->
+<!--   PROMPT      : Enable 'Logback Appender SMTP' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_logback = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_logback_appender_smtp">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>
 
-
-
-
-        <!--  PROPERTY-LOGBACK.XML _________________________________________ -->
-        <requiredProperty key="enable_logback">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="logback_console_type">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="enable_logback_appender_smtp">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="enable_logback_appender_file">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+<!-- FLAG: enable_logback_appender_file -->
+<!--   DESCRIPTION : Habilita o appender FILE do Logback (logs persistidos em arquivo). -->
+<!--   PROMPT      : Enable 'Logback Appender File' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_logback = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_logback_appender_file">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

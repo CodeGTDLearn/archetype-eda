@@ -1,14 +1,29 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--  PROPERTY-POM-DEPENDENCIES.XML  ______________________________  -->
-        <requiredProperty key="extra_POM_dependencies">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-POM-DEPENDENCIES.XML _____________________________ -->
+<!-- FLAG: extra_POM_dependencies -->
+<!--   DESCRIPTION : Lista de dependencias Maven extras a serem injetadas -->
+<!--                 no pom.xml do projeto gerado. Cada dependencia segue -->
+<!--                 o formato canonico 'groupId:artifactId:version[:scope]', -->
+<!--                 e multiplas dependencias sao separadas por virgula. -->
+<!--                 Escopos validos: compile, runtime, test, provided. -->
+<!--                 O scope e opcional - quando ausente, Maven assume 'compile'. -->
+<!--                 Exemplos validos: -->
+<!--                   Kafka:      org.apache.kafka:kafka-clients:3.7.0 -->
+<!--                   PostgreSQL: org.postgresql:postgresql:42.7.3:runtime -->
+<!--                   Jackson:    com.fasterxml.jackson.core:jackson-databind:2.17.0 -->
+<!--                   Multiplas:  org.slf4j:slf4j-api:1.7.31:runtime,org.apache.kafka:kafka-clients:3.7.0 -->
+<!--                 Para NAO adicionar nenhuma dependencia extra, setar o -->
+<!--                 valor como a string literal 'false' (sentinela que o -->
+<!--                 Groovy de pos-processamento reconhece e ignora). -->
+<!--                 Espacos entre virgulas sao opcionais - o Groovy remove -->
+<!--                 todos os espacos em branco antes de processar. -->
+<!--   PROMPT      : Enter 'Extra POM Dependencies' -->
+<!--   TYPE        : list (dependency) -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : false OR lista de groupId:artifactId:version[:scope] (virgula) -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(false|([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?)(,([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?))*)$ -->
+<requiredProperty key="extra_POM_dependencies">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(false|([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?)(,([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?))*)$</validationRegex>
+</requiredProperty>

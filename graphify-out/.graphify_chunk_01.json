@@ -1,0 +1,1021 @@
+{
+  "nodes": [
+    {
+      "id": "readme",
+      "label": "EDA Archetype README",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_yml",
+      "label": "Spec-Kit Installed Extensions Manifest",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_memory_constitution",
+      "label": "EDA Archetype Constitution v1.0.0",
+      "file_type": "rationale",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_workflows_speckit_workflow_yml",
+      "label": "Full SDD Cycle Workflow (speckit)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\workflows\\speckit\\workflow.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": "GitHub",
+      "contributor": null
+    },
+    {
+      "id": "specify_templates_checklist_template",
+      "label": "Spec-Kit Checklist Template",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\checklist-template.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_templates_constitution_template",
+      "label": "Spec-Kit Constitution Template",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\constitution-template.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_templates_plan_template",
+      "label": "Spec-Kit Plan Template",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\plan-template.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_templates_spec_template",
+      "label": "Spec-Kit Spec Template",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\spec-template.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_templates_tasks_template",
+      "label": "Spec-Kit Tasks Template",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\tasks-template.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_assess_readme",
+      "label": "Idea Assessment Pipeline Extension README",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_assess_extension_yml",
+      "label": "Assess Extension Manifest",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\extension.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": "spec-kit-core",
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_assess_commands_speckit_assess_decide",
+      "label": "Speckit Assess Decide Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.decide.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_assess_commands_speckit_assess_define",
+      "label": "Speckit Assess Define Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.define.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_assess_commands_speckit_assess_intake",
+      "label": "Speckit Assess Intake Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.intake.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_assess_commands_speckit_assess_research",
+      "label": "Speckit Assess Research Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.research.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_assess_commands_speckit_assess_shape",
+      "label": "Speckit Assess Shape Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.shape.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_bug_readme",
+      "label": "Bug Triage Workflow Extension README",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_bug_extension_yml",
+      "label": "Bug Extension Manifest",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\extension.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": "spec-kit-core",
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_bug_commands_speckit_bug_assess",
+      "label": "Speckit Bug Assess Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\commands\\speckit.bug.assess.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_bug_commands_speckit_bug_fix",
+      "label": "Speckit Bug Fix Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\commands\\speckit.bug.fix.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "specify_extensions_bug_commands_speckit_bug_test",
+      "label": "Speckit Bug Test Command",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\commands\\speckit.bug.test.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "src_test_resources_projects_basic_goal_txt",
+      "label": "Basic Project Test Goal (empty)",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\src\\test\\resources\\projects\\basic\\goal.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "src_main_resources_archetype_resources_readme",
+      "label": "Generated Project README Template (Velocity)",
+      "file_type": "document",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\src\\main\\resources\\archetype-resources\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_modularidade_por_chave_de_ativacao",
+      "label": "Constitution Principle I — Modularidade por Chave de Ativacao",
+      "file_type": "rationale",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_convencao_fixa_de_nomenclatura",
+      "label": "Constitution Principle II — Convencao Fixa de Nomenclatura para Artefatos de Extensao",
+      "file_type": "rationale",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_pacote_por_funcionalidade",
+      "label": "Constitution Principle III — Pacote por Funcionalidade",
+      "file_type": "rationale",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_binding_duplo_de_configuracao",
+      "label": "Constitution Principle IV — Binding Duplo de Configuracao Externalizada",
+      "file_type": "rationale",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_credenciais_nunca_no_repositorio",
+      "label": "Constitution Principle V — Credenciais Nunca Entram no Repositorio",
+      "file_type": "rationale",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_validar_antes_de_culpar",
+      "label": "Constitution Principle VI — Validar Antes de Culpar o Codigo",
+      "file_type": "rationale",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_assessment_pipeline",
+      "label": "Idea Assessment Pipeline (5-stage funnel)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_bug_triage_workflow",
+      "label": "Bug Triage Workflow (assess-fix-test)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_url_trust_policy",
+      "label": "URL Trust Policy (allowlist + symlink + RFC1918 refusal)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.intake.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_devsecops_triad",
+      "label": "DevSecOps Triad (Dev / Sec / Ops)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_maven_archetype_phases",
+      "label": "5-Phase Maven Archetype Composition",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_archetype_metadata_xmlsnippets",
+      "label": "Archetype-Metadata XML Snippets (DOCTYPE + XSLT identity)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_credentials_protection_strategy",
+      "label": "Credentials Protection Strategy (Encrypted Folder + Global GitIgnore)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_type_safe_binding_configuration",
+      "label": "Type-Safe Binding Configuration (Constructor + JavaBean)",
+      "file_type": "concept",
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "specify_extensions_yml",
+      "target": "specify_extensions_assess_extension_yml",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_yml",
+      "target": "specify_extensions_bug_extension_yml",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_extension_yml",
+      "target": "specify_extensions_assess_commands_speckit_assess_intake",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_extension_yml",
+      "target": "specify_extensions_assess_commands_speckit_assess_research",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_extension_yml",
+      "target": "specify_extensions_assess_commands_speckit_assess_define",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_extension_yml",
+      "target": "specify_extensions_assess_commands_speckit_assess_shape",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_extension_yml",
+      "target": "specify_extensions_assess_commands_speckit_assess_decide",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_readme",
+      "target": "concept_assessment_pipeline",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_bug_extension_yml",
+      "target": "specify_extensions_bug_commands_speckit_bug_assess",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_bug_extension_yml",
+      "target": "specify_extensions_bug_commands_speckit_bug_fix",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_bug_extension_yml",
+      "target": "specify_extensions_bug_commands_speckit_bug_test",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\extension.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_bug_readme",
+      "target": "concept_bug_triage_workflow",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_commands_speckit_assess_intake",
+      "target": "specify_extensions_assess_commands_speckit_assess_research",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.intake.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_commands_speckit_assess_intake",
+      "target": "concept_url_trust_policy",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.intake.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_commands_speckit_assess_research",
+      "target": "concept_url_trust_policy",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.research.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_commands_speckit_assess_research",
+      "target": "specify_extensions_assess_commands_speckit_assess_define",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.research.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_commands_speckit_assess_define",
+      "target": "specify_extensions_assess_commands_speckit_assess_shape",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.define.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_commands_speckit_assess_shape",
+      "target": "specify_extensions_assess_commands_speckit_assess_decide",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.shape.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_commands_speckit_assess_decide",
+      "target": "specify_workflows_speckit_workflow_yml",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\commands\\speckit.assess.decide.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_bug_commands_speckit_bug_assess",
+      "target": "specify_extensions_bug_commands_speckit_bug_fix",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\commands\\speckit.bug.assess.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_bug_commands_speckit_bug_fix",
+      "target": "specify_extensions_bug_commands_speckit_bug_test",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\commands\\speckit.bug.fix.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_workflows_speckit_workflow_yml",
+      "target": "specify_templates_spec_template",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\workflows\\speckit\\workflow.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_workflows_speckit_workflow_yml",
+      "target": "specify_templates_plan_template",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\workflows\\speckit\\workflow.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_workflows_speckit_workflow_yml",
+      "target": "specify_templates_tasks_template",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\workflows\\speckit\\workflow.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_workflows_speckit_workflow_yml",
+      "target": "specify_templates_checklist_template",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\workflows\\speckit\\workflow.yml",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_templates_plan_template",
+      "target": "specify_templates_constitution_template",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\plan-template.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_templates_tasks_template",
+      "target": "specify_templates_spec_template",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\tasks-template.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_templates_tasks_template",
+      "target": "specify_templates_plan_template",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\tasks-template.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_templates_checklist_template",
+      "target": "specify_templates_spec_template",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\templates\\checklist-template.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_memory_constitution",
+      "target": "concept_modularidade_por_chave_de_ativacao",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_memory_constitution",
+      "target": "concept_convencao_fixa_de_nomenclatura",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_memory_constitution",
+      "target": "concept_pacote_por_funcionalidade",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_memory_constitution",
+      "target": "concept_binding_duplo_de_configuracao",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_memory_constitution",
+      "target": "concept_credenciais_nunca_no_repositorio",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_memory_constitution",
+      "target": "concept_validar_antes_de_culpar",
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_modularidade_por_chave_de_ativacao",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_convencao_fixa_de_nomenclatura",
+      "target": "concept_archetype_metadata_xmlsnippets",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_pacote_por_funcionalidade",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_binding_duplo_de_configuracao",
+      "target": "concept_type_safe_binding_configuration",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_credenciais_nunca_no_repositorio",
+      "target": "concept_credentials_protection_strategy",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_type_safe_binding_configuration",
+      "target": "src_main_resources_archetype_resources_readme",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\src\\main\\resources\\archetype-resources\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_devsecops_triad",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_maven_archetype_phases",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_archetype_metadata_xmlsnippets",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_credentials_protection_strategy",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_type_safe_binding_configuration",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_resources_archetype_resources_readme",
+      "target": "concept_type_safe_binding_configuration",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\src\\main\\resources\\archetype-resources\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_resources_archetype_resources_readme",
+      "target": "concept_credentials_protection_strategy",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\src\\main\\resources\\archetype-resources\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_assessment_pipeline",
+      "target": "concept_bug_triage_workflow",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_assessment_pipeline",
+      "target": "specify_workflows_speckit_workflow_yml",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_assess_readme",
+      "target": "concept_url_trust_policy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_extensions_bug_readme",
+      "target": "concept_url_trust_policy",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\bug\\commands\\speckit.bug.assess.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_validar_antes_de_culpar",
+      "target": "readme",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "specify_memory_constitution",
+      "target": "specify_templates_constitution_template",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme",
+      "target": "concept_maven_archetype_phases",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "src_test_resources_projects_basic_goal_txt",
+      "target": "specify_extensions_bug_commands_speckit_bug_assess",
+      "relation": "conceptually_related_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.15,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\src\\test\\resources\\projects\\basic\\goal.txt",
+      "source_location": null,
+      "weight": 0.5
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "sdd_assessment_bug_triplet",
+      "label": "Spec-Kit SDD + Assessment + Bug extensions lifecycle",
+      "nodes": [
+        "specify_workflows_speckit_workflow_yml",
+        "concept_assessment_pipeline",
+        "concept_bug_triage_workflow"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions.yml"
+    },
+    {
+      "id": "eda_constitution_principles_set",
+      "label": "Six Non-Negotiable EDA Constitution Principles",
+      "nodes": [
+        "concept_modularidade_por_chave_de_ativacao",
+        "concept_convencao_fixa_de_nomenclatura",
+        "concept_pacote_por_funcionalidade",
+        "concept_binding_duplo_de_configuracao",
+        "concept_credenciais_nunca_no_repositorio",
+        "concept_validar_antes_de_culpar"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\memory\\constitution.md"
+    },
+    {
+      "id": "assessment_five_stage_funnel",
+      "label": "Idea Assessment Five-Stage Funnel",
+      "nodes": [
+        "specify_extensions_assess_commands_speckit_assess_intake",
+        "specify_extensions_assess_commands_speckit_assess_research",
+        "specify_extensions_assess_commands_speckit_assess_define",
+        "specify_extensions_assess_commands_speckit_assess_shape",
+        "specify_extensions_assess_commands_speckit_assess_decide"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\WORKBASE\\DEV\\SCRIPTS\\archetype-v2-eda\\.specify\\extensions\\assess\\README.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

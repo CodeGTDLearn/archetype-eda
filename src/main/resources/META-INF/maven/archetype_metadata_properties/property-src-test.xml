@@ -1,14 +1,14 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--   PROPERTY-SRC-TEST.XML ___________________________________________ -->
-        <requiredProperty key="enable_folder_src_test_java">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-SRC-TEST.XML ____________________________________ -->
+<!-- FLAG: enable_folder_src_test_java -->
+<!--   DESCRIPTION : Habilita a geracao da pasta src/test/java (esqueleto de testes). -->
+<!--   PROMPT      : Enable 'Folder src/test/java' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : true -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_folder_src_test_java">
+    <defaultValue>true</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

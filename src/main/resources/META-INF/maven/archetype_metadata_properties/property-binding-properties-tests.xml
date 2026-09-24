@@ -1,14 +1,19 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--  PROPERTY-BINDING-PROPERTIES-TESTS.XML  _______________________ -->
-        <requiredProperty key="enable_binding_properties_tests">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-BINDING-PROPERTIES-TESTS.XML _____________________ -->
+<!-- FLAG: enable_binding_properties_tests -->
+<!--   DESCRIPTION : Habilita o projeto de testes de Binding Properties. -->
+<!--   PROMPT      : Enable 'Binding Properties Tests' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : So faz sentido perguntar se a geracao da pasta -->
+<!--                  src/test/java estiver habilitada (enable_folder_ -->
+<!--                  src_test_java = true) E pelo menos um dos tres -->
+<!--                  sub-modulos de binding properties (default, list, -->
+<!--                  map) estiver ligado como true. Caso contrario, o -->
+<!--                  proprio sistema ja fixa o valor como false. -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_binding_properties_tests">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

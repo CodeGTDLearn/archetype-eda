@@ -1,19 +1,20 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--  PROPERTY-CPANEL.XML __________________________________________ -->
-        <requiredProperty key="enable_api_cpanel">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-        <requiredProperty key="enable_api_cpanel_elk_log_system">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-CPANEL.XML _______________________________________ -->
+<!-- FLAG: enable_api_cpanel_elk_log_system -->
+<!--   DESCRIPTION : Habilita integracao do cPanel com o sistema de log ELK. -->
+<!--   PROMPT      : Enable 'API cPanel ELK Log System' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : So faz sentido perguntar se a API cPanel estiver -->
+<!--                  habilitada (enable_api_cpanel = true) E o sistema -->
+<!--                  de log Logback tambem estiver habilitado (enable_ -->
+<!--                  logback = true). E a flag que combina dois modulos: -->
+<!--                  o painel cPanel e o envio de logs para o stack ELK -->
+<!--                  via Logback. Se qualquer um dos dois estiver -->
+<!--                  desligado, o sistema ja fixa o valor como false. -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_api_cpanel_elk_log_system">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

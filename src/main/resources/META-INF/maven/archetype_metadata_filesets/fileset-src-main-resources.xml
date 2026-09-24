@@ -1,11 +1,4 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--  FILESET-SRC-MAIN-RSCS.XML  ___________________________________ -->
+<!--  FILESET-SRC-MAIN-RSCS.XML  ___________________________________ -->
 
         <!-- SRC\MAIN\RESOURCES FILES -->
         <fileSet filtered="true" encoding="UTF-8">
@@ -66,5 +59,3 @@
                 <include>**/*.json</include>
             </includes>
         </fileSet>
-
-<!-- ______________ -->

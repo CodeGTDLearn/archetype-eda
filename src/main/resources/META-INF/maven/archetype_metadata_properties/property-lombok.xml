@@ -1,14 +1,14 @@
-<!-- ______________ -->
-
-
-
-
-
-
-        <!--  PROPERTY-LOMBOK.XML  ________________________________________  -->
-        <requiredProperty key="enable_lombok">
-            <defaultValue></defaultValue>
-        </requiredProperty>
-
-
-<!-- ______________ -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-LOMBOK.XML _______________________________________ -->
+<!-- FLAG: enable_lombok -->
+<!--   DESCRIPTION : Habilita o uso de Lombok (anotacoes para reduzir boilerplate). -->
+<!--   PROMPT      : Enable 'Lombok' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : true -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_lombok">
+    <defaultValue>true</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

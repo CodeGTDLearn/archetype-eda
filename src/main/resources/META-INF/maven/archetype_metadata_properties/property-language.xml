@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-LANGUAGE.XML ______________________________________ -->
+<!-- FLAG: language -->
+<!--   DESCRIPTION : Idioma em que os textos de prompt do comando LLM serao exibidos. -->
+<!--                 NAO altera o idioma do projeto gerado. -->
+<!--   PROMPT      : Selecione o idioma do LLM / Choose LLM language -->
+<!--   TYPE        : enum -->
+<!--   DEFAULT     : pt -->
+<!--   DOMAIN      : pt | en -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(pt|en)$ -->
+<requiredProperty key="language">
+    <defaultValue>pt</defaultValue>
+    <validationRegex>^(pt|en)$</validationRegex>
+</requiredProperty>
