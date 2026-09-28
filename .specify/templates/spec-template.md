@@ -8,6 +8,14 @@
 
 **Input**: User description: "$ARGUMENTS"
 
+<!--
+  When the feature being specified requires generating a new project from the
+  archetype, use the LLM flag inference mechanism (`eda-llm-flag-inference`)
+  to produce the project generation command line. Provide the textual
+  description of the use case and a JSON contract; do not construct the
+  command line ad-hoc.
+-->
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--

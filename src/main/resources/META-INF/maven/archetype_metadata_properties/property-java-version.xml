@@ -4,7 +4,7 @@
 <!--   DESCRIPTION : Versao do Java a ser usada no projeto. -->
 <!--   PROMPT      : Enter 'Java Version' -->
 <!--   TYPE        : enum (number) -->
-<!--   DEFAULT     : 17 -->
+<!--   DEFAULT     : 21 -->
 <!--   DOMAIN      : 17 | 21 -->
 <!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(17|21)$ -->

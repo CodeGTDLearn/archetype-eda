@@ -1,0 +1,8 @@
+{
+  "entityName": "ContractEntity",
+  "attributes": [
+    { "name": "id", "value": 1024 },
+    { "name": "name", "value": "Acme Corp" },
+    { "name": "active", "value": true }
+  ]
+}

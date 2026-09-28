@@ -5,12 +5,12 @@
 <!--                 (sub-modulos default/list/map em runtime). -->
 <!--   PROMPT      : Enable 'Binding Properties' -->
 <!--   TYPE        : boolean -->
-<!--   DEFAULT     : true -->
+<!--   DEFAULT     : false -->
 <!--   DOMAIN      : true | false -->
 <!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(true|false)$ -->
 <requiredProperty key="enable_binding_properties">
-    <defaultValue>true</defaultValue>
+    <defaultValue>false</defaultValue>
     <validationRegex>^(true|false)$</validationRegex>
 </requiredProperty>
 

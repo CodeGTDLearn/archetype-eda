@@ -4,12 +4,12 @@
 <!--   DESCRIPTION : Habilita o suporte a Git no projeto (init + remote + branch principal). -->
 <!--   PROMPT      : Enable 'Git Support' -->
 <!--   TYPE        : boolean -->
-<!--   DEFAULT     : true -->
+<!--   DEFAULT     : false -->
 <!--   DOMAIN      : true | false -->
 <!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(true|false)$ -->
 <requiredProperty key="enable_git_support">
-    <defaultValue>true</defaultValue>
+    <defaultValue>false</defaultValue>
     <validationRegex>^(true|false)$</validationRegex>
 </requiredProperty>
 

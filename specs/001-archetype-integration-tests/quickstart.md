@@ -15,7 +15,7 @@ This guide walks a maintainer through running the new test matrix locally and ve
   mvn clean install
   ```
 * Network access to Maven Central (first run only, to fetch Spring Boot 4.0.0, Lombok, Logback, etc.). Subsequent runs can be offline.
-* (Optional, for the `json-contract` fixture) A sample JSON contract file matching the structure the post-processor expects.
+* (Optional, for the `custom-attributes` fixture) The attribute list the fixture declares in `custom_attributes_list` — the entity shape the `verify.groovy` asserts against.
 
 ## What ships in this feature
 
@@ -25,7 +25,7 @@ Under `src/test/resources/projects/`, one new subdirectory per scenario (plus th
 |---|---|---|
 | `minimal/` | All optional flags off. Baseline. | No |
 | `full/` | All optional flags on. Stress. | No |
-| `json-contract/` | `enable_json_entity_contracts=true`. | **Yes** |
+| `custom-attributes/` | `enable_custom_attributes=true` + `custom_attributes_list`. | **Yes** |
 | `binding-default-only/` | Parent on + only `default_*` on. | No |
 | `binding-list-only/` | Parent on + only `list_*` on. | No |
 | `binding-map-only/` | Parent on + only `map_*` on. | No |
@@ -35,7 +35,7 @@ Under `src/test/resources/projects/`, one new subdirectory per scenario (plus th
 Each fixture directory contains:
 * `archetype.properties` — flag values for that scenario.
 * `goal.txt` — Maven goal to run in the generated project (always `clean verify`).
-* (`json-contract` only) `verify.groovy` — structural assertion script.
+* (`custom-attributes` only) `verify.groovy` — structural assertion script.
 
 ## Running the full matrix
 
@@ -49,7 +49,7 @@ mvn integration-test
 
 Or as a single line: `mvn clean install integration-test`. Do NOT use `mvn archetype:integration-test` — that goal fails with "Unable to get the archetypes' artifact which should have just been built" because it looks for the .jar in `~/.m2/repository/` instead of `target/`.
 
-Expected outcome: a passing run for each fixture, in sequence. The output should report one passing test per fixture. The `json-contract` fixture takes longer (extra `verify.groovy` step).
+Expected outcome: a passing run for each fixture, in sequence. The output should report one passing test per fixture. The `custom-attributes` fixture takes longer (extra `verify.groovy` step).
 
 ## Running a single fixture (faster local loop)
 
@@ -71,7 +71,7 @@ To prove the matrix is doing its job, induce a regression and confirm the corres
 3. **Re-run**: at least one fixture should fail with a diagnostic pointing at the changed file.
 4. **Revert**: restore the change; re-run; all fixtures should pass again.
 
-For the `json-contract` scenario specifically, edit the input JSON contract to drop an attribute and re-run: the `verify.groovy` should report the missing attribute (not just a generic build failure).
+For the `custom-attributes` scenario specifically, edit `custom_attributes_list` in the fixture's `archetype.properties` to drop an attribute and re-run: the `verify.groovy` should report the missing attribute (not just a generic build failure).
 
 ## Verifying the dependency rule (FR-004)
 
@@ -83,7 +83,7 @@ Run the full matrix twice in a row. The second run should be a no-op or a clean 
 
 ## Verifying the offline-runnable constraint (FR-007)
 
-After the first online run, disconnect from the network and re-run the matrix. All fixtures should still pass (Maven uses the populated local cache). The `json-contract` fixture's `verify.groovy` MUST NOT perform any network call (e.g., no HTTP fetches inside the script). If a future edit of `verify.groovy` introduces a network call, this offline test will fail.
+After the first online run, disconnect from the network and re-run the matrix. All fixtures should still pass (Maven uses the populated local cache). The `custom-attributes` fixture's `verify.groovy` MUST NOT perform any network call (e.g., no HTTP fetches inside the script). If a future edit of `verify.groovy` introduces a network call, this offline test will fail.
 
 ## Out of scope (per spec / intake / constitution)
 
@@ -97,7 +97,7 @@ After the first online run, disconnect from the network and re-run the matrix. A
 |---|---|---|
 | All fixtures fail with "unknown property" | A flag in `archetype.properties` is not declared in any `property-*.xml`. | Re-check the property name against `property-*.xml`. |
 | One fixture fails, others pass | The failing fixture's flags exercise a code path with a regression. | Inspect the build log; cross-reference with `archetype-post-generate.groovy` for the relevant `if` block. |
-| `json-contract` reports a malformed-contract error | The sample JSON contract file is not parseable or doesn't match the schema the post-processor expects. | Re-check the contract against the `archetype-post-generate.groovy` JSON-entity generation path. |
+| `custom-attributes` reports a missing attribute | The declared `custom_attributes_list` no longer matches what the `verify.groovy` asserts (or violates the catalog's `validationRegex`). | Re-check the attribute list against the fixture's `verify.groovy` expectations and the `custom_attributes_list` validation rule. |
 | Build hangs on dependency download | First run only — Maven is downloading Spring Boot 4.0.0, Lombok, etc. | Wait. Subsequent runs use the local cache. |
 | `mvn integration-test` reports "no projects found" | The `src/test/resources/projects/` directory is empty or the filter is wrong. | Verify the directory layout; re-check `-Darchetype.test.projects` value. |
 | `mvn archetype:integration-test` reports "Unable to get the archetypes' artifact which should have just been built" | You ran the goal directly without installing the archetype first. | Use `mvn clean install integration-test` instead, or run `mvn clean install` followed by `mvn integration-test`. |

@@ -24,5 +24,3 @@ Path srcMainJavaEntityConfigPropertiesMapFolder = srcMainJavaEntityConfigPropert
 // ARCHETYPE-PATH-SRC-MAIN-RESOURCES -------------------------------------------
 Path srcMainResources = projectRootFolder.resolve("src").resolve("main").resolve("resources")
 Path srcMainResourcesProperties = srcMainResources.resolve(properties_folder)
-Path srcMainResourcesContracts = srcMainResources.resolve(json_entity_contracts_folder)
-Path jsonfileEntityContractSourcePath = Paths.get(absolute_path_jsonfile_contract)

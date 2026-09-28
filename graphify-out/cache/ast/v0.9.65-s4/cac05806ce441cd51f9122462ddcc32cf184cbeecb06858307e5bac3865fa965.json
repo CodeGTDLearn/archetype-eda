@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_src_test_resources_projects_json_contract_verify_groovy", "label": "verify.groovy", "file_type": "code", "source_file": "src/test/resources/projects/json-contract/verify.groovy", "source_location": "L1"}], "edges": [], "raw_calls": [], "parse_errors": {"first_error_line": 3, "multiline_error": false}}

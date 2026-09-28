@@ -4,11 +4,11 @@
 <!--   DESCRIPTION : Habilita o suporte a Docker (Dockerfile + docker-compose) no projeto gerado. -->
 <!--   PROMPT      : Enable 'Docker support' -->
 <!--   TYPE        : boolean -->
-<!--   DEFAULT     : true -->
+<!--   DEFAULT     : false -->
 <!--   DOMAIN      : true | false -->
 <!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(true|false)$ -->
 <requiredProperty key="enable_docker">
-    <defaultValue>true</defaultValue>
+    <defaultValue>false</defaultValue>
     <validationRegex>^(true|false)$</validationRegex>
 </requiredProperty>

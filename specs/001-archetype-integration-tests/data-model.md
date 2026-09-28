@@ -13,11 +13,11 @@ A self-contained description of one scenario's flag values, plus a verification 
 
 | Attribute | Type | Required | Description |
 |---|---|---|---|
-| `name` | string (kebab-case) | yes | Unique identifier; matches the subdirectory name under `src/test/resources/projects/<name>/`. Examples: `minimal`, `full`, `json-contract`, `binding-default-only`. |
+| `name` | string (kebab-case) | yes | Unique identifier; matches the subdirectory name under `src/test/resources/projects/<name>/`. Examples: `minimal`, `full`, `custom-attributes`, `binding-default-only`. |
 | `archetype_properties` | map<string,string> | yes | The set of flag values. Sourced from `property-*.xml` defaults unless explicitly overridden. May only contain keys declared in `property-*.xml` (archetype rejects unknowns). |
 | `goal_txt` | string | yes | The Maven goal to run in the generated project. Always `clean verify` per intake. |
-| `verify_groovy` | string (file content) | conditional | Present only for the `json-contract` fixture. Asserts on the generated entity's structure against the input JSON contract. |
-| `scenario` | enum | yes | Logical grouping. One of: `minimal`, `full`, `json-contract`, `binding-properties`. |
+| `verify_groovy` | string (file content) | conditional | Present only for the `custom-attributes` fixture. Asserts on the generated entity's structure against the declared `custom_attributes_list`. |
+| `scenario` | enum | yes | Logical grouping. One of: `minimal`, `full`, `custom-attributes`, `binding-properties`. |
 | `parent_flags_off` | map<string,bool> | no | Documents which parent flags are off in this fixture, so child flags are not set. (Informational; the actual `archetype.properties` is the source of truth.) |
 
 **Validation rules**:
@@ -32,14 +32,14 @@ A logical grouping of fixtures sharing a thematic purpose.
 
 | Attribute | Type | Description |
 |---|---|---|
-| `name` | enum | One of: `minimal`, `full`, `json-contract`, `binding-properties`. |
+| `name` | enum | One of: `minimal`, `full`, `custom-attributes`, `binding-properties`. |
 | `purpose` | string | Plain-language description (matches the spec's user-story narrative). |
 | `fixtures` | list<Fixture> | The fixtures belonging to this scenario. |
-| `acceptance_signal` | enum | `mvn-verify-only` or `mvn-verify-plus-structural` (the latter only for `json-contract`). |
+| `acceptance_signal` | enum | `mvn-verify-only` or `mvn-verify-plus-structural` (the latter only for `custom-attributes`). |
 
 **Validation rules**:
 - `minimal` and `full` each have exactly one fixture.
-- `json-contract` has exactly one fixture, and that fixture MUST have `verify_groovy` non-null.
+- `custom-attributes` has exactly one fixture, and that fixture MUST have `verify_groovy` non-null.
 - `binding-properties` has at least one fixture per sub-module: `default`, `list`, `map`, `mutable`, `validated` (5 minimum).
 
 ### Generated Project
@@ -50,13 +50,13 @@ The temporary Spring Boot project produced by running the archetype generation w
 |---|---|---|
 | `source_fixture` | Fixture (ref) | The fixture whose flags were used. |
 | `build_status` | enum | `pass` (build succeeded), `fail` (build failed), `error` (post-processor or generation error). |
-| `generated_layout` | map<path,exists> | Per-file existence map used by post-build assertions (only populated for `json-contract` via `verify.groovy`). |
-| `generated_entity_shape` | map<field,type> | Only populated for `json-contract`; asserts structural match with the input contract. |
+| `generated_layout` | map<path,exists> | Per-file existence map used by post-build assertions (only populated for `custom-attributes` via `verify.groovy`). |
+| `generated_entity_shape` | map<field,type> | Only populated for `custom-attributes`; asserts structural match with the declared `custom_attributes_list`. |
 
 **State transitions** (per fixture run):
 1. `pending` (before archetype generation)
 2. `generating` (archetype running)
-3. `verifying` (`mvn verify` running in the generated project, plus `verify.groovy` for `json-contract`)
+3. `verifying` (`mvn verify` running in the generated project, plus `verify.groovy` for `custom-attributes`)
 4. → `pass` OR `fail` OR `error`
 
 ## Relationships

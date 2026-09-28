@@ -24,7 +24,7 @@ As the **archetype maintainer**, I want the most minimal flag combination (`mini
 
 ### User Story 2 - Stress Coverage of Co-Enabled Flags (Priority: P1)
 
-As the **archetype maintainer**, I want the "all flags on" combination (`full`) to be exercised automatically, so that conflicts between co-enabled features (e.g., Git + Docker + Logback + Lombok + binding properties + JSON contracts + custom attributes) are caught before they reach consumers.
+As the **archetype maintainer**, I want the "all flags on" combination (`full`) to be exercised automatically, so that conflicts between co-enabled features (e.g., Git + Docker + Logback + Lombok + binding properties + custom attributes) are caught before they reach consumers.
 
 **Why this priority**: Co-enabled flags are the second-most likely place for the post-processor to misbehave (conditional branches interact). `full` is the cheapest way to exercise the stress surface; without it, every individual flag looks fine but combinations blow up.
 
@@ -37,18 +37,18 @@ As the **archetype maintainer**, I want the "all flags on" combination (`full`) 
 
 ---
 
-### User Story 3 - JSON Contract Entity Generation (Priority: P2)
+### User Story 3 - Custom Attributes Entity Generation (Priority: P2)
 
-As the **archetype maintainer**, I want the JSON-contract generation path (`json-contract` — `enable_json_entity_contracts=true` with a real JSON contract file as input) to be exercised automatically, so that I have confidence the generated entity matches the contract's shape — not just that the build passes.
+As the **archetype maintainer**, I want the custom-attributes generation path (`custom-attributes` — `enable_custom_attributes=true` with an explicit `custom_attributes_list`) to be exercised automatically, so that I have confidence the generated entity matches the declared attribute shape — not just that the build passes.
 
-**Why this priority**: This is the only scenario where `mvn verify` is **not sufficient** as an acceptance signal (the post-processor depends on an external file whose contents must shape the generated entity). It is the only scenario with structural assertions on the output.
+**Why this priority**: This is the only scenario where `mvn verify` is **not sufficient** as an acceptance signal (the generated entity's field list must match the declared attributes). It is the only scenario with structural assertions on the output.
 
-**Independent Test**: Run the local suite for the `json-contract` fixture; assert the build passes AND the generated entity class matches the structural expectations of the contract.
+**Independent Test**: Run the local suite for the `custom-attributes` fixture; assert the build passes AND the generated entity class matches the structural expectations.
 
 **Acceptance Scenarios**:
 
-1. **Given** the `json-contract` fixture is configured with a sample JSON contract file, **When** the local suite runs that fixture, **Then** the generated Spring Boot project passes `mvn verify` AND the generated entity class contains the attributes declared in the contract.
-2. **Given** the JSON contract file is malformed, **When** the local suite runs the `json-contract` fixture, **Then** the suite reports a clear failure naming the contract file as the cause, and no generated artifact is silently accepted.
+1. **Given** the `custom-attributes` fixture declares `custom_attributes_list`, **When** the local suite runs that fixture, **Then** the generated Spring Boot project passes `mvn verify` AND the generated entity class contains the declared attributes with the declared types.
+2. **Given** the declared attribute list is malformed, **When** the local suite runs the `custom-attributes` fixture, **Then** the suite reports a clear failure naming the attribute list as the cause, and no generated artifact is silently accepted.
 
 ---
 
@@ -81,9 +81,9 @@ As the **archetype maintainer**, I want at least one fixture per binding-propert
 
 - **FR-001** — The system MUST execute each fixture as a separate, isolated generation-and-verify run, so that a failure in one fixture does not affect the others.
 - **FR-002** — The system MUST validate, for each fixture, that the project generated from the archetype passes `mvn verify` (clean and verify goals), so that the "funcional" criterion is uniformly applied.
-- **FR-003** — For the `json-contract` fixture, the system MUST additionally validate structural properties of the generated entity class against the input JSON contract, so that build-passing alone is not accepted as sufficient evidence.
+- **FR-003** — For the `custom-attributes` fixture, the system MUST additionally validate structural properties of the generated entity class against the declared `custom_attributes_list`, so that build-passing alone is not accepted as sufficient evidence.
 - **FR-004** — The system MUST respect the dependency rule that when a parent flag is `false`, the related child flags are not exercised in that fixture, so that the matrix is not polluted with semantically invalid combinations.
-- **FR-005** — The system MUST provide at least one fixture per scenario defined for this feature: `minimal`, `full`, `json-contract`, and one fixture per binding-properties sub-module (default, list, map, mutable, validated).
+- **FR-005** — The system MUST provide at least one fixture per scenario defined for this feature: `minimal`, `full`, `custom-attributes`, and one fixture per binding-properties sub-module (default, list, map, mutable, validated).
 - **FR-006** — The system MUST source each fixture's flag values from an explicit, human-readable `archetype.properties` per fixture, so that the matrix is self-documenting in the filesystem.
 - **FR-007** — The system MUST NOT make real network, Git, or Docker calls during a fixture run, so that tests remain deterministic and offline-runnable once the archetype and its dependencies are cached.
 - **FR-008** — When a flag is added to or removed from `property-*.xml`, the system MUST allow the maintainer to extend coverage by editing or adding at most one fixture, so that incremental maintenance is bounded.
@@ -95,14 +95,14 @@ As the **archetype maintainer**, I want at least one fixture per binding-propert
 ### Key Entities
 
 - **Fixture**: A self-contained description of one scenario's flag values, plus a verification goal, located in a dedicated directory. Attributes: scenario name, set of flag values, expected verification outcome (build-only or build+structural).
-- **Generated Project**: The temporary Spring Boot project produced by running the archetype generation with a given fixture's flags. Attributes: build status (pass/fail), generated file layout, generated entity shape (for the `json-contract` scenario).
-- **Scenario**: A logical grouping of fixtures sharing a thematic purpose. In this feature: `minimal`, `full`, `json-contract`, and the `binding-properties` family.
+- **Generated Project**: The temporary Spring Boot project produced by running the archetype generation with a given fixture's flags. Attributes: build status (pass/fail), generated file layout, generated entity shape (for the `custom-attributes` scenario).
+- **Scenario**: A logical grouping of fixtures sharing a thematic purpose. In this feature: `minimal`, `full`, `custom-attributes`, and the `binding-properties` family.
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001** — At least the 4 scenarios (`minimal`, `full`, `json-contract`, `binding-properties` family) and their valid sub-combinations per the dependency rule are exercised automatically. Baseline: 1 fixture (`basic`). Target: ≥ 8 fixtures covering the named scenarios plus one per binding-properties sub-module.
+- **SC-001** — At least the 4 scenarios (`minimal`, `full`, `custom-attributes`, `binding-properties` family) and their valid sub-combinations per the dependency rule are exercised automatically. Baseline: 1 fixture (`basic`). Target: ≥ 8 fixtures covering the named scenarios plus one per binding-properties sub-module.
 - **SC-002** — A maintainer running the suite locally receives a regression signal for a change to `archetype-post-generate.groovy` or `property-*.xml` within a single local run, rather than only when a downstream consumer reports the issue. Baseline: end-to-end (consumer-discovered). Target: local run after the change.
 - **SC-003** — Adding a new flag in `property-*.xml` requires the maintainer to edit or add at most one fixture to extend coverage. Baseline: unbounded (no per-fixture tracking). Target: ≤ 1 fixture edit/add per new flag.
 - **SC-004** — Every conditional branch of the post-processor's `if (flag == 'true'|'false')` transformations in `archetype-post-generate.groovy` is reachable by at least one fixture. Baseline: not measured. Target: 100% reachability of the documented flag-controlled branches.
@@ -119,7 +119,7 @@ As the **archetype maintainer**, I want at least one fixture per binding-propert
 
 ## Scope Boundary: Automated Suite vs. Manual Validation Checklist
 
-The **automated suite** (executed by `mvn clean install`) covers: FR-001, FR-002, FR-003, FR-005, FR-006, FR-008, FR-009, FR-010, FR-011, FR-012, and SC-001, SC-003, SC-004. The 9 fixtures under `src/test/resources/projects/` execute end-to-end (generation + sub-build + verify.groovy for `json-contract`).
+The **automated suite** (executed by `mvn clean install`) covers: FR-001, FR-002, FR-003, FR-005, FR-006, FR-008, FR-009, FR-010, FR-011, FR-012, and SC-001, SC-003, SC-004. The 9 fixtures under `src/test/resources/projects/` execute end-to-end (generation + sub-build + verify.groovy for `custom-attributes`).
 
 A **maintainer validation checklist** (NOT part of the automated suite, run manually on demand) covers three additional items: regression-bait (correlates to SC-002), offline-runnable (correlates to FR-007), and dependency-rule (correlates to FR-004). These are listed in `quickstart.md` §Verifying the matrix catches a real regression, §Verifying the offline-runnable constraint, and §Verifying the dependency rule. Rationale for keeping these manual rather than automated:
 

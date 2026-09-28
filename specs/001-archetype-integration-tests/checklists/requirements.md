@@ -25,7 +25,7 @@
 ## Feature Readiness
 
 - [x] All functional requirements have clear acceptance criteria — Each FR maps to at least one acceptance scenario in the user stories; isolated FRs (e.g., FR-007 about no real network calls) are verifiable by inspecting the fixture's run output.
-- [x] User scenarios cover primary flows — `minimal` (baseline), `full` (stress), `json-contract` (structural), `binding-properties` (per-sub-module) cover the four primary matrix axes.
+- [x] User scenarios cover primary flows — `minimal` (baseline), `full` (stress), `custom-attributes` (structural), `binding-properties` (per-sub-module) cover the four primary matrix axes.
 - [x] Feature meets measurable outcomes defined in Success Criteria — SC-001 maps to the scenario list; SC-002 maps to the local-runnable requirement (FR-010); SC-003 maps to FR-008; SC-004 maps to FR-005 + the post-processor complexity in research.
 - [x] No implementation details leak into specification — The spec does not dictate which file path the fixtures live under (that is `/speckit.plan` work), does not specify the contents of `verify.groovy` (that is implementation), and does not name a testing framework beyond the user-facing "verify goal".
 

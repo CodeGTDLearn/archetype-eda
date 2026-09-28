@@ -59,7 +59,11 @@ source "${SCRIPT_FOLDER_WIN}\\script_injection.sh"
 
 # B) INJECOES DE FUNCOES -------------------------------------------------------
 inject_script "${SCRIPT_FOLDER_WIN}" "progress_bar_functions.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "general_functions.sh" $SHOW_INJECTION_LOG
+# general_functions.sh removed in US6 (T032); references to its helpers (open_ide_manager,
+# provide_os_path, get_filename_checking_path, etc.) are still made by other retained
+# scripts. T034: these helpers MUST be inlined into the retained scripts before this
+# entry can be removed safely. Until then, the entry is kept disabled by T034.
+# inject_script "${SCRIPT_FOLDER_WIN}" "general_functions.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "general_functions_for_inputs.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "input_processor_functions.sh" $SHOW_INJECTION_LOG
 inject_script "${SCRIPT_FOLDER_WIN}" "config_constants.sh" $SHOW_INJECTION_LOG
@@ -76,26 +80,33 @@ inject_script "${SCRIPT_FOLDER_WIN}" "json_processor.sh" $SHOW_INJECTION_LOG
 #             * Pos-Processador: "ARCHETYPE-POS-GENERATE".GROOVY
 #-------------------------------------------------------------------------------
 # C.1) INJECOES DE 'SCRIPTS DE INPUT'/coleta de 'VARIAVEIS p/ os SWITCHES DO MVN-CLI'
-inject_script "${SCRIPT_FOLDER_WIN}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_java_version_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_github_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_binding_properties_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_logback_manager_inputs.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_docker_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_cpanel_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_jwt_authentication_input.sh" $SHOW_INJECTION_LOG
-inject_script "${SCRIPT_FOLDER_WIN}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
+# All 14 user_*_input*.sh scripts were removed in US6 (T033). The mechanism
+# (Orchestrator.groovy) reads the canonical flag catalog at runtime and infers
+# flag values from the textual description + JSON contract (FR-001..FR-019).
+# The prompt-capture flow that these scripts supported is no longer needed.
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_general_inputs.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_java_version_input.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_entity_attributes_inputs.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_github_inputs.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_extra_pom_dependencies_inputs.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_properties_filetype_input.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_api_tests_input.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_binding_properties_inputs.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_logback_manager_inputs.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_docker_input.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_lombok_input.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_cpanel_input.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_jwt_authentication_input.sh" $SHOW_INJECTION_LOG
+# inject_script "${SCRIPT_FOLDER_WIN}" "user_artifactid_inputs.sh" $SHOW_INJECTION_LOG
 
 # C.2) Packages: 'Arvores de Pastas separadas por ".", onde a(s) classe(s) se encontra(m)
 project_package=$groupId.$artifactId
 
 # C.3) MONTAGEM das 'SWITCHES -D' para o MVN-CLI
-inject_script "${SCRIPT_FOLDER_WIN}" "maven_command_line_archetype_generate.sh" $SHOW_INJECTION_LOG
+# maven_command_line_archetype_generate.sh was removed in US6 (T031). The mechanism
+# (Orchestrator.groovy) produces the mvn archetype:generate command line directly
+# from the validated catalog + JSON contract.
+# inject_script "${SCRIPT_FOLDER_WIN}" "maven_command_line_archetype_generate.sh" $SHOW_INJECTION_LOG
 
 # C.4) 'REQUIRED-PROPERTY':
 # C.5) 'PROPERTY DE TESTE' do archetype

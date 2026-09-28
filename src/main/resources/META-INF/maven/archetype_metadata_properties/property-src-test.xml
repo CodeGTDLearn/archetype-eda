@@ -4,11 +4,11 @@
 <!--   DESCRIPTION : Habilita a geracao da pasta src/test/java (esqueleto de testes). -->
 <!--   PROMPT      : Enable 'Folder src/test/java' -->
 <!--   TYPE        : boolean -->
-<!--   DEFAULT     : true -->
+<!--   DEFAULT     : false -->
 <!--   DOMAIN      : true | false -->
 <!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(true|false)$ -->
 <requiredProperty key="enable_folder_src_test_java">
-    <defaultValue>true</defaultValue>
+    <defaultValue>false</defaultValue>
     <validationRegex>^(true|false)$</validationRegex>
 </requiredProperty>

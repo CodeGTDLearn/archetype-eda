@@ -18,17 +18,18 @@
 <!--                 NAO TROCAR a derivacao - Groovy/templates dependem. -->
 <!--   PROMPT      : (auto-derivado de entity_name) -->
 <!--   TYPE        : package -->
-<!--   DEFAULT     : (derivado de entity_name) -->
+<!--   DEFAULT     : myentity -->
 <!--   DOMAIN      : ^[a-z][a-z0-9_.]+$ -->
-<!--   DEPENDS_ON  : E derivado automaticamente de entity_name (em -->
-<!--                  minusculas, sem caracteres especiais). NAO e uma -->
-<!--                  pergunta feita ao usuario. O Groovy de pos- -->
-<!--                  processamento aplica a transformacao ${entity_ -->
-<!--                  name,,} para gerar o pacote Java. Se o usuario -->
-<!--                  alterar entity_name, este valor e recalculado. -->
+<!--   DEPENDS_ON  : E derivado de entity_name (em minusculas, sem -->
+<!--                  caracteres especiais). O default 'myentity' existe -->
+<!--                  para satisfazer o FR-018 (defaultValue nao vazio em -->
+<!--                  todo <requiredProperty>); quem gera o projeto DEVE -->
+<!--                  passar -Dentity_name_package=<entity_name em -->
+<!--                  minusculas> para que o pacote acompanhe o nome da -->
+<!--                  entidade. -->
 <!--   VALIDATION  : ^[a-z][a-z0-9_.]+$ -->
 <requiredProperty key="entity_name_package">
-    <defaultValue/>
+    <defaultValue>myentity</defaultValue>
     <validationRegex>^[a-z][a-z0-9_.]+$</validationRegex>
 </requiredProperty>
 
@@ -47,42 +48,36 @@
 
 <!-- FLAG: custom_attributes_list -->
 <!--   DESCRIPTION : Lista de atributos no formato 'Tipo:nome', separados por virgula -->
-<!--                 (ex.: Long:id, MyId:id, My_Id:my_id). -->
+<!--                 (ex.: Long:id,MyId:id,My_Id:my_id). -->
 <!--                 Observacao: pode assumir a string 'false' quando enable_custom_attributes=false -->
 <!--                 (NAO TROCAR - Groovy depende). -->
 <!--   PROMPT      : Provide the 'Attributes' -->
 <!--   TYPE        : list (entity_list_attributes) -->
-<!--   DEFAULT     : Long:id, MyId:id, My_Id:my_id -->
+<!--   DEFAULT     : Long:id,MyId:id,My_Id:my_id -->
 <!--   DOMAIN      : false OR lista de Tipo:nome (virgula) -->
 <!--   DEPENDS_ON  : enable_custom_attributes = true -->
 <!--   VALIDATION  : ^(false|[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*(,[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*)*)$ -->
 <requiredProperty key="custom_attributes_list">
-    <defaultValue>Long:id, MyId:id, My_Id:my_id</defaultValue>
+    <defaultValue>Long:id,MyId:id,My_Id:my_id</defaultValue>
     <validationRegex>^(false|[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*(,[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*)*)$</validationRegex>
 </requiredProperty>
 
-<!-- FLAG: enable_json_entity_contracts -->
-<!--   DESCRIPTION : Habilita a criacao da entidade a partir de um arquivo JSON de contrato (fluxo JSON). -->
-<!--   PROMPT      : Creating 'Entity from JSON' -->
-<!--   TYPE        : boolean -->
-<!--   DEFAULT     : false -->
-<!--   DOMAIN      : true | false -->
-<!--   DEPENDS_ON  : nao aplicavel -->
-<!--   VALIDATION  : ^(true|false)$ -->
-<requiredProperty key="enable_json_entity_contracts">
-    <defaultValue>false</defaultValue>
-    <validationRegex>^(true|false)$</validationRegex>
-</requiredProperty>
-
-<!-- FLAG: absolute_path_jsonfile_contract -->
-<!--   DESCRIPTION : Caminho absoluto (Linux) do arquivo JSON que define o contrato da entidade. -->
-<!--   PROMPT      : Enter file location -->
+<!-- FLAG: entity_contract_path -->
+<!--   DESCRIPTION : Caminho do arquivo JSON que contem o contrato do modulo. -->
+<!--                 Preenchido pelo mecanismo de inferencia LLM (que grava o -->
+<!--                 contrato extraido do prompt e emite o caminho aqui). Quando o -->
+<!--                 arquivo existe E enable_folder_src_test_java=true, o -->
+<!--                 pos-processador copia o contrato para -->
+<!--                 src/test/resources/contracts/contract.json no projeto -->
+<!--                 gerado - o contrato passa a ser a base do modulo. -->
+<!--   PROMPT      : (interno - preenchido pelo mecanismo de inferencia LLM) -->
 <!--   TYPE        : path -->
-<!--   DEFAULT     : (vazio - definido no fluxo JSON) -->
-<!--   DOMAIN      : /path/file.json -->
-<!--   DEPENDS_ON  : enable_json_entity_contracts = true -->
-<!--   VALIDATION  : ^\/([^\/]+\/)*[^\/]+\.json$ -->
-<requiredProperty key="absolute_path_jsonfile_contract">
-    <defaultValue/>
-    <validationRegex>^\/([^\/]+\/)*[^\/]+\.json$</validationRegex>
+<!--   DEFAULT     : none -->
+<!--   DOMAIN      : none OU caminho (absoluto ou relativo) para arquivo .json -->
+<!--   DEPENDS_ON  : enable_folder_src_test_java = true (a pasta de contratos -->
+<!--                  existe apenas quando a arvore de testes e mantida) -->
+<!--   VALIDATION  : ^(none|[^\r\n]*\.json)$ -->
+<requiredProperty key="entity_contract_path">
+    <defaultValue>none</defaultValue>
+    <validationRegex>^(none|[^\r\n]*\.json)$</validationRegex>
 </requiredProperty>

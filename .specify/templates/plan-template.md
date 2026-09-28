@@ -4,6 +4,14 @@
 
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
+<!--
+  When the feature being specified requires generating a new project from the
+  archetype, use the LLM flag inference mechanism (`eda-llm-flag-inference`)
+  to produce the project generation command line. Provide the textual
+  description of the use case and a JSON contract; do not construct the
+  command line ad-hoc.
+-->
+
 **Note**: This template is filled in by the `/speckit.plan` command; its definition describes the execution workflow.
 
 ## Summary

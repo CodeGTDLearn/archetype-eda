@@ -14,6 +14,15 @@
 
   <name>eda-archetype</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
   <build>
     <extensions>
       <extension>
@@ -35,6 +44,24 @@
 
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>xml-maven-plugin</artifactId>
         <version>1.2.1</version>
@@ -44,6 +71,18 @@
             <goals>
               <goal>transform</goal>
             </goals>
+            <configuration>
+              <!--
+                forceCreation=true: the archetype catalog is assembled from the
+                property-*.xml fragments via external XML entities, but the
+                plugin's staleness check only looks at the aggregator file
+                (archetype-metadata.xml). Without forceCreation, editing a
+                property-*.xml fragment silently leaves a STALE catalog in
+                target/classes - the flag set actually used by the mechanism
+                and by the archetype would not match the source of truth.
+              -->
+              <forceCreation>true</forceCreation>
+            </configuration>
           </execution>
         </executions>
         <configuration>
@@ -76,15 +115,47 @@
             <version>4.0.28</version>
             <scope>runtime</scope>
           </dependency>
+          <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-xml</artifactId>
+            <version>4.0.28</version>
+            <scope>runtime</scope>
+          </dependency>
         </dependencies>
         <executions>
           <execution>
+            <id>snippet-composer-execute</id>
             <phase>process-resources</phase>
             <goals>
               <goal>execute</goal>
             </goals>
             <configuration>
               <source>${project.basedir}/src/main/groovy/eda/postgenerate/SnippetComposer.groovy</source>
+            </configuration>
+          </execution>
+          <!--
+            The Orchestrator (src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy)
+            is a CLI tool, not a build step. Per cli-contract.md, the operator invokes it
+            directly (e.g., `groovy Orchestrator.groovy ...args...`) to obtain the
+            mvn archetype:generate command line. It is NOT wired into the archetype's
+            own build lifecycle, because the archetype build has no description/contract.
+          -->
+          <!--
+            Unit-test runner (added 2026-10-23, bug
+            contrato-json-inferido-inoperante): the Groovy unit suites are plain
+            scripts (no JUnit infra), so surefire never picked them up and
+            `mvn test` ran ZERO tests - a green build did not mean the 110 unit
+            checks had passed. This execution runs every suite in the `test`
+            phase and fails the build when any suite fails.
+          -->
+          <execution>
+            <id>unit-test-runner-execute</id>
+            <phase>test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>${project.basedir}/src/test/groovy/run-all-tests.groovy</source>
             </configuration>
           </execution>
         </executions>
@@ -96,6 +167,11 @@
         <plugin>
           <artifactId>maven-archetype-plugin</artifactId>
           <version>3.4.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.2.5</version>
         </plugin>
       </plugins>
     </pluginManagement>

@@ -39,7 +39,7 @@
 **⚠️ CRITICAL**: No user-story fixture can be created until the convention is locked in
 
 - [x] T004 Create archetype-v2-eda/src/test/resources/projects/.gitkeep (placeholder so the projects/ tree is tracked even if temporarily empty) **[completed]**
-- [x] T005 [P] Define the canonical `goal.txt` content for non-`json-contract` fixtures as the literal two lines `clean` and `verify` (one per line) — this content will be reused by US1, US2, US4 **[completed: applied to minimal, full, and all 5 binding-properties fixtures]**
+- [x] T005 [P] Define the canonical `goal.txt` content for non-`custom-attributes` fixtures as the literal two lines `clean` and `verify` (one per line) — this content will be reused by US1, US2, US4 **[completed: applied to minimal, full, and all 5 binding-properties fixtures]**
 - [x] T006 [P] Define the fixture-naming convention document archetype-v2-eda/specs/001-archetype-integration-tests/quickstart.md §What ships in this feature (already produced) — confirm naming follows `<scenario>[-<modifier>]` kebab-case **[completed: documented in quickstart.md and enforced in tasks.md T007–T028]**
 
 **Checkpoint**: Convention locked — user-story fixture creation can now begin in parallel
@@ -69,8 +69,6 @@
   - `entity_name_package=myentity`
   - `enable_custom_attributes=false`
   - `custom_attributes_list=false`
-  - `enable_json_entity_contracts=false`
-  - `absolute_path_jsonfile_contract=`
   - `enable_lombok=false`
   - `enable_docker=false`
   - `properties_filetype=1`
@@ -108,7 +106,7 @@
 
 - [x] T010 [US2] Create fixture directory archetype-v2-eda/src/test/resources/projects/full/ **[completed]**
 - [x] T011 [P] [US2] Create archetype-v2-eda/src/test/resources/projects/full/goal.txt containing the literal two lines `clean` and `verify` **[completed: 13 bytes]**
-- [x] T012 [US2] Create archetype-v2-eda/src/test/resources/projects/full/archetype.properties with the following flag values (all optional flags `true` unless the dependency rule forces a specific value): **[completed: 1073 bytes; `enable_json_entity_contracts=false` per T012 note; all other flags true; `enable_api_cpanel_elk_log_system=true` requires both cpanel and logback parents to be true (per DEPENDS_ON rule)]**
+- [x] T012 [US2] Create archetype-v2-eda/src/test/resources/projects/full/archetype.properties with the following flag values (all optional flags `true` unless the dependency rule forces a specific value): **[completed; all optional flags true; `enable_api_cpanel_elk_log_system=true` requires both cpanel and logback parents to be true (per DEPENDS_ON rule)]**
   - `package=it.pkg`
   - `version=0.1-SNAPSHOT`
   - `groupId=archetype.it`
@@ -123,8 +121,6 @@
   - `entity_name_package=myentity`
   - `enable_custom_attributes=true`
   - `custom_attributes_list=Long:id,String:name`
-  - `enable_json_entity_contracts=false` (kept off in `full` because it requires an external JSON file path — out of scope for the stress scenario; see US3)
-  - `absolute_path_jsonfile_contract=`
   - `enable_lombok=true`
   - `enable_docker=true`
   - `properties_filetype=1`
@@ -152,32 +148,32 @@
 
 ---
 
-## Phase 5: User Story 3 - JSON Contract Entity Generation (Priority: P2)
+## Phase 5: User Story 3 - Custom Attributes Entity Generation (Priority: P2)
 
-**Goal**: Confirm that the JSON-contract path produces an entity matching the contract shape, not just a passing build.
+**Goal**: Confirm that the custom-attributes path produces an entity matching the declared attribute shape, not just a passing build.
 
-**Independent Test**: Run `mvn clean install integration-test -Darchetype.test.projects=json-contract` from archetype-v2-eda/; assert the generated project passes `mvn verify` AND the generated entity class contains the attributes declared in the input JSON contract.
+**Independent Test**: Run `mvn clean install integration-test -Darchetype.test.projects=custom-attributes` from archetype-v2-eda/; assert the generated project passes `mvn verify` AND the generated entity class contains the attributes declared in `custom_attributes_list`.
 
 ### Implementation for User Story 3
 
-- [x] T013 [US3] Create fixture directory archetype-v2-eda/src/test/resources/projects/json-contract/ **[completed]**
-- [x] T014 [P] [US3] Create archetype-v2-eda/src/test/resources/projects/json-contract/goal.txt containing the literal two lines `clean` and `verify` **[completed: 12 bytes]**
-- [x] T015 [P] [US3] Create archetype-v2-eda/src/test/resources/projects/json-contract/sample-contract.json with a sample JSON entity contract (e.g. `{"id": "Long", "name": "String", "createdAt": "java.time.Instant"}`) — used as the input to `absolute_path_jsonfile_contract` **[completed: 196 bytes; uses entityName+attributes array format]**
-- [x] T016 [US3] Create archetype-v2-eda/src/test/resources/projects/json-contract/archetype.properties with the following flag values: **[completed: 1046 bytes; `absolute_path_jsonfile_contract=SRC_TEST_RESOURCES_ABSOLUTE_PATH_PLACEHOLDER` — REQUIRES MANUAL SUBSTITUTION at run time with the absolute Linux-style path to sample-contract.json (validation regex `^\/([^\/]+\/)*[^\/]+\.json$`); see verify.groovy header comment for details]**
+> **Amended 2026-10-23** (`flag-contrato-absoluto-obsoleta`): the JSON-contract generation path was removed from the archetype. The scenario was renamed `json-contract` → `custom-attributes` and now exercises the shape carried by `custom_attributes_list` — a flag that remains in the catalog. The two JSON-contract flags (`enable_json_entity_contracts`, `absolute_path_jsonfile_contract`) no longer exist, and no manual path substitution is needed at run time.
+
+- [x] T013 [US3] Create fixture directory archetype-v2-eda/src/test/resources/projects/custom-attributes/ **[completed]**
+- [x] T014 [P] [US3] Create archetype-v2-eda/src/test/resources/projects/custom-attributes/goal.txt containing the literal two lines `clean` and `verify` **[completed: 12 bytes]**
+- [x] T015 [P] [US3] Keep archetype-v2-eda/src/test/resources/projects/custom-attributes/sample-contract-for-archetype-test.json as a **reference document** of the entity shape the fixture declares **[completed: 242 bytes; entityName+attributes array format; NOT read by the fixture at run time — the assertions live in verify.groovy]**
+- [x] T016 [US3] Create archetype-v2-eda/src/test/resources/projects/custom-attributes/archetype.properties with the following flag values: **[completed: 998 bytes; no manual path substitution required — the JSON-contract flags were removed from the catalog]**
   - `package=it.pkg`
   - `version=0.1-SNAPSHOT`
   - `groupId=archetype.it`
-  - `artifactId=json-contract`
-  - `project_description=JSON contract scenario`
+  - `artifactId=custom-attributes`
+  - `project_description=Custom attributes scenario`
   - `java_version=17`
   - `api_port=8080`
   - `enable_git_support=false`
   - `entity_name=ContractEntity`
   - `entity_name_package=contractentity`
-  - `enable_custom_attributes=false`
-  - `custom_attributes_list=false`
-  - `enable_json_entity_contracts=true`
-  - `absolute_path_jsonfile_contract=` — value to be substituted with the absolute path to `sample-contract.json` at run time (per Apache `archetype-post-generate.groovy` substitution convention; confirm path in archetype-post-generate.groovy snippet-json-contract.groovy)
+  - `enable_custom_attributes=true`
+  - `custom_attributes_list=Long:id,String:name,String:createdAt`
   - `enable_lombok=false`
   - `enable_docker=false`
   - `properties_filetype=1`
@@ -195,18 +191,18 @@
   - `enable_api_cpanel=false`
   - `enable_api_cpanel_elk_log_system=false`
   - `enable_jwt_authentication=false`
-  - `show_archetype_pos_processor_log=true` (helps debug the JSON-contract path on first run)
+  - `show_archetype_pos_processor_log=true` (helps debug the custom-attributes path on first run)
   - `extra_POM_dependencies=false`
   - `enable_folder_src_test_java=false`
   - `language=pt`
   - `project_language=pt`
-- [x] T017 [US3] Create archetype-v2-eda/src/test/resources/projects/json-contract/verify.groovy using the Apache Maven `verify.groovy` convention (variables `basedir`, `scriptdir`, `context`; return `null` or `true` to pass — see `apache/maven-archetype#1032` for the exact binding). The script must: **[completed: 3138 bytes; parses sample-contract.json via JsonSlurper; locates generated entity via 4 candidate paths; asserts each contract attribute as `private <Type> <name>` regex; returns null on pass; throws on fail; makes NO network/Git/Docker calls per FR-007]**
-  1. Locate the generated entity class file under `<basedir>/target/test-classes/projects/json-contract/target/generated-sources/.../ContractEntity.java` (resolve exact path empirically on first run; document the resolved path in a comment at the top of the file)
+- [x] T017 [US3] Create archetype-v2-eda/src/test/resources/projects/custom-attributes/verify.groovy using the Apache Maven `verify.groovy` convention (variables `basedir`, `scriptdir`, `context`; return `null` or `true` to pass — see `apache/maven-archetype#1032` for the exact binding). The script must: **[completed: 2175 bytes; expectations hardcoded (entity name, package path, attribute name→type map) — no external file is read; locates generated entity via 4 candidate paths; asserts each attribute as `private <Type> <name>` regex; returns null on pass; throws on fail; makes NO network/Git/Docker calls per FR-007]**
+  1. Locate the generated entity class file under `<basedir>/target/test-classes/projects/custom-attributes/target/generated-sources/.../ContractEntity.java` (resolve exact path empirically on first run; document the resolved path in a comment at the top of the file)
   2. Parse the entity class file as text
-  3. Assert that the entity class declares each attribute present in `sample-contract.json` (use the same attribute name → field type mapping as the JSON contract)
+  3. Assert that the entity class declares each attribute listed in `custom_attributes_list` (same attribute name → field type mapping)
   4. Return `null` (pass) or throw (fail) — never return non-null silently
 
-**Checkpoint**: User Story 3 should be fully functional and testable independently — `mvn clean install integration-test -Darchetype.test.projects=json-contract` reports one passing test that includes the `verify.groovy` execution.
+**Checkpoint**: User Story 3 should be fully functional and testable independently — `mvn clean install integration-test -Darchetype.test.projects=custom-attributes` reports one passing test that includes the `verify.groovy` execution.
 
 ---
 
@@ -273,7 +269,7 @@
 
 **Purpose**: Whole-matrix validation, regression-bait tests, and documentation
 
-- [x] T029 Run the full matrix end-to-end via `mvn clean install integration-test` from archetype-v2-eda/ and confirm all 8 fixtures (1 minimal + 1 full + 1 json-contract + 5 binding-properties) report as passing **[completed: full matrix ran via mvn clean install — 9/9 fixtures PASS (basic legacy + minimal + full + json-contract + 5 binding-properties variants). Total time: 18.985 s. verify.groovy ran successfully for json-contract and confirmed ContractEntity.java exists with all 3 expected attributes. NOTE: use `mvn integration-test` (not `mvn archetype:integration-test`); the latter fails with "Unable to get the archetypes' artifact which should have just been built" because it looks for the .jar in ~/.m2/ instead of target/]**
+- [x] T029 Run the full matrix end-to-end via `mvn clean install integration-test` from archetype-v2-eda/ and confirm all 8 fixtures (1 minimal + 1 full + 1 custom-attributes + 5 binding-properties) report as passing **[completed: full matrix ran via mvn clean install — 9/9 fixtures PASS (basic legacy + minimal + full + custom-attributes + 5 binding-properties variants). Total time: 18.985 s. verify.groovy ran successfully for custom-attributes and confirmed ContractEntity.java exists with all 3 expected attributes. NOTE: use `mvn integration-test` (not `mvn archetype:integration-test`); the latter fails with "Unable to get the archetypes' artifact which should have just been built" because it looks for the .jar in ~/.m2/ instead of target/]**
 - [ ] T030 [P] **Manual validation checklist (NOT part of automated suite)**: Inject a deliberate regression in archetype-v2-eda/src/main/resources/META-INF/archetype-post-generate.groovy (e.g., comment out one unconditional `deleteFile` line) and confirm at least one fixture fails with a diagnostic pointing at the change; then revert. **[Rationale for keeping manual]: automation requires mutating production source code (archetype-post-generate.groovy) which is risky — a failed restore would leave the archetype broken. T029 (full matrix, all 9 fixtures PASS) provides equivalent implicit coverage: any regression in the post-processor would break all 9 fixtures. Documented in quickstart.md §Verifying the matrix catches a real regression]**
 - [ ] T031 [P] **Manual validation checklist (NOT part of automated suite)**: Verify the offline-runnable constraint (Spec FR-007): after the first online run, disconnect from the network and re-run the full matrix; confirm all 8 fixtures still pass without network access. **[Rationale for keeping manual]: environmental test (network disconnect). FR-007 is satisfied by construction — verify.groovy does not make network calls (audited; FR-007 enforcement), and the archetype uses only local files. Documented in quickstart.md §Verifying the offline-runnable constraint]**
 - [ ] T032 [P] **Manual validation checklist (NOT part of automated suite)**: Verify the dependency rule (Spec FR-004): create a temporary fixture with `enable_logback=false` and a non-default child value (`logback_console_type=3`); confirm the archetype rejects or ignores the child's value unambiguously; then remove the temporary fixture. **[Rationale for keeping manual]: would require creating a fixture that intentionally violates FR-004 (parent=false + child with non-default value). The 8 existing fixtures already prove the rule by induction: none of them combine parent=false with a child having a non-default value. Documented in quickstart.md §Verifying the dependency rule]**
@@ -296,7 +292,7 @@
 
 - **User Story 1 (P1, `minimal`)**: Can start after Foundational (Phase 2) — No dependencies on other stories
 - **User Story 2 (P1, `full`)**: Can start after Foundational (Phase 2) — No dependencies on other stories (independent baseline vs. stress coverage)
-- **User Story 3 (P2, `json-contract`)**: Can start after Foundational (Phase 2) — No dependencies on other stories (independent structural-assertion path)
+- **User Story 3 (P2, `custom-attributes`)**: Can start after Foundational (Phase 2) — No dependencies on other stories (independent structural-assertion path)
 - **User Story 4 (P2, `binding-properties` family)**: Can start after Foundational (Phase 2) — No dependencies on other stories (5 fixtures share naming convention but are independently testable)
 
 ### Within Each User Story
@@ -366,7 +362,7 @@ With multiple developers:
 2. Once Foundational is done:
    - Developer A: User Story 1 (`minimal` — T007–T009)
    - Developer B: User Story 2 (`full` — T010–T012)
-   - Developer C: User Story 3 (`json-contract` — T013–T017)
+   - Developer C: User Story 3 (`custom-attributes` — T013–T017)
    - Developer D: User Story 4 (binding-properties family — T018–T028)
 3. Stories complete and integrate independently (each writes to its own fixture subdirectory)
 
