@@ -1,0 +1,9 @@
+{
+  "entityName": "ContractEntity",
+  "package": "it.pkg.contractentity",
+  "attributes": [
+    { "name": "id", "type": "Long" },
+    { "name": "name", "type": "String" },
+    { "name": "createdAt", "type": "java.time.Instant" }
+  ]
+}

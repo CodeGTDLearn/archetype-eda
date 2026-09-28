@@ -34,7 +34,6 @@ def properties_folder = "properties"
 def map_properties_folder = "map_properties"
 def list_properties_folder = "list_properties"
 
-def show_pos_processor_log = "${properties?.show_archetype_pos_processor_log}"
 
 def log_text_header =
         "\n\n\n-------------------------------------------------------------------------------\n" +
@@ -879,7 +878,7 @@ if (keep_src_test_java == 'false') {
 // ARCHETYPE-FOOTER.GROOVY -----------------------------------------------------
 
 // ARCHETYPE-POST-GENERATE-LOG -------------------------------------------------
-if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
+if (properties?.show_archetype_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 // -----------------------------------------------------------------------------
 
 
@@ -891,48 +890,48 @@ if (show_pos_processor_log == 'true') printf "\n$log_text $log_text_footer"
 
 def deleteFile(File pathToFile) {
 
-    println "\nEntrou na funcao deleteFile - File: $pathToFile"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nEntrou na funcao deleteFile - File: $pathToFile"
 
     if (pathToFile.isFile()) pathToFile.delete()
 
-    println "\nSaiu da funcao deleteFile - File: $pathToFile"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nSaiu da funcao deleteFile - File: $pathToFile"
 
 }
 
 
 def renameFile(File pathToFile, String newName) {
 
-    println "\nEntrou na funcao renameFile - File: $pathToFile"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nEntrou na funcao renameFile - File: $pathToFile"
 
     def newFile = new File(pathToFile.getParent(), newName)
 
-    println "\nnewFile: $newFile"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nnewFile: $newFile"
 
     if (!pathToFile.exists() || !pathToFile.isFile()) {
-        println "\nError: File $pathToFile invalid or inexistent."
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nError: File $pathToFile invalid or inexistent."
         return
     }
 
     if (newFile.exists()) {
-        println "\nError: File $newName already exists in the path"
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nError: File $newName already exists in the path"
         return
     }
 
     if (pathToFile.renameTo(newFile)) {
-        println "\nFile renamed: $pathToFile -> $newName"
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nFile renamed: $pathToFile -> $newName"
     } else {
-        println "\nError: Unable to rename $pathToFile to $newFile"
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nError: Unable to rename $pathToFile to $newFile"
     }
 
-    println "\nSaiu da funcao renameFile - File: $pathToFile"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nSaiu da funcao renameFile - File: $pathToFile"
 }
 
 
 def copyFile(File sourceFile, File destinationFolder) {
-    println "\nEntrou na funcao copyFile - Source: $sourceFile, Destination Folder: $destinationFolder"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nEntrou na funcao copyFile - Source: $sourceFile, Destination Folder: $destinationFolder"
 
     if (!sourceFile.exists() || !sourceFile.isFile()) {
-        println "\nError: Source file $sourceFile invalid or inexistent."
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nError: Source file $sourceFile invalid or inexistent."
         return
     }
 
@@ -944,12 +943,12 @@ def copyFile(File sourceFile, File destinationFolder) {
 
     try {
         destinationFile << sourceFile.bytes
-        println "\nFile copied successfully: $sourceFile -> $destinationFile"
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nFile copied successfully: $sourceFile -> $destinationFile"
     } catch (Exception e) {
-        println "\nError copying file: ${e.message}"
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nError copying file: ${e.message}"
     }
 
-    println "\nSaiu da funcao copyFile - Source: $sourceFile, Destination: $destinationFile"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nSaiu da funcao copyFile - Source: $sourceFile, Destination: $destinationFile"
 }
 
 // -----------------------------------------------------------------------------
@@ -962,7 +961,7 @@ def copyFile(File sourceFile, File destinationFolder) {
 // ARCHETYPE-FOLDER-FUNCTIONS.GROOVY -------------------------------------------
 def deleteFolder(File pathToFolder) {
 
-    println "\nEntrou na funcao deleteFolder: $pathToFolder"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nEntrou na funcao deleteFolder: $pathToFolder"
 
     if (pathToFolder.isDirectory()) {
 
@@ -973,29 +972,29 @@ def deleteFolder(File pathToFolder) {
     }
     pathToFolder.delete()
 
-    println "\nSaiu na funcao deleteFolder: $pathToFolder"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nSaiu na funcao deleteFolder: $pathToFolder"
 
 }
 
 
 def renameFolder(File pathToFolder, String newName) {
 
-    println "\nEntrou na funcao renameFolder: $pathToFolder"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nEntrou na funcao renameFolder: $pathToFolder"
 
     if (pathToFolder.isDirectory()) {
         def newFolderPath = pathToFolder.parentFile.toPath().resolve(newName)
 
         if (newFolderPath.toFile().exists()) {
-            println "\nErro: Pasta com o nome $newName já existe."
+            if (properties?.show_archetype_pos_processor_log == 'true') println "\nErro: Pasta com o nome $newName já existe."
             return
         }
         pathToFolder.renameTo(newFolderPath.toFile())
-        println "\nPasta renomeada com sucesso: $pathToFolder -> $newName"
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nPasta renomeada com sucesso: $pathToFolder -> $newName"
     } else {
-        println "\nErro: $pathToFolder não é um diretório."
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nErro: $pathToFolder não é um diretório."
     }
 
-    println "\nSaiu da funcao renameFolder: $pathToFolder"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nSaiu da funcao renameFolder: $pathToFolder"
 
 }
 
@@ -1007,7 +1006,7 @@ def renameFolder(File pathToFolder, String newName) {
  */
 def deleteFilesByExtensionRecursivelyFromFolder(Path pathToFiles, String extension) {
 
-    println "\nEntrou na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nEntrou na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
 
     def currentFolder = pathToFiles.toFile()
 
@@ -1023,19 +1022,19 @@ def deleteFilesByExtensionRecursivelyFromFolder(Path pathToFiles, String extensi
         subDir -> deleteFilesByExtensionRecursivelyFromFolder(subDir.toPath(), extension)
     }
 
-    println "\nSaiu na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nSaiu na funcao deleteFilesByExtensionRecursivelyFromFolder: $pathToFiles"
 }
 
 
 def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
 
-    println "\nEntrou na funcao deleteFilesFromListFromFolder: $pathToFiles"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nEntrou na funcao deleteFilesFromListFromFolder: $pathToFiles"
 
     files.removeIf { it == null || it.trim() == "" }
 
     // Valida se diretório existe
     if (!pathToFiles.toFile().isDirectory()) {
-        println "\nPasta não encontrada: $pathToFiles"
+        if (properties?.show_archetype_pos_processor_log == 'true') println "\nPasta não encontrada: $pathToFiles"
         return
     }
 
@@ -1048,15 +1047,15 @@ def deleteFilesFromListFromFolder(Path pathToFiles, List<String> files) {
                 if (fileToDelete.exists()) {
 
                     fileToDelete.delete()
-                    println "\nFile Found: $fileName"
+                    if (properties?.show_archetype_pos_processor_log == 'true') println "\nFile Found: $fileName"
                 } else {
 
-                    println "\nFile Not Found: $fileName em ${pathToFiles.toAbsolutePath()}"
+                    if (properties?.show_archetype_pos_processor_log == 'true') println "\nFile Not Found: $fileName em ${pathToFiles.toAbsolutePath()}"
                 }
             } catch (Exception e) {
-                println "\nErro ao deletar $fileName: ${e.message}"
+                if (properties?.show_archetype_pos_processor_log == 'true') println "\nErro ao deletar $fileName: ${e.message}"
             }
     }
 
-    println "\nSaiu da funcao deleteFilesFromListFromFolder: $pathToFiles"
+    if (properties?.show_archetype_pos_processor_log == 'true') println "\nSaiu da funcao deleteFilesFromListFromFolder: $pathToFiles"
 }
