@@ -9,6 +9,6 @@
 <!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(17|21)$ -->
 <requiredProperty key="java_version">
-    <defaultValue>17</defaultValue>
+    <defaultValue>21</defaultValue>
     <validationRegex>^(17|21)$</validationRegex>
 </requiredProperty>
