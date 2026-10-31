@@ -7,6 +7,11 @@
 
 def gcl = new GroovyClassLoader(this.class.classLoader)
 def catalogEntryClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/CatalogEntry.groovy"))
+// The canonical components: type inference and contract -> entity derivation.
+// They are wired by hand (reflection) because a sibling source file is not
+// resolvable at compile time in this build.
+def resolverClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/ContractTypeResolver.groovy"))
+def deriverClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/ContractEntityDeriver.groovy"))
 def mergerClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/FlagProposalMerger.groovy"))
 
 int failures = 0
@@ -22,7 +27,7 @@ catalog.put("enable_jwt_authentication", mkEntry("enable_jwt_authentication", "f
 catalog.put("log_level", mkEntry("log_level", "INFO", null))
 catalog.put("entity_name", mkEntry("entity_name", "MyEntity", '^[A-Z][a-zA-Z0-9_]+$'))
 
-def merger = mergerClass.newInstance()
+def merger = mergerClass.newInstance(deriverClass.newInstance(resolverClass.newInstance()))
 
 // ----------------------------------------------------------------------
 // Scenario A: contract wins over inference; unknown/absent LLM flags discarded

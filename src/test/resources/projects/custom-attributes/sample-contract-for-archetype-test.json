@@ -4,6 +4,9 @@
   "attributes": [
     { "name": "id", "type": "Long" },
     { "name": "name", "type": "String" },
-    { "name": "createdAt", "type": "java.time.Instant" }
+    { "name": "createdAt", "type": "java.time.Instant" },
+    { "name": "status", "type": "it.pkg.domain.StatusPedido", "value": "ATIVO", "enumValues": ["ATIVO", "CANCELADO"] },
+    { "name": "situacao", "type": "it.pkg.contractentity.Situacao", "value": "ABERTA" },
+    { "name": "credenciais", "type": "it.pkg.contractentity.config.properties.credentials.AdminCredentials" }
   ]
 }

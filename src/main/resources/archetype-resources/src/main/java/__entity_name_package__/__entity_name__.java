@@ -6,6 +6,20 @@ package ${package}.${entity_name_package};
 
 import jakarta.persistence.Entity;
 ##
+#if(${enable_custom_attributes} == "true" && ${custom_attribute_imports} != "none")
+#set($entity_package_full = "${package}.${entity_name_package}")
+#set($custom_imports_list = ${custom_attribute_imports})
+#foreach($custom_import in $custom_imports_list.split(","))
+#set($custom_import_trim = $custom_import.trim())
+#if($custom_import_trim.length() > 0 && $custom_import_trim.lastIndexOf(".") > 0)
+#set($custom_import_pkg = $custom_import_trim.substring(0, $custom_import_trim.lastIndexOf(".")))
+#if($custom_import_pkg != $entity_package_full)
+import $custom_import_trim;
+#end
+#end
+#end
+#end
+##
 ##
 #if(${enable_custom_attributes} == "false")
 ##

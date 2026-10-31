@@ -240,20 +240,20 @@
 
 * Visão geral: o archetype é composto por **artefatos versionados**, montados no
   build, e o resultado é executado em **2 momentos** distintos:
-  a *montagem* do archetype (`mvn install`) e a *geração* de um projeto
-  (`mvn archetype:generate`).
+  - *montagem* do archetype (`mvn install`)
+  - *geração* de um projeto (`mvn archetype:generate`).
 
 #### Artefatos (fonte da verdade) 🎨
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
-| A1 | Catálogo de flags — `archetype_metadata_properties` | `src/main/resources/META-INF/maven/archetype_metadata_properties/` | 33 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
+| A1 | Catálogo de flags — `archetype_metadata_properties` | `src/main/resources/META-INF/maven/archetype_metadata_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
 | A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | mapeia `archetype-resources/` → árvore do projeto gerado |
 | A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 26 entities (17 `property-*` + 9 `fileset-*`) |
 | A4 | XSLT identidade | `src/main/resources/META-INF/maven/identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
 | A5 | Pós-processador — `body/` + `variables/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,snippets}/` | modulariza o projeto gerado (mantém / exclui arquivos e pastas) |
 | A6 | Compositor do pós-processador | `src/main/groovy/eda/postgenerate/SnippetComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
-| A7 | Mecanismo de inferência LLM | `src/main/groovy/eda/postgenerate/llmflag/` | lê o catálogo em runtime, infere as flags a partir do prompt dado à LLM e emite a command line do `archetype:generate` |
+| A7 | Mecanismo de 'inferência via LLM' | `src/main/groovy/eda/postgenerate/llmflag/` | lê o catálogo em runtime, infere as flags a partir do prompt dado à LLM e emite a command line do `archetype:generate` |
 
 > Detalhes, CLI, precedência e exit codes → seção **"Detalhando o Mecanismo de Inferência LLM (A7)"**
 
@@ -278,7 +278,7 @@
       4.2 archetype-post-generate.groovy ─► modulariza (mantém / exclui)
         ▼
 [5] TESTES
-      5.1 unitários Groovy do mecanismo LLM (fase test — 7 suítes)
+      5.1 unitários Groovy do mecanismo LLM (fase test — 10 suítes / 296 checks)
       5.2 integração (fase integration-test) — 11 fixtures + verify.groovy (2)
         ▼
 [6] INSTALAÇÃO (fase install) ──► ~/.m2/repository + archetype-catalog.xml
@@ -290,8 +290,8 @@
 | Fase | Plugin | Entrada | Saída |
 |------|--------|---------|-------|
 | `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
-| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 32 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
-| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `src/test/groovy/run-all-tests.groovy` | 7 suítes unitárias do mecanismo LLM (o build falha se alguma falhar) |
+| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 34 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
+| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `src/test/groovy/run-all-tests.groovy` | 10 suítes unitárias do mecanismo LLM (296 checks; o build falha se alguma falhar) |
 | `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | 11 projetos gerados, cada um com `mvn clean verify` |
 | `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
 
@@ -301,6 +301,21 @@
 > Portanto `mvn clean install integration-test` roda a suíte de integração
 > **duas vezes** (cada fixture é gerada e validada 2×) — use `mvn clean install`
 > ou, se não quiser instalar, `mvn clean integration-test`.
+
+#### Suítes unitárias do mecanismo LLM 🧪
+
+| Suíte | Checks | O que garante |
+|---|---|---|
+| `ContractTypeResolverTest` | 50 | inferência de tipo: `java.lang`, **tipo do projeto**, detecção de enum, normalização de constantes, nomenclatura pelo tipo |
+| `ContractDerivationTest` | 52 | derivação da entidade, precedência, flags de imports/enums, colisão de nomes, **paridade** canônico × espelho do `Orchestrator` |
+| `CustomEnumGenerationTest` | 24 | pós-processador: geração dos enums (pacote, constantes, plural, arquivo existente **não** sobrescrito, entrada inválida) |
+| `CustomAttributesProfileConsistencyTest` | 25 | **contrato ↔ perfil do archetype**: as flags derivadas são exatamente as declaradas no perfil de integração |
+| `OrchestratorCacheTest` | 34 | cache v2/v1, byte-equivalência, guarda FR-017 |
+| `ProvenanceReportTest` | 24 | relatório de proveniência, FR-006/007/008/009/017 |
+| `FlagCatalogExtractorTest` | 29 | catálogo real (35 flags), FR-018, defaults × regex |
+| `OrchestratorContractGateTest` | 25 | gates do CLI (FR-001/002/003), stdout puro |
+| `CommandLineAssemblerTest` | 21 | formatação e escape da command line (FR-010) |
+| `FlagCatalogExtractorDriftTest` | 12 | o catálogo segue o metadata sem lista hardcoded (FR-013) |
 
 #### Regras estruturais 📏
 
@@ -320,13 +335,13 @@
 * Pós-processador (compositor Groovy) → seção **"Processamento do Archetype-Post-Generate.groovy"**
 * Catálogo de flags (33) → seção **"Flags do mvn archetype:generate"**
 * Como adicionar uma flag → seção **"Acrescentando Novas Flags ➕️"**
-* Mecanismo (A7) → seção **"Detalhando o Mecanismo de Inferência LLM (A7)"**
-* Inferência via LLM (uso no OpenCode) → seção **"Usando a Inferência via LLM"**
+* Mecanismo (A7) → seção **"Mecanismo de 'Inferência via LLM' (A7)"**
+* Inferência via LLM (uso no OpenCode) → seção **"Usando o 'Mecanismo de Inferência via LLM'"**
 * Testes → seções **"Testes de Integracao ✅"** e **"verify.groovy - Validacao por Fixture (Integracao) 🔬"**
 
 </details>
 
-<details><summary><strong> Detalhando o Mecanismo de Inferência LLM (A7) 🧠</strong></summary>
+<details><summary><strong> Mecanismo de 'Inferência via LLM' 🧠</strong></summary>
 
 **O que é:** o mecanismo que transforma **uma intenção em linguagem natural + um contrato JSON** na **command line pronta** do `mvn archetype:generate`.
 É uma **CLI de operador** — *não* é uma fase do build do archetype (o `pom.xml` registra isso explicitamente).
@@ -336,15 +351,49 @@
 | # | Classe | Papel | Momento (runtime) |
 |---|--------|-------|-------------------|
 | 1 | `Orchestrator.groovy` | entry point da CLI; orquestra o fluxo completo | parse dos args, gate FR-001, leitura do `stdin` (entrada padrão do processo) |
-| 2 | `FlagCatalogExtractor.groovy` | lê o catálogo de flags do metadata transformado (FR-005, FR-013, FR-018) | passo 3 — lê as **33 flags** de `target/classes/META-INF/maven/archetype-metadata.xml` |
-| 3 | `CatalogEntry.groovy` | invariantes de cada flag: `key` e `defaultValue` não-vazios, regex compilável (FR-018) | passo 3 — valida cada flag extraída |
-| 4 | `JsonCanonicalizer.groovy` | canonicaliza o JSON e deriva a chave de cache (SHA-256) | passo 4 — chave = SHA-256(descrição + contrato canônico) |
-| 5 | `InvocationCache.groovy` | cache em JSONL fora do repositório (FR-011, FR-012, FR-017) | passo 6 — **consulta antes da LLM** (cache hit encerra) e passo 11 — gravação |
-| 6 | `FlagProposalMerger.groovy` | merge das fontes de valor + **proveniência** por flag (FR-006..FR-009, FR-020, FR-021) | passo 8 — consolida contrato > derivadas > LLM > defaults |
-| 7 | `CommandLineAssembler.groovy` | monta a command line final (FR-010), com escape de valores | passo 9 — último passo antes do stdout |
+| 2 | `ContractTypeResolver.groovy` | **inferência de tipo** de UM atributo (resolve o tipo Java; higieniza o nome) | passo 8 — resolve o `Tipo:nome` de cada atributo derivado do contrato |
+| 3 | `ContractEntityDeriver.groovy` | **derivação da entidade** a partir do contrato (nome, pacote, atributos) | passo 8 — deriva `entity_name`, `entity_name_package` e `custom_attributes_list` |
+| 4 | `FlagCatalogExtractor.groovy` | lê o catálogo de flags do metadata transformado (FR-005, FR-013, FR-018) | passo 3 — lê as **35 flags** de `target/classes/META-INF/maven/archetype-metadata.xml` |
+| 5 | `CatalogEntry.groovy` | invariantes de cada flag: `key` e `defaultValue` não-vazios, regex compilável (FR-018) | passo 3 — valida cada flag extraída |
+| 6 | `JsonCanonicalizer.groovy` | canonicaliza o JSON e deriva a chave de cache (SHA-256) | passo 4 — chave = SHA-256(descrição + contrato canônico) |
+| 7 | `InvocationCache.groovy` | cache em JSONL fora do repositório (FR-011, FR-012, FR-017) | passo 6 — **consulta antes da LLM** (cache hit encerra) e passo 11 — gravação |
+| 8 | `FlagProposalMerger.groovy` | merge das fontes de valor + **proveniência** por flag (FR-006..FR-009, FR-020, FR-021) | passo 8 — consolida contrato > derivadas > LLM > defaults |
+| 9 | `CommandLineAssembler.groovy` | monta a command line final (FR-010), com escape de valores | passo 9 — último passo antes do stdout |
 
-> ⚠️ **As classes não se chamam entre si em runtime.** O `Orchestrator` é *self-contained*: a lógica de cada classe listada está **inline** nele (marcadores `// Inlined <Classe> logic`). Motivo: o `gmaven` embarca Groovy 2.4.9 e não enxerga as classes irmãs compiladas com Groovy 4.0.28.
-> Elas existem como **gêmeos testáveis** — as 7 suítes unitárias carregam cada `.groovy` via `GroovyClassLoader` e comparam com a versão inline (paridade verificada em `ContractDerivationTest`), e `FlagCatalogExtractorDriftTest` garante que o catálogo lido reflete o metadata **sem lista de flags hardcoded**.
+> ⚠️ **O `Orchestrator` é *self-contained*: a lógica de cada componente está *inline* nele** (marcadores `// Inlined <Classe> logic` e o bloco de espelhos no fim do arquivo). Motivo: o `gmaven` embarca Groovy 2.4.9 e não enxerga as classes irmãs compiladas com Groovy 4.0.28.
+> Os **módulos canônicos** são a fonte da verdade e existem como **gêmeos testáveis** — as 10 suítes unitárias carregam cada `.groovy` via `GroovyClassLoader` e comparam com a versão inline (paridade verificada em `ContractDerivationTest`), e `FlagCatalogExtractorDriftTest` garante que o catálogo lido reflete o metadata **sem lista de flags hardcoded**.
+> Os espelhos inline de `ContractTypeResolver`/`ContractEntityDeriver` levam o prefixo `Orchestrator` porque vivem no mesmo pacote dos canônicos — e um `GroovyClassLoader` guarda **uma classe por nome**: um espelho homônimo esconderia a classe canônica nos testes.
+> O `FlagProposalMerger` (gêmeo testável) **consome os módulos canônicos** por injeção de construtor (`ContractEntityDeriver` ← `ContractTypeResolver`); as suítes fazem a fiação por reflexão.
+
+#### Separação de responsabilidades: derivação da entidade × inferência de tipo 🧩
+
+As duas etapas que transformam o contrato JSON em atributos da entidade são **componentes separados**, cada um com uma responsabilidade única:
+
+| Componente | Entrada | Saída | Responsabilidade |
+|---|---|---|---|
+| `ContractEntityDeriver` | contrato JSON + inferência LLM + catálogo | `entityName`, `entityNameSource`, `attributes[]`, `attributeList`, `warnings[]` | **derivação**: quais atributos existem, como se chamam e em que ordem; monta a lista `Tipo:nome,Tipo:nome` |
+| `ContractTypeResolver` | nome do atributo + tipo declarado (opcional) + valor (opcional) | `TypeResolution { type, warning }` | **inferência de tipo**: qual tipo Java aquele atributo tem |
+
+**Fluxo no passo 8:**
+
+```
+contrato JSON ──► ContractEntityDeriver ──► (por atributo) ──► ContractTypeResolver ──► "Integer:id,String:name"
+                              │                                            │
+                              │                                            └─► TypeResolution { type, warning }
+                              └─► attributeList ──► flag custom_attributes_list ──► merge ──► command line
+```
+
+**Regra de inferência de tipo** (`ContractTypeResolver.resolve`):
+
+1. **Tipo declarado de `java.lang` vence** — normalizado para o nome simples (`java.lang.String` → `String`; genéricos são removidos).
+2. **Tipo do projeto** (fora de `java.lang`: uma classe de domínio ou um enum) → **é preservado**. A entidade o referencia pelo **nome simples** e o **nome do atributo vem do próprio tipo** (`EnderecoCliente` → `enderecoCliente`, `StatusPedido` → `statusPedido`). O tipo viaja em `custom_attribute_imports` (import) e/ou em `custom_enum_definitions` (enum gerado pelo pós-processador).
+3. **Qualquer outro tipo declarado** (`java.time.Instant`, `List<String>`, tipos genéricos) → **warning explícito** e *fallback* para a estimativa pelo valor.
+4. **Estimativa pelo valor** — conforme o tipo em memória do valor: `Integer` → `Integer`, `Long`/`BigInteger` → `Long`, `BigDecimal`/`Double`/`Float` → `Double`, `Boolean` → `Boolean`, texto → `String`.
+5. **Objeto JSON, array ou `null`** → `String` (quando não há tipo declarado).
+6. **O nome do atributo é único** — a entidade não pode repetir um campo. Quando dois atributos share o mesmo tipo do projeto, o primeiro fica com o nome do tipo (`statusPedido`) e o segundo mantém o nome do contrato (`statusAnterior`); um nome ainda duplicado descarta o atributo com **aviso**.
+7. **Dois tipos com o mesmo nome simples e pacotes diferentes** (ex.: `br.com.projeto.Pedido` e `br.com.outro.Pedido`) são avisados: a entidade não consegue importar os dois.
+
+> O nome do atributo também é higienizado (`ContractTypeResolver.sanitizeAttributeName`): caracteres inválidos viram `_`, o primeiro caractere é minúsculo (o regex do catálogo exige `^[a-z][a-zA-Z0-9_]*$`) e um nome sem caractere válido é descartado com warning.
 
 #### Como executar (operador)
 
@@ -443,7 +492,7 @@ groovy src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy \
 mvn clean install
 ```
 
-* A fase `install` executa, em ordem: as **7 suítes unitárias** do mecanismo LLM (fase `test`),
+* A fase `install` executa, em ordem: as **10 suítes unitárias** do mecanismo LLM (fase `test`),
   as **11 fixtures** de integração (fase `integration-test`) e a publicação no repositório local.
   * ⚠️ A fase `integration-test` é **anterior** a `install` → `mvn clean install integration-test`
     roda a suíte de integração **duas vezes**. Use `mvn clean install`.
@@ -1237,8 +1286,8 @@ enable_s3_storage=false
   * O build monta ele a partir das pastas:
 ```bash
 archetype_post_generate_body/          (11 arquivos, ordem fixa)
-archetype_post_generate_variables/      (10 arquivos, alfabetico)
-archetype_post_generate_snippets/       (11 arquivos, alfabetico)
+archetype_post_generate_variables/      (11 arquivos, alfabetico)
+archetype_post_generate_snippets/       (12 arquivos, alfabetico)
 ```
     - `variables-s3-storage.groovy` entra em ordem alfabetica.
     - `snippet-s3-storage.groovy` tambem.
@@ -1272,17 +1321,17 @@ mvn archetype:generate \
 
 ##### RESUMO - 6 arquivos CRIADOS + 2 arquivos EDITADOS:
 
-| # | Arquivo | Acao |
-|---|---------|------|
-| 1 | `archetype-resources/config/s3-storage.properties` | CRIAR |
-| 2 | `archetype-resources/src/main/java/config/StorageProperties.java` | CRIAR |
-| 3 | `archetype-resources/docker/minio/docker-compose.yml` | CRIAR |
-| 4 | `archetype_metadata_properties/property-s3-storage.xml` | CRIAR |
-| 5 | `archetype-metadata.xml` | **EDITAR** (2 pontos: DOCTYPE + requiredProperties) |
-| 6 | `archetype_metadata_filesets/fileset-s3-storage.xml` | CRIAR |
-| 7 | `archetype-metadata.xml` | **EDITAR** (1 ponto: fileSets) |
-| 8 | `archetype_post_generate_variables/variables-s3-storage.groovy` | CRIAR |
-| 9 | `archetype_post_generate_snippets/snippet-s3-storage.groovy` | CRIAR |
+| #  | Arquivo | Acao |
+|----|---------|------|
+| 01 | `archetype-resources/config/s3-storage.properties` | CRIAR |
+| 02 | `archetype-resources/src/main/java/config/StorageProperties.java` | CRIAR |
+| 03 | `archetype-resources/docker/minio/docker-compose.yml` | CRIAR |
+| 04 | `archetype_metadata_properties/property-s3-storage.xml` | CRIAR |
+| 05 | `archetype-metadata.xml` | **EDITAR** (2 pontos: DOCTYPE + requiredProperties) |
+| 06 | `archetype_metadata_filesets/fileset-s3-storage.xml` | CRIAR |
+| 07 | `archetype-metadata.xml` | **EDITAR** (1 ponto: fileSets) |
+| 08 | `archetype_post_generate_variables/variables-s3-storage.groovy` | CRIAR |
+| 09 | `archetype_post_generate_snippets/snippet-s3-storage.groovy` | CRIAR |
 | 10 | `projects/basic/archetype.properties` | **EDITAR** |
 
 ---
@@ -1499,7 +1548,7 @@ if (keep_binding_properties == 'false') {
 
 </details>
 
-<details><summary><strong> Usando a Inferência via LLM </strong></summary>
+<details><summary><strong> Usando a 'Inferência via LLM' </strong></summary>
 
 * Esta seção mostra, na prática, como gerar um projeto a partir do archetype
 usando o mecanismo de inferência LLM. 
@@ -1633,6 +1682,13 @@ Antes de executar, confira que o valor de `-Dpackage` **NÃO** contém o nome da
 * O contrato também pode trazer a coleção `attributes` explícita
   (`{"attributes": [{"name": "id", "value": 1024}]}`), que tem precedência
   sobre os campos de negócio avulsos.
+* Cada atributo pode declarar o seu `type`
+  (`{"name": "status", "type": "br.com.projeto.StatusPedido"}`). Um tipo de
+  `java.lang` é usado como está; um **tipo do projeto** (fora de `java.lang`)
+  é preservado: a entidade o referencia pelo nome simples, **o atributo passa
+  a se chamar pelo tipo** (`StatusPedido` → `statusPedido`) e o tipo viaja em
+  `custom_attribute_imports` (import) e/ou `custom_enum_definitions` (enum
+  gerado pelo pós-processador).
 * O contrato **é a base do módulo**: o mecanismo o grava em disco e o
   archetype o copia para `src/test/resources/contracts/contract.json` no
   projeto gerado (quando `enable_folder_src_test_java = true`). Os testes de
@@ -1698,12 +1754,12 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
 * **OBJETIVO**
   * Manter 1 arquivo final [ARCHETYPE-POST-GENERATE.GROOVY](src/main/resources/META-INF/archetype-post-generate.groovy) consumido pelo (`maven-archetype-plugin`)
     durante o pos-processamento do projeto gerado,
-    mas organizado no source em modulos menores (11 arquivos de (`body/`) + 10 de (`variables/`) + 11 de (`snippets/`)).
+    mas organizado no source em modulos menores (11 arquivos de (`body/`) + 11 de (`variables/`) + 12 de (`snippets/`)).
 
 * **MECANISMO**
   * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 3 diretorios.
   * A [`List<String> SECTIONS`](src/main/groovy/eda/postgenerate/SnippetComposer.groovy) no topo do compositor e a **fonte unica da verdade da ordem** (substitui o `ls -1` alfabetico implicito do bash legado).
-  * Resultado: o source continua sendo uma colecao de 32 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
+  * Resultado: o source continua sendo uma colecao de 34 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
 
 * **PLUGIN** — [`groovy-maven-plugin`](https://groovy.github.io/gmaven/) 2.1.1
   * Fase: (`process-resources`) (imediatamente apos (`xml-maven-plugin:transform`) montar o metadata em (`generate-resources`), e antes do (`package`) e do (`integration-test`)).
@@ -1726,9 +1782,9 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
   * [`archetype_post_generate_body/`](src/main/resources/META-INF/archetype_post_generate_body)
     => 11 arquivos canonicos (1 header, 1 global-vars, 5 path-vars, 1 footer, 1 file-functions, 1 folder-functions, 1 imports).
   * [`archetype_post_generate_variables/`](src/main/resources/META-INF/archetype_post_generate_variables)
-    => 10 (`variables-*.groovy`) (1 por categoria de flag).
+    => 11 (`variables-*.groovy`) (1 por categoria de flag).
   * [`archetype_post_generate_snippets/`](src/main/resources/META-INF/archetype_post_generate_snippets)
-    => 11 (`snippet-*.groovy`) (1 por comportamento condicional).
+    => 12 (`snippet-*.groovy`) (1 por comportamento condicional).
   * [`SnippetComposer.groovy`](src/main/groovy/eda/postgenerate/SnippetComposer.groovy) => o compositor Groovy de build-time.
 
 * **FLUXO BUILD**
@@ -1786,7 +1842,14 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
 
 * **O QUE FAZ** (exemplo `custom-attributes`)
   * Procura `ContractEntity.java` em 5 caminhos candidatos.
-  * Valida via regex que existem os campos `private Long id`, `private String name`, `private String createdAt`.
+  * Valida via regex que existem os campos `private Long id`, `private String name`, `private String createdAt`,
+    `private StatusPedido statusPedido`, `private Situacao situacao`, `private AdminCredentials adminCredentials`.
+  * Valida os **tipos do projeto** (FR-021/FR-024): a entidade importa `it.pkg.domain.StatusPedido` e
+    `it.pkg.contractentity.config.properties.credentials.AdminCredentials`, **nao** importa
+    `it.pkg.contractentity.Situacao` (mesmo pacote da entidade) e os enums `StatusPedido` e `Situacao`
+    foram gerados nos pacotes declarados.
+  * Valida que a classe **referenciada** (`AdminCredentials`) nao foi transformada em enum nem sobrescrita
+    e que a pasta do enum gerado contem **apenas** o enum (nada e gerado para uma classe referenciada).
   * Lanca `IllegalStateException` se entity ausente ou atributo faltar.
   * E **auto-contido** — hardcoda a expectativa e nao depende do JSON copiado.
   * No caso negativo do FR-021, verifica que a pasta `src/test/resources/contracts/` **nao** existe
@@ -1835,14 +1898,21 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
     Faca um sanity check completo do projeto archetype-v2-eda, na ordem:
     (1) Confirme os pre-requisitos: Java 21 e Maven 3.9.x instalados.
     (2) Prepare o catalogo com `mvn clean process-resources` para que `target/classes/META-INF/maven/archetype-metadata.xml` exista.
-    (3) Rode os testes de integracao com `mvn clean install integration-test` — isto cobre as 7 suites unitarias 
-    Groovy (159 checks, agora inclusas no build), todas as 11 fixtures de `src/test/resources/projects/`, e o `verify.groovy` das fixtures `custom-attributes` e `entity-contract`. 
-    (4) Me entregue um sumario final com DOIS blocos: 
+    (3) Rode os testes de integracao com `mvn clean install integration-test` — isto cobre todas as suites unitarias 
+    Groovy (todos os checks, agora inclusas no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das fixtures `custom-attributes` e `entity-contract`. 
+    (4) Me entregue um sumario final tabelado, com DOIS blocos: 
     (4.1) UNITARIOS — Todas as suites, todos os checks, quantas passaram e a lista de checks por suite; 
-    (4.2) INTEGRACAO — todas as fixtures, quantas passaram e qualquer `verify.groovy` que tenha falhado, nesse caso 
-    observando:
-    (4.2.1) Se algo falhar, mostre o trecho do log e sugira a correcao. 
-    (4.2.2) Se tudo passar, confirme com 'Tudo verde' e o tempo total gasto. 
+    (4.2) INTEGRACAO — todas as fixtures, quantas passaram e qualquer `verify.groovy` que tenha falhado, nesse caso observando:
+    (5) Quanto ao Sumario Final:
+    (5.1) Qdo o item falhar, mostre o trecho do log e sugira a correcao. 
+    (5.2) Qdo o item passar, confirme com 'Tudo verde' e o tempo total gasto.
+    (6) Formato obrigatorio do relatorio (100% em tabelas Markdown, nesta ordem): 
+    (6.1) Tabela de Setup [(1)-(3)]: colunas `Etapa | Comando / Verificacao | Resultado Obtido | Status | Tempo`. 
+    (6.2) Bloco (4.1) UNITARIOS: 
+    - Tabela Resumo Geral: colunas `# | Suite | Total de Checks | Passaram | Falharam | Status` (com linha final de Total).
+    - Uma tabela separada para CADA suite listando TODOS os checks individuais: colunas `ID | Check | Resultado`.         
+    (6.3) Bloco (4.2) INTEGRACAO: tabela unica com todas as fixtures e linha final de Total: colunas `# | Fixture | Invoker Exit Code | Pos-Build verify.groovy | Verificacoes do verify.groovy | Status`.  
+    (6.4) Bloco (5) Sumario Final: tabela consolidada por bloco + linha `TOTAL GERAL`: colunas `Bloco | Escopo | Passaram | Falharam | Diagnostico / Correcao (5.1) | Confirmacao e Tempo (5.2)`. 
     ```
 </details>
 
@@ -1931,9 +2001,32 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
   * *Derivação:* o mecanismo monta a lista **a partir do contrato**, no formato estrito
     `Tipo:nome,Tipo:nome` (sem espaços, na ordem do contrato). O **tipo é estimado pelo
     valor** do atributo (`Boolean`, `Integer`, `Long`, `Double`, `String`); um `type`
-    declarado no contrato tem precedência, mas só é aceito se for um tipo de `java.lang`
-    (o template não emite `import` para o tipo do atributo) — fora de `java.lang`, o tipo é
+    declarado no contrato tem precedência quando é um tipo de `java.lang` **ou um tipo do
+    projeto** (fora de `java.lang`). Um tipo do projeto é referenciado pelo nome simples e
+    **nomeia o atributo pelo próprio tipo** (`EnderecoCliente` → `enderecoCliente`). Um
+    `type` fora dessas duas categorias (ex.: `java.time.Instant`, `List<String>`) é
     rejeitado com **aviso** e o valor volta a ser estimado pelo valor do atributo.
+
+* **`custom_attribute_imports`**
+  * Padrão: `none`
+  * Efeito: lista de FQNs dos **tipos do projeto** referenciados pela entidade — o template
+    emite um `import` para cada um (o import do próprio pacote da entidade é omitido).
+  * **Depende de:** `enable_custom_attributes = true`
+  * *Derivação:* preenchida pelo mecanismo a partir do contrato: cada atributo com `type`
+    fora de `java.lang` **e com pacote declarado** contribui com seu FQN.
+  * Validação: `none` ou uma lista de FQNs separados por vírgula.
+
+* **`custom_enum_definitions`**
+  * Padrão: `none`
+  * Efeito: os **enums** que o pós-processador gera no projeto gerado, no formato
+    `Tipo:CONSTANTE|CONSTANTE` (vários enums separados por `;`).
+  * **Depende de:** `enable_custom_attributes = true`
+  * *Derivação:* preenchida pelo mecanismo a partir do contrato: um tipo do projeto com
+    **valor textual** é um enum. As constantes vêm de `enumValues`/`values` quando
+    declaradas; caso contrário, do próprio valor observado (`"ATIVO"` → `ATIVO`).
+    Um `Tipo` sem pacote é gerado no pacote da entidade; um `Tipo` com pacote é gerado no
+    próprio pacote. Um arquivo de enum já existente **não é sobrescrito**.
+  * Validação: `none` ou uma lista de definições no formato acima.
 
 * **`entity_contract_path`**
   * Padrão: `none`
@@ -2139,7 +2232,9 @@ enable_git_support = true
   └─→ git_branch_repo
 
 enable_custom_attributes = true
-  └─→ custom_attributes_list
+  ├─→ custom_attributes_list
+  ├─→ custom_attribute_imports
+  └─→ custom_enum_definitions
 
 entity_name
   └─→ entity_name_package (derivada pelo mecanismo LLM a partir de entity_name)

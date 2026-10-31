@@ -81,7 +81,7 @@ A single flag as declared in the canonical archetype metadata. Read at runtime f
 
 ### Source
 
-`src/main/resources/META-INF/maven/archetype_metadata_properties/*.xml` (17 files). The 32 `<requiredProperty key="…">` declarations across these files constitute the catalog.
+`src/main/resources/META-INF/maven/archetype_metadata_properties/*.xml` (17 files). The `<requiredProperty key="…">` declarations across these files constitute the catalog (35 flags).
 
 ### Validation rules
 
@@ -104,7 +104,7 @@ A structured `(flag-key, value)` pair produced by either the external LLM infere
 ### Shape
 
 - **Type**: `Map<String, String>` (catalog-key → value).
-- **Cardinality**: 0..32 (zero or more per invocation; bounded by the catalog size).
+- **Cardinality**: 0..35 (zero or more per invocation; bounded by the catalog size).
 
 ### Production sources
 

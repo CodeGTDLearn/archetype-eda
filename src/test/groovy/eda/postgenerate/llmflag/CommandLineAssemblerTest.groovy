@@ -59,6 +59,21 @@ check("2.7 an empty value is emitted as -D<key>= (no quotes)",
 check("2.8 a null value does not break the assembly", assemble([v: null]).endsWith("-Dv="))
 
 // ---------------------------------------------------------------------------
+// 2b) The PROJECT type channels: imports and enum definitions
+// ---------------------------------------------------------------------------
+check("2.9 a list of imports is emitted verbatim",
+        assemble([custom_attribute_imports: "br.com.projeto.EnderecoCliente,br.com.projeto.StatusPedido"])
+                .contains("-Dcustom_attribute_imports=br.com.projeto.EnderecoCliente,br.com.projeto.StatusPedido"))
+check("2.10 an enum definition is quoted (it carries a pipe)",
+        assemble([custom_enum_definitions: "br.com.projeto.StatusPedido:ATIVO|CANCELADO"])
+                .contains('-Dcustom_enum_definitions="br.com.projeto.StatusPedido:ATIVO|CANCELADO"'))
+check("2.11 several enum definitions are quoted (they carry a semicolon)",
+        assemble([custom_enum_definitions: "br.com.projeto.StatusPedido:ATIVO;Situacao:ABERTA"])
+                .contains('-Dcustom_enum_definitions="br.com.projeto.StatusPedido:ATIVO;Situacao:ABERTA"'))
+check("2.12 the 'none' default is emitted verbatim",
+        assemble([custom_enum_definitions: "none"]).contains("-Dcustom_enum_definitions=none"))
+
+// ---------------------------------------------------------------------------
 // 3) Guardrails
 // ---------------------------------------------------------------------------
 def threw = false

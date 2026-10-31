@@ -4,7 +4,7 @@
  *
  * Why this exists: the suites are plain Groovy scripts (no JUnit infra in this
  * repo), so surefire never picked them up - `mvn test` executed ZERO tests and
- * a green build did NOT mean the 110 unit checks had passed. This runner
+ * a green build did NOT mean the 191 unit checks had passed. This runner
  * evaluates each suite in-process; a failing suite throws (instead of calling
  * System.exit), which the runner catches and turns into a build failure.
  *
@@ -18,6 +18,9 @@
 
 List<String> suites = [
         "src/test/groovy/eda/postgenerate/llmflag/ContractDerivationTest.groovy",
+        "src/test/groovy/eda/postgenerate/llmflag/ContractTypeResolverTest.groovy",
+        "src/test/groovy/eda/postgenerate/llmflag/CustomEnumGenerationTest.groovy",
+        "src/test/groovy/eda/postgenerate/llmflag/CustomAttributesProfileConsistencyTest.groovy",
         "src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy",
         "src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy",
         "src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy",

@@ -20,6 +20,11 @@
 
 def gcl = new GroovyClassLoader(this.class.classLoader)
 def catalogEntryClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/CatalogEntry.groovy"))
+// The canonical components: type inference and contract -> entity derivation.
+// They are wired by hand (reflection) because a sibling source file is not
+// resolvable at compile time in this build.
+def resolverClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/ContractTypeResolver.groovy"))
+def deriverClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/ContractEntityDeriver.groovy"))
 def mergerClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/FlagProposalMerger.groovy"))
 def orchestratorClass = gcl.parseClass(new File("src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy"))
 
@@ -41,13 +46,17 @@ catalogEntries.put("custom_attributes_list", mkEntry("custom_attributes_list", "
         '^(false|[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*(,[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*)*)$'))
 catalogEntries.put("api_port", mkEntry("api_port", "8080", '\\d{1,5}'))
 catalogEntries.put("entity_contract_path", mkEntry("entity_contract_path", "none", '^(none|[^\r\n]*\\.json)$'))
+catalogEntries.put("custom_attribute_imports", mkEntry("custom_attribute_imports", "none",
+        '^(none|([A-Za-z_][A-Za-z0-9_]*\\.)+[A-Za-z_][A-Za-z0-9_]*(,([A-Za-z_][A-Za-z0-9_]*\\.)+[A-Za-z_][A-Za-z0-9_]*)*)$'))
+catalogEntries.put("custom_enum_definitions", mkEntry("custom_enum_definitions", "none",
+        '^(none|([A-Za-z_][A-Za-z0-9_]*\\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\\|[A-Z][A-Z0-9_]*)*(;([A-Za-z_][A-Za-z0-9_]*\\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\\|[A-Z][A-Z0-9_]*)*)*)$'))
 
 def catalogPlain = new LinkedHashMap()
 catalogEntries.each { k, v ->
     catalogPlain.put(k, [defaultValue: v.defaultValue, validationRegex: v.validationRegex])
 }
 
-def merger = mergerClass.newInstance()
+def merger = mergerClass.newInstance(deriverClass.newInstance(resolverClass.newInstance()))
 def orchestrator = orchestratorClass.newInstance()
 
 def mMerge = {
@@ -127,7 +136,8 @@ check("3.3 the flag keeps the CONTRACT source",
         mergedFlat.get("sources").get("api_port") == "CONTRACT")
 
 // ---------------------------------------------------------------------------
-// 4) a declared type wins, but only when it is a java.lang type
+// 4) a declared type wins: java.lang types as declared, a PROJECT type is
+//    kept, any other declared type falls back to the value estimate
 // ---------------------------------------------------------------------------
 def contractTypes = new LinkedHashMap()
 contractTypes.put("attributes", [
@@ -186,10 +196,106 @@ check("6.3 the explicit value keeps the CONTRACT source",
         mergedExplicit.get("sources").get("custom_attributes_list") == "CONTRACT")
 
 // ---------------------------------------------------------------------------
-// 7) parity: the Orchestrator and the FlagProposalMerger must not diverge
+// 7) PROJECT types (outside java.lang): kept, named after the type and
+//    carried to the archetype as imports + enum definitions
+// ---------------------------------------------------------------------------
+def contractProject = new LinkedHashMap()
+contractProject.put("entityName", "PedidoEntity")
+contractProject.put("attributes", [
+        [name: "endereco", type: "br.com.projeto.EnderecoCliente", value: [rua: "X"]],
+        [name: "status", type: "br.com.projeto.StatusPedido", value: "ATIVO", enumValues: ["ATIVO", "CANCELADO"]],
+        [name: "situacao", type: "Situacao", value: "ABERTA"],
+        [name: "quantidade", type: "Quantidade", value: 3]
+])
+
+def mergedProject = mergeMerger(contractProject, [:])
+def valuesProject = mergedProject.get("values")
+
+check("7.1 a PROJECT type is kept in the attribute list",
+        valuesProject.get("custom_attributes_list").contains("EnderecoCliente:enderecoCliente"))
+check("7.2 ...the attribute is named after the TYPE",
+        valuesProject.get("custom_attributes_list").contains("StatusPedido:statusPedido"))
+check("7.3 ...a PROJECT type without a textual value is kept too",
+        valuesProject.get("custom_attributes_list").contains("Quantidade:quantidade"))
+check("7.4 the referenced types travel as imports",
+        valuesProject.get("custom_attribute_imports") ==
+                "br.com.projeto.EnderecoCliente,br.com.projeto.StatusPedido")
+check("7.5 the enums travel as definitions",
+        valuesProject.get("custom_enum_definitions") ==
+                "br.com.projeto.StatusPedido:ATIVO|CANCELADO;Situacao:ABERTA")
+check("7.6 the imports are derived from the contract",
+        mergedProject.get("sources").get("custom_attribute_imports") == "CONTRACT_DERIVED")
+check("7.7 the enum definitions are derived from the contract",
+        mergedProject.get("sources").get("custom_enum_definitions") == "CONTRACT_DERIVED")
+check("7.8 no warning is raised for a PROJECT type",
+        !(mergedProject.get("warnings") as List).any { it.contains("EnderecoCliente") })
+check("7.9 the derived imports satisfy the catalog regex",
+        valuesProject.get("custom_attribute_imports") ==~
+                catalogEntries.get("custom_attribute_imports").validationRegex)
+check("7.10 the derived enum definitions satisfy the catalog regex",
+        valuesProject.get("custom_enum_definitions") ==~
+                catalogEntries.get("custom_enum_definitions").validationRegex)
+check("7.11 a contract without PROJECT types keeps the flags at 'none'",
+        mergedList.get("values").get("custom_attribute_imports") == "none" &&
+                mergedList.get("values").get("custom_enum_definitions") == "none")
+
+// ---------------------------------------------------------------------------
+// 8) PROJECT types - edge cases
+// ---------------------------------------------------------------------------
+def contractShared = new LinkedHashMap()
+contractShared.put("attributes", [
+        [name: "status", type: "br.com.projeto.StatusPedido", value: "ATIVO"],
+        [name: "statusAnterior", type: "br.com.projeto.StatusPedido", value: "CANCELADO"]
+])
+def mergedShared = mergeMerger(contractShared, [:])
+check("8.1 the same type in two attributes is imported ONCE",
+        mergedShared.get("values").get("custom_attribute_imports") == "br.com.projeto.StatusPedido")
+check("8.2 ...and yields ONE enum definition with the merged constants",
+        mergedShared.get("values").get("custom_enum_definitions") ==
+                "br.com.projeto.StatusPedido:ATIVO|CANCELADO")
+check("8.3 ...both attributes are named after the type",
+        mergedShared.get("values").get("custom_attributes_list") ==
+                "StatusPedido:statusPedido,StatusPedido:statusAnterior")
+
+def contractExplicitImports = new LinkedHashMap()
+contractExplicitImports.put("custom_attribute_imports", "com.acme.Other")
+contractExplicitImports.put("attributes", [
+        [name: "status", type: "br.com.projeto.StatusPedido", value: "ATIVO"]
+])
+def mergedExplicitImports = mergeMerger(contractExplicitImports, [:])
+check("8.4 an explicit custom_attribute_imports wins over the derivation",
+        mergedExplicitImports.get("values").get("custom_attribute_imports") == "com.acme.Other")
+check("8.5 ...and keeps the CONTRACT source",
+        mergedExplicitImports.get("sources").get("custom_attribute_imports") == "CONTRACT")
+
+def contractClash = new LinkedHashMap()
+contractClash.put("attributes", [
+        [name: "pedido", type: "br.com.projeto.Pedido", value: "x"],
+        [name: "venda", type: "br.com.outro.Pedido", value: "y"]
+])
+def mergedClash = mergeMerger(contractClash, [:])
+check("8.6 two types with the same simple name are BOTH imported",
+        mergedClash.get("values").get("custom_attribute_imports") == "br.com.projeto.Pedido,br.com.outro.Pedido")
+check("8.7 ...and the clash is reported as a loud warning",
+        (mergedClash.get("warnings") as List).any { it.contains("br.com.projeto.Pedido") &&
+                it.contains("br.com.outro.Pedido") })
+
+def contractNoEnum = new LinkedHashMap()
+contractNoEnum.put("attributes", [
+        [name: "endereco", type: "br.com.projeto.EnderecoCliente", value: [rua: "X"]]
+])
+def mergedNoEnum = mergeMerger(contractNoEnum, [:])
+check("8.8 a PROJECT type with a nested object is NOT an enum",
+        mergedNoEnum.get("values").get("custom_enum_definitions") == "none")
+check("8.9 ...but it IS imported",
+        mergedNoEnum.get("values").get("custom_attribute_imports") == "br.com.projeto.EnderecoCliente")
+
+// ---------------------------------------------------------------------------
+// 8) parity: the Orchestrator and the FlagProposalMerger must not diverge
 // ---------------------------------------------------------------------------
 def parityContracts = [
-        contractList, contractMap, contractFlat, contractTypes, contractNoName, contractExplicit
+        contractList, contractMap, contractFlat, contractTypes, contractNoName, contractExplicit,
+        contractProject
 ]
 int parityFailures = 0
 parityContracts.eachWithIndex { Map c, int i ->
@@ -209,34 +315,34 @@ parityContracts.eachWithIndex { Map c, int i ->
         println "       divergence on discarded, scenario ${i}"
     }
 }
-check("7.1 Orchestrator and FlagProposalMerger produce identical results", parityFailures == 0)
+check("8.1 Orchestrator and FlagProposalMerger produce identical results", parityFailures == 0)
 
 // ---------------------------------------------------------------------------
-// 8) FR-021: the materialized contract path travels as CONTRACT_DERIVED
+// 9) FR-021: the materialized contract path travels as CONTRACT_DERIVED
 // ---------------------------------------------------------------------------
-def derivedOverrides = new LinkedHashMap()
+def derivedOverrides = new LinkedHashMap<String, String>()
 derivedOverrides.put("entity_contract_path", "C:/tmp/contracts/abc.json")
 def mMergeWithOverrides = orchestratorClass.getDeclaredMethod("merge", Map, Map, Map, Map)
 mMergeWithOverrides.accessible = true
 def mergedWithPath = (Map) mMergeWithOverrides.invoke(orchestrator, [:], contractList, catalogPlain, derivedOverrides)
-check("8.1 the contract path is emitted as CONTRACT_DERIVED",
+check("9.1 the contract path is emitted as CONTRACT_DERIVED",
         mergedWithPath.get("values").get("entity_contract_path") == "C:/tmp/contracts/abc.json")
-check("8.2 the contract path source is CONTRACT_DERIVED",
+check("9.2 the contract path source is CONTRACT_DERIVED",
         mergedWithPath.get("sources").get("entity_contract_path") == "CONTRACT_DERIVED")
 
 // ---------------------------------------------------------------------------
-// 9) the contract file is materialized with a deterministic name
+// 10) the contract file is materialized with a deterministic name
 // ---------------------------------------------------------------------------
 def mMaterialize = orchestratorClass.getDeclaredMethod("materializeContract", String, String, String)
 mMaterialize.accessible = true
 def tmpDir = new File(System.getProperty("java.io.tmpdir"), "llmflag-contract-" + System.nanoTime())
 def pathA = (String) mMaterialize.invoke(orchestrator, tmpDir.absolutePath, "{\"a\":1}", "{\"a\": 1}")
 def pathB = (String) mMaterialize.invoke(orchestrator, tmpDir.absolutePath, "{\"a\":1}", "{\"a\": 1}")
-check("9.1 the materialized path is deterministic for the same contract", pathA == pathB)
-check("9.2 the materialized file exists", new File(pathA).isFile())
-check("9.3 the materialized file holds the contract as delivered",
+check("10.1 the materialized path is deterministic for the same contract", pathA == pathB)
+check("10.2 the materialized file exists", new File(pathA).isFile())
+check("10.3 the materialized file holds the contract as delivered",
         new File(pathA).getText("UTF-8") == "{\"a\": 1}")
-check("9.4 the materialized path has no backslash (shell portability)",
+check("10.4 the materialized path has no backslash (shell portability)",
         !pathA.contains("\\"))
 
 println ""

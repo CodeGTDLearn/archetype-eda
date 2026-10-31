@@ -10,7 +10,9 @@ import java.security.MessageDigest
  * CLI entry point for the LLM flag inference mechanism. See spec.md FR-001..FR-019;
  * contracts/cli-contract.md; data-model.md.
  *
- * This script is invoked at phase process-resources by gmaven:2.1.1 (per pom.xml).
+ * This script is a CLI tool: the operator invokes it directly (per
+ * cli-contract.md) to obtain the mvn archetype:generate command line. It is
+ * NOT wired into the archetype's own build lifecycle.
  *
  * Why a single-file implementation: gmaven:execute 2.1.1 bundles Groovy 2.4.9
  * internally; sibling .class files compiled with Groovy 4.0.28 are not on its
@@ -18,6 +20,22 @@ import java.security.MessageDigest
  * compile time. The sibling classes (CatalogEntry, FlagCatalogExtractor, etc.)
  * still exist as unit-testable modules; the Orchestrator inlines the runtime
  * logic here to keep the build-time invocation self-contained.
+ *
+ * RESPONSIBILITY: this file is the CLI entry point (argument gates, contract
+ * reading, cache, inference shell-out and command line assembly). The
+ * DERIVATION of the entity from the contract and the TYPE INFERENCE are
+ * dedicated components - ContractEntityDeriver.groovy and
+ * ContractTypeResolver.groovy - mirrored INLINE at the bottom of this file
+ * (OrchestratorTypeResolution, OrchestratorContractTypeResolver,
+ * OrchestratorContractEntityDeriver), because a sibling source file is not
+ * resolvable at compile time here. The canonical modules are the source of
+ * truth; ContractDerivationTest.groovy asserts the parity between this mirror
+ * and the canonical modules (through FlagProposalMerger).
+ *
+ * The mirrors carry the "Orchestrator" prefix on purpose: they live in the
+ * same package as the canonical modules, and a GroovyClassLoader holds ONE
+ * class per name - an identically named mirror would shadow the canonical
+ * class in the unit tests.
  *
  * Exit codes (per cli-contract.md Section 4):
  *   0  success
@@ -268,21 +286,17 @@ class Orchestrator {
     private static final List<String> FR009_ALLOWLIST = ["entity_name"]
 
     /**
-     * Contract keys that carry meta-information about the module; they are
-     * never entity attributes.
+     * The component that derives the entity semantics from the contract. It
+     * is the INLINE MIRROR of ContractEntityDeriver.groovy (see the header).
      */
-    private static final List<String> CONTRACT_META_KEYS = [
-            "entityName", "entity", "package", "description", "attributes", "fields"
-    ]
+    private OrchestratorContractEntityDeriver _deriver
 
-    /**
-     * Types the entity template can render without emitting an extra import
-     * (the template writes "private ${attrib.type} ${attrib.name};" verbatim).
-     */
-    private static final List<String> JAVA_LANG_TYPES = [
-            "String", "Integer", "Long", "Double", "Float", "Short", "Byte",
-            "Boolean", "Character", "Number", "Object", "StringBuilder", "StringBuffer"
-    ]
+    private OrchestratorContractEntityDeriver getDeriver() {
+        if (_deriver == null) {
+            _deriver = new OrchestratorContractEntityDeriver(new OrchestratorContractTypeResolver())
+        }
+        return _deriver
+    }
 
     private Map<String, Object> merge(Map<String, String> llmInference,
                                       Map<String, Object> contract,
@@ -305,7 +319,7 @@ class Orchestrator {
         // from the contract BEFORE the merge loop, because the package depends
         // on the resolved entity name (and must not depend on the catalog
         // iteration order).
-        Map<String, Object> derived = deriveFromContract(contract, llmInference, catalog)
+        Map<String, Object> derived = getDeriver().deriveFromContract(contract, llmInference, catalog)
 
         for (Map.Entry<String, Map<String, String>> e : catalog.entrySet()) {
             String key = e.key
@@ -391,6 +405,13 @@ class Orchestrator {
             sources.put(key, source)
         }
 
+        // The entity semantics may carry PROJECT types (types outside
+        // java.lang). They are referenced by their simple name in the entity,
+        // so the metadata the archetype needs travels in two derived flags:
+        // the imports of the referenced types and the definitions of the
+        // enums it must generate.
+        applyDerivedTypeFlags(values, sources, notes, catalog, derived)
+
         // FR-009/FR-020: LLM proposals whose key is absent from the contract
         // are discarded - unless the key is on the allowlist AND the proposal
         // was accepted (an accepted proposal must not be listed as discarded).
@@ -426,6 +447,93 @@ class Orchestrator {
     }
 
     /**
+     * Derives the flags that carry the metadata of the PROJECT types:
+     *   - custom_attribute_imports: the FQNs of the referenced types, so the
+     *     entity template can import them;
+     *   - custom_enum_definitions: the enums the archetype must generate
+     *     ("Type:CONSTANT|CONSTANT", separated by ';').
+     */
+    private void applyDerivedTypeFlags(Map<String, String> values, Map<String, String> sources,
+                                       Map<String, String> notes, Map<String, Map<String, String>> catalog,
+                                       Map<String, Object> derived) {
+        List<Map<String, Object>> details = (List<Map<String, Object>>) derived.get("attributeDetails")
+        if (details == null || details.isEmpty()) return
+
+        List<String> imports = new ArrayList<String>()
+        Map<String, List<String>> enums = new LinkedHashMap<String, List<String>>()
+        Map<String, String> simpleNames = new LinkedHashMap<String, String>()
+        List<String> warnings = (List<String>) derived.get("warnings")
+        for (Map<String, Object> detail : details) {
+            if (!(Boolean) detail.get("projectType")) continue
+            String qualified = (String) detail.get("qualifiedType")
+            String type = (String) detail.get("type")
+            if (qualified != null && qualified.contains(".") && !imports.contains(qualified)) {
+                imports.add(qualified)
+                // Two distinct types with the same simple name cannot both be
+                // imported: the entity would not compile. The clash is loud.
+                String simple = qualified.substring(qualified.lastIndexOf(".") + 1)
+                String known = simpleNames.get(simple)
+                if (known == null) {
+                    simpleNames.put(simple, qualified)
+                } else if (known != qualified && warnings != null) {
+                    warnings.add("tipos com o mesmo nome simples e pacotes diferentes: '" +
+                            known + "' e '" + qualified + "' - a entidade pode nao compilar")
+                }
+            }
+            if ((Boolean) detail.get("enumType")) {
+                String key = (qualified != null && qualified.contains(".")) ? qualified : type
+                if (key == null) continue
+                List<String> constants = enums.get(key)
+                if (constants == null) {
+                    constants = new ArrayList<String>()
+                    enums.put(key, constants)
+                }
+                for (Object constant : (List<Object>) detail.get("enumConstants")) {
+                    if (!constants.contains(constant)) constants.add((String) constant)
+                }
+            }
+        }
+
+        List<String> enumDefinitions = new ArrayList<String>()
+        for (Map.Entry<String, List<String>> entry : enums.entrySet()) {
+            enumDefinitions.add(entry.getKey() + ":" + entry.getValue().join("|"))
+        }
+        applyDerivedFlag(values, sources, notes, catalog, "custom_attribute_imports",
+                imports.isEmpty() ? "none" : imports.join(","))
+        applyDerivedFlag(values, sources, notes, catalog, "custom_enum_definitions",
+                enumDefinitions.isEmpty() ? "none" : enumDefinitions.join(";"))
+    }
+
+    /**
+     * Applies a derived flag value: the operator's explicit value (CONTRACT)
+     * always wins; a value that violates the catalog rule falls back to the
+     * catalog default (FR-006); otherwise the derived value is emitted with
+     * the CONTRACT_DERIVED provenance.
+     */
+    private void applyDerivedFlag(Map<String, String> values, Map<String, String> sources,
+                                  Map<String, String> notes, Map<String, Map<String, String>> catalog,
+                                  String key, String derivedValue) {
+        if (values == null || !values.containsKey(key)) return
+        if ("CONTRACT".equals(sources.get(key))) return
+        Map<String, String> entry = catalog.get(key)
+        if (entry == null) return
+        String regex = entry.get("validationRegex")
+        if (regex != null && !regex.isEmpty() && !(derivedValue ==~ regex)) {
+            System.err.println(
+                    "ERROR: Flag '" + key + "' value '" + derivedValue +
+                            "' fails validation regex '" + regex +
+                            "'. Default value '" + entry.get("defaultValue") + "' will be used instead."
+            )
+            notes.put(key, "valor derivado '" + derivedValue + "' rejeitado pela regex; default aplicado (FR-006)")
+            values.put(key, entry.get("defaultValue"))
+            sources.put(key, "DEFAULT")
+            return
+        }
+        values.put(key, derivedValue)
+        sources.put(key, "CONTRACT_DERIVED")
+    }
+
+    /**
      * FR-009 (amended): a flag proposed by the LLM is eligible when the
      * contract carries the literal key, or when the flag is on the allowlist
      * (its semantic is derivable from the contract).
@@ -433,155 +541,6 @@ class Orchestrator {
     private boolean isInferenceEligible(String key, Map<String, Object> contract) {
         if (FR009_ALLOWLIST.contains(key)) return true
         return contract != null && contract.containsKey(key)
-    }
-
-    /**
-     * Derives the entity semantics from the contract:
-     *   - the entity name (contract field first, LLM proposal second);
-     *   - the entity attributes, with the type estimated from the VALUE (a
-     *     declared type wins, but only when it is a java.lang type - the
-     *     entity template emits no import for the attribute type);
-     *   - the strict "Type:name,Type:name" list expected by the catalog.
-     *
-     * @return Map with keys: entityName, entityNameSource, attributes (List of
-     *         [name:.., type:..]), attributeList (String), warnings (List).
-     */
-    private Map<String, Object> deriveFromContract(Map<String, Object> contract,
-                                                   Map<String, String> llmInference,
-                                                   Map<String, Map<String, String>> catalog) {
-        Map<String, Object> derived = new LinkedHashMap<>()
-        List<String> warnings = new ArrayList<>()
-        derived.put("warnings", warnings)
-
-        // ---- entity name -------------------------------------------------
-        String entityName = null
-        String entityNameSource = null
-        if (contract != null) {
-            for (String metaKey : ["entity_name", "entityName", "entity"]) {
-                Object raw = contract.get(metaKey)
-                if (raw instanceof String && !((String) raw).trim().isEmpty()) {
-                    entityName = ((String) raw).trim()
-                    entityNameSource = "CONTRACT"
-                    break
-                }
-            }
-        }
-        if (entityName == null && llmInference != null) {
-            String proposed = llmInference.get("entity_name")
-            if (proposed != null && !proposed.trim().isEmpty()) {
-                entityName = proposed.trim()
-                entityNameSource = "INFERENCE"
-            }
-        }
-        derived.put("entityName", entityName)
-        derived.put("entityNameSource", entityNameSource)
-
-        // ---- attributes --------------------------------------------------
-        List<Map<String, Object>> rawAttributes = new ArrayList<>()
-        Object attrs = contract == null ? null : contract.get("attributes")
-        if (attrs == null && contract != null) attrs = contract.get("fields")
-
-        if (attrs instanceof Map) {
-            for (Map.Entry<?, ?> entry : ((Map<?, ?>) attrs).entrySet()) {
-                rawAttributes.add([name: entry.key?.toString(), value: entry.value, type: null])
-            }
-        } else if (attrs instanceof List) {
-            for (Object element : (List<Object>) attrs) {
-                if (element instanceof Map) {
-                    Map<?, ?> em = (Map<?, ?>) element
-                    Object name = em.get("name")
-                    if (name == null) name = em.get("attribute")
-                    if (name == null) name = em.get("field")
-                    Object value = null
-                    if (em.containsKey("value")) value = em.get("value")
-                    else if (em.containsKey("default")) value = em.get("default")
-                    rawAttributes.add([name: name?.toString(), value: value, type: em.get("type")])
-                } else if (element instanceof String) {
-                    rawAttributes.add([name: (String) element, value: null, type: null])
-                }
-            }
-        } else if (attrs == null && contract != null) {
-            // No explicit attribute collection: the business fields of the
-            // contract (top-level keys that are neither catalog flags nor
-            // meta keys) ARE the entity attributes.
-            for (Map.Entry<?, ?> entry : contract.entrySet()) {
-                String key = entry.key?.toString()
-                if (key == null) continue
-                if (catalog.containsKey(key)) continue
-                if (CONTRACT_META_KEYS.contains(key)) continue
-                rawAttributes.add([name: key, value: entry.value, type: null])
-            }
-        }
-
-        List<Map<String, Object>> attributes = new ArrayList<>()
-        List<String> parts = new ArrayList<>()
-        for (Map<String, Object> raw : rawAttributes) {
-            String name = sanitizeAttributeName((String) raw.get("name"))
-            if (name == null) {
-                warnings.add("atributo descartado: nome invalido '" + raw.get("name") + "'")
-                continue
-            }
-            String type = null
-            Object declared = raw.get("type")
-            if (declared != null) {
-                type = normalizeType(declared.toString())
-                if (type == null) {
-                    warnings.add("atributo '" + name + "': tipo declarado '" + declared +
-                            "' nao e um tipo de java.lang - tipo estimado pelo valor")
-                    type = null
-                }
-            }
-            if (type == null) type = estimateType(raw.get("value"))
-            attributes.add([name: name, type: type])
-            parts.add(type + ":" + name)
-        }
-        derived.put("attributes", attributes)
-        derived.put("attributeList", parts.join(","))
-        return derived
-    }
-
-    /**
-     * Normalizes a declared attribute type: FQN -> simple name, generics
-     * dropped. Returns null when the type is not a java.lang type (the entity
-     * template emits no import for the attribute type, so anything else would
-     * produce a project that does not compile).
-     */
-    private String normalizeType(String raw) {
-        if (raw == null) return null
-        String t = raw.trim()
-        if (t.isEmpty()) return null
-        if (t.contains(".")) t = t.substring(t.lastIndexOf(".") + 1)
-        if (t.contains("<")) t = t.substring(0, t.indexOf("<"))
-        if (!JAVA_LANG_TYPES.contains(t)) return null
-        return t
-    }
-
-    /**
-     * Estimates the attribute type from the VALUE carried by the contract.
-     */
-    private String estimateType(Object value) {
-        if (value == null) return "String"
-        if (value instanceof Boolean) return "Boolean"
-        if (value instanceof Integer || value instanceof Short || value instanceof Byte) return "Integer"
-        if (value instanceof Long || value instanceof java.math.BigInteger) return "Long"
-        if (value instanceof java.math.BigDecimal || value instanceof Double || value instanceof Float) return "Double"
-        // Arrays and objects are kept as their serialized String form: the
-        // template emits no import, so java.util types would not compile.
-        return "String"
-    }
-
-    /**
-     * Normalizes an attribute name into a valid Java identifier that also
-     * satisfies the catalog regex ^[a-z][a-zA-Z0-9_]*$.
-     */
-    private String sanitizeAttributeName(String raw) {
-        if (raw == null) return null
-        String s = raw.trim().replaceAll("[^A-Za-z0-9_]", "_")
-        if (s.isEmpty()) return null
-        if (Character.isDigit(s.charAt(0))) s = "field_" + s
-        if (Character.isUpperCase(s.charAt(0))) s = Character.toLowerCase(s.charAt(0)) + s.substring(1)
-        if (!(s ==~ /^[a-z][a-zA-Z0-9_]*$/)) return null
-        return s
     }
 
     private String pickFromContract(String key, Map<String, Object> contract) {
@@ -1082,5 +1041,435 @@ class Orchestrator {
             tmpDesc.delete()
             tmpContract.delete()
         }
+    }
+}
+
+// ----------------------------------------------------------------------
+// Inlined runtime MIRRORS of the canonical modules.
+//
+// The canonical sources of truth are:
+//   - ContractTypeResolver.groovy  (type inference)
+//   - ContractEntityDeriver.groovy (contract -> entity derivation)
+//
+// They are mirrored here because a sibling source file is NOT resolvable at
+// compile time in the environments this script runs in (gmaven:execute 2.1.1
+// bundles Groovy 2.4.9 and groovy.ui.GroovyMain compiles a single file).
+// Keep the bodies in sync with the canonical modules: the behaviour is
+// asserted by ContractDerivationTest.groovy, which compares the outputs of
+// this mirror (Orchestrator) against the canonical modules
+// (FlagProposalMerger).
+//
+// The mirrors carry the "Orchestrator" prefix on purpose: they live in the
+// same package as the canonical modules, and a GroovyClassLoader holds ONE
+// class per name - an identically named mirror would shadow the canonical
+// class in the unit tests.
+// ----------------------------------------------------------------------
+
+/**
+ * The outcome of resolving the type of one attribute: the Java type that will
+ * be rendered in the entity, plus an optional warning (set when a declared
+ * type had to be rejected).
+ *
+ * The extra fields carry the metadata the archetype needs for a PROJECT type:
+ *   - qualifiedType: the type as declared (with its package, when declared)
+ *   - projectType:   the type is a domain type (outside java.lang)
+ *   - enumType:      the type is an enum that the archetype must generate
+ *   - enumConstants: the constants of that enum
+ */
+class OrchestratorTypeResolution {
+    String type
+    String warning
+    String qualifiedType
+    boolean projectType
+    boolean enumType
+    List<String> enumConstants
+}
+
+/**
+ * Resolves the Java type of a single entity attribute and sanitizes attribute
+ * names. SINGLE RESPONSIBILITY: type inference.
+ *
+ * Rules:
+ *   1. A DECLARED java.lang type wins (FQN -> simple name, generics dropped).
+ *   2. A declared PROJECT type (a type outside java.lang - a domain class or
+ *      an enum) is KEPT: the entity references it by its simple name, the
+ *      archetype imports it (flag custom_attribute_imports) and/or generates
+ *      the enum source (flag custom_enum_definitions). The attribute NAME
+ *      then comes from the type itself (EnderecoCliente -> enderecoCliente).
+ *   3. Any OTHER declared type (a JDK type outside java.lang, a generic
+ *      type) produces a LOUD WARNING and falls back to the type estimated
+ *      from the VALUE.
+ *   4. The estimate maps the runtime class of the value to a java.lang type;
+ *      nested objects, arrays and null all fall back to String.
+ */
+class OrchestratorContractTypeResolver {
+
+    /**
+     * Types the entity template can render without emitting an extra import
+     * (the template writes "private ${attrib.type} ${attrib.name};" verbatim).
+     */
+    private static final List<String> JAVA_LANG_TYPES = [
+            "String", "Integer", "Long", "Double", "Float", "Short", "Byte",
+            "Boolean", "Character", "Number", "Object", "StringBuilder", "StringBuffer"
+    ]
+
+    /**
+     * Well-known JDK type names declared WITHOUT a package (e.g. "List").
+     * A package-less name cannot be told apart from a project type by its
+     * spelling, so the usual JDK names keep the legacy behaviour (rejected
+     * + estimate from the value) instead of being treated as project types.
+     */
+    private static final List<String> STANDARD_JDK_TYPE_NAMES = [
+            "List", "ArrayList", "LinkedList", "Map", "HashMap", "LinkedHashMap",
+            "TreeMap", "Set", "HashSet", "LinkedHashSet", "TreeSet", "Collection",
+            "Iterable", "Date", "Calendar", "Timestamp", "Instant", "LocalDate",
+            "LocalDateTime", "LocalTime", "OffsetDateTime", "ZonedDateTime",
+            "Duration", "Period", "UUID", "BigDecimal", "BigInteger", "Optional",
+            "Stream", "Thread"
+    ]
+
+    /**
+     * Resolves the Java type of ONE attribute.
+     */
+    OrchestratorTypeResolution resolve(String name, Object declared, Object value) {
+        return resolve(name, declared, value, null)
+    }
+
+    /**
+     * Resolves the Java type of ONE attribute.
+     *
+     * @param enumValues the explicit enum constants declared in the contract
+     *        (may be null): a List of constants or a single constant
+     */
+    OrchestratorTypeResolution resolve(String name, Object declared, Object value, Object enumValues) {
+        String type = null
+        String warning = null
+        String qualifiedType = null
+        boolean projectType = false
+        boolean enumType = false
+        List<String> enumConstants = new ArrayList<String>()
+        if (declared != null) {
+            String raw = declared.toString().trim()
+            if (!raw.isEmpty()) qualifiedType = raw
+            String normalized = normalizeType(raw)
+            if (normalized != null) {
+                type = normalized
+            } else if (isProjectType(raw)) {
+                // A PROJECT type (outside java.lang) is a valid domain type:
+                // it is kept, referenced by its simple name and carried over
+                // to the archetype (import + enum generation).
+                type = simpleTypeName(raw)
+                projectType = true
+                List<String> constants = enumConstantsFor(value, enumValues)
+                if (!constants.isEmpty()) {
+                    enumType = true
+                    enumConstants = constants
+                }
+            } else {
+                warning = "atributo '" + name + "': tipo declarado '" + declared +
+                        "' nao e um tipo de java.lang - tipo estimado pelo valor"
+            }
+        }
+        if (type == null) type = estimateType(value)
+        OrchestratorTypeResolution out = new OrchestratorTypeResolution()
+        out.type = type
+        out.warning = warning
+        out.qualifiedType = qualifiedType
+        out.projectType = projectType
+        out.enumType = enumType
+        out.enumConstants = enumConstants
+        return out
+    }
+
+    /**
+     * Tells a PROJECT type (a domain class or an enum) from the types that
+     * keep the legacy behaviour (java.lang types, JDK types outside
+     * java.lang and generic types).
+     */
+    boolean isProjectType(String raw) {
+        if (raw == null) return false
+        String t = raw.trim()
+        if (t.isEmpty()) return false
+        if (t.contains("<") || t.contains(">") || t.contains("[")) return false
+        String simple = simpleTypeName(t)
+        if (simple == null) return false
+        // A Java type is a class-like name.
+        if (!(simple ==~ /^[A-Z][A-Za-z0-9_]*$/)) return false
+        if (JAVA_LANG_TYPES.contains(simple)) return false
+        if (t.contains(".")) {
+            String pkg = t.substring(0, t.lastIndexOf(".")).trim()
+            if (pkg.isEmpty()) return false
+            String p = pkg.toLowerCase(Locale.ROOT)
+            // A JDK type outside java.lang keeps the legacy behaviour.
+            if (p.startsWith("java.") || p.startsWith("javax.") || p.startsWith("jakarta.")) return false
+            return true
+        }
+        return !STANDARD_JDK_TYPE_NAMES.contains(simple)
+    }
+
+    /**
+     * The simple name of a declared type: "br.com.projeto.StatusPedido" ->
+     * "StatusPedido".
+     */
+    String simpleTypeName(String raw) {
+        if (raw == null) return null
+        String t = raw.trim()
+        if (t.isEmpty()) return null
+        if (t.contains(".")) t = t.substring(t.lastIndexOf(".") + 1)
+        return t.trim()
+    }
+
+    /**
+     * The enum constants of a PROJECT type: the explicit ones when the
+     * contract declares them, otherwise the observed textual value.
+     */
+    List<String> enumConstantsFor(Object value, Object enumValues) {
+        List<Object> raw = new ArrayList<Object>()
+        if (enumValues instanceof Collection) {
+            raw.addAll((Collection<Object>) enumValues)
+        } else if (enumValues != null) {
+            raw.add(enumValues)
+        }
+        if (raw.isEmpty() && value instanceof String) {
+            raw.add(value)
+        }
+        List<String> out = new ArrayList<String>()
+        for (Object o : raw) {
+            String constant = normalizeEnumConstant(o == null ? null : o.toString())
+            if (constant != null && !out.contains(constant)) out.add(constant)
+        }
+        return out
+    }
+
+    /**
+     * Normalizes a value into a Java enum constant: "em processamento" ->
+     * "EM_PROCESSAMENTO".
+     */
+    String normalizeEnumConstant(String raw) {
+        if (raw == null) return null
+        String s = raw.trim().toUpperCase(Locale.ROOT)
+        if (s.isEmpty()) return null
+        s = s.replaceAll("[^A-Z0-9]+", "_").replaceAll('^_+|_+$', "")
+        if (s.isEmpty()) return null
+        if (Character.isDigit(s.charAt(0))) s = "VALUE_" + s
+        return s
+    }
+
+    /**
+     * Normalizes a declared attribute type: FQN -> simple name, generics
+     * dropped. Returns null when the type is not a java.lang type.
+     */
+    String normalizeType(String raw) {
+        if (raw == null) return null
+        String t = raw.trim()
+        if (t.isEmpty()) return null
+        if (t.contains(".")) t = t.substring(t.lastIndexOf(".") + 1)
+        if (t.contains("<")) t = t.substring(0, t.indexOf("<"))
+        if (!JAVA_LANG_TYPES.contains(t)) return null
+        return t
+    }
+
+    /**
+     * Estimates the attribute type from the VALUE carried by the contract.
+     */
+    String estimateType(Object value) {
+        if (value == null) return "String"
+        if (value instanceof Boolean) return "Boolean"
+        if (value instanceof Integer || value instanceof Short || value instanceof Byte) return "Integer"
+        if (value instanceof Long || value instanceof java.math.BigInteger) return "Long"
+        if (value instanceof java.math.BigDecimal || value instanceof Double || value instanceof Float) return "Double"
+        // Arrays and objects are kept as their serialized String form: the
+        // template emits no import, so java.util types would not compile.
+        return "String"
+    }
+
+    /**
+     * Normalizes an attribute name into a valid Java identifier that also
+     * satisfies the catalog regex ^[a-z][a-zA-Z0-9_]*$.
+     */
+    String sanitizeAttributeName(String raw) {
+        if (raw == null) return null
+        String s = raw.trim().replaceAll("[^A-Za-z0-9_]", "_")
+        if (s.isEmpty()) return null
+        if (Character.isDigit(s.charAt(0))) s = "field_" + s
+        if (Character.isUpperCase(s.charAt(0))) s = Character.toLowerCase(s.charAt(0)).toString() + s.substring(1)
+        if (!(s ==~ /^[a-z][a-zA-Z0-9_]*$/)) return null
+        return s
+    }
+
+    /**
+     * The attribute name of a PROJECT type: the simple name of the type with
+     * its first letter lowercased ("StatusPedido" -> "statusPedido",
+     * "EnderecoCliente" -> "enderecoCliente"). It satisfies the same catalog
+     * regex as sanitizeAttributeName.
+     */
+    String fieldNameForType(String simpleTypeName) {
+        if (simpleTypeName == null) return null
+        String s = simpleTypeName.trim()
+        if (s.isEmpty()) return null
+        if (!(s ==~ /^[A-Za-z_][A-Za-z0-9_]*$/)) return null
+        if (Character.isDigit(s.charAt(0))) s = "field_" + s
+        if (Character.isUpperCase(s.charAt(0))) s = Character.toLowerCase(s.charAt(0)).toString() + s.substring(1)
+        if (!(s ==~ /^[a-z][a-zA-Z0-9_]*$/)) return null
+        return s
+    }
+}
+
+/**
+ * Derives the ENTITY semantics from the operator's JSON contract: the entity
+ * name, the entity attributes (type resolved by the injected resolver) and the
+ * strict "Type:name,Type:name" list expected by the catalog.
+ *
+ * SINGLE RESPONSIBILITY: contract -> entity/attribute derivation.
+ */
+class OrchestratorContractEntityDeriver {
+
+    /**
+     * Contract keys that carry meta-information about the module; they are
+     * never entity attributes.
+     */
+    private static final List<String> CONTRACT_META_KEYS = [
+            "entityName", "entity", "package", "description", "attributes", "fields"
+    ]
+
+    private final OrchestratorContractTypeResolver typeResolver
+
+    OrchestratorContractEntityDeriver(OrchestratorContractTypeResolver typeResolver) {
+        if (typeResolver == null) {
+            throw new IllegalArgumentException("OrchestratorContractEntityDeriver: typeResolver MUST be non-null")
+        }
+        this.typeResolver = typeResolver
+    }
+
+    /**
+     * Derives the entity semantics from the contract.
+     *
+     * @return a Map with keys: entityName, entityNameSource, attributes (List
+     *         of [name:.., type:..]), attributeList (String), warnings (List).
+     */
+    Map<String, Object> deriveFromContract(Map<String, Object> contract,
+                                           Map<String, String> llmInference,
+                                           Map<String, ?> catalog) {
+        Map<String, Object> derived = new LinkedHashMap<>()
+        List<String> warnings = new ArrayList<>()
+        derived.put("warnings", warnings)
+
+        // ---- entity name -------------------------------------------------
+        String entityName = null
+        String entityNameSource = null
+        if (contract != null) {
+            for (String metaKey : ["entity_name", "entityName", "entity"]) {
+                Object raw = contract.get(metaKey)
+                if (raw instanceof String && !((String) raw).trim().isEmpty()) {
+                    entityName = ((String) raw).trim()
+                    entityNameSource = "CONTRACT"
+                    break
+                }
+            }
+        }
+        if (entityName == null && llmInference != null) {
+            String proposed = llmInference.get("entity_name")
+            if (proposed != null && !proposed.trim().isEmpty()) {
+                entityName = proposed.trim()
+                entityNameSource = "INFERENCE"
+            }
+        }
+        derived.put("entityName", entityName)
+        derived.put("entityNameSource", entityNameSource)
+
+        // ---- attributes --------------------------------------------------
+        List<Map<String, Object>> rawAttributes = new ArrayList<>()
+        Object attrs = contract == null ? null : contract.get("attributes")
+        if (attrs == null && contract != null) attrs = contract.get("fields")
+
+        if (attrs instanceof Map) {
+            for (Map.Entry<?, ?> entry : ((Map<?, ?>) attrs).entrySet()) {
+                rawAttributes.add([name: entry.key?.toString(), value: entry.value, type: null])
+            }
+        } else if (attrs instanceof List) {
+            for (Object element : (List<Object>) attrs) {
+                if (element instanceof Map) {
+                    Map<?, ?> em = (Map<?, ?>) element
+                    Object name = em.get("name")
+                    if (name == null) name = em.get("attribute")
+                    if (name == null) name = em.get("field")
+                    Object value = null
+                    if (em.containsKey("value")) value = em.get("value")
+                    else if (em.containsKey("default")) value = em.get("default")
+                    // The explicit enum constants of the attribute (when declared).
+                    Object enumValues = em.get("enumValues")
+                    if (enumValues == null) enumValues = em.get("values")
+                    rawAttributes.add([name: name?.toString(), value: value, type: em.get("type"),
+                                       enumValues: enumValues])
+                } else if (element instanceof String) {
+                    rawAttributes.add([name: (String) element, value: null, type: null])
+                }
+            }
+        } else if (attrs == null && contract != null) {
+            // No explicit attribute collection: the business fields of the
+            // contract (top-level keys that are neither catalog flags nor
+            // meta keys) ARE the entity attributes.
+            for (Map.Entry<?, ?> entry : contract.entrySet()) {
+                String key = entry.key?.toString()
+                if (key == null) continue
+                if (catalog.containsKey(key)) continue
+                if (CONTRACT_META_KEYS.contains(key)) continue
+                rawAttributes.add([name: key, value: entry.value, type: null])
+            }
+        }
+
+        List<Map<String, Object>> attributes = new ArrayList<>()
+        List<Map<String, Object>> attributeDetails = new ArrayList<>()
+        List<String> parts = new ArrayList<>()
+        Set<String> usedNames = new LinkedHashSet<String>()
+        for (Map<String, Object> raw : rawAttributes) {
+            String contractName = typeResolver.sanitizeAttributeName((String) raw.get("name"))
+            if (contractName == null) {
+                warnings.add("atributo descartado: nome invalido '" + raw.get("name") + "'")
+                continue
+            }
+            // The explicit enum constants of the attribute (when declared).
+            Object enumValues = raw.get("enumValues")
+            if (enumValues == null) enumValues = raw.get("values")
+            // The type is resolved by the dedicated resolver component: a
+            // declared java.lang type wins; a declared PROJECT type is kept;
+            // any other declared type is estimated from the value and the
+            // rejection is reported as a warning.
+            def resolution = typeResolver.resolve(contractName, raw.get("type"), raw.get("value"), enumValues)
+            if (resolution.warning != null) warnings.add(resolution.warning)
+            String type = resolution.type
+            String name = contractName
+            // A PROJECT type takes its attribute name from the TYPE itself:
+            // EnderecoCliente -> enderecoCliente, StatusPedido -> statusPedido.
+            if (resolution.projectType) {
+                String typeName = typeResolver.fieldNameForType(type)
+                if (typeName == null) {
+                    warnings.add("atributo descartado: nome invalido para o tipo '" + type + "'")
+                    continue
+                }
+                name = typeName
+                // The type already named another attribute: the name of the
+                // contract is kept (the entity MUST NOT repeat a field).
+                if (usedNames.contains(name) && !usedNames.contains(contractName)) {
+                    name = contractName
+                }
+            }
+            if (usedNames.contains(name)) {
+                warnings.add("atributo descartado: nome duplicado '" + name + "'")
+                continue
+            }
+            usedNames.add(name)
+            attributes.add([name: name, type: type])
+            parts.add(type + ":" + name)
+            attributeDetails.add([name: name, type: type,
+                                  qualifiedType: resolution.qualifiedType,
+                                  projectType: resolution.projectType,
+                                  enumType: resolution.enumType,
+                                  enumConstants: resolution.enumConstants])
+        }
+        derived.put("attributes", attributes)
+        derived.put("attributeDetails", attributeDetails)
+        derived.put("attributeList", parts.join(","))
+        return derived
     }
 }

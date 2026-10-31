@@ -57,8 +57,8 @@ final List<String> SECTIONS = [
     "archetype-path-src-test-variables.groovy",         //  4: Paths de src/test/java e src/test/resources
     "archetype-path-logback-variables.groovy",          //  5: Paths de logback-spring-config (appenders)
     "archetype-path-security-variables.groovy",         //  6: Paths de security (appJwt.key/pub, folderJwtPath)
-    "VARIABLES",                                        //  7: 10 arquivos variables-*.groovy (alfabético)
-    "SNIPPETS",                                         //  8: 11 arquivos snippet-*.groovy (alfabético)
+    "VARIABLES",                                        //  7: 11 arquivos variables-*.groovy (alfabético)
+    "SNIPPETS",                                         //  8: 12 arquivos snippet-*.groovy (alfabético)
     "archetype-footer.groovy",                          //  9: log de fim do pos-processor
     "archetype-file-functions.groovy",                  // 10: helpers (deleteFile, renameFile, copyFile)
     "archetype-folder-functions.groovy"                 // 11: helpers (deleteFolder, renameFolder, etc.)

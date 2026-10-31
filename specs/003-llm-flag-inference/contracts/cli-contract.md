@@ -201,12 +201,13 @@ The mechanism uses whichever form the script advertises in its first line of std
 - **Stderr (any case)**: free-form diagnostics, surfaced to the operator with the prefix `Inference script:`.
 - **The entity name** (FR-021): the script SHOULD estimate `entity_name` from the context of the prompt and of the contract, and return it under the `entity_name` key. The value is **accepted even when the contract carries no literal `entity_name` key** — `entity_name` is on the FR-009 allowlist. The value MUST satisfy the catalog's `validationRegex` for that flag (`^[A-Z][a-zA-Z0-9_]+$`); an invalid value falls back to the catalog default (FR-006).
 - **The attribute list** (FR-021): the mechanism derives `custom_attributes_list` from the contract **itself** — the attributes, their order and their types (estimated from the attribute values) are computed by the mechanism, not by the script. A script proposal for `custom_attributes_list` is therefore ignored whenever the contract carries attributes; the strict `Type:name,Type:name` format is guaranteed by the mechanism, not by the script.
+- **The PROJECT types** (FR-021/FR-024): the mechanism also derives `custom_attribute_imports` and `custom_enum_definitions` from the contract — the imports of the referenced domain types and the enums the archetype must generate. Like `custom_attributes_list`, they are derived, not proposed: a script proposal for them is ignored whenever the contract carries attributes.
 
 ### Required LLM configuration (operator's responsibility)
 
 - `temperature = 0` (enforced contractually by FR-012 byte-equivalence requirement).
 - `top_p = 0` (recommended, not enforced).
-- The script MUST validate that every key in its output is present in the catalog (a small JSON file listing the 32 flag names is provided to the script via `--catalog-file`).
+- The script MUST validate that every key in its output is present in the catalog (a small JSON file listing the 35 flag names is provided to the script via `--catalog-file`).
 
 ### Why this contract exists
 
