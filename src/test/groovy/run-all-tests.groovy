@@ -17,16 +17,16 @@
  */
 
 List<String> suites = [
-        "src/test/groovy/eda/postgenerate/llmflag/ContractDerivationTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/ContractTypeResolverTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/CustomEnumGenerationTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/CustomAttributesProfileConsistencyTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/OrchestratorContractGateTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/CommandLineAssemblerTest.groovy",
-        "src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorDriftTest.groovy"
+        "src/test/pre-processamento-llm-flags/ContractDerivationTest.groovy",
+        "src/test/pre-processamento-llm-flags/ContractTypeResolverTest.groovy",
+        "src/test/pre-processamento-llm-flags/CustomEnumGenerationTest.groovy",
+        "src/test/pre-processamento-llm-flags/CustomAttributesProfileConsistencyTest.groovy",
+        "src/test/pre-processamento-llm-flags/OrchestratorCacheTest.groovy",
+        "src/test/pre-processamento-llm-flags/ProvenanceReportTest.groovy",
+        "src/test/pre-processamento-llm-flags/FlagCatalogExtractorTest.groovy",
+        "src/test/pre-processamento-llm-flags/OrchestratorContractGateTest.groovy",
+        "src/test/pre-processamento-llm-flags/CommandLineAssemblerTest.groovy",
+        "src/test/pre-processamento-llm-flags/FlagCatalogExtractorDriftTest.groovy"
 ]
 
 int failed = 0

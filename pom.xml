@@ -130,11 +130,11 @@
               <goal>execute</goal>
             </goals>
             <configuration>
-              <source>${project.basedir}/src/main/groovy/eda/postgenerate/SnippetComposer.groovy</source>
+              <source>${project.basedir}/src/main/groovy/SnippetComposer.groovy</source>
             </configuration>
           </execution>
           <!--
-            The Orchestrator (src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy)
+            The Orchestrator (src/main/pre-processamento-llm-flags/Orchestrator.groovy)
             is a CLI tool, not a build step. Per cli-contract.md, the operator invokes it
             directly (e.g., `groovy Orchestrator.groovy ...args...`) to obtain the
             mvn archetype:generate command line. It is NOT wired into the archetype's

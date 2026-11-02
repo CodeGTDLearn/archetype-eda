@@ -15,33 +15,7 @@
 
 </details>
 
-<details><summary><strong> Features Test Validation 📍</strong></summary>
-
-* **FASE 01: POS-PROCESSAMENTO**
-  * Target: Pastas/Arquivos gerados a partir do Archetype
-    * Manejo de Pastas/Arquivos
-  * Metodologia:
-    * Tabelamento analitico de hipoteses
-
-
-* **FASE 02: Teste de Aplicacao**
-  * Target: App Gerados a partir do Archetype
-    * Testes de unidade
-    * Testes de Integracao
-  * Metodologia:
-    * Tabelamento analitico de hipoteses
-</details>
-
 <details><summary><strong>Cores ⚛️</strong></summary>
-
-* [ARCHETYPE-POST-GENERATE.GROOVY](src/main/groovy/eda/postgenerate/SnippetComposer.groovy):
-  * Conceito: 
-    * Script GROOVY nativo (build-time) que COMPOE o `archetype-post-generate.groovy` a partir dos snippets em `META-INF/archetype_post_generate_body/`, `..._snippets/` e `..._variables/`. Substituiu o pre-processamento em bash (`bash_script/create_archetype_post_generate.sh`).
-  * Local:
-    * [src \ "MAIN" \ groovy \ eda \ postgenerate \](src/main/groovy/eda/postgenerate/)
-  * Invocado por: `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` (goal `execute`) na fase `process-resources`. Configurado em `pom.xml` (raiz).
-  * Output: `target/classes/META-INF/archetype-post-generate.groovy` (gerado a cada build, equivalente ao output do bash legado).
-
 
 * [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml):
   * Conceito:
@@ -172,6 +146,15 @@
               - Exemplo de OMISSAO DA SWITCH 'enable_jwt':
                 - mvn archetype:generate -DarchetypeGroupId=seu.grupo
 
+* [ARCHETYPE-POST-GENERATE.GROOVY](src/main/groovy/SnippetComposer.groovy):
+  * Conceito:
+    * Script GROOVY nativo (build-time) que COMPOE o `archetype-post-generate.groovy` a partir dos snippets em `META-INF/archetype_post_generate_body/`, `..._snippets/` e `..._variables/`. Substituiu o pre-processamento em bash (`bash_script/create_archetype_post_generate.sh`).
+  * Local:
+    * [src \ "MAIN" \ groovy \](src/main/groovy/)
+  * Invocado por: `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` (goal `execute`) na fase `process-resources`. Configurado em `pom.xml` (raiz).
+  * Output: `target/classes/META-INF/archetype-post-generate.groovy` (gerado a cada build, equivalente ao output do bash legado).
+
+
 * [ARCHETYPE.PROPERTIES](src/test/resources/projects/basic/archetype.properties):
   * Conceito:
 	* Arquivo de propriedades(requiredProperties) do archetype
@@ -180,46 +163,6 @@
   * Local:
 	* [src \ "TEST" \ resources \ _projects_ \ _**"BASIC"**_ \ ](src/test/resources/projects/basic)
 
-</details>
-
-<details><summary><strong> Sources 🔍</strong></summary>
-
-##### Videos 📺
-* [Creating & Using Maven Archetypes](https://www.youtube.com/watch?v=U3AvNVT5j8w)
-* [How to create a Custom Maven Archetype](https://www.youtube.com/watch?v=NBimK5qFy3E)
-* [Spring Boot Code Structure](https://www.youtube.com/watch?v=B1d95I7-zsw)
-* [Centralize spring boot log to ELK Elasticsearch, Logstash, Kibana](https://www.youtube.com/watch?v=hvYUwUmHB6M)
-* [Spring Boot Configuration Properties: Working with Lists & Maps](https://youtu.be/RiG9YORZOfc)
-* [External Properties in Spring Boot 3 @ConfigurationProperties, @Value, Environment](https://youtu.be/s_BT8o0KbxQ)
-* [@ConfigurationProperties: Application Properties in Spring Boot 3 - Properties/Constructor Binding](https://youtu.be/qWr9WD3uYCE)
-
-##### Artigos 📝
-* [Externalized Configuration - Spring Documentation](https://docs.spring.io/spring-boot/reference/features/external-config.html)
-* [Guide to @ConfigurationProperties in Spring Boot](https://www.baeldung.com/configuration-properties-in-spring-boot)
-* [What is Gitleaks?](https://akashchandwani.medium.com/what-is-gitleaks-and-how-to-use-it-a05f2fb5b034l)
-* [What is GitLeaks and How to Use It?](https://www.geeksforgeeks.org/gitleaks/)
-* [Logging in Spring Boot](https://www.baeldung.com/spring-boot-logging)
-* [Spring Boot Logging Example](https://mkyong.com/spring-boot/spring-boot-logging-example/)
-* [Logback xml Configuration Examples](https://javatechonline.com/logback-xml-configuration-examples/)
-* [Setting the Log Level in Spring Boot When Testing](https://www.baeldung.com/spring-boot-testing-log-level)
-* [Logback in Spring Boot](https://www.linkedin.com/pulse/logback-spring-boot-pradeep-h-r-k6fec)
-* [Logback - Chapter 5: Encoders](https://logback.qos.ch/manual/encoders.html)
-* [Understanding Logback](https://medium.com/@facuramallo8/understanding-logback-66044df087ed)
-* [Configuring Centralized Logging with Logback in Logstash and Kibana for Java Applications](https://medium.com/@noushka99anu/configuring-centralized-logging-with-logback-in-logstash-and-kibana-for-java-applications-2d51ba509b9f)
-* [Send the Logs of a Java App to the Elastic Stack (ELK)](https://www.baeldung.com/java-application-logs-to-elastic-stack)
-* [Monitoring Spring Boot Microservices Logs with the ELK Stack](https://medium.com/@sovisrushain/monitoring-spring-boot-microservices-logs-with-the-elk-stack-aeeaf3e98d7b)
-* [ELK Kibana Logs + Springboot Logback](https://www.youtube.com/embed/6kfmMIWrFpg?si=vTF2s1ffOxahT1yP)
-* [Spring Boot & ELK Stack with Log4j2 Socket Appender](https://karadenizfaruk28.medium.com/spring-boot-elk-stack-with-log4j2-socket-appender-6dd63f01ddba)
-* [Testing Spring Boot @ConfigurationProperties](https://www.baeldung.com/spring-boot-testing-configurationproperties)
-* [Custom Validation MessageSource in Spring Boot](https://www.baeldung.com/spring-custom-validation-message-source)
-
-##### Repos 🐙
-* [lemoncode21/docker-loging-elk](https://github.com/lemoncode21/docker-loging-elk)
-* [lemoncode21/springboot-logging-elk](https://github.com/lemoncode21/springboot-logging-elk)
-* [danvega/list-map-props](https://github.com/danvega/list-map-props.git)
-
-##### Documentation 📖
-* [Double words package name](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html)
 </details>
 
 <details><summary><strong>Maven Coordinates 📍</strong></summary>
@@ -236,71 +179,58 @@
 <img alt="" height="400" src="assets/spr_init_folder_structure.png" width="150"/>
 </details>
 
-<details><summary><strong> Composição 📈</strong></summary>
+<details><summary><strong> Etapas de Processamento 📈</strong></summary>
 
-* Visão geral: o archetype é composto por **artefatos versionados**, montados no
-  build, e o resultado é executado em **2 momentos** distintos:
-  - *montagem* do archetype (`mvn install`)
-  - *geração* de um projeto (`mvn archetype:generate`).
+* Visão geral: o processamento do archetype acontece em **3 etapas** — e apenas 2
+  delas viajam empacotadas dentro do JAR:
+  - **1) Pré-processamento** — captura a intenção (use-case + contrato JSON) e
+    produz a command line `-D...` do Maven. ❌ **não empacotado** (sempre viveu
+    fora do `src/main/resources`; hoje é o mecanismo LLM — A7).
+  - **2) Processamento** — o `maven-archetype-plugin` materializa a árvore do
+    projeto a partir do catálogo de flags + templates. ✅ **empacotado** (A1–A4).
+  - **3) Pós-processamento** — o Groovy modulariza o projeto gerado (mantém /
+    exclui arquivos e pastas). ✅ **empacotado** (A5–A6).
 
-#### Artefatos (fonte da verdade) 🎨
+#### Visão das três etapas 🧭
 
-| # | Artefato | Local | Papel |
-|---|----------|-------|-------|
-| A1 | Catálogo de flags — `archetype_metadata_properties` | `src/main/resources/META-INF/maven/archetype_metadata_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
-| A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | mapeia `archetype-resources/` → árvore do projeto gerado |
-| A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 26 entities (17 `property-*` + 9 `fileset-*`) |
-| A4 | XSLT identidade | `src/main/resources/META-INF/maven/identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
-| A5 | Pós-processador — `body/` + `variables/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,snippets}/` | modulariza o projeto gerado (mantém / exclui arquivos e pastas) |
-| A6 | Compositor do pós-processador | `src/main/groovy/eda/postgenerate/SnippetComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
-| A7 | Mecanismo de 'inferência via LLM' | `src/main/groovy/eda/postgenerate/llmflag/` | lê o catálogo em runtime, infere as flags a partir do prompt dado à LLM e emite a command line do `archetype:generate` |
+| Etapa | Papel | Tecnologia | Empacotado no JAR? | Momento |
+|---|---|---|---|---|
+| 1. Pré-processamento | intenção → `mvn ... -D...` | Orchestrator + LLM (A7) | ❌ (projeto-fonte) | antes do `archetype:generate` |
+| 2. Processamento | catálogo + templates → árvore do projeto | `archetype-metadata.xml` + `archetype-resources/` (Velocity) | ✅ | durante o `mvn archetype:generate` |
+| 3. Pós-processamento | árvore gerada → modularização | `archetype-post-generate.groovy` | ✅ | ao fim do `mvn archetype:generate` |
 
-> Detalhes, CLI, precedência e exit codes → seção **"Detalhando o Mecanismo de Inferência LLM (A7)"**
+> O `mvn clean install` **não** é uma etapa de processamento: é o passo final do
+> *pipeline do artefato* (montagem, testes e instalação em `~/.m2`), detalhado no
+> §4 abaixo.
 
-#### Fluxo 🔄
+#### 1) Pré-processamento (não empacotado) 🧠
 
-```text
-[1] CATÁLOGO (fonte da verdade)             [2] PÓS-PROCESSADOR (fonte da verdade)
- 17 property-*.xml + 9 fileset-*.xml            11 body/ + 10 variables/ + 11 snippets/
-        │                                                  │
-        │ archetype-metadata.xml (DOCTYPE, 26 entities)      │ SnippetComposer.groovy
-        │                                                  │
-        ├─ xml-maven-plugin:transform ─► target/classes/META-INF/maven/archetype-metadata.xml
-        │                                                  └─ gmaven:execute ─► target/classes/META-INF/archetype-post-generate.groovy
-        │   (ambos EXCLUÍDOS da cópia convencional — pom.xml:38-41)
-        ▼
-[3] FLAGS (33) ──► catálogo transformado em target/classes ──► lido em RUNTIME pelo Orchestrator (A7)
-        │                                                          └─► command line:
-        │                                                              mvn archetype:generate --batch-mode -D...
-        ▼
-[4] GERAÇÃO (mvn archetype:generate, já no projeto gerado)
-      4.1 archetype-metadata.xml        ─► cria a árvore do projeto (Velocity nos ${...})
-      4.2 archetype-post-generate.groovy ─► modulariza (mantém / exclui)
-        ▼
-[5] TESTES
-      5.1 unitários Groovy do mecanismo LLM (fase test — 10 suítes / 296 checks)
-      5.2 integração (fase integration-test) — 11 fixtures + verify.groovy (2)
-        ▼
-[6] INSTALAÇÃO (fase install) ──► ~/.m2/repository + archetype-catalog.xml
-      (maven-install-plugin:install + maven-archetype-plugin:update-local-catalog)
-```
-
-#### Fases do build do archetype 🏗️
-
-| Fase | Plugin | Entrada | Saída |
-|------|--------|---------|-------|
-| `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
-| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 34 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
-| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `src/test/groovy/run-all-tests.groovy` | 10 suítes unitárias do mecanismo LLM (296 checks; o build falha se alguma falhar) |
-| `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | 11 projetos gerados, cada um com `mvn clean verify` |
-| `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
-
-> **Comando canônico:** `mvn clean install`
->
-> A fase `integration-test` é **anterior** a `install` e já é executada por ele.
-> Portanto `mvn clean install integration-test` roda a suíte de integração
-> **duas vezes** (cada fixture é gerada e validada 2×) — use `mvn clean install`
-> ou, se não quiser instalar, `mvn clean integration-test`.
+* **Objetivo:** transformar **use-case + contrato JSON** na command line pronta
+  do `mvn archetype:generate` (todas as flags `-D` resolvidas).
+* **Composição (A7):** `Orchestrator` + módulos
+  [`pre-processamento-llm-flags/`](src/main/pre-processamento-llm-flags/)
+  (`ContractEntityDeriver`, `ContractTypeResolver`, `FlagCatalogExtractor`,
+  `CatalogEntry`, `JsonCanonicalizer`, `InvocationCache`, `FlagProposalMerger`,
+  `CommandLineAssembler`).
+* **Entrada/Saída:** descrição + contrato JSON via `stdin` → command line no
+  `stdout` + relatório de proveniência no `stderr`.
+* **Por que não é empacotado:** é uma **CLI de operador**, não uma fase do build
+  (o `pom.xml` registra isso explicitamente) e vive em
+  `src/main/pre-processamento-llm-flags/` — que nunca entra no JAR do archetype.
+* **Dependência operacional:** o catálogo só existe em
+  `target/classes/META-INF/maven/` após `mvn clean process-resources`; portanto
+  rode o mecanismo **dentro da pasta do projeto-fonte**.
+* **Evolução — 3 eras, sempre fora do empacotamento:**
+  - *bash Q&A:* `eda.sh` + scripts de input + montagem das switches `-D`
+    (commits 1.0–14.0);
+  - *bash + JSON:* `json_processor.sh` / `json_validator.sh` passam a consumir o
+    contrato (commits 56.0–59.0);
+  - *LLM:* `Orchestrator` + `llmflag/` substituem o Q&A (spec
+    `003-llm-flag-inference`).
+* **Garantias:** gates do CLI (FR-001/002/003), precedência
+  contrato > derivadas > proposta LLM > default (FR-006/009), fallback por
+  `validationRegex`, cache de invocação (FR-011/012/017).
+* Detalhes, CLI, precedência e exit codes → seção **"Mecanismo de 'Inferência via LLM' 🧠"**
 
 #### Suítes unitárias do mecanismo LLM 🧪
 
@@ -317,10 +247,108 @@
 | `CommandLineAssemblerTest` | 21 | formatação e escape da command line (FR-010) |
 | `FlagCatalogExtractorDriftTest` | 12 | o catálogo segue o metadata sem lista hardcoded (FR-013) |
 
+#### 2) Processamento (empacotado) 🏗️
+
+* **Objetivo:** o `maven-archetype-plugin` materializa a árvore do projeto
+  gerado a partir do catálogo de flags + templates — durante o
+  `mvn archetype:generate`.
+* **Composição (fonte da verdade):**
+
+| # | Artefato | Local | Papel |
+|---|----------|-------|-------|
+| A1 | Catálogo de flags — `archetype_metadata_properties` | `src/main/resources/META-INF/maven/archetype_metadata_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
+| A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | mapeia `archetype-resources/` → árvore do projeto gerado |
+| A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 26 entities (17 `property-*` + 9 `fileset-*`) |
+| A4 | XSLT identidade | `src/main/resources/META-INF/maven/identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
+
+| Artefato | Local | Papel |
+|----------|-------|-------|
+| Templates | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
+| Fixtures de integração | `src/test/resources/projects/*` | 11 projetos gerados pelo `integration-test`, cada um validado com `mvn clean verify` |
+
+* **Montagem do catálogo:** fragmentos (A1 + A2) + DOCTYPE (A3) →
+  `xml-maven-plugin:transform` + `identity.xsl` (A4) na fase
+  `generate-resources` → `target/classes/META-INF/maven/archetype-metadata.xml`
+  (cópia convencional excluída — `pom.xml:38-41`).
+* **Execução:** o plugin lê o JAR instalado (`~/.m2`), valida as flags `-D`
+  (default × `validationRegex`) e renderiza os templates — etapa
+  **autossuficiente**: depende apenas do `.m2`, nunca da pasta-fonte.
+
+#### 3) Pós-processamento (empacotado) 🧬
+
+* **Objetivo:** modularizar o projeto recém-gerado (mantém / exclui pastas e
+  arquivos conforme as flags escolhidas) — ao fim do `mvn archetype:generate`.
+* **Composição:**
+
+| # | Artefato | Local | Papel |
+|---|----------|-------|-------|
+| A5 | Pós-processador — `body/` + `variables/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,snippets}/` | 34 fragmentos Groovy (11 `body/` + 11 `variables/` + 12 `snippets/`) |
+| A6 | Compositor do pós-processador | `src/main/groovy/SnippetComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
+
+* **Montagem:** `SnippetComposer` (A6) via `groovy-maven-plugin:execute` na fase
+  `process-resources` → `target/classes/META-INF/archetype-post-generate.groovy`
+  → levado no JAR.
+* **O que faz em runtime:** mantém / exclui por flag; persiste o contrato em
+  `src/test/resources/contracts/contract.json` (FR-021, quando
+  `enable_folder_src_test_java=true`); gera enums customizados; log opcional
+  (`show_archetype_pos_processor_log`).
+* Histórico: arquivo único editado à mão → compositor bash
+  (`bash_script/create_archetype_post_generate.sh`) → compositor nativo Groovy
+  (commit `63.0`).
+
+#### 4) Montagem e instalação do artefato 📦 (fora das três etapas)
+
+| Fase | Plugin | Entrada | Saída |
+|------|--------|---------|-------|
+| `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
+| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 34 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
+| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `src/test/groovy/run-all-tests.groovy` | 10 suítes unitárias do mecanismo LLM (296 checks; o build falha se alguma falhar) |
+| `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | 11 projetos gerados, cada um com `mvn clean verify` |
+| `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
+
+> **Comando canônico:** `mvn clean install`
+>
+> A fase `integration-test` é **anterior** a `install` e já é executada por ele.
+> Portanto `mvn clean install integration-test` roda a suíte de integração
+> **duas vezes** (cada fixture é gerada e validada 2×) — use `mvn clean install`
+> ou, se não quiser instalar, `mvn clean integration-test`.
+
+* **De volta aos 2 momentos do archetype:** o §4 acima é o **momento de
+  montagem** (build + testes + instalação em `~/.m2`); as **etapas 1 → 3** são o
+  **momento de geração** (`mvn archetype:generate`).
+
+#### Fluxo 🔄
+
+```text
+TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
+─────────────────────────────────────────────────────────────────────
+[1] CATÁLOGO         17 property-*.xml + 9 fileset-*.xml + DOCTYPE (26 entities)
+                     └─ xml-maven-plugin:transform + identity.xsl (generate-resources)
+[2] PÓS-PROCESSADOR  34 fragmentos .groovy
+                     └─ SnippetComposer.groovy via gmaven:execute (process-resources)
+                        (local: src/main/groovy/SnippetComposer.groovy)
+[3] TESTES           unitários: 10 suítes / 296 checks (fase test)
+                     integração: 11 fixtures + verify.groovy (2) (fase integration-test)
+[4] INSTALAÇÃO       ~/.m2/repository + archetype-catalog.xml (fase install)
+
+TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
+─────────────────────────────────────────────────────────────────────
+[5] PRÉ (FORA DO JAR)   use-case + contrato JSON → Orchestrator (A7) lê o catálogo
+                        em target/classes → mvn archetype:generate --batch-mode -D...
+[6] PROCESSAMENTO       archetype-metadata.xml + archetype-resources/ (Velocity)
+                        → árvore do projeto gerado
+[7] PÓS                 archetype-post-generate.groovy mantém / exclui
+                        + FR-021: contrato → src/test/resources/contracts/contract.json
+                              ▼
+                        projeto final
+```
+
 #### Regras estruturais 📏
 
 * **Fonte da verdade = os fragmentos** (A1, A2, A5). Os arquivos em `target/classes/`
   são **gerados** a cada build — editá-los é trabalho perdido.
+* **O pré-processamento nunca é empacotado:** em todas as suas eras (bash Q&A →
+  bash + JSON → LLM) ele viveu fora de `src/main/resources` (`src/main/pre-processamento-llm-flags/`) — trocar de tecnologia jamais significou viajar no JAR.
 * **O catálogo precisa existir antes da inferência:** o Orchestrator lê
   `target/classes/META-INF/maven/archetype-metadata.xml`; portanto rode
   `mvn clean process-resources` antes de usá-lo.
@@ -333,11 +361,33 @@
 
 * Metadata (entities + XSLT) → seção **"Processamento do Arquetype-Metadata.xml"**
 * Pós-processador (compositor Groovy) → seção **"Processamento do Archetype-Post-Generate.groovy"**
-* Catálogo de flags (33) → seção **"Flags do mvn archetype:generate"**
+* Catálogo de flags (35) → seção **"Flags do mvn archetype:generate"**
 * Como adicionar uma flag → seção **"Acrescentando Novas Flags ➕️"**
-* Mecanismo (A7) → seção **"Mecanismo de 'Inferência via LLM' (A7)"**
-* Inferência via LLM (uso no OpenCode) → seção **"Usando o 'Mecanismo de Inferência via LLM'"**
+* Mecanismo (A7) → seção **"Mecanismo de 'Inferência via LLM' 🧠"**
+* Inferência via LLM (uso no OpenCode) → seção **"Usando a 'Inferência via LLM'"**
 * Testes → seções **"Testes de Integracao ✅"** e **"verify.groovy - Validacao por Fixture (Integracao) 🔬"**
+
+---
+
+> **Sanity Check (Instrução para Agentes de Execução) 🛠️**
+>
+> Ao ser solicitado para rodar o build completo (`mvn clean install`) e validar a integridade técnica, o agente DEVE auditar: (1) O `archetype-metadata.xml` (catálogo); (2) O `archetype-post-generate.groovy` (pós-processador); (3) Os testes unitários Groovy (todos os checks, agora inclusos no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das fixtures `custom-attributes` e `entity-contract`. 
+>
+> (4) Me entregue um sumário final tabelado, com DOIS blocos: 
+> (4.1) UNITÁRIOS — Todas as suítes, todos os checks, quantas passaram e a lista de checks por suíte; 
+> (4.2) INTEGRAÇÃO — todas as fixtures, quantas passaram e qualquer `verify.groovy` que tenha falhado, nesse caso observando:
+>
+> (5) Quanto ao Sumário Final:
+> (5.1) Quando o item falhar, mostre o trecho do log e sugira a correção. 
+> (5.2) Quando o item passar, confirme com 'Tudo verde' e o tempo total gasto.
+>
+> (6) Formato obrigatório do relatório (100% em tabelas Markdown, nesta ordem): 
+> (6.1) Tabela de Setup [(1)-(3)]: colunas `Etapa | Comando / Verificacao | Resultado Obtido | Status | Tempo`. 
+> (6.2) Bloco (4.1) UNITÁRIOS: 
+> - Tabela Resumo Geral: colunas `# | Suite | Total de Checks | Passaram | Falharam | Status` (com linha final de Total).
+> - Uma tabela separada para CADA suíte listando TODOS os checks individuais: colunas `ID | Check | Resultado`.    
+> (6.3) Bloco (4.2) INTEGRAÇÃO: tabela única com todas as fixtures e linha final de Total: colunas `# | Fixture | Invoker Exit Code | Pos-Build verify.groovy | Verificações do verify.groovy | Status`.  
+> (6.4) Bloco (5) Sumário Final: tabela consolidada por bloco + linha `TOTAL GERAL`: colunas `Bloco | Escopo | Passaram | Falharam | Diagnostico / Correcao (5.1) | Confirmacao e Tempo (5.2)`.
 
 </details>
 
@@ -398,7 +448,7 @@ contrato JSON ──► ContractEntityDeriver ──► (por atributo) ──►
 #### Como executar (operador)
 
 ```bash
-groovy src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy \
+groovy src/main/pre-processamento-llm-flags/Orchestrator.groovy \
   --use-case-description "descrição do use-case" \
   --use-case-contract \
   < contract.json
@@ -484,7 +534,7 @@ groovy src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy \
 
 ---
 
-#### FLUXO A) Instalar e publicar este archetype
+#### Instalar e publicar este archetype
 
 **a) Instale no repositório local do Maven:**
 
@@ -521,73 +571,7 @@ mvn clean install
 * Catalogo de 'Archetypes Locais': `%USERPROFILE%\.m2\repository\archetype-catalog.xml`
 
 **d) Visualizando/Checando a Instalação**
-
-* **OPÇÃO 01:**
   ![img_1.png](assets/archetype-log_1.png)
-
-
-* **OPÇÃO 02:**
-  - Inicie um processo interativo: (só para visualizar)
-    - mvn archetype:generate -DarchetypeCatalog=local
-      - somente para checagem:
-        - cancelar assim que visualizar o "archetype"
-    - Visualizado o archetype, no "local-repo"
-      - Atente para o "número do Archetype"
-    - Cancele esse processo interativo (Crtl+C)
-        ![img_2.png](assets/archetype-log_2.png)
-
-#### FLUXO B) Criar um archetype NOVO a partir deste
-
-**a) Entre na nova pasta**
-
-- Esta pasta poderá conter - ALTERNATIVAMENTE:
-  - Os **items** (`pom.xml` + `src`) criados a partir do item anterior.
-  - Um projeto de **Archetype** já existente (em andamento).
-
-**b) Ajuste o `pom.xml`** _(exemplo)_:
-
-```xml
-   <groupId>com.eda-archetype</groupId>
-   <artifactId>eda-archetype</artifactId>
-   <version>0.0.1-SNAPSHOT</version>
-   <name>eda-archetype</name>
-```
-
-**c) Limpe a pasta `src` deletando:**
-
-- `src/test/resources/projects/` _(SE HOUVER)_ — são as **11 fixtures** de integração do archetype de origem:
-  - `basic`, `minimal`, `full`, `defaults-only`, `custom-attributes`, `entity-contract`,
-  - `binding-default-only`, `binding-list-only`, `binding-map-only`, `binding-mutable-only`, `binding-validated-only`
-  - Cada fixture tem `archetype.properties` + `goal.txt`; `custom-attributes` e `entity-contract` têm também `verify.groovy`.
-  * ⚠️ O IT do `maven-archetype-plugin` lê as fixtures de `target/test-classes/projects/` (cópia dos recursos de teste) — apague no `src` e o build limpa a cópia.
-  * Se o novo archetype **precisar** de integração, mantenha ao menos uma fixture.
-- Arquivos temporários _(SE HOUVER)_.
-
-**d) Separe numa pasta temporária** _(permanece somente `pom.xml` + `src`)_:
-
-- `.idea`
-- `.opencode`
-- `.specify`
-- `assets`
-- `bash_script` _(legado — não é usado pelo build)_
-- `graphify-out`
-- `scripts` _(legado)_
-- `specs`
-- `target`
-- `README.md`
-- `.gitignore`
-- Outros, que nao sejam `src` nem `pom.xml`
-
-**e) Instale** _(mesmo do FLUXO A)_: `mvn clean install`
-
-**f) Retorne a "pasta do Archetype", os arquivos separados na "pasta temporária":**
-
-* `.idea`
-* `.opencode`, `.specify`, `assets`, `graphify-out`, `specs`, `target`
-* `bash_script`, `scripts` _(legado)_
-* `README.md`
-* `.gitignore`
-* Outros separados
 
 </details>
 
@@ -1021,9 +1005,9 @@ mvn clean install
         - Root Path: [_C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\src\main\resources\ **META-INF**_](src/main/resources/META-INF)
 
 
-  + **Orquestrador (mecanismo de inferência de flags):** [Orchestrator.groovy](src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy)
-    - Local: _"llmflag"_
-      - Root Path: [_C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\src\main\groovy\eda\postgenerate\ **llmflag**_](src/main/groovy/eda/postgenerate/llmflag)
+  + **Orquestrador (mecanismo de inferência de flags):** [Orchestrator.groovy](src/main/pre-processamento-llm-flags/Orchestrator.groovy)
+    - Local: _"pre-processamento-llm-flags"_
+      - Root Path: [_C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\src\main\pre-processamento-llm-flags\_](src/main/pre-processamento-llm-flags/)
 
   * **NOTA _(a partir de `003-llm-flag-inference`)_:**
     * O passo de adição de uma nova flag **NÃO** requer criar um script
@@ -1823,9 +1807,25 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
        "Rode `mvn clean install integration-test` e me diga quais fixtures passaram. Se alguma falhar, me mostre o trecho relevante do log."
     ```
   * **Sanity check rapido:** 
-    ```text
-       "Confirme os pre-requisitos (Java 21, Maven 3.9.x) e rode `mvn clean install 
-       integration-test`. Me entregue um sumario com passes/failures." 
+    ```txt
+    Faca um sanity check completo do projeto archetype-v2-eda, na ordem:
+    (1) Confirme os pre-requisitos: Java 21 e Maven 3.9.x instalados.
+    (2) Prepare o catalogo com `mvn clean process-resources` para que `target/classes/META-INF/maven/archetype-metadata.xml` exista.
+    (3) Rode os testes de integracao com `mvn clean install integration-test` — isto cobre todas as suites unitarias 
+    Groovy (todos os checks, agora inclusas no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das fixtures `custom-attributes` e `entity-contract`. 
+    (4) Me entregue um sumario final tabelado, com DOIS blocos: 
+    (4.1) UNITARIOS — Todas as suites, todos os checks, quantas passaram e a lista de checks por suite; 
+    (4.2) INTEGRACAO — todas as fixtures, quantas passaram e qualquer `verify.groovy` que tenha falhado, nesse caso observando:
+    (5) Quanto ao Sumario Final:
+    (5.1) Qdo o item falhar, mostre o trecho do log e sugira a correcao. 
+    (5.2) Qdo o item passar, confirme com 'Tudo verde' e o tempo total gasto.
+    (6) Formato obrigatorio do relatorio (100% em tabelas Markdown, nesta ordem): 
+    (6.1) Tabela de Setup [(1)-(3)]: colunas `Etapa | Comando / Verificacao | Resultado Obtido | Status | Tempo`. 
+    (6.2) Bloco (4.1) UNITARIOS: 
+    - Tabela Resumo Geral: colunas `# | Suite | Total de Checks | Passaram | Falharam | Status` (com linha final de Total).
+    - Uma tabela separada para CADA suite listando TODOS os checks individuais: colunas `ID | Check | Resultado`.         
+    (6.3) Bloco (4.2) INTEGRACAO: tabela unica com todas as fixtures e linha final de Total: colunas `# | Fixture | Invoker Exit Code | Pos-Build verify.groovy | Verificacoes do verify.groovy | Status`.  
+    (6.4) Bloco (5) Sumario Final: tabela consolidada por bloco + linha `TOTAL GERAL`: colunas `Bloco | Escopo | Passaram | Falharam | Diagnostico / Correcao (5.1) | Confirmacao e Tempo (5.2)`. 
     ```
 
 * **FIXTURES** (em [src/test/resources/projects/](src/test/resources/projects))
@@ -2245,178 +2245,4 @@ enable_custom_attributes = true
 enable_folder_src_test_java = true
   └─→ entity_contract_path (contrato copiado para src/test/resources/contracts/)
 ```
-</details>
-
-
-<details><summary><strong> Deprecated 🔺️</strong></summary>
-
- <details><summary><strong> 🔺 Tech Triad ️</strong></summary>
-
- <img alt="Development, Operations, and Security" height="140" src="assets/dev-sec-ops.png" width="314"/>
-
- #### 1) Development (Dev)
- * Code
-   - **WebService Structure**: The project is structured as a web service.
-   - **Technologies**: Written in Java, utilizing Spring Boot and Vaadin frameworks.
-
- * Performance
-   - **EhCache**: Used for caching to improve performance.
-   - **Virtual Threads**: Leveraged for efficient concurrency.
-
- * CI/CD
-   - **GitOps**: Implemented for continuous integration and continuous deployment.
-
- #### 2) Security (Sec)
-   * **Secure Protocols**: The security of the project is ensured by the use of secure protocols.
-
- #### 3) Operations (Ops)
-   * Testing
-     - **Unit Tests**: Tests for individual components.
-     - **Integration Tests**: Tests for combined components.
-     - **Contract Tests**: Tests for API contracts.
-     - **Schema Tests**: Tests for database schemas.
-     - **Functional Tests**: Tests for system functionality.
-
-   * Documentation
-     - **Swagger**: Used for API documentation.
-
-   * Log Management
-     - **ELK Stack**: Elasticsearch, Logstash, and Kibana for log management.
-
-   * Health Check
-     - **Grafana**: For monitoring and visualizing metrics.
-     - **Spring Actuator**: For monitoring and managing the application.
-
-   * Containerization
-     - **Docker**: Used for containerization.
-     - **Docker Compose**: For defining and running multi-container Docker applications.
-
-   * Maintenance CPanel
-     - **Health Check**: Monitored using Grafana.
-     - **DBA Client**: Tools like Robo3T, MongoCompass, PhpMyAdmin, and Adminer.
-     - **Log Management Client**: Kibana for log visualization.
-     - **Dockerization Client**: Portainer for managing Docker environments.
-
- </details>
-
-
- <details><summary><strong> 🔺 Bug Summary </strong></summary>
-
- 1. '_fileSet filtered="true"_' em target incorreto:
-   - Problema: 
-     - "Filtered="true" aplica o motor do Velocity em placeholders (ex: ${placeholder})
-     - O BUG ocorre se o Velocity e desnecessario na pasta/arquivo (_targets do fileSet_)
-     - Logo, o "filtered="false" devera substitui-lo, para desligar o 'velocity', pois
-     - o Velocity "quebra" se nenhum 'placeholder' e encontrado no _'target do fileSet'_
- ```Console
- [INFO] Scanning for projects...
- (...)
- [ERROR] ResourceManager: parse exception: Encountered ">[0]}) {\n" at archetype-resources/.git_temp/hooks/pre-rebase.sam
- ple[line 79, column 56]
- Was expecting one of:
-     "[" ...
-     "|" ...
-     "}" ...
-     "}" ...
- [INFO] ------------------------------------------------------------------------
- [INFO] BUILD FAILURE
- [INFO] ------------------------------------------------------------------------
- [INFO] Total time:  1.642 s
- [INFO] Finished at: 2025-02-14T17:17:47-05:00
- [INFO] ------------------------------------------------------------------------
- ```
-   - Solucao: Isolamento de 'TARGET ATINGIDO PELO VELOCITY'
- ```xml
-     <fileSet filtered="false" encoding="UTF-8"> (filtered="false" - Exclue Velocity)
-     <directory>.git_temp</directory>
-     <includes>
-     <include>**/*.*</include>      (NADA NO 'TARGET' DEMANDA O VELOCITY)
-     </includes>
-     <excludes>
-     <exclude>config</exclude>(EXCLUI 'ARQUIVO' 'ATINGIDO' PELO VELOCITY)
-     </excludes>
-     </fileSet>
-
-
-     <fileSet filtered="true" encoding="UTF-8">  (filtered="TRUE" - Aplica Velocity)
-     <directory>.git_temp</directory>
-     <includes>
-     <include>config</include> (ISOLA 'ARQUIVO' 'ATINGIDO' PELO VELOCITY)
-     </includes>
-     </fileSet>
- ```
- ---
-
- 2. Falta de Atualizacao do Maven:
- ```Console
- No signature of method: Script1.var()
-
-     [ERROR] Failed to execute goal org.apache.maven.plugins:maven-archetype-plugin:3.2.1:generate (default-cli)
-     on project standalone-pom:
-     No signature of method: Script1.var() is applicable for argument types:
-     (java.lang.String)
- ```
-
- ---
-
- 3. Excesso "DISPLICENTE" de arquivos de "Properties":
- ```Console
- java.lang.IllegalStateException: 
- Failed to load ApplicationContext for 
- [WebMergedContextConfiguration@425357dd testClass = dev.danvega.props.properties.ApplicationPropertiesTest, locations = [], classes = [dev.danvega.props.AppDriver], contextInitializerClasses = [], activeProfiles = [], propertySourceDescriptors = [], propertySourceProperties = ["org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true"], 
- contextCustomizers = [org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@14028087, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1750fbeb, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@303cf2ba, org.springframework.boot.test.autoconfigure.actuate.observability.ObservabilityContextCustomizerFactory$DisableObservabilityContextCustomizer@1f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizer@6f53b8a, org.springframework.boot.test.context.SpringBootTestAnnotation@118ad067], 
- resourceBasePath = "src/main/webapp", 
- contextLoader = org.springframework.boot.test.context.SpringBootContextLoader, 
- parent = null]
- ```
- * Descricao:
-   - Nao pode existir no “basePathResources”(src\main\resources OR src\test\resources) Application.PROPERTIES “e” 
-     Application.YML “SIMULTANEAMENTE”
- * Reason:
-   - Eventualmente, por descuido e necessidade de, enviar arquivos para o “Archetype”, todos os os arquivos de “propriedades” (Application.properties OR Application.yml) sao colocados/mantidos no classpath do “App de Prova de Conceito”.
-   -	Isso ocorre pois, para implantar a “Prova de Concenceito” no “Archetype”, precisamos de todos os arquivos “SIMULTANEAMENTE”
-   - Em caso de necessidade de TESTE, apos o envio da “Prova de Conceito”, 
-   ao Archetype, ESTANDO OS DOIS OS ARQUIVOS, SIMULTANEANTE PRESENTES NA “PROVA DE CONCEITO”, por alguma displicencia(um deletes deveria ser deletado ou renomeado), o testes FALHARAO
- * Solucao:
-   - Deixar apenas UM TIPO de arquivos de “propriedades”, seja: “Application.properties e derivados” OU “Application.yml e derivados
-
- ---
-
- 4. Mudancas no Archtype "NAO SURTEM EFEITO":
- * Descricao:
-   * Mudancas no Archetype, sejam:
-     - 'Velocity'(acrescimos/alteracoes ou delecoes de 'placeholders')
-     - Mudanca Estruturais (pastas / arquivos)
-     - Codigo 'alterado' nao surte efeito
-     - Alteracao no 'archetype-metadata.xml' nao surte efeito ou desaparecem
-     - Alteracao no 'archetype-pos-generate.groovy' nao surte efeito ou desaparecem
- * Razao:
-   * A "RE-CRIACAO" do Archetype, esta sendo "MAL SUCEDIDA"
-     - 'MVN CLEAN INSTALL' nao "sem completa" _**recriando**_ "o" "novo archetype" no REPO-LOCAL DO MAVEN
-     - Mantendo o "archetype anterior", ainda valendo
-     - Isso causa a impressao de que as "mudancas nao surtiram efeito"
-     - Ou seja, apos a criacao do novo projeto, elas nao "aparecem"
-     - Pois, o que se enxerga, e' o "antigo archetype"
- * Solucao:
-     * Encontrar o BUG que impede o "RE-CRIACAO" do Archetype
-     - Essa "RE-CRIACAO" se da atraves do "MVN CLEAN INSTALL"
-     - Corrigir o BUG ate ela ser "BEM SUCEDIDA"
- ---
- </details>
-
- <details><summary><strong> 🔺Code Structure </strong></summary>
-
- - Structural approach chosen: _Package by Feature_    
-
- | Criteria                | Package by Feature                                         | Package by Layer                                       |
- |-------------------------|------------------------------------------------------------|--------------------------------------------------------|
- | Best Practices          | **- High cohesion<br>- Low coupling<br>- High modularity** | - Low cohesion<br>- High coupling<br>- Low modularity  |
- | Encapsulation           | **- Some classes use package-private access modifier**     | - Most classes must be public                          |
- | Modularity              | **- Easy to break down into microservices**                | - Difficult to break down into microservices           |
- | Maintainability         | **- Reduces navigation between packages**                  | - Difficult to find needed classes                     |
- | Testability             | **- Tests limited to same package<br>- Focused tests**     | - Tests can access any package<br>- Less focused tests |
- | Design Approach         | **- Promotes Domain Driven Design**                        | - Promotes Database Driven Design                      |
- | Microservices Migration | **- Facilitates Migration for Microservices**              | - Difficult to migrate for Microservices               |
- </details>
-
 </details>
