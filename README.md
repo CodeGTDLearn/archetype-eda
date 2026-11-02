@@ -15,14 +15,16 @@
 
 </details>
 
-<details><summary><strong>Cores ⚛️</strong></summary>
+<details><summary><strong>Cores do Maven Archetype System ⚛️</strong></summary>
 
-* [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml):
+**1) Flags p/ 'maven:Archetype:Generate':**
+  * Arquivo: [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml):
   * Conceito:
     * Arquivo de configuração do archetype
     * Contendo:
       * as propriedades que serao capturadas para o uso no MVN CLI
       * Estrutura do Archetype e seus respectivos arquivos e pastas
+  * Formacao do arquivo: Ver o item **'Processamento do arquivo Archetype-Metadata.xml'** desta documentacao
   * Local:
     * [src \ "MAIN" \ resources \ _META-INF_ \ _**"MAVEN"**_ \ ](src/main/resources/META-INF/maven)
     * 02 - Setores (**_FileSet_** + **_RequiredProperties_**):
@@ -146,7 +148,14 @@
               - Exemplo de OMISSAO DA SWITCH 'enable_jwt':
                 - mvn archetype:generate -DarchetypeGroupId=seu.grupo
 
-* [ARCHETYPE-POST-GENERATE.GROOVY](src/main/groovy/SnippetComposer.groovy):
+**2) Manejo de Arquivos c/ Groovy (seguido da geracao do archetype):**
+  * Arquivo: [ARCHETYPE-POST-GENERATE.GROOVY](src/main/resources/META-INF/archetype-post-generate.groovy)
+  * Conceito:
+    * Arquivo Groovy de manejo de pastas/arquivos, **APOS** a geracao do ARchetype
+    * Contendo:
+      * Codigo Groovy de manejo de pastas/arquivos
+      * Formacao do arquivo: Ver item **'Processamento do Archetype-Post-Generate.groovy'** desta documentacao
+    * Local: [src \ "MAIN" \ resources \ _**META-INF**_ \ ](src/main/resources/META-INF)
   * Conceito:
     * Script GROOVY nativo (build-time) que COMPOE o `archetype-post-generate.groovy` a partir dos snippets em `META-INF/archetype_post_generate_body/`, `..._snippets/` e `..._variables/`. Substituiu o pre-processamento em bash (`bash_script/create_archetype_post_generate.sh`).
   * Local:
@@ -155,13 +164,12 @@
   * Output: `target/classes/META-INF/archetype-post-generate.groovy` (gerado a cada build, equivalente ao output do bash legado).
 
 
-* [ARCHETYPE.PROPERTIES](src/test/resources/projects/basic/archetype.properties):
+**3) Testes Relativos ao Archetype:**
+  * Local: [src \ "TEST" \ resources \ _projects_ \ _**"BASIC"**_ \ ](src/test/resources/projects/basic)
   * Conceito:
 	* Arquivo de propriedades(requiredProperties) do archetype
 	* Responsavel pelo _**teste do Archetype**_
 	* Esse teste e realizado antes da montagem do Archetype
-  * Local:
-	* [src \ "TEST" \ resources \ _projects_ \ _**"BASIC"**_ \ ](src/test/resources/projects/basic)
 
 </details>
 
@@ -1693,7 +1701,7 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
 </details>
 
 <details><summary><strong>Processamento do Arquetype-Metadata.xml🏗️</strong></summary>
-
+<a id="processamento-archetype-post-generate-anchor"></a>
 * **OBJETIVO**
   * Manter 1 arquivo final [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml) consumido pelo (`maven-archetype-plugin`),
     mas organizado no source em modulos menores (17 snippets de propriedades + 9 de filesets).
