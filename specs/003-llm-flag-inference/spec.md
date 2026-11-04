@@ -188,7 +188,7 @@ After the mechanism has been validated against all 10 integration test profiles,
   - `bash_script/create_archetype_post_generate.sh:84` — `read -n 1 -s` (pause on snippet-composition error; same caveat)
 
   Note: `bash_script/create_archetype_post_generate.sh:134` also contains a `read -n 1 -s` but is past the line where the script is short-circuited by the Groovy replacement, so it never runs in the current `mvn clean install` flow. It is removed in US6 T031–T034 regardless. (Historical note only; not counted in the 4.)
-- **SC-003**: 100% of the 32 catalog flags are recognized by the validator without any code change. Baseline: not previously enforced - drift between the bash prompt scripts and the catalog was possible.
+- **SC-003**: 100% of the 35 catalog flags are recognized by the validator without any code change. Baseline: not previously enforced - drift between the bash prompt scripts and the catalog was possible.
 - **SC-004**: 100% of repeated invocations with the same (description + contract) input produce byte-equivalent command lines and do not re-trigger the inference step.
 - **SC-005**: 100% of invocations without a JSON contract are interrupted before any inference happens; no command line is produced.
 - **SC-006**: 100% of inferred flag proposals whose values fail the catalog's validation rule are rejected, with the catalog's default value applied instead.

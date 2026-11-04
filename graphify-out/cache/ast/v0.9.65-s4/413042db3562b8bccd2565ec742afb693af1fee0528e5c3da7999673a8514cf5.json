@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_src_test_groovy_run_all_tests_groovy", "label": "run-all-tests.groovy", "file_type": "code", "source_file": "src/test/groovy/run-all-tests.groovy", "source_location": "L1"}], "edges": [], "raw_calls": [], "parse_errors": {"first_error_line": 36, "multiline_error": false}}

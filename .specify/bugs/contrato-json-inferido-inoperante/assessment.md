@@ -112,7 +112,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
    ```powershell
    Get-Content src/test/resources/projects/custom-attributes/sample-contract-for-archetype-test.json -Raw |
-     groovy src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy `
+     groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy `
        --use-case-description "Criar entidade ContractEntity com atributos id, name, createdAt" `
        --use-case-contract --inference-bin <stub.cmd> --cache-dir <tmp>
    ```
@@ -175,23 +175,23 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
 ### Metade B — causa raiz: o portão FR-009
 
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:254` — passo 2 do `merge()`:
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:254` — passo 2 do `merge()`:
   `if (value == null && contract != null && contract.containsKey(key))`. A chave precisa existir
   **literalmente** no contrato. Um contrato de domínio nunca contém `entity_name` nem
   `custom_attributes_list` ⇒ a proposta da LLM é descartada.
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:281-289` — coleta de `discarded`: mesma
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:281-289` — coleta de `discarded`: mesma
   condição, aplicada a **todas** as chaves propostas pela LLM que não constem do contrato. É o que popula
   a seção *"Propostas do LLM descartadas"* do relatório de proveniência.
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:299-306` — `pickFromContract()`: lê apenas
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:299-306` — `pickFromContract()`: lê apenas
   o **nível superior** do contrato (`contract.get(key)`). Um contrato de domínio (`entityName`,
   `attributes[]`) nunca casa com uma chave de flag.
-- `src/main/groovy/eda/postgenerate/llmflag/FlagProposalMerger.groovy:61` e `:92` — **segunda cópia** da
+- `src/main/pre-processamento-maven-flags-via-llm/FlagProposalMerger.groovy:61` e `:92` — **segunda cópia** da
   mesma lógica, no módulo unit-testável irmão. Qualquer correção precisa ser aplicada nos dois lugares
   (ou o mecanismo passa a divergir do módulo).
 
 ### Metade B — a premissa do relato, verificada como verdadeira
 
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:671-702` — `runInference()`: o contrato
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:671-702` — `runInference()`: o contrato
   **é** entregue ao script de inferência, escrito num arquivo temporário (`tmpContract`, linha 677) e
   passado como `--use-case-contract-file` (linhas 682-685). A LLM **tem** o contrato em mãos. O defeito
   não está na entrega, está no que o mecanismo faz com a resposta.
@@ -218,7 +218,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
 ### Metade B — bloqueante: o caminho de cache HIT está quebrado (pré-existente, agora alcançável)
 
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:521-551` — `cacheLookup()`: valida cada
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:521-551` — `cacheLookup()`: valida cada
   linha do `cache.jsonl` com o regex
   `^\{"k":"([0-9a-f]{64})","v":"((?:[^"\\]|\\.)*)","r":"((?:[^"\\]|\\.)*)","t":(\d+)\}$`. O grupo
   `((?:[^"\\]|\\.)*)` é guloso sobre um grupo alternado e o `java.util.regex` o compila como
@@ -230,7 +230,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
 ### Metade C — não existe canal do mecanismo para o projeto gerado
 
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:110` — a única saída do mecanismo é
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:110` — a única saída do mecanismo é
   `assemble(proposal)` (`:163`, `:169`), isto é, **uma linha de comando** (FR-010). Não há como o mecanismo
   escrever no projeto gerado: ele roda **antes** de `mvn archetype:generate` e não conhece o diretório
   destino.
@@ -272,10 +272,10 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
   valores esperados à mão (`entity_name=ContractEntity`, `entity_name_package=contractentity`,
   `enable_custom_attributes=true`, `custom_attributes_list=Long:id,String:name,String:createdAt`). O IT
   **jamais** pode detectar este bug.
-- `src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy:50-53` — os checks A6/A7/A8
+- `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy:50-53` — os checks A6/A7/A8
   **afirmam** o descarte FR-009 (`log_level`, `unknown_flag` fora do contrato ⇒ descartados). Qualquer
   relaxamento do portão precisa ser reconciliado com esses checks.
-- `src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy:68-69,101` — trava a ausência
+- `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy:68-69,101` — trava a ausência
   das duas flags removidas e as 32 flags do catálogo.
 
 ### Documentação — divergente do código
@@ -311,7 +311,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
 ### Vazamento sutil já presente (FR-017, pré-existente)
 
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:337-348` — a seção *"Propostas do LLM
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:337-348` — a seção *"Propostas do LLM
   descartadas"* grava no relatório os **valores** que a LLM derivou do contrato (verificado: `cache.jsonl`
   contém `ContractEntity`). O relatório é persistido no cache (`:176`, `cacheWrite`). Ou seja: embora o
   contrato **cru** não vaze, **valores derivados dele** vazam para o disco. Relevante porque a Metade C
@@ -532,10 +532,10 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
   (`:1930-1932`, `:2131-2132`); atualizar a nota de remoção das duas flags (`:1944-1950`) para refletir a nova
   materialização do snapshot; documentar o efeito de `enable_folder_src_test_java` sobre `contracts/`
   (`:2095-2097`).
-* `src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy`: reconciliar os checks A6/A7/A8
+* `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy`: reconciliar os checks A6/A7/A8
   com a allowlist (uma flag fora da allowlist e ausente do contrato **continua descartada** — esse check
   deve permanecer, apenas com uma flag de contrato de domínio a mais no cenário).
-* `src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy`: **sem alteração esperada** se a
+* `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy`: **sem alteração esperada** se a
   Parte 4 for adotada (o catálogo não muda, o lock de 32 flags continua valendo). Ver *Alternativa A* para o
   caso de a parte ser implementada com flag nova.
 
@@ -572,11 +572,11 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 
 ## Files likely to change
 
-* `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy` — derivação dos atributos a partir do
+* `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy` — derivação dos atributos a partir do
   contrato, allowlist da FR-009 no `merge()` (`:254`), remoção da allowlist da lista `discarded`
   (`:281-289`), derivação de `entity_name_package`, `enable_custom_attributes` forçado, nova fonte de
   proveniência no `renderProvenanceReport()` (`:312-355`), parser do cache (`:521-551`).
-* `src/main/groovy/eda/postgenerate/llmflag/FlagProposalMerger.groovy` — **mesma** allowlist e a mesma
+* `src/main/pre-processamento-maven-flags-via-llm/FlagProposalMerger.groovy` — **mesma** allowlist e a mesma
   derivação no módulo unit-testável irmão (`:61`, `:92`), para o mecanismo e o módulo não divergirem.
 * `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml` — só se a regex de
   `custom_attributes_list` precisar ser alargada (`:60-63`); a regex atual já aceita `Tipo:nome` estrito.
@@ -589,11 +589,11 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 * `src/main/groovy/eda/postgenerate/SnippetComposer.groovy` — `SECTIONS` (`:52-65`), se a ordem do novo
   snippet precisar ser fixada explicitamente.
 * `scripts/inference-stub.sh` — stub que deriva a entidade e a lista do contrato lido (`:40-42`).
-* `src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy` — reconciliar A6/A7/A8 com a
+* `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` — reconciliar A6/A7/A8 com a
   allowlist; novos cenários para a derivação.
-* `src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy` — caso de regressão do parser do
+* `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` — caso de regressão do parser do
   cache com relatório de tamanho realista.
-* Novo teste (sugestão: `src/test/groovy/eda/postgenerate/llmflag/ContractDerivationTest.groovy`) — regras de
+* Novo teste (sugestão: `src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy`) — regras de
   estimativa de tipo por valor, montagem estrita da lista, `enable_custom_attributes` forçado, pacote
   acompanhando a entidade.
 * `src/test/resources/projects/custom-attributes/archetype.properties` (+ `verify.groovy`) — o perfil passa

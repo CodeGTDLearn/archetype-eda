@@ -40,7 +40,7 @@ Replace the legacy bash-based capture of `mvn archetype:generate` flags (today s
 - Cache file content must not include the contract's payload — only the hash as key, only the produced command line as value (Principle V — credentials never enter the repo; even outside the repo, the contract payload should not be persisted).
 - Zero regressions on the 10 existing IT profiles (SC-001).
 
-**Scale/Scope**: 1 operator (single maintainer). 32 `<requiredProperty>` flags. 10 IT profiles. Cache size is bounded by the number of distinct (description + contract) pairs the operator generates — typically < 100 in steady state.
+**Scale/Scope**: 1 operator (single maintainer). 35 `<requiredProperty>` flags. 10 IT profiles. Cache size is bounded by the number of distinct (description + contract) pairs the operator generates — typically < 100 in steady state.
 
 ## Constitution Check
 
@@ -81,7 +81,7 @@ src/
 │   │   └── eda/
 │   │       └── postgenerate/
 │   │           ├── SnippetComposer.groovy        # existing — unchanged
-│   │           └── llmflag/
+│   │           └── pre-processamento-maven-flags-via-llm/
 │   │               ├── FlagCatalogExtractor.groovy   # new — reads archetype-metadata.xml + 17 property-*.xml via XInclude
 │   │               ├── FlagProposalMerger.groovy     # new — merges LLM inference + JSON contract + catalog defaults
 │   │               ├── CommandLineAssembler.groovy   # new — builds the final mvn archetype:generate command
@@ -95,7 +95,7 @@ src/
     ├── groovy/
     │   └── eda/
     │       └── postgenerate/
-    │           └── llmflag/                     # new — unit tests for the mechanism
+    │           └── pre-processamento-maven-flags-via-llm/                     # new — unit tests for the mechanism
     │               ├── FlagCatalogExtractorTest.groovy
     │               ├── FlagProposalMergerTest.groovy
     │               ├── CommandLineAssemblerTest.groovy
@@ -108,7 +108,7 @@ pom.xml                                          # minor — add second <executi
 bash_script/                                     # to be deleted after SC-001/007 are met
 ```
 
-**Structure Decision**: Single-project layout, consistent with the existing archetype project. New mechanism code lives in a dedicated Groovy package (`eda.postgenerate.llmflag`) alongside the existing `SnippetComposer.groovy`. The `gmaven:2.1.1` plugin invocation already present in `pom.xml` is extended with a second `<execution>` pointing to the new orchestrator script (no new dependencies). No new module, no new top-level directories in the repo.
+**Structure Decision**: Single-project layout, consistent with the existing archetype project. New mechanism code lives in a dedicated Groovy package (`eda.postgenerate.pre_processamento_maven_flags_via_llm`) alongside the existing `SnippetComposer.groovy`. The `gmaven:2.1.1` plugin invocation already present in `pom.xml` is extended with a second `<execution>` pointing to the new orchestrator script (no new dependencies). No new module, no new top-level directories in the repo.
 
 ## Complexity Tracking
 
@@ -127,7 +127,7 @@ See [research.md](./research.md) for the full technology decision record. Summar
 - **Language**: Groovy 4.0.28 — chosen because it is already on the archetype's `maven-archetype-plugin:3.4.1` classpath and already used in this project by `SnippetComposer.groovy` (precedent from `groovy-snippet-injection`).
 - **Build-time invocation**: `gmaven:2.1.1` goal `execute` in phase `process-resources` — chosen because the same plugin + phase is already wired for `SnippetComposer.groovy`; extending with a second execution is a smaller change than introducing a new plugin.
 - **Flag catalog extraction**: Reuse the existing `xml-maven-plugin:1.2.1` + `identity.xsl` for `archetype-metadata.xml` (precedent in `pom.xml`) and parse the XInclude-resolved output with the Groovy 4.0.28 transitive `groovy-xml`. No new parser dependency.
-- **JSON canonicalization**: Use the Groovy 4.0.28 transitive `groovy-json` `JsonOutput.prettyPrint` + a stable field-order sort. RFC 8785 (JCS) is not needed for the 32-flag use case; sorted-key serialization suffices and avoids pulling in a new library.
+- **JSON canonicalization**: Use the Groovy 4.0.28 transitive `groovy-json` `JsonOutput.prettyPrint` + a stable field-order sort. RFC 8785 (JCS) is not needed for the 35-flag use case; sorted-key serialization suffices and avoids pulling in a new library.
 - **Cache storage**: Single JSON-line file outside the repo (`$XDG_CACHE_HOME/eda-archetype/llm-flag-inference/cache.jsonl` with Windows fallback). Locking via atomic rename (`File.renameTo`) to avoid corruption from concurrent invocations.
 - **Inference call**: Use the same LLM endpoint already used by `github/spec-kit` and opencode; temperature fixed at 0. The mechanism itself does not embed an LLM client library — it delegates to a thin external script (provided by the operator) that returns a `Map<String, String>` of flag → value. This keeps the build-time Groovy code free of HTTP-client dependencies.
 
@@ -147,12 +147,12 @@ See [data-model.md](./data-model.md), [contracts/cli-contract.md](./contracts/cl
 classes (`CatalogEntry`, `FlagCatalogExtractor`, `FlagProposalMerger`,
 `CommandLineAssembler`, `JsonCanonicalizer`, `InvocationCache`) and
 `Orchestrator.groovy` imports them as siblings under
-`eda.postgenerate.llmflag.*`.
+`eda.postgenerate.pre_processamento_maven_flags_via_llm.*`.
 
 **What actually shipped (T012, T046):** `Orchestrator.groovy` inlines the
 behavior of all six sibling classes as private methods on the Orchestrator
 itself. The sibling classes still exist as source files under
-`src/main/groovy/eda/postgenerate/llmflag/` because the unit tests
+`src/main/pre-processamento-maven-flags-via-llm/` because the unit tests
 (`CatalogEntryTest`, `CommandLineAssemblerTest`, `FlagProposalMergerTest`,
 `InvocationCacheTest`, plus the new `JsonCanonicalizerTest`,
 `FlagCatalogExtractorTest`, `FlagCatalogExtractorDriftTest`) cover them as
@@ -176,7 +176,7 @@ process-resources`. Two approaches were attempted and abandoned:
 - **Compiling sibling Groovy sources to `target/classes` via
   `groovy.tools.FileSystemCompiler` and then pointing the second
   `gmaven:execute` at them**: the runtime `Class.forName(...).newInstance()`
-  path produced `ClassNotFoundException: eda.postgenerate.llmflag.InvocationCache`,
+  path produced `ClassNotFoundException: eda.postgenerate.pre_processamento_maven_flags_via_llm.InvocationCache`,
   confirming the Groovy-2.4.9-vs-Groovy-4.0.28 bytecode mismatch.
 
 The pragmatic fix: keep the sibling classes for unit-test coverage

@@ -9,7 +9,7 @@
  * System.exit), which the runner catches and turns into a build failure.
  *
  * Each suite remains directly runnable on its own:
- *   groovy src/test/groovy/eda/postgenerate/llmflag/ContractDerivationTest.groovy
+ *   groovy src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy
  * (a failure now surfaces as an uncaught exception, i.e. a non-zero exit code).
  *
  * Wired into the build by the `groovy-maven-plugin` execution
@@ -17,16 +17,16 @@
  */
 
 List<String> suites = [
-        "src/test/pre-processamento-llm-flags/ContractDerivationTest.groovy",
-        "src/test/pre-processamento-llm-flags/ContractTypeResolverTest.groovy",
-        "src/test/pre-processamento-llm-flags/CustomEnumGenerationTest.groovy",
-        "src/test/pre-processamento-llm-flags/CustomAttributesProfileConsistencyTest.groovy",
-        "src/test/pre-processamento-llm-flags/OrchestratorCacheTest.groovy",
-        "src/test/pre-processamento-llm-flags/ProvenanceReportTest.groovy",
-        "src/test/pre-processamento-llm-flags/FlagCatalogExtractorTest.groovy",
-        "src/test/pre-processamento-llm-flags/OrchestratorContractGateTest.groovy",
-        "src/test/pre-processamento-llm-flags/CommandLineAssemblerTest.groovy",
-        "src/test/pre-processamento-llm-flags/FlagCatalogExtractorDriftTest.groovy"
+        "src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/ContractTypeResolverTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/CustomEnumGenerationTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/CustomAttributesProfileConsistencyTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/OrchestratorContractGateTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/CommandLineAssemblerTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorDriftTest.groovy"
 ]
 
 int failed = 0

@@ -14,11 +14,11 @@ O sintoma original está **eliminado e verificado por reprodução direta**: o m
 
 | Check | Command / Action | Result | Notes |
 |-------|------------------|--------|-------|
-| Reprodução (post-fix) — comando exato do assessment | `'{"id":1024,…}' \| groovy src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy --use-case-description "criar entidade de teste" --use-case-contract` | **pass** | `exit 3` (antes: `exit 4`). O abort FR-018 (*"empty defaultValue"*) **não ocorre mais**; a execução avança até o passo de inferência e falha ali por limitação do Windows (stub `.sh` não executável via `CreateProcess`, erro 193) — pré-existente e documentada no `fix.md`. |
+| Reprodução (post-fix) — comando exato do assessment | `'{"id":1024,…}' \| groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "criar entidade de teste" --use-case-contract` | **pass** | `exit 3` (antes: `exit 4`). O abort FR-018 (*"empty defaultValue"*) **não ocorre mais**; a execução avança até o passo de inferência e falha ali por limitação do Windows (stub `.sh` não executável via `CreateProcess`, erro 193) — pré-existente e documentada no `fix.md`. |
 | Reprodução (post-fix) — com stub executável | mesmo comando + `--inference-bin <stub .cmd>` + `--cache-dir <tmp>` | **pass** | `exit 0`. stdout = 1 linha de comando com **32** flags; `absolute_path_jsonfile_contract` **ausente**; `enable_json_entity_contracts` **ausente**; `-Dentity_name_package=myentity` presente. |
 | Cache HIT (2ª invocação, mesmo input) | mesma repetição com o mesmo `--cache-dir` | **fail** | `exit 1` — `java.lang.StackOverflowError` em `cacheLookup`. Ver *Output Excerpts* e *Residual Risks*. |
 | Blast radius da falha | run A (input X) → run B (**input Y**) → run C (input X) | **fail** | run A `exit 0`; run B `exit 1`; run C `exit 1`. Uma única linha longa no `cache.jsonl` envenena o cache para **todos** os inputs. |
-| Novos/atualizados testes | `groovy src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy` | **pass** | ALL CHECKS PASSED — 15 checks, 0 falhas. |
+| Novos/atualizados testes | `groovy src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | **pass** | ALL CHECKS PASSED — 15 checks, 0 falhas. |
 | Testes (cache) | `groovy …/OrchestratorCacheTest.groovy` | **pass** | ALL CHECKS PASSED — 28 checks, 0 falhas. Cobre 4.1-4.6 (impressão digital do catálogo, chave legada inalcançável). |
 | Testes (regressão do merge/proveniência) | `groovy …/ProvenanceReportTest.groovy` | **pass** | ALL CHECKS PASSED — 20 checks, 0 falhas. |
 | Suite de regressão (build + IT) | `mvn -o clean install` | **pass** | BUILD SUCCESS, `exit 0`. **10/10** perfis de IT com `Post-archetype-generation invoker exit code: 0`; `verify.groovy` executado (`Finished post-build script`); **0** ocorrências de `[ERROR]`. |
@@ -88,7 +88,7 @@ at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:5078)   <-- 1 frame
 ## Residual Risks
 
 - **🔴 CRÍTICO — caminho de cache HIT quebrado (defeito pré-existente, exposto pela correção).**
-  `cacheLookup` (`src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:490-520`) valida cada linha do `cache.jsonl` com o regex
+  `cacheLookup` (`src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:490-520`) valida cada linha do `cache.jsonl` com o regex
   `^\{"k":"([0-9a-f]{64})","v":"((?:[^"\\]|\\.)*)","r":"((?:[^"\\]|\\.)*)","t":(\d+)\}$`.
   O grupo `((?:[^"\\]|\\.)*)` é um `*` guloso sobre um grupo alternado; o `java.util.regex` compila isso como `Pattern$Loop`, **recursivo**, com **1 frame de pilha por caractere**. O relatório de proveniência real (`r`) tem **1965** caracteres — acima do limite medido de **1726** — e o `StackOverflowError` derruba a invocação (`exit 1`).
   * **Não foi introduzido pela correção*: o regex e o método `cacheLookup` não foram alterados; a correção mudou apenas `makeCacheKey()` e adicionou `fingerprintCatalog()`.

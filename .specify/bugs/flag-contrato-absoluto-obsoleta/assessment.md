@@ -26,7 +26,7 @@ Reproduzido neste repositório em 2026-10-23 (Windows, Groovy 5.1.3, `target/cla
 
    ```powershell
    '{"id":1024,"nome":"Caramelo","dono":"Antonio"}' |
-     groovy src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy `
+     groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy `
        --use-case-description "criar entidade de teste" --use-case-contract
    ```
 
@@ -43,12 +43,12 @@ Reproduzido neste repositório em 2026-10-23 (Windows, Groovy 5.1.3, `target/cla
 2. Confirmar que **nenhum** escritor da flag existe no mecanismo:
 
    ```powershell
-   Select-String -Path "src/main/groovy/eda/postgenerate/llmflag/*.groovy" `
+   Select-String -Path "src/main/pre-processamento-maven-flags-via-llm/*.groovy" `
      -Pattern "absolute_path_jsonfile_contract"
    # → sem resultados
    ```
 
-   A flag entra no laço genérico de `merge()`/`assemble()` apenas pelo `defaultValue` do catálogo — que hoje é vazio. Nenhum módulo do pacote `llmflag` possui lista hardcoded de flags (verificado: 0 ocorrências de `entity_name`, `enable_json`, `absolute_path`).
+   A flag entra no laço genérico de `merge()`/`assemble()` apenas pelo `defaultValue` do catálogo — que hoje é vazio. Nenhum módulo do pacote `pre_processamento_maven_flags_via_llm` possui lista hardcoded de flags (verificado: 0 ocorrências de `entity_name`, `enable_json`, `absolute_path`).
 
 3. Confirmar que o contrato **já** vai para o prompt da LLM: `Orchestrator.groovy:645-654` grava o contrato em arquivo temporário e o passa como `--use-case-contract-file`; `:667-669` apaga o arquivo no `finally`.
 
@@ -62,12 +62,12 @@ Reproduzido neste repositório em 2026-10-23 (Windows, Groovy 5.1.3, `target/cla
 
 ## Suspected Code Paths
 
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:66-89` — o contrato é lido de **stdin** (FR-002/FR-003) e fica em memória: a premissa do relato, **confirmada**.
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:640-671` — `runInference()` entrega o contrato à LLM (`--use-case-contract-file`) e o apaga no `finally`; **não há** qualquer caminho de código que o persista de forma permanente.
-- `src/main/groovy/eda/postgenerate/llmflag/` (pacote inteiro) — **0 ocorrências** de `absolute_path_jsonfile_contract`: o mecanismo **nunca** popula a flag.
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:229-300` — `merge()`: `pickFromContract()` lê **só o nível superior** (`contract.get(key)`); o gate FR-009 (`:248`, `:279`) exige a chave **literal** no contrato.
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:181-217` — `extractCatalog()` rejeita `<defaultValue/>` vazio (FR-018) e aborta com exit 4.
-- `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy:462-467` — `makeCacheKey()`: a chave de cache é `sha256(description + "\0" + contrato canônico)`, **sem** incorporate qualquer assinatura do catálogo ⇒ as entradas em cache permanecem válidas (as-is) após a mudança de catálogo.
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:66-89` — o contrato é lido de **stdin** (FR-002/FR-003) e fica em memória: a premissa do relato, **confirmada**.
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:640-671` — `runInference()` entrega o contrato à LLM (`--use-case-contract-file`) e o apaga no `finally`; **não há** qualquer caminho de código que o persista de forma permanente.
+- `src/main/pre-processamento-maven-flags-via-llm/` (pacote inteiro) — **0 ocorrências** de `absolute_path_jsonfile_contract`: o mecanismo **nunca** popula a flag.
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:229-300` — `merge()`: `pickFromContract()` lê **só o nível superior** (`contract.get(key)`); o gate FR-009 (`:248`, `:279`) exige a chave **literal** no contrato.
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:181-217` — `extractCatalog()` rejeita `<defaultValue/>` vazio (FR-018) e aborta com exit 4.
+- `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:462-467` — `makeCacheKey()`: a chave de cache é `sha256(description + "\0" + contrato canônico)`, **sem** incorporate qualquer assinatura do catálogo ⇒ as entradas em cache permanecem válidas (as-is) após a mudança de catálogo.
 - `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:77-88` — `absolute_path_jsonfile_contract` com `<defaultValue/>` **vazio** e regex `^\/([^\/]+\/)*[^\/]+\.json$` (só caminho absoluto Linux).
 - `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:64-75` — `enable_json_entity_contracts` (default `false`), cuja única função é governar o par delete/copy de `contracts/`.
 - `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:30-33` — `entity_name_package` com `<defaultValue/>` **vazio** → **primeiro** a disparar o FR-018.
@@ -81,8 +81,8 @@ Reproduzido neste repositório em 2026-10-23 (Windows, Groovy 5.1.3, `target/cla
 - `bash_script/script_core.sh:83-100` — os 14 coletores `user_*_input*.sh` (US6/T033) eram quem perguntava o caminho do JSON ao operador; **não existe mais** ⇒ nenhum escritor legado sobrou.
 - `src/test/resources/projects/json-contract/archetype.properties:13-14` — perfil de IT que fixa `enable_json_entity_contracts=true` e o caminho via placeholder de substituição manual.
 - `src/test/resources/projects/{basic,binding-default-only,binding-list-only,binding-map-only,binding-mutable-only,binding-validated-only,defaults-only,full,minimal}/archetype.properties` — as outras 9 fixtures também fixam `absolute_path_jsonfile_contract=absolute_path_jsonfile_contract` (valor literal, que **viola** a regex atual).
-- `src/test/groovy/eda/postgenerate/llmflag/OrchestratorContractBridgeTest.groovy:34-36, 64, 69-83, 143-154` — teste WIP que especifica a **arquitetura oposta** a este bug (`persistContractFile` + `injectContractBridge`, fonte `SYNTHETIC`, default sentinela `/dev/null/null.json`); seu check `0.1` fixa a contagem de **34** flags.
-- `src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy:27-31` e `ProvenanceReportTest.groovy:19-22` — usam catálogos **sintéticos** inline; não dependem das 34 flags reais ⇒ não quebram com a remoção.
+- `src/test/pre-processamento-maven-flags-via-llm/OrchestratorContractBridgeTest.groovy:34-36, 64, 69-83, 143-154` — teste WIP que especifica a **arquitetura oposta** a este bug (`persistContractFile` + `injectContractBridge`, fonte `SYNTHETIC`, default sentinela `/dev/null/null.json`); seu check `0.1` fixa a contagem de **34** flags.
+- `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy:27-31` e `ProvenanceReportTest.groovy:19-22` — usam catálogos **sintéticos** inline; não dependem das 34 flags reais ⇒ não quebram com a remoção.
 - `scripts/inference-stub.sh:40-42` — o stub devolve sempre o mesmo conjunto fixo de flags; não deriva nada do contrato, logo não exercita a extração descrita no relato.
 - `specs/003-llm-flag-inference/spec.md:118-137` — FR-002 (contrato via stdin), FR-009 (gate), FR-017 (não persistir o contrato no VCS), FR-018 (default não-vazio). **Nenhuma FR cobre** a remoção da flag nem a extração da entidade a partir do contrato no prompt.
 - `specs/003-llm-flag-inference/contracts/cli-contract.md:42` — "the JSON contract is always multi-line and is always read from stdin"; `:192` — "the 34 flag names".
@@ -132,7 +132,7 @@ Confiança: **alta**. Premissa e inoperância reproduzidas por execução real (
 
 **Parte 6 — Contagem de flags 34 → 32**: atualizar `specs/003-llm-flag-inference/spec.md:168` (SC-003), `contracts/cli-contract.md:192`, `data-model.md:84,107`, `plan.md:43,130`, `research.md:42,52`, `tasks.md:66,316,353` (a task T077/T013 do `FlagCatalogExtractorTest` — hoje **inexistente em disco** — deve passar a esperar 32 entradas). **Não** reescrever os documentos históricos em `.specify/assessments/llm-flag-inference/` (registram o que era verdadeiro na data da avaliação).
 
-**Parte 7 — Teste WIP**: **descartar** `src/test/groovy/eda/postgenerate/llmflag/OrchestratorContractBridgeTest.groovy` (e `sample-contract-for-archetype-test.json`, se não for mantido). Ele especifica a arquitetura oposta a esta decisão (sintetizar a flag, fonte `SYNTHETIC`). A dele saem apenas as asserções reutilizáveis — em especial o guard FR-018 (nenhum default vazio) — que devem ser portadas para um teste de catálogo.
+**Parte 7 — Teste WIP**: **descartar** `src/test/pre-processamento-maven-flags-via-llm/OrchestratorContractBridgeTest.groovy` (e `sample-contract-for-archetype-test.json`, se não for mantido). Ele especifica a arquitetura oposta a esta decisão (sintetizar a flag, fonte `SYNTHETIC`). A dele saem apenas as asserções reutilizáveis — em especial o guard FR-018 (nenhum default vazio) — que devem ser portadas para um teste de catálogo.
 
 **Parte 8 — Docs**: `README.md:1619` (remover o dummy `/dev/null/null.json`), `README.md:1947-1950` (remover a entrada da flag e reescrever a de `enable_json_entity_contracts`), `README.md:2131-2132` (remover a aresta do grafo de dependências). Atualizar `specs/001-archetype-integration-tests/` (spec.md:42,50-51,84,86,105; data-model.md:19-20,35,38,42,53-54,59; plan.md:13,16,26,62,82,91; quickstart.md:18,28,38,52,74,100; research.md:18,23,33,37-38,48; tasks.md:42,157-209,276,299,369; checklists/requirements.md:28) para o novo nome e escopo do perfil.
 
@@ -145,10 +145,10 @@ Confiança: **alta**. Premissa e inoperância reproduzidas por execução real (
 * `src/main/resources/META-INF/archetype_post_generate_body/archetype-global-variables.groovy`
 * `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-main-variables.groovy`
 * `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-src-main-resources.groovy`
-* `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy` — invalidação do cache (impressão digital do catálogo na chave).
+* `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy` — invalidação do cache (impressão digital do catálogo na chave).
 * `src/test/resources/projects/json-contract/` → `src/test/resources/projects/custom-attributes/` (renomeado: `archetype.properties`, `verify.groovy`, `goal.txt`, `sample-contract-for-archetype-test.json`).
 * `src/test/resources/projects/{basic,binding-default-only,binding-list-only,binding-map-only,binding-mutable-only,binding-validated-only,defaults-only,full,minimal}/archetype.properties` — remover as 2 linhas (9 arquivos).
-* `src/test/groovy/eda/postgenerate/llmflag/OrchestratorContractBridgeTest.groovy` — **descartar**; portar o guard FR-018 para um teste de catálogo.
+* `src/test/pre-processamento-maven-flags-via-llm/OrchestratorContractBridgeTest.groovy` — **descartar**; portar o guard FR-018 para um teste de catálogo.
 * `specs/003-llm-flag-inference/spec.md`, `data-model.md`, `plan.md`, `research.md`, `tasks.md`, `contracts/cli-contract.md`, `checklists/requirements.md`.
 * `specs/001-archetype-integration-tests/spec.md`, `data-model.md`, `plan.md`, `quickstart.md`, `research.md`, `tasks.md`, `checklists/requirements.md`.
 * `README.md`.

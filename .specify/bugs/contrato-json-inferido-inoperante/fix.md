@@ -19,15 +19,15 @@ segunda invocação sair com exit 1 — foi corrigido (parser JSON em vez de reg
 
 | File | Change | Notes |
 |------|--------|-------|
-| `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy` | modified | Deriva a entidade do contrato (FR-021/FR-022); *allowlist* do FR-009 para `entity_name`; nova fonte de proveniência `CONTRACT_DERIVED`; materializa o contrato em disco e emite `-Dentity_contract_path` (FR-023); guarda de chaves secret-like; `cacheLookup` passa a parsear JSON (corrige o `StackOverflowError`); novo argumento `--contract-dir`. |
-| `src/main/groovy/eda/postgenerate/llmflag/FlagProposalMerger.groovy` | modified | Espelho exato da lógica acima no módulo unit-testável (o `Orchestrator` precisa ser auto-contido). A paridade é assegurada por teste. |
+| `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy` | modified | Deriva a entidade do contrato (FR-021/FR-022); *allowlist* do FR-009 para `entity_name`; nova fonte de proveniência `CONTRACT_DERIVED`; materializa o contrato em disco e emite `-Dentity_contract_path` (FR-023); guarda de chaves secret-like; `cacheLookup` passa a parsear JSON (corrige o `StackOverflowError`); novo argumento `--contract-dir`. |
+| `src/main/pre-processamento-maven-flags-via-llm/FlagProposalMerger.groovy` | modified | Espelho exato da lógica acima no módulo unit-testável (o `Orchestrator` precisa ser auto-contido). A paridade é assegurada por teste. |
 | `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml` | modified | Nova flag `entity_contract_path` (default `none`, regex `^(none\|[^\r\n]*\.json)$`). Catálogo: 32 → **33** flags. |
 | `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-entity-contract.groovy` | added | Copia o contrato para `src/test/resources/contracts/contract.json` **guardado por `enable_folder_src_test_java`**; caminho absoluto ou relativo (resolvido contra o CWD e contra a raiz do projeto, subindo níveis); arquivo ausente ⇒ aviso, nunca quebra a geração. |
 | `scripts/inference-stub.sh` | modified | O stub passa a **derivar a entidade do contrato** (nome + lista de atributos), exercitando o caminho ponta a ponta sem LLM real. |
-| `src/test/groovy/eda/postgenerate/llmflag/ContractDerivationTest.groovy` | added test | 38 checks: derivação (mapa/lista/campos de negócio), tipo por valor, tipo declarado, restrição `java.lang`, formato estrito, `enable_custom_attributes` forçado, precedências, *allowlist*, **paridade Orchestrator × FlagProposalMerger**, materialização determinística. |
-| `src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy` | modified | Sumário do relatório passa a contar `CONTRACT_DERIVED`; nova seção 5: regressão do `StackOverflowError` (relatório realista > 1900 chars) e linha corrompida não fatal. |
-| `src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy` | modified | Cenário E: *allowlist* do FR-009 (proposta aceita **não** aparece como descartada); flag fora da *allowlist* continua descartada. |
-| `src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy` | modified | Lock do catálogo: 32 → **33** flags; checks do `entity_contract_path` (default não-vazio, default válida, aceita `.json`, rejeita o resto). |
+| `src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy` | added test | 38 checks: derivação (mapa/lista/campos de negócio), tipo por valor, tipo declarado, restrição `java.lang`, formato estrito, `enable_custom_attributes` forçado, precedências, *allowlist*, **paridade Orchestrator × FlagProposalMerger**, materialização determinística. |
+| `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` | modified | Sumário do relatório passa a contar `CONTRACT_DERIVED`; nova seção 5: regressão do `StackOverflowError` (relatório realista > 1900 chars) e linha corrompida não fatal. |
+| `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` | modified | Cenário E: *allowlist* do FR-009 (proposta aceita **não** aparece como descartada); flag fora da *allowlist* continua descartada. |
+| `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | modified | Lock do catálogo: 32 → **33** flags; checks do `entity_contract_path` (default não-vazio, default válida, aceita `.json`, rejeita o resto). |
 | `src/test/resources/projects/entity-contract/*` | added | Perfil de IT: contrato com `entityName` + `attributes` (valores), `enable_folder_src_test_java=true`, `entity_contract_path` apontando para o contrato. `verify.groovy` exige: (1) o contrato existe em `src/test/resources/contracts/contract.json`; (2) conteúdo **byte a byte** igual ao contrato fonte; (3) a entidade gerada corresponde ao contrato. |
 | `src/test/resources/projects/custom-attributes/archetype.properties` | modified | Passa a oferecer `entity_contract_path` — este perfil mantém `enable_folder_src_test_java=false` e passa a ser o **caso negativo** da persistência. |
 | `src/test/resources/projects/custom-attributes/verify.groovy` | modified | Asserção negativa: a pasta `src/test/resources/contracts/` **não** pode existir com `enable_folder_src_test_java=false`. |
@@ -73,7 +73,7 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
 
 ## Tests Added or Updated
 
-- `src/test/groovy/eda/postgenerate/llmflag/ContractDerivationTest.groovy` — **novo**, 38 checks:
+- `src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy` — **novo**, 38 checks:
   * `attributes` como lista / como mapa / campos de negócio avulsos ⇒ a mesma lista de atributos;
   * tipo estimado pelo valor (`Integer`/`Long`/`Double`/`Boolean`/`String`);
   * tipo declarado tem precedência; tipo fora de `java.lang` é rejeitado **com aviso**;
@@ -83,10 +83,10 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
   * *allowlist*: `entity_name` aceito e **não** listado como descartado; flag fora da *allowlist* continua descartada;
   * **paridade** Orchestrator × FlagProposalMerger (6 cenários);
   * materialização determinística (mesmo contrato ⇒ mesmo caminho) e sem backslash.
-- `src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy` — §1.9 (novo formato do sumário) e §5
+- `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` — §1.9 (novo formato do sumário) e §5
   (regressão do `StackOverflowError` com relatório realista; linha corrompida não invalida o cache).
-- `src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy` — cenário E (*allowlist* do FR-009).
-- `src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy` — lock de 33 flags + checks do
+- `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` — cenário E (*allowlist* do FR-009).
+- `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` — lock de 33 flags + checks do
   `entity_contract_path`.
 - `src/test/resources/projects/entity-contract/verify.groovy` — **novo**: contrato persistido, byte a byte, e
   entidade correspondente ao contrato.
@@ -98,10 +98,10 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
   11 fixtures: `basic`, `binding-default-only`, `binding-list-only`, `binding-map-only`,
   `binding-mutable-only`, `binding-validated-only`, `custom-attributes`, `defaults-only`, **`entity-contract`**,
   `full`, `minimal`.
-- `groovy src/test/groovy/eda/postgenerate/llmflag/ContractDerivationTest.groovy` → `ALL CHECKS PASSED` (exit 0).
-- `groovy src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy` → `ALL CHECKS PASSED` (exit 0).
-- `groovy src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy` → `ALL CHECKS PASSED` (exit 0).
-- `groovy src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy` → `ALL CHECKS PASSED` (exit 0).
+- `groovy src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy` → `ALL CHECKS PASSED` (exit 0).
+- `groovy src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` → `ALL CHECKS PASSED` (exit 0).
+- `groovy src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` → `ALL CHECKS PASSED` (exit 0).
+- `groovy src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` → `ALL CHECKS PASSED` (exit 0).
 - Mecanismo ponta a ponta (contrato de domínio, cache limpo):
   * 1ª invocação: exit 0, `-Dentity_name=ContractEntity -Dentity_name_package=contractentity
     -Denable_custom_attributes=true -Dcustom_attributes_list=Long:id,String:name,String:createdAt

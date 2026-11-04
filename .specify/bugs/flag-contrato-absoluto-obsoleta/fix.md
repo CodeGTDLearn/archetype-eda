@@ -20,17 +20,17 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 | `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-main-variables.groovy` | modified | Removidos `srcMainResourcesContracts` e `jsonfileEntityContractSourcePath` (linhas 27-28). |
 | `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-src-main-resources.groovy` | **removed** | O arquivo continha **apenas** os ramos `deleteFolder`/`copyFile` de `contracts/`. Removido por inteiro — a pasta `contracts/` deixa de ser criada, apagada ou populada. |
 | `src/main/resources/META-INF/maven/archetype_metadata_filesets/fileset-src-main-resources.xml` | modified | **Expansão de escopo** — removido o fileSet `SRC\MAIN\RESOURCES\CONTRACTS`. Sem isso o plugin criava a pasta `contracts/` **vazia** no projeto gerado, contrariando a decisão "a pasta deixa de existir". Ver *Deviations*. |
-| `src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy` | modified | Impressão digital do catálogo (SHA-256 sobre chave + default + regex de cada flag) incluída no payload da chave de cache (`makeCacheKey`) + novo método `fingerprintCatalog()`. Entradas de cache gravadas antes da mudança ficam inalcançáveis. |
-| `src/main/groovy/eda/postgenerate/llmflag/FlagCatalogExtractor.groovy` | modified | **Expansão de escopo** — adicionado `import groovy.xml.XmlSlurper`. O módulo não compilava isoladamente (erro 193 / "unable to resolve class XmlSlurper"); sem isso o módulo nomeado na task T013/T047/T077 do spec não podia ser testado. Ver *Deviations*. |
+| `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy` | modified | Impressão digital do catálogo (SHA-256 sobre chave + default + regex de cada flag) incluída no payload da chave de cache (`makeCacheKey`) + novo método `fingerprintCatalog()`. Entradas de cache gravadas antes da mudança ficam inalcançáveis. |
+| `src/main/pre-processamento-maven-flags-via-llm/FlagCatalogExtractor.groovy` | modified | **Expansão de escopo** — adicionado `import groovy.xml.XmlSlurper`. O módulo não compilava isoladamente (erro 193 / "unable to resolve class XmlSlurper"); sem isso o módulo nomeado na task T013/T047/T077 do spec não podia ser testado. Ver *Deviations*. |
 | `pom.xml` | modified | **Expansão de escopo** — `<forceCreation>true</forceCreation>` na execução do `xml-maven-plugin:transform`. Ver *Deviations*. |
 
 ### Testes
 
 | File | Change | Notes |
 |------|--------|-------|
-| `src/test/groovy/eda/postgenerate/llmflag/OrchestratorContractBridgeTest.groovy` | **removed** | Descartado por decisão do maintainer: especificava a arquitetura **oposta** (sintetizar a flag, fonte `SYNTHETIC`). |
-| `src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy` | added | 16 checks: contagem de 32 flags, guard FR-018, ausência das duas flags, default `entity_name_package`, auto-coerência default×regex, extrator real sobre o catálogo construído, Orchestrator sem exit 4, caso negativo FR-018. |
-| `src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy` | modified | 6 checks novos (4.1-4.6) sobre a impressão digital do catálogo e a invalidação do cache legado. |
+| `src/test/pre-processamento-maven-flags-via-llm/OrchestratorContractBridgeTest.groovy` | **removed** | Descartado por decisão do maintainer: especificava a arquitetura **oposta** (sintetizar a flag, fonte `SYNTHETIC`). |
+| `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | added | 16 checks: contagem de 32 flags, guard FR-018, ausência das duas flags, default `entity_name_package`, auto-coerência default×regex, extrator real sobre o catálogo construído, Orchestrator sem exit 4, caso negativo FR-018. |
+| `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` | modified | 6 checks novos (4.1-4.6) sobre a impressão digital do catálogo e a invalidação do cache legado. |
 | `src/test/resources/projects/json-contract/` → `src/test/resources/projects/custom-attributes/` | **renamed** | Perfil reformulado (decisão do maintainer). `archetype.properties`: `artifactId=custom-attributes`, `project_description=Custom attributes scenario`, `enable_custom_attributes=true`, `custom_attributes_list=Long:id,String:name,String:createdAt`; as 2 flags de contrato JSON removidas. `verify.groovy`: `expectedArtifactId = 'custom-attributes'`. `goal.txt` inalterado. `sample-contract-for-archetype-test.json` mantido como **documento de referência** da forma da entidade (não é lido em tempo de execução). |
 | `src/test/resources/projects/{basic,binding-default-only,binding-list-only,binding-map-only,binding-mutable-only,binding-validated-only,defaults-only,full,minimal}/archetype.properties` | modified | 9 arquivos — removidas as linhas `enable_json_entity_contracts=` e `absolute_path_jsonfile_contract=`. |
 
@@ -77,7 +77,7 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 
 ## Tests Added or Updated
 
-- `src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy::1.1` — o catálogo tem exatamente **32** flags (trava a remoção).
+- `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy::1.1` — o catálogo tem exatamente **32** flags (trava a remoção).
 - `…::1.2` — nenhum `<requiredProperty>` com `defaultValue` vazio (guard FR-018; era o que abortava com exit 4).
 - `…::1.3` / `::1.4` — `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` **ausentes** do catálogo.
 - `…::1.6` / `::1.7` — `entity_name_package` com default `myentity`, casando com a própria `validationRegex`.
@@ -85,7 +85,7 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 - `…::2.1-2.3` — o `FlagCatalogExtractor` real lê o catálogo construído com 32 flags e sem as flags de contrato.
 - `…::3.1` / `::3.2` — o `Orchestrator` real carrega o catálogo **sem lançar** (o caminho de exit 4 está fechado).
 - `…::4.1` / `::4.2` — caso negativo FR-018: `defaultValue` vazio é rejeitado e o erro nomeia a flag.
-- `src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy::4.1-4.3` — a chave de cache é determinística, muda com a impressão digital e **não** é alcançável pela chave legada.
+- `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy::4.1-4.3` — a chave de cache é determinística, muda com a impressão digital e **não** é alcançável pela chave legada.
 - `…::4.4-4.6` — a impressão digital é estável para o mesmo catálogo, muda quando um default muda e é um sha256 hex.
 - `src/test/resources/projects/custom-attributes/verify.groovy` — asserções estruturais sobre a entidade gerada a partir de `custom_attributes_list` (`Long id`, `String name`, `String createdAt`).
 
@@ -94,10 +94,10 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 - `mvn -o clean install -DskipTests` → **BUILD SUCCESS** (exit 0); catálogo gerado com **32** flags e **0** defaults vazios.
 - `mvn -o integration-test` → **BUILD SUCCESS**; os **10** perfis de IT rodaram com `Post-archetype-generation invoker exit code: 0` (incluindo o `custom-attributes`, com `run post-build script verify.groovy` executado e finalizado).
 - `mvn -o integration-test "-Darchetype.test.projects=custom-attributes"` → **BUILD SUCCESS**; `verify.groovy` executado; entidade gerada contém `private Long id;`, `private String name;`, `private String createdAt;`.
-- `groovy src/test/groovy/eda/postgenerate/llmflag/FlagCatalogExtractorTest.groovy` → **ALL CHECKS PASSED** (16 checks).
-- `groovy src/test/groovy/eda/postgenerate/llmflag/OrchestratorCacheTest.groovy` → **ALL CHECKS PASSED** (34 checks).
-- `groovy src/test/groovy/eda/postgenerate/llmflag/ProvenanceReportTest.groovy` → **ALL CHECKS PASSED** (24 checks; sem regressão).
-- `groovy src/main/groovy/eda/postgenerate/llmflag/Orchestrator.groovy --use-case-description "..." --use-case-contract` (contrato pelo stdin) → **exit 0** (antes: **exit 4**); stdout com uma única linha de comando com **32** flags e **nenhuma** referência a `absolute_path_jsonfile_contract` / `enable_json_entity_contracts`.
+- `groovy src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` → **ALL CHECKS PASSED** (16 checks).
+- `groovy src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` → **ALL CHECKS PASSED** (34 checks).
+- `groovy src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` → **ALL CHECKS PASSED** (24 checks; sem regressão).
+- `groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "..." --use-case-contract` (contrato pelo stdin) → **exit 0** (antes: **exit 4**); stdout com uma única linha de comando com **32** flags e **nenhuma** referência a `absolute_path_jsonfile_contract` / `enable_json_entity_contracts`.
 - Verificação da invalidação do cache (script temporário, fora do repositório): chave antiga `fa2f1cdf…` ≠ chave nova `89330dc7…`; `cacheLookup` com a chave nova **não** serviu a entrada legada → **OK, entrada legada inalcançável**.
 - Verificação do pós-processador composto (`target/classes/META-INF/archetype-post-generate.groovy`): **0** referências a `absolute_path_jsonfile_contract`, `enable_json_entity_contracts`, `srcMainResourcesContracts`, `jsonfileEntityContractSourcePath`, `keep_json_entity_contracts` e `json_entity_contracts_folder`.
 - Verificação do artefato gerado: `src/main/resources/contracts/` **ausente** no projeto gerado (após `mvn clean` do diretório de IT, para descartar resíduo de execuções anteriores).
@@ -116,7 +116,7 @@ Três expansões de escopo, todas **necessárias** para satisfazer os critérios
 2. **`pom.xml`** (não listado no assessment).
    *Motivo*: o `xml-maven-plugin:1.2.1` tem `forceCreation` com default `false` e faz **staleness check apenas sobre o agregador** `archetype-metadata.xml` — os fragments `property-*.xml` entram por **entidades XML externas** e o mtime deles não é considerado. Consequência observada: após editar `property-entity.xml`, `mvn process-resources` **não** regenerou o catálogo (continuou com 34 flags e os defaults vazios) — a correção seria aparentemente inexistente. Com `<forceCreation>true</forceCreation>` o catálogo passa a refletir a fonte da verdade a cada build.
 
-3. **`src/main/groovy/eda/postgenerate/llmflag/FlagCatalogExtractor.groovy`** (não listado no assessment).
+3. **`src/main/pre-processamento-maven-flags-via-llm/FlagCatalogExtractor.groovy`** (não listado no assessment).
    *Motivo*: o módulo usa `XmlSlurper` sem `import groovy.xml.XmlSlurper` e **não compilava isoladamente** ("unable to resolve class XmlSlurper"). Como o assessment determina criar um teste de catálogo — e o `tasks.md` do spec (T013/T047/T077) nomeia explicitamente `FlagCatalogExtractorTest` para este módulo — o import faltante foi acrescentado (1 linha). Sem ele o módulo nomeado pelo spec permaneceria intestável.
 
 **Observação sem mudança**: `src/main/resources/META-INF/archetype-post-generate.groovy` **não** foi editado, conforme a instrução do assessment — ele é excluído do build (`pom.xml:40`) e regenerado em `target/classes/` pelo `SnippetComposer`. O arquivo versionado está defasado, mas é inerte. Ver *Follow-ups*.

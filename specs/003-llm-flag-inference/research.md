@@ -39,7 +39,7 @@ This research consolidates the technology decisions behind the implementation pl
 - **Rationale**:
   - The XInclude references are already resolved by `xml-maven-plugin` at materialization time, so the orchestrator reads a flat, fully-merged XML — no second XInclude pass needed at runtime.
   - `groovy-xml` is already on the classpath; no new dependency.
-  - The catalog extraction is deterministic and cheap: parse once, build a `Map<String, CatalogEntry>` keyed by flag name, with `defaultValue` and `validationRegex` captured. Memory footprint: 32 entries × a few dozen bytes each.
+  - The catalog extraction is deterministic and cheap: parse once, build a `Map<String, CatalogEntry>` keyed by flag name, with `defaultValue` and `validationRegex` captured. Memory footprint: 35 entries × a few dozen bytes each.
 - **Alternatives considered**:
   - **StAX / SAX streaming**: not needed — the merged XML is small (a few KB) and fits in memory.
   - **Hardcoded flag list**: explicitly rejected — FR-013 forbids it; the precedent of drift between bash prompt scripts and the catalog is the failure mode being eliminated.
@@ -49,7 +49,7 @@ This research consolidates the technology decisions behind the implementation pl
 
 - **Decision**: Use Groovy 4.0.28 transitive `groovy-json` to canonicalize the JSON contract by recursively sorting object keys alphabetically before serialization. Use the resulting string as input to SHA-256 for the cache key.
 - **Rationale**:
-  - The catalog has 32 flags, all flat top-level `<requiredProperty key="…">` entries; the contract payload, by user spec, is a free-form JSON object that may contain nested objects and arrays.
+  - The catalog has 35 flags, all flat top-level `<requiredProperty key="…">` entries; the contract payload, by user spec, is a free-form JSON object that may contain nested objects and arrays.
   - Sorted-key serialization (RFC 8785 / JCS is overkill for this use case) is sufficient to produce stable cache keys regardless of input field ordering.
   - `groovy-json` is already on the classpath via the Groovy 4.0.28 transitive set; no new dependency.
   - SHA-256 is provided by the JDK (`MessageDigest.getInstance("SHA-256")`) — no new dependency.
