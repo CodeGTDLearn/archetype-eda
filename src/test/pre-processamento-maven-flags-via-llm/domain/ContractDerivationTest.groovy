@@ -314,6 +314,34 @@ check("10.3 the materialized file holds the contract as delivered",
 check("10.4 the materialized path has no backslash (shell portability)",
         !pathA.contains("\\"))
 
+// ---------------------------------------------------------------------------
+// 11) the structural id: every spelling collapses to "id" (the entity
+//     template renders "<entityName>Id" and MUST NOT repeat the field)
+// ---------------------------------------------------------------------------
+def contractIdUpper = new LinkedHashMap()
+contractIdUpper.put("entityName", "ContractEntity")
+contractIdUpper.put("attributes", [[name: "ID", value: 1024]])
+def mergedIdUpper = mergeMerger(contractIdUpper, [:])
+check("11.1 an uppercase 'ID' is derived as the structural 'id'",
+        mergedIdUpper.get("values").get("custom_attributes_list") == "Integer:id")
+check("11.2 ...and no 'iD' leaks into the command-line flags",
+        !mergedIdUpper.get("values").get("custom_attributes_list").contains("iD"))
+
+def contractIdBoth = new LinkedHashMap()
+contractIdBoth.put("entityName", "ContractEntity")
+contractIdBoth.put("attributes", [[name: "id", value: 1], [name: "ID", value: 2]])
+def mergedIdBoth = mergeMerger(contractIdBoth, [:])
+check("11.3 'id' and 'ID' collapse to ONE attribute",
+        mergedIdBoth.get("values").get("custom_attributes_list") == "Integer:id")
+check("11.4 ...and the duplicate is reported as a warning",
+        ((List) mergedIdBoth.get("warnings")).any { it.contains("nome duplicado 'id'") })
+
+def contractIdentity = new LinkedHashMap()
+contractIdentity.put("entityName", "ContractEntity")
+contractIdentity.put("attributes", [[name: "identity", value: "abc"]])
+check("11.5 a field named 'identity' is NOT collapsed",
+        mergeMerger(contractIdentity, [:]).get("values").get("custom_attributes_list") == "String:identity")
+
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"
 if (failures > 0) throw new RuntimeException("${failures} CHECK(S) FAILED")

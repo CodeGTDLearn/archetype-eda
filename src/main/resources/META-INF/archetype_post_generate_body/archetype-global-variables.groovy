@@ -11,7 +11,7 @@ def project_package = "${properties?.package}".replace('.', '/')
 
 def entity_name = "${properties?.entity_name}"
 
-def entity_folder = "${properties?.entity_name}"
+def entity_folder = "${properties?.entity_name_package}"
 def config_folder = "config"
 def properties_folder = "properties"
 def map_properties_folder = "map_properties"

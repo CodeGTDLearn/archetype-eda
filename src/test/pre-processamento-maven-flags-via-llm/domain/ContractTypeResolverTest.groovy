@@ -94,6 +94,16 @@ check("7.2 a leading digit gets the field_ prefix", resolver.sanitizeAttributeNa
 check("7.3 a leading uppercase letter is lowercased", resolver.sanitizeAttributeName("Nome") == "nome")
 check("7.4 a name with no valid character is rejected", resolver.sanitizeAttributeName("!!!") == null)
 check("7.5 an already valid name passes through", resolver.sanitizeAttributeName("nome_ok") == "nome_ok")
+check("7.6 an all-uppercase 'ID' collapses to the structural id",
+        resolver.sanitizeAttributeName("ID") == "id")
+check("7.7 a mixed-case 'iD' collapses to the structural id",
+        resolver.sanitizeAttributeName("iD") == "id")
+check("7.8 a capitalized 'Id' collapses to the structural id",
+        resolver.sanitizeAttributeName("Id") == "id")
+check("7.9 a name that only starts with 'id' is untouched",
+        resolver.sanitizeAttributeName("identity") == "identity")
+check("7.10 a plural name is untouched",
+        resolver.sanitizeAttributeName("ids") == "ids")
 
 // ---------------------------------------------------------------------------
 // 8) normalizeType edge cases

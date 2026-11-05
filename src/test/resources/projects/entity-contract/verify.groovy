@@ -25,7 +25,7 @@ def expectedArtifactId = 'entity-contract'
 def expectedEntityName = 'ContractEntity'
 def expectedPackagePath = 'it/pkg/contractentity'
 def expectedAttributes = [
-    [name: 'id',     type: 'Integer'],
+    [name: 'contractEntityId', type: 'Long'],
     [name: 'name',   type: 'String'],
     [name: 'active', type: 'Boolean'],
 ]

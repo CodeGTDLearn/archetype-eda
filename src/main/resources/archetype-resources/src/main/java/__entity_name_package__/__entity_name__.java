@@ -21,14 +21,10 @@ import $custom_import_trim;
 #end
 ##
 ##
-#if(${enable_custom_attributes} == "false")
 ##
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
-
-#end
 ##
 ##
 #if(${enable_lombok} == "true")
@@ -44,9 +40,30 @@ import lombok.NoArgsConstructor;
 #end
 ##
 ##
+#set($id_base = "${entity_name.substring(0,1).toLowerCase()}${entity_name.substring(1)}")
+#if($entity_name == $entity_name.toUpperCase())
+  #set($id_base = $entity_name.toLowerCase())
+#end
+#set($id_field = "${id_base}Id")
+#set($id_field_lower = $id_field.toLowerCase())
+#set($id_suffix = "${id_field.substring(0,1).toUpperCase()}${id_field.substring(1)}")
 @Entity
 public class ${entity_name} {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long ${id_field};
+
+#if(${enable_lombok} == "false" && ${enable_custom_attributes} == "true")
+  public Long get${id_suffix}() {
+    return this.${id_field};
+  }
+
+  public void set${id_suffix}(Long ${id_field}) {
+    this.${id_field} = ${id_field};
+  }
+
+#end
 ##
 #if(${enable_custom_attributes} == "true")
   ##
@@ -55,7 +72,10 @@ public class ${entity_name} {
   ##
   #foreach($attrib in $attribute_list.split(","))
     #set($parts = $attrib.split(":"))
-    #set($dummy = $attributes.add({"type": $parts[0], "name": $parts[1]}))
+    #set($attrib_name_lower = $parts[1].toLowerCase())
+    #if($attrib_name_lower != "id" && $attrib_name_lower != $id_field_lower)
+      #set($dummy = $attributes.add({"type": $parts[0], "name": $parts[1]}))
+    #end
   #end
   ##
 
@@ -65,10 +85,13 @@ public class ${entity_name} {
     ##
   #end
 
-  #if(${enable_lombok} == "false")
-    #set($canonic_constructor_params = ${custom_attributes_list})
-    #set($canonic_constructor_params = $$canonic_constructor_params.replaceAll(":"," "))
-    #set($final_constructor_params = $$canonic_constructor_params.replaceAll(",$", ""))
+  #if(${enable_lombok} == "false" && $attributes.size() > 0)
+    #set($canonic_constructor_params = "")
+    #foreach($attrib in $attributes)
+      #set($canonic_constructor_params = "${canonic_constructor_params}${attrib.type}:${attrib.name},")
+    #end
+    #set($canonic_constructor_params = $canonic_constructor_params.replaceAll(":"," "))
+    #set($final_constructor_params = $canonic_constructor_params.replaceAll(",$", ""))
 
   public ${entity_name}(#evaluate($$final_constructor_params)){
     ##
@@ -89,16 +112,13 @@ public class ${entity_name} {
 #if(${enable_custom_attributes} == "false")
   ##
   ##
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
   private String username;
   private String password;
 
   #if(${enable_lombok} == "false")
     ##
-  public ${entity_name}(Long id, String username, String password) {
-    this.id = id;
+  public ${entity_name}(Long ${id_field}, String username, String password) {
+    this.${id_field} = ${id_field};
     this.username = username;
     this.password = password;
   }
@@ -135,12 +155,12 @@ public class ${entity_name} {
 ## uses de standard attributes / accessors + mutators: id, username and password
 #if(${enable_lombok} == "false" && ${enable_custom_attributes} == "false")
 ##
-  public Long getId() {
-        return this.id;
+  public Long get${id_suffix}() {
+        return this.${id_field};
       }
 
-  public void setId(Long id) {
-        this.id = id;
+  public void set${id_suffix}(Long ${id_field}) {
+        this.${id_field} = ${id_field};
       }
 
   public String getUsername() {

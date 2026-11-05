@@ -23,8 +23,8 @@ public class ApplicationProperties {
 
 #if(${validated_binding_properties} == "true")
   @Pattern(
-       message = "Pattern must be N.N.N format",
-       regexp = "^[0-9]+\\.[0-9]+(\\.[0-9])?$")
+       message = "Pattern must be N.N.N[-QUALIFIER] format",
+       regexp = "^[0-9]+\\.[0-9]+(\\.[0-9]+)?([-+][A-Za-z0-9.-]+)?$")
 #end
   private String version;
 

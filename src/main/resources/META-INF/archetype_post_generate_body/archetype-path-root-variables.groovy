@@ -16,4 +16,4 @@ Path rootELKFolder = projectRootFolder.resolve("ELK")
 Path rootGitFolder = projectRootFolder.resolve("git_temp")
 Path rootDockerFolder = projectRootFolder.resolve("docker")
 
-Path rootGitIgnoreFile = projectRootFolder.resolve(".gitignore")
+Path rootGitIgnoreFile = projectRootFolder.resolve("gitignore")

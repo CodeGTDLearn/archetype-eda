@@ -14,8 +14,33 @@
  */
 
 List<String> suites = [
+        // composer / build / metadata
+        "src/test/archetype-post-generate/ComposerTest.groovy",
+        "src/test/archetype-post-generate/BuildArtifactsTest.groovy",
+        "src/test/archetype-post-generate/MetadataContractTest.groovy",
+        "src/test/archetype-post-generate/FilesetConsistencyTest.groovy",
+        "src/test/archetype-post-generate/TemplateFlagConsistencyTest.groovy",
+        // variables
+        "src/test/archetype-post-generate/VariablesTest.groovy",
         "src/test/archetype-post-generate/VariablesCustomTypesTest.groovy",
-        "src/test/archetype-post-generate/SnippetCustomEnumsTest.groovy"
+        // body
+        "src/test/archetype-post-generate/BodyFunctionsTest.groovy",
+        "src/test/archetype-post-generate/BodyVariablesTest.groovy",
+        // snippets
+        "src/test/archetype-post-generate/SnippetAuthenticationTest.groovy",
+        "src/test/archetype-post-generate/SnippetBindingPropertiesTest.groovy",
+        "src/test/archetype-post-generate/SnippetBindingPropertiesTestTest.groovy",
+        "src/test/archetype-post-generate/SnippetCpanelTest.groovy",
+        "src/test/archetype-post-generate/SnippetCustomEnumsTest.groovy",
+        "src/test/archetype-post-generate/SnippetDockerTest.groovy",
+        "src/test/archetype-post-generate/SnippetEntityContractTest.groovy",
+        "src/test/archetype-post-generate/SnippetExtraPomDependenciesTest.groovy",
+        "src/test/archetype-post-generate/SnippetGithubTest.groovy",
+        "src/test/archetype-post-generate/SnippetLogbackTest.groovy",
+        "src/test/archetype-post-generate/SnippetPropertiesFiletypeTest.groovy",
+        "src/test/archetype-post-generate/SnippetSrcTestJavaTest.groovy",
+        // coverage
+        "src/test/archetype-post-generate/CoverageRegistryTest.groovy"
 ]
 
 int failed = 0

@@ -7,6 +7,7 @@
 #set($mapProps = "${map_binding_properties}")
 #set($listProps = "${list_binding_properties}")
 #set($bindProps = "${enable_binding_properties}")
+#set($sec_jwt = "${enable_jwt_authentication}")
 ##
 ##
 properties_folder: classpath:properties
@@ -22,9 +23,23 @@ spring:
 ##
 ##
 ## ENABLING IMPORT SWITCH ______________________________________________________
-#if($mapProps == "true" || $listProps == "true")
+#if($mapProps == "true" || $listProps == "true" || $sec_jwt == "true")
   config:
     import:
+#end
+##
+##
+## SECURITY - JWT AUTHENTICATION _______________________________________________
+#if($sec_jwt == "true")
+      - ${protected_properties_folder}/application_keys.yml
+      - ${protected_properties_folder}/admin_credentials.yml
+      - ${protected_properties_folder}/authentication_credentials.yml
+#end
+
+## SECURITY - JWT KEYS (flat dotted keys; same names as the .properties template)
+#if($sec_jwt == "true")
+jwt.private.key: classpath:security/appJwt.key
+jwt.public.key: classpath:security/appJwt.pub
 #end
 ##
 ##

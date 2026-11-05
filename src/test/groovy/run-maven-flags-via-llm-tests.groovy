@@ -26,13 +26,23 @@ List<String> suites = [
         "src/test/pre-processamento-maven-flags-via-llm/catalog/FlagCatalogExtractorTest.groovy",
         "src/test/pre-processamento-maven-flags-via-llm/catalog/FlagCatalogExtractorDriftTest.groovy",
         // command
-        "src/test/pre-processamento-maven-flags-via-llm/command/CommandLineAssemblerTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/commandLine/CommandLineAssemblerTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/commandLine/CommandLineArgumentsTest.groovy",
         // contract
         "src/test/pre-processamento-maven-flags-via-llm/contract/ContractReaderTest.groovy",
         "src/test/pre-processamento-maven-flags-via-llm/contract/ContractStoreTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/contract/ContractSecretScannerTest.groovy",
         // domain
         "src/test/pre-processamento-maven-flags-via-llm/domain/ContractDerivationTest.groovy",
         "src/test/pre-processamento-maven-flags-via-llm/domain/ContractTypeResolverTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/ContractAttributeExtractorTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/ContractAttributeAssemblerTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/ContractEntityNameResolverTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/ContractValueReaderTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/DerivedFlagProjectorTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/FlagValidationPolicyTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/InferenceEligibilityPolicyTest.groovy",
+        "src/test/pre-processamento-maven-flags-via-llm/domain/TypeNameListFormatterTest.groovy",
         "src/test/pre-processamento-maven-flags-via-llm/domain/CustomAttributesProfileConsistencyTest.groovy",
         "src/test/pre-processamento-maven-flags-via-llm/domain/ProvenanceReportTest.groovy",
         // inference

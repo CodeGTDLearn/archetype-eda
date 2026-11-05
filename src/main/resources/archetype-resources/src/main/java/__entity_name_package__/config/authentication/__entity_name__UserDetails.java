@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 #if(${enable_lombok} == "true")
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ import lombok.AllArgsConstructor;
 #set($restOfName = $entity_name.substring(1))
 #set($componentAliasPrefix = "${firstChar}${restOfName}")
 #set($userDetails = $entity_name.toLowerCase())
-@Service(value = "${componentAliasPrefix}UserDetails")
 public class ${entity_name}UserDetails implements UserDetails {
 
   private final ${entity_name} ${userDetails};

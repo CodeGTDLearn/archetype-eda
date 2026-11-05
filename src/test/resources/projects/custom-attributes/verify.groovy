@@ -14,7 +14,7 @@ def expectedEntityName = 'ContractEntity'
 def expectedArtifactId = 'custom-attributes'
 def packagePath = 'it/pkg/contractentity'
 def expectedAttributes = [
-    [name: 'id',        type: 'Long'],
+    [name: 'contractEntityId', type: 'Long'],
     [name: 'name',      type: 'String'],
     [name: 'createdAt', type: 'String'],
     [name: 'statusPedido', type: 'StatusPedido'],

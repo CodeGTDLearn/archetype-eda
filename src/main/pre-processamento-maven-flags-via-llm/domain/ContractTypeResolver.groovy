@@ -224,6 +224,11 @@ class ContractTypeResolver {
         // a String before the concatenation (a char + String is not a valid
         // Groovy operation and raises MissingMethodException).
         if (Character.isUpperCase(s.charAt(0))) s = Character.toLowerCase(s.charAt(0)).toString() + s.substring(1)
+        // "ID" and "iD" are the SAME structural id as "id": collapse the
+        // spelling so the entity template drops every variant and only emits
+        // the primary key "<entityName>Id". Without this, "ID" became "iD"
+        // and the template rendered a SECOND field next to the primary key.
+        if (s.equalsIgnoreCase("id")) s = "id"
         if (!(s ==~ /^[a-z][a-zA-Z0-9_]*$/)) return null
         return s
     }

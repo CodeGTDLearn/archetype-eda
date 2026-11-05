@@ -46,7 +46,7 @@
         <fileSet filtered="true" encoding="UTF-8">
             <directory>src/main/resources/security</directory>
             <includes>
-                <include>app.key</include>
-                <include>app.pub</include>
+                <include>appJwt.key</include>
+                <include>appJwt.pub</include>
             </includes>
         </fileSet>

@@ -26,6 +26,11 @@ def renameFile(File pathToFile, String newName) {
 
     println "\nnewFile: $newFile"
 
+    if (newFile.absoluteFile == pathToFile.absoluteFile) {
+        println "\nNo-op: source and target are the same file: $pathToFile"
+        return
+    }
+
     if (!pathToFile.exists() || !pathToFile.isFile()) {
         println "\nError: File $pathToFile invalid or inexistent."
         return

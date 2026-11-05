@@ -18,8 +18,8 @@ public record ApplicationPropertiesRecord(
 
 #if(${validated_binding_properties} == "true")
      @Pattern(
-          message = "Pattern must be N.N.N format - immutable",
-          regexp = "^[0-9]+\\.[0-9]+(\\.[0-9])?$")
+          message = "Pattern must be N.N.N[-QUALIFIER] format - immutable",
+          regexp = "^[0-9]+\\.[0-9]+(\\.[0-9]+)?([-+][A-Za-z0-9.-]+)?$")
 #end
      String version
 
