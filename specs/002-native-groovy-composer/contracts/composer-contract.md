@@ -55,7 +55,7 @@ No `pom.xml` (raiz do archetype-v2-eda):
         <goal>execute</goal>
       </goals>
       <configuration>
-        <source>${project.basedir}/src/main/groovy/eda/postgenerate/SnippetComposer.groovy</source>
+        <source>${project.basedir}/src/main/groovy/ArchetypePostGenerateComposer.groovy</source>
       </configuration>
     </execution>
   </executions>

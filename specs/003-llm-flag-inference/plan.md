@@ -6,6 +6,8 @@
 
 **Note**: This plan is filled in by the `/speckit.plan` command.
 
+> **Histórico de nome (2026-11-04):** o arquivo era `Orchestrator.groovy` (classe `Orchestrator`) e o teste era `OrchestratorContractGateTest`; foram renomeados para `MavenFlagsViaLlmStarter.groovy` e `MavenFlagsViaLlmStarterTest`. As referências abaixo já usam o nome novo.
+
 ## Summary
 
 Replace the legacy bash-based capture of `mvn archetype:generate` flags (today spread across `bash_script/script_core.sh`, `maven_command_line_archetype_generate.sh`, `general_functions.sh`, and 14 `user_*_input.sh` scripts) with a mechanism that takes a textual description plus a JSON contract, returns a single non-interactive command line, validates every flag against the existing canonical archetype metadata at runtime, applies defaults for unspecified flags, and caches results so repeated invocations skip the inference step. Bash scripts are removed from version control after validation across all 10 existing integration test profiles.
@@ -15,7 +17,7 @@ Replace the legacy bash-based capture of `mvn archetype:generate` flags (today s
 **Language/Version**: Groovy 4.0.28 (already on the archetype's `maven-archetype-plugin:3.4.1` classpath via the `groovy-bom` declared by the plugin). Project also uses Java 17 and Maven 3.9.16 per constitution.
 
 **Primary Dependencies**:
-- `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` (goal `execute`) — already configured in `pom.xml` at phase `process-resources` for `SnippetComposer.groovy`. Reused for the validator.
+- `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` (goal `execute`) — already configured in `pom.xml` at phase `process-resources` for `ArchetypePostGenerateComposer.groovy`. Reused for the validator.
 - `org.codehaus.gmaven:gmaven:2.1.1` (parent POM) — same precedent. Reused for the Groovy runtime on the plugin classpath.
 - `org.apache.maven.archetype:maven-archetype-plugin:3.4.1` — produces the project; not modified.
 - Existing `pom.xml` configuration of the two plugins above. No new external dependencies required.
@@ -26,7 +28,7 @@ Replace the legacy bash-based capture of `mvn archetype:generate` flags (today s
 
 **Target Platform**: Cross-platform via Maven (already the case for the archetype). The mechanism must work in TTY-less environments (no `read -n 1 -s`). Must work on Windows (current primary platform), Linux, and macOS (BSD sed historically problematic for the bash legacy).
 
-**Project Type**: Build-time extension to the existing single-project archetype. No new module; new code lives alongside `SnippetComposer.groovy` under `src/main/groovy/eda/postgenerate/` (or a sibling package), and the new cache directory lives outside the repo.
+**Project Type**: Build-time extension to the existing single-project archetype. No new module; new code lives alongside `ArchetypePostGenerateComposer.groovy` under `src/main/groovy/` (or a sibling package), and the new cache directory lives outside the repo.
 
 **Performance Goals**:
 - Cache hit: < 100 ms per invocation (single file read + hash check).
@@ -49,7 +51,7 @@ Replace the legacy bash-based capture of `mvn archetype:generate` flags (today s
 | Principle | Gate | Status | Justification |
 |---|---|---|---|
 | I. Modularidade por Chave de Ativação (NON-NEGOTIABLE) | Every optional capability controlled by a flag, respected in input, metadata, and post-generation layers | ✅ PASS | FR-005/006/008/009 + validator reading the canonical catalog at runtime enforce that every flag is validated, defaults applied, and contract-precedence respected. |
-| II. Convenção Fixa de Nomenclatura (NON-NEGOTIABLE) | Extension files follow fixed prefix/suffix per category | N/A | This feature does not add files under `archetype_post_generate_body/`, `..._variables/`, or `..._snippets/`. Mechanism files live under `src/main/groovy/eda/postgenerate/` (standard Groovy source layout) with no naming convention beyond standard Java/Groovy class naming. |
+| II. Convenção Fixa de Nomenclatura (NON-NEGOTIABLE) | Extension files follow fixed prefix/suffix per category | N/A | This feature does not add files under `archetype_post_generate_body/`, `..._variables/`, or `..._snippets/`. Mechanism files live under `src/main/groovy/` (standard Groovy source layout) with no naming convention beyond standard Java/Groovy class naming. |
 | III. Pacote por Funcionalidade no Código Gerado | Generated Java code organized by domain feature | N/A | Mechanism does not modify the generated code's package structure. |
 | IV. Binding Duplo de Configuração Externalizada | Externalized config offered in immutable + mutable variants | N/A | Mechanism does not introduce new externalized configuration bindings. |
 | V. Credenciais Nunca Entram no Repositório | No credentials or secrets committed | ✅ PASS | FR-017 forbids persisting the contract's content. Cache key = `hash(description + canonical-JSON)`; cache value = produced command line only. No contract content reaches the file system outside the invocation's memory. |
@@ -80,7 +82,7 @@ src/
 │   ├── groovy/
 │   │   └── eda/
 │   │       └── postgenerate/
-│   │           ├── SnippetComposer.groovy        # existing — unchanged
+│   │           ├── ArchetypePostGenerateComposer.groovy        # existing — unchanged
 │   │           └── pre-processamento-maven-flags-via-llm/
 │   │               ├── FlagCatalogExtractor.groovy   # new — reads archetype-metadata.xml + 17 property-*.xml via XInclude
 │   │               ├── FlagProposalMerger.groovy     # new — merges LLM inference + JSON contract + catalog defaults
@@ -108,7 +110,7 @@ pom.xml                                          # minor — add second <executi
 bash_script/                                     # to be deleted after SC-001/007 are met
 ```
 
-**Structure Decision**: Single-project layout, consistent with the existing archetype project. New mechanism code lives in a dedicated Groovy package (`eda.postgenerate.pre_processamento_maven_flags_via_llm`) alongside the existing `SnippetComposer.groovy`. The `gmaven:2.1.1` plugin invocation already present in `pom.xml` is extended with a second `<execution>` pointing to the new orchestrator script (no new dependencies). No new module, no new top-level directories in the repo.
+**Structure Decision**: Single-project layout, consistent with the existing archetype project. New mechanism code lives in a dedicated Groovy package (`eda.postgenerate.pre_processamento_maven_flags_via_llm`) alongside the existing `ArchetypePostGenerateComposer.groovy`. The `gmaven:2.1.1` plugin invocation already present in `pom.xml` is extended with a second `<execution>` pointing to the new orchestrator script (no new dependencies). No new module, no new top-level directories in the repo.
 
 ## Complexity Tracking
 
@@ -124,9 +126,9 @@ All gates pass; the table is intentionally empty.
 
 See [research.md](./research.md) for the full technology decision record. Summary:
 
-- **Language**: Groovy 4.0.28 — chosen because it is already on the archetype's `maven-archetype-plugin:3.4.1` classpath and already used in this project by `SnippetComposer.groovy` (precedent from `groovy-snippet-injection`).
-- **Build-time invocation**: `gmaven:2.1.1` goal `execute` in phase `process-resources` — chosen because the same plugin + phase is already wired for `SnippetComposer.groovy`; extending with a second execution is a smaller change than introducing a new plugin.
-- **Flag catalog extraction**: Reuse the existing `xml-maven-plugin:1.2.1` + `identity.xsl` for `archetype-metadata.xml` (precedent in `pom.xml`) and parse the XInclude-resolved output with the Groovy 4.0.28 transitive `groovy-xml`. No new parser dependency.
+- **Language**: Groovy 4.0.28 — chosen because it is already on the archetype's `maven-archetype-plugin:3.4.1` classpath and already used in this project by `ArchetypePostGenerateComposer.groovy` (precedent from `groovy-snippet-injection`).
+- **Build-time invocation**: `gmaven:2.1.1` goal `execute` in phase `process-resources` — chosen because the same plugin + phase is already wired for `ArchetypePostGenerateComposer.groovy`; extending with a second execution is a smaller change than introducing a new plugin.
+- **Flag catalog extraction**: Reuse the existing `xml-maven-plugin:1.2.1` + `archetype-metadata-identity.xsl` for `archetype-metadata.xml` (precedent in `pom.xml`) and parse the XInclude-resolved output with the Groovy 4.0.28 transitive `groovy-xml`. No new parser dependency.
 - **JSON canonicalization**: Use the Groovy 4.0.28 transitive `groovy-json` `JsonOutput.prettyPrint` + a stable field-order sort. RFC 8785 (JCS) is not needed for the 35-flag use case; sorted-key serialization suffices and avoids pulling in a new library.
 - **Cache storage**: Single JSON-line file outside the repo (`$XDG_CACHE_HOME/eda-archetype/llm-flag-inference/cache.jsonl` with Windows fallback). Locking via atomic rename (`File.renameTo`) to avoid corruption from concurrent invocations.
 - **Inference call**: Use the same LLM endpoint already used by `github/spec-kit` and opencode; temperature fixed at 0. The mechanism itself does not embed an LLM client library — it delegates to a thin external script (provided by the operator) that returns a `Map<String, String>` of flag → value. This keeps the build-time Groovy code free of HTTP-client dependencies.
@@ -141,30 +143,32 @@ See [data-model.md](./data-model.md), [contracts/cli-contract.md](./contracts/cl
 
 ## Implementation Drift (Recorded 2026-10-12, during `/speckit.implement`)
 
-### D1. Orchestrator is a single-file self-contained script
+### D1. MavenFlagsViaLlmStarter was a single-file self-contained script (superseded 2026-11-04)
+
+> **Superseded (2026-11-04):** este D1 descreve o estado original. O `MavenFlagsViaLlmStarter` atual é um bootstrap que carrega `InferenceApplication` e os módulos separados via `GroovyClassLoader`; os componentes não estão mais inline.
 
 **Stated plan (this file, Phase 1 Design):** The validator is split into modular
 classes (`CatalogEntry`, `FlagCatalogExtractor`, `FlagProposalMerger`,
 `CommandLineAssembler`, `JsonCanonicalizer`, `InvocationCache`) and
-`Orchestrator.groovy` imports them as siblings under
+`MavenFlagsViaLlmStarter.groovy` imports them as siblings under
 `eda.postgenerate.pre_processamento_maven_flags_via_llm.*`.
 
-**What actually shipped (T012, T046):** `Orchestrator.groovy` inlines the
-behavior of all six sibling classes as private methods on the Orchestrator
+**What actually shipped (T012, T046):** `MavenFlagsViaLlmStarter.groovy` inlines the
+behavior of all six sibling classes as private methods on the MavenFlagsViaLlmStarter
 itself. The sibling classes still exist as source files under
 `src/main/pre-processamento-maven-flags-via-llm/` because the unit tests
 (`CatalogEntryTest`, `CommandLineAssemblerTest`, `FlagProposalMergerTest`,
 `InvocationCacheTest`, plus the new `JsonCanonicalizerTest`,
 `FlagCatalogExtractorTest`, `FlagCatalogExtractorDriftTest`) cover them as
-isolated modules. The Orchestrator's runtime path no longer calls them
+isolated modules. The MavenFlagsViaLlmStarter's runtime path no longer calls them
 directly; it re-implements the same logic inline.
 
 **Why the drift:** gmaven:execute 2.1.1 (the build-time plugin that invokes
-`Orchestrator.groovy` via `<execution>` in `pom.xml`) bundles Groovy 2.4.9 in
+`MavenFlagsViaLlmStarter.groovy` via `<execution>` in `pom.xml`) bundles Groovy 2.4.9 in
 its own classloader. Sibling `.groovy` files compiled with Groovy 4.0.28 use
 Groovy-4-only bytecode features (extended metaclass, modern lambda forms)
 that Groovy 2.4.9 cannot load at runtime — the static `Map<String,
-CatalogEntry> catalog` declaration in Orchestrator.groovy produced
+CatalogEntry> catalog` declaration in MavenFlagsViaLlmStarter.groovy produced
 `unable to resolve class CatalogEntry` errors during `mvn
 process-resources`. Two approaches were attempted and abandoned:
 
@@ -181,13 +185,13 @@ process-resources`. Two approaches were attempted and abandoned:
 
 The pragmatic fix: keep the sibling classes for unit-test coverage
 (modular, fast, deterministic) and inline their behavior into
-Orchestrator.groovy (single file, no classpath dependencies, runs under
+MavenFlagsViaLlmStarter.groovy (single file, no classpath dependencies, runs under
 gmaven's bundled Groovy 2.4.9). FR-001..FR-019 are satisfied by the
 inlined behavior; the unit tests verify the same logic on the modular
 classes; the only delta is the architectural split.
 
 **Impact on FR/SC:**
-- FR-001..FR-019: satisfied (verified by the Orchestrator's runtime
+- FR-001..FR-019: satisfied (verified by the MavenFlagsViaLlmStarter's runtime
   behavior and the unit tests on the modular classes).
 - SC-001/SC-002/SC-007: satisfied (`mvn integration-test` passes for all
   10 profiles after the bash legacy is deleted; the new mechanism sources
@@ -196,20 +200,20 @@ classes; the only delta is the architectural split.
   and V (no credentials in repo) are still upheld; the catalog is still
   read at runtime and the cache still stores only the hash + command line.
 
-### D2. Orchestrator is NOT wired into `pom.xml` as a build step
+### D2. MavenFlagsViaLlmStarter is NOT wired into `pom.xml` as a build step
 
 **Stated plan (T007):** pom.xml adds a second `<execution>` to the
-existing gmaven plugin block, pointing at `Orchestrator.groovy` at phase
+existing gmaven plugin block, pointing at `MavenFlagsViaLlmStarter.groovy` at phase
 `process-resources`.
 
-**What actually shipped:** The Orchestrator's `<execution>` was REMOVED from
-`pom.xml`. The Orchestrator remains a CLI tool that the operator invokes
+**What actually shipped:** The MavenFlagsViaLlmStarter's `<execution>` was REMOVED from
+`pom.xml`. The MavenFlagsViaLlmStarter remains a CLI tool that the operator invokes
 manually per `cli-contract.md` Section 1. The `pom.xml` retains a
 commented-out placeholder explaining why the execution is omitted.
 
-**Why the drift:** Wiring Orchestrator into `pom.xml` at `process-resources`
+**Why the drift:** Wiring MavenFlagsViaLlmStarter into `pom.xml` at `process-resources`
 runs it every time `mvn clean install` is invoked on the archetype — but
-the archetype build has no description or contract, so the Orchestrator
+the archetype build has no description or contract, so the MavenFlagsViaLlmStarter
 exits with code 2 (FR-003), failing the archetype's own build. The
 mechanism is a CLI tool, not a build step; per `cli-contract.md` the
 operator invokes it directly to obtain the `mvn archetype:generate`

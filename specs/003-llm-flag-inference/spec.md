@@ -184,7 +184,7 @@ After the mechanism has been validated against all 10 integration test profiles,
   **Baseline enumeration (4 traps, audited 2026-10-12):**
   - `bash_script/create_archetype_metadata.sh:67` — `read -n 1 -s` (pause on metadata-recreation error)
   - `bash_script/create_archetype_metadata.sh:77` — `read -n 1 -s` (pause on metadata-recreation error)
-  - `bash_script/create_archetype_post_generate.sh:66` — `read -n 1 -s` (pause on snippet-composition error; this script is already replaced by `SnippetComposer.groovy` in flow but the bash file remains in the repo)
+  - `bash_script/create_archetype_post_generate.sh:66` — `read -n 1 -s` (pause on snippet-composition error; this script is already replaced by `ArchetypePostGenerateComposer.groovy` in flow but the bash file remains in the repo)
   - `bash_script/create_archetype_post_generate.sh:84` — `read -n 1 -s` (pause on snippet-composition error; same caveat)
 
   Note: `bash_script/create_archetype_post_generate.sh:134` also contains a `read -n 1 -s` but is past the line where the script is short-circuited by the Groovy replacement, so it never runs in the current `mvn clean install` flow. It is removed in US6 T031–T034 regardless. (Historical note only; not counted in the 4.)

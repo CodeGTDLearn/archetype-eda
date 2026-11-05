@@ -28,7 +28,7 @@ sha256sum /tmp/golden-archetype-post-generate.groovy  # guarde o hash
 ### Passo 2: Aplicar mudanças do compositor Groovy
 
 1. Adicionar `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` ao `pom.xml` com `<dependencies>` fixando `groovy:4.0.28`.
-2. Criar `src/main/groovy/eda/postgenerate/SnippetComposer.groovy` com `List<String> SECTIONS`.
+2. Criar `src/main/groovy/ArchetypePostGenerateComposer.groovy` com `List<String> SECTIONS`.
 3. Adicionar `<exclude>META-INF/archetype-post-generate.groovy</exclude>` ao `<resources><resource>` do `pom.xml`.
 4. Modificar `script_core.sh` para parar de invocar o bash compositor (remover linhas 41-42).
 

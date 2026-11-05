@@ -62,37 +62,37 @@ This guide lists the runnable validation scenarios that prove the mechanism work
 
 1. **Description missing**: run
    ```powershell
-   groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-contract
+   groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy --use-case-contract
    ```
    (or simply omit `--use-case-description`). Observe exit code and stderr.
 
 2. **Description as the last argument with no value**: run
    ```powershell
-   groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description
+   groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy --use-case-description
    ```
    Observe exit code and stderr.
 
 3. **Description blank**: run
    ```powershell
-   groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "   "
+   groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy --use-case-description "   "
    ```
    Observe exit code and stderr.
 
 4. **Contract missing (description present)**: run
    ```powershell
-   groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "basic profile"
+   groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy --use-case-description "basic profile"
    ```
    Observe exit code and stderr. The mechanism MUST NOT shell out to the inference script.
 
 5. **Contract empty via empty stdin**: run
    ```powershell
-   '' | groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "basic profile" --use-case-contract
+   '' | groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy --use-case-description "basic profile" --use-case-contract
    ```
    Observe exit code and stderr.
 
 6. **Description followed by another flag (parser must not swallow the next flag as a value)**: run
    ```powershell
-   '' | groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description --use-case-contract
+   '' | groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy --use-case-description --use-case-contract
    ```
    Observe exit code and stderr. The parser MUST reject this as a missing description (FR-001), not as a missing contract (FR-003) — the contract flag must remain free to be parsed as a real flag.
 
@@ -111,7 +111,7 @@ This guide lists the runnable validation scenarios that prove the mechanism work
 
 ```
 <contract.json echo or pipe>
-groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy \
+groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy \
   --use-case-description "<profile-name> profile" \
   --use-case-contract \
   --inference-bin "<path-to-real-or-stub>" \

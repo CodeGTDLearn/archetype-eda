@@ -92,7 +92,7 @@
               <includes>
                 <include>archetype-metadata.xml</include>
               </includes>
-              <stylesheet>src/main/resources/META-INF/maven/identity.xsl</stylesheet>
+              <stylesheet>src/main/resources/META-INF/maven/archetype-metadata-identity.xsl</stylesheet>
               <outputDir>${project.build.outputDirectory}/META-INF/maven</outputDir>
             </transformationSet>
           </transformationSets>
@@ -124,38 +124,48 @@
         </dependencies>
         <executions>
           <execution>
-            <id>snippet-composer-execute</id>
+            <id>archetype-post-generate-composer-execute</id>
             <phase>process-resources</phase>
             <goals>
               <goal>execute</goal>
             </goals>
             <configuration>
-              <source>${project.basedir}/src/main/groovy/SnippetComposer.groovy</source>
+              <source>${project.basedir}/src/main/groovy/ArchetypePostGenerateComposer.groovy</source>
             </configuration>
           </execution>
           <!--
-            The Orchestrator (src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy)
+            The MavenFlagsViaLlmStarter (src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy)
             is a CLI tool, not a build step. Per cli-contract.md, the operator invokes it
-            directly (e.g., `groovy Orchestrator.groovy ...args...`) to obtain the
+            directly (e.g., `groovy MavenFlagsViaLlmStarter.groovy ...args...`) to obtain the
             mvn archetype:generate command line. It is NOT wired into the archetype's
             own build lifecycle, because the archetype build has no description/contract.
           -->
           <!--
-            Unit-test runner (added 2026-10-23, bug
-            contrato-json-inferido-inoperante): the Groovy unit suites are plain
-            scripts (no JUnit infra), so surefire never picked them up and
-            `mvn test` ran ZERO tests - a green build did not mean the 110 unit
-            checks had passed. This execution runs every suite in the `test`
-            phase and fails the build when any suite fails.
+            Unit-test runners (added 2026-10-23, bug
+            contrato-json-inferido-inoperante; split 2026-11-04 into
+            pre-processing/inference and post-processor): the Groovy unit
+            suites are plain scripts (no JUnit infra), so surefire never picked
+            them up and `mvn test` ran ZERO tests. Each execution runs its own
+            runner in the `test` phase and fails the build when any suite fails.
           -->
           <execution>
-            <id>unit-test-runner-execute</id>
+            <id>maven-flags-via-llm-test-runner</id>
             <phase>test</phase>
             <goals>
               <goal>execute</goal>
             </goals>
             <configuration>
-              <source>${project.basedir}/src/test/groovy/run-all-tests.groovy</source>
+              <source>${project.basedir}/src/test/groovy/run-maven-flags-via-llm-tests.groovy</source>
+            </configuration>
+          </execution>
+          <execution>
+            <id>archetype-post-generate-test-runner</id>
+            <phase>test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>${project.basedir}/src/test/groovy/run-archetype-post-generate-tests.groovy</source>
             </configuration>
           </execution>
         </executions>

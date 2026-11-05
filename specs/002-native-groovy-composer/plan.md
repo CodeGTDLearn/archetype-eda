@@ -6,7 +6,7 @@
 
 ## Summary
 
-Substituir o `bash_script/create_archetype_post_generate.sh` (225 linhas, com `sed -i`/`tr`/`ls`/`read -n 1 -s`) por um compositor Groovy nativo executado em build-time via `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` na fase `process-resources`. O compositor (`SnippetComposer.groovy`, ~50-80 linhas) lê os 32 arquivos `.groovy` das 3 pastas (`archetype_post_generate_body/`, `..._snippets/`, `..._variables/`), aplica consolidação de imports (remover `^import …` e `^//import …` dos snippets, prepor `archetype_post_generate_body/archetype-imports.groovy` no topo), concatena em ordem canônica de 12 seções, e gera `target/classes/META-INF/archetype-post-generate.groovy`. Equivalência byte-a-byte com a saída atual do bash é o critério de aceitação primário (SC-003); passar 9/9 perfis IT em `mvn clean install` + `mvn integration-test` é o critério secundário (SC-001+SC-002).
+Substituir o `bash_script/create_archetype_post_generate.sh` (225 linhas, com `sed -i`/`tr`/`ls`/`read -n 1 -s`) por um compositor Groovy nativo executado em build-time via `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` na fase `process-resources`. O compositor (`ArchetypePostGenerateComposer.groovy`, ~50-80 linhas) lê os 32 arquivos `.groovy` das 3 pastas (`archetype_post_generate_body/`, `..._snippets/`, `..._variables/`), aplica consolidação de imports (remover `^import …` e `^//import …` dos snippets, prepor `archetype_post_generate_body/archetype-imports.groovy` no topo), concatena em ordem canônica de 12 seções, e gera `target/classes/META-INF/archetype-post-generate.groovy`. Equivalência byte-a-byte com a saída atual do bash é o critério de aceitação primário (SC-003); passar 9/9 perfis IT em `mvn clean install` + `mvn integration-test` é o critério secundário (SC-001+SC-002).
 
 ## Technical Context
 
@@ -84,10 +84,8 @@ specs/002-native-groovy-composer/
 ```text
 archetype-v2-eda/
 ├── pom.xml                                                (modificado: adiciona gmaven:2.1.1; ajusta <resources>)
-├── src/main/groovy/                                       (novo diretório)
-│   └── eda/
-│       └── postgenerate/
-│           └── SnippetComposer.groovy                     (novo, ~50-80 linhas)
+├── src/main/groovy/
+│   └── ArchetypePostGenerateComposer.groovy               (novo, ~50-80 linhas)
 ├── src/main/resources/META-INF/
 │   ├── archetype-post-generate.groovy                     (REMOVIDO do controle de versão; git rm + .gitignore)
 │   ├── archetype_post_generate_body/                      (preservado, sem mudanças)
@@ -99,14 +97,14 @@ archetype-v2-eda/
     └── script_core.sh                                     (modificado: linhas 41-42 removidas/comentadas)
 ```
 
-**Estrutura do `SnippetComposer.groovy` (esboço conceitual):**
+**Estrutura do `ArchetypePostGenerateComposer.groovy` (esboço conceitual):**
 
 ```groovy
 import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
- * SnippetComposer — Compositor Nativo Groovy para archetype-post-generate.groovy
+ * ArchetypePostGenerateComposer — Compositor Nativo Groovy para archetype-post-generate.groovy
  *
  * Lê os snippets das 3 pastas em src/main/resources/META-INF/, aplica a
  * consolidação de imports, e gera o arquivo final em
@@ -175,7 +173,7 @@ SECTIONS.each { section ->
 
 // 5. Write
 outputFile.text = sb.toString()
-println "[SnippetComposer] Written: ${outputFile.path} (${sb.toString().length()} bytes)"
+println "[ArchetypePostGenerateComposer] Written: ${outputFile.path} (${sb.toString().length()} bytes)"
 ```
 
 **Estrutura da modificação do `pom.xml` (trechos):**
@@ -231,7 +229,7 @@ println "[SnippetComposer] Written: ${outputFile.path} (${sb.toString().length()
             <goal>execute</goal>
           </goals>
           <configuration>
-            <source>${project.basedir}/src/main/groovy/eda/postgenerate/SnippetComposer.groovy</source>
+            <source>${project.basedir}/src/main/groovy/ArchetypePostGenerateComposer.groovy</source>
           </configuration>
         </execution>
       </executions>
@@ -257,7 +255,7 @@ source "${SCRIPT_FOLDER_WIN}\\create_archetype_post_generate.sh"
 create_archetype_post_generate_groovy "${RECREATE_ARCHETYPE}" "${META_INF_FOLDER_WIN}" "archetype-post-generate.groovy" "$SHOW_RECREATE_ARCHETYPE_LOG"
 
 # DEPOIS:
-# create_archetype_post_generate.sh foi substituído por SnippetComposer.groovy
+# create_archetype_post_generate.sh foi substituído por ArchetypePostGenerateComposer.groovy
 # (executado via groovy-maven-plugin:2.1.1 na fase process-resources).
 # Arquivo mantido em disco como referência histórica.
 ```
@@ -269,7 +267,7 @@ create_archetype_post_generate_groovy "${RECREATE_ARCHETYPE}" "${META_INF_FOLDER
 target/classes/META-INF/archetype-post-generate.groovy
 ```
 
-**Structure Decision**: Modificação in-place do archetype-v2-eda, adicionando 1 diretório novo (`src/main/groovy/eda/postgenerate/`), 1 arquivo novo (`SnippetComposer.groovy`), e ajustes pontuais em `pom.xml` / `script_core.sh` / `.gitignore`. Nenhum módulo ou projeto novo é criado — a complexidade do projeto permanece inalterada.
+**Structure Decision**: Modificação in-place do archetype-v2-eda, adicionando 1 arquivo novo (`src/main/groovy/ArchetypePostGenerateComposer.groovy`), e ajustes pontuais em `pom.xml` / `script_core.sh` / `.gitignore`. Nenhum módulo ou projeto novo é criado — a complexidade do projeto permanece inalterada.
 
 ## Complexity Tracking
 

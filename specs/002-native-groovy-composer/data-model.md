@@ -65,7 +65,7 @@
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| `sections` | `List<Section>` | Lista ordenada. Declarada como `List<String> SECTIONS` no topo de `SnippetComposer.groovy`. |
+| `sections` | `List<Section>` | Lista ordenada. Declarada como `List<String> SECTIONS` no topo de `ArchetypePostGenerateComposer.groovy`. |
 | `commentPerEntry` | `boolean` | Indica se cada entrada da lista tem comentário explicativo (FR-006). |
 
 **Validação**:

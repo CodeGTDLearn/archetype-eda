@@ -217,7 +217,7 @@
 
 | Etapa | Papel | Tecnologia | Empacotado no JAR? | Momento |
 |---|---|---|---|---|
-| 1. Pré-processamento | intenção → `mvn ... -D...` | Orchestrator + LLM (A7) | ❌ (projeto-fonte) | antes do `archetype:generate` |
+| 1. Pré-processamento | intenção → `mvn ... -D...` | MavenFlagsViaLlmStarter + LLM (A7) | ❌ (projeto-fonte) | antes do `archetype:generate` |
 | 2. Processamento | catálogo + templates → árvore do projeto | `archetype-metadata.xml` + `archetype-resources/` (Velocity) | ✅ | durante o `mvn archetype:generate` |
 | 3. Pós-processamento | árvore gerada → modularização | `archetype-post-generate.groovy` | ✅ | ao fim do `mvn archetype:generate` |
 
@@ -229,7 +229,7 @@
 
 * **Objetivo:** transformar **use-case + contrato JSON** na command line pronta
   do `mvn archetype:generate` (todas as flags `-D` resolvidas).
-* **Composição (A7):** `Orchestrator` + módulos
+* **Composição (A7):** `MavenFlagsViaLlmStarter` + módulos
   [`pre-processamento-maven-flags-via-llm/`](src/main/pre-processamento-maven-flags-via-llm/)
   (`ContractEntityDeriver`, `ContractTypeResolver`, `FlagCatalogExtractor`,
   `CatalogEntry`, `JsonCanonicalizer`, `InvocationCache`, `FlagProposalMerger`,
@@ -247,27 +247,46 @@
     (commits 1.0–14.0);
   - *bash + JSON:* `json_processor.sh` / `json_validator.sh` passam a consumir o
     contrato (commits 56.0–59.0);
-  - *LLM:* `Orchestrator` + `pre_processamento_maven_flags_via_llm/` substituem o Q&A (spec
+  - *LLM:* `MavenFlagsViaLlmStarter` + `pre_processamento_maven_flags_via_llm/` substituem o Q&A (spec
     `003-llm-flag-inference`).
 * **Garantias:** gates do CLI (FR-001/002/003), precedência
   contrato > derivadas > proposta LLM > default (FR-006/009), fallback por
   `validationRegex`, cache de invocação (FR-011/012/017).
 * Detalhes, CLI, precedência e exit codes → seção [**"Mecanismo de 'Inferência via LLM' 🧠"**](#mecanismo-inferencia-llm)
 
-#### Suítes unitárias do mecanismo LLM 🧪
+#### Suítes unitárias do mecanismo LLM e do pós-processador 🧪
+
+##### Pré-processamento / inferência (`run-maven-flags-via-llm-tests.groovy`)
 
 | Suíte | Checks | O que garante |
 |---|---|---|
-| `ContractTypeResolverTest` | 50 | inferência de tipo: `java.lang`, **tipo do projeto**, detecção de enum, normalização de constantes, nomenclatura pelo tipo |
-| `ContractDerivationTest` | 52 | derivação da entidade, precedência, flags de imports/enums, colisão de nomes, **paridade** canônico × espelho do `Orchestrator` |
-| `CustomEnumGenerationTest` | 24 | pós-processador: geração dos enums (pacote, constantes, plural, arquivo existente **não** sobrescrito, entrada inválida) |
-| `CustomAttributesProfileConsistencyTest` | 25 | **contrato ↔ perfil do archetype**: as flags derivadas são exatamente as declaradas no perfil de integração |
-| `OrchestratorCacheTest` | 34 | cache v2/v1, byte-equivalência, guarda FR-017 |
-| `ProvenanceReportTest` | 24 | relatório de proveniência, FR-006/007/008/009/017 |
-| `FlagCatalogExtractorTest` | 29 | catálogo real (35 flags), FR-018, defaults × regex |
-| `OrchestratorContractGateTest` | 25 | gates do CLI (FR-001/002/003), stdout puro |
-| `CommandLineAssemblerTest` | 21 | formatação e escape da command line (FR-010) |
-| `FlagCatalogExtractorDriftTest` | 12 | o catálogo segue o metadata sem lista hardcoded (FR-013) |
+| `domain/ContractTypeResolverTest` | 50 | inferência de tipo: `java.lang`, **tipo do projeto**, detecção de enum, normalização de constantes, nomenclatura pelo tipo |
+| `domain/ContractDerivationTest` | 51 | derivação da entidade, precedência, flags de imports/enums, colisão de nomes |
+| `domain/CustomAttributesProfileConsistencyTest` | 25 | **contrato ↔ perfil do archetype**: as flags derivadas são exatamente as declaradas no perfil de integração |
+| `cache/CacheStoreTest` | 18 | cache v2/v1, byte-equivalência, corrupção e guarda FR-017 |
+| `cache/CacheKeyFactoryTest` | 6 | chave determinística e fingerprint do catálogo |
+| `presentation/ProvenanceReportRendererTest` | 10 | merge + relatório de proveniência (FR-020) |
+| `presentation/CliOutputTest` | 11 | roteamento stdout/stderr, headers, warnings e erros |
+| `domain/ProvenanceReportTest` | 24 | relatório de proveniência, FR-006/007/008/009/017 |
+| `catalog/FlagCatalogExtractorTest` | 27 | catálogo real (35 flags), FR-018, defaults × regex |
+| `MavenFlagsViaLlmStarterTest` | 25 | gates do CLI (FR-001/002/003), stdout puro |
+| `command/CommandLineAssemblerTest` | 21 | formatação e escape da command line (FR-010) |
+| `catalog/FlagCatalogExtractorDriftTest` | 12 | o catálogo segue o metadata sem lista hardcoded (FR-013) |
+| `contract/ContractStoreTest` | 12 | materialização determinística, UTF-8, sobrescrita e falha do contrato |
+| `contract/ContractReaderTest` | 7 | leitura do stdin e validação da raiz JSON do contrato |
+| `inference/InferenceConfigTest` | 10 | defaults, caminho do catálogo, variável de ambiente e debug |
+| `inference/InferenceClientTest` | 6 | parsing do stdout, exit code, JSON inválido e binário ausente |
+| **Total** | **315** | 16 suítes |
+
+##### Pós-processador (`run-archetype-post-generate-tests.groovy`)
+
+| Suíte | Checks | O que garante |
+|---|---|---|
+| `archetype-post-generate/VariablesCustomTypesTest` | 5 | mapeamento de `properties` para as variáveis do pós-processador |
+| `archetype-post-generate/SnippetCustomEnumsTest` | 23 | geração dos enums (pacote, constantes, plural, arquivo existente **não** sobrescrito, entrada inválida) |
+| **Total** | **28** | 2 suítes |
+
+> Contagens verificadas em 2026-11-04; as fontes de verdade são `run-maven-flags-via-llm-tests.groovy` e `run-archetype-post-generate-tests.groovy`.
 
 #### 2) Processamento (empacotado) 🏗️
 
@@ -281,7 +300,7 @@
 | A1 | Catálogo de flags — `archetype_metadata_properties` | `src/main/resources/META-INF/maven/archetype_metadata_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
 | A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | mapeia `archetype-resources/` → árvore do projeto gerado |
 | A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 26 entities (17 `property-*` + 9 `fileset-*`) |
-| A4 | XSLT identidade | `src/main/resources/META-INF/maven/identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
+| A4 | XSLT identidade | `src/main/resources/META-INF/maven/archetype-metadata-identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
 
 | Artefato | Local | Papel |
 |----------|-------|-------|
@@ -289,7 +308,7 @@
 | Fixtures de integração | `src/test/resources/projects/*` | 11 projetos gerados pelo `integration-test`, cada um validado com `mvn clean verify` |
 
 * **Montagem do catálogo:** fragmentos (A1 + A2) + DOCTYPE (A3) →
-  `xml-maven-plugin:transform` + `identity.xsl` (A4) na fase
+  `xml-maven-plugin:transform` + `archetype-metadata-identity.xsl` (A4) na fase
   `generate-resources` → `target/classes/META-INF/maven/archetype-metadata.xml`
   (cópia convencional excluída — `pom.xml:38-41`).
 * **Execução:** o plugin lê o JAR instalado (`~/.m2`), valida as flags `-D`
@@ -305,9 +324,9 @@
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
 | A5 | Pós-processador — `body/` + `variables/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,snippets}/` | 34 fragmentos Groovy (11 `body/` + 11 `variables/` + 12 `snippets/`) |
-| A6 | Compositor do pós-processador | `src/main/groovy/SnippetComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
+| A6 | Compositor do pós-processador | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
 
-* **Montagem:** `SnippetComposer` (A6) via `groovy-maven-plugin:execute` na fase
+* **Montagem:** `ArchetypePostGenerateComposer` (A6) via `groovy-maven-plugin:execute` na fase
   `process-resources` → `target/classes/META-INF/archetype-post-generate.groovy`
   → levado no JAR.
 * **O que faz em runtime:** mantém / exclui por flag; persiste o contrato em
@@ -322,9 +341,9 @@
 
 | Fase | Plugin | Entrada | Saída |
 |------|--------|---------|-------|
-| `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
+| `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
 | `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 34 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
-| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `src/test/groovy/run-all-tests.groovy` | 10 suítes unitárias do mecanismo LLM (296 checks; o build falha se alguma falhar) |
+| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-maven-flags-via-llm-tests.groovy` + `run-archetype-post-generate-tests.groovy` | 18 suítes unitárias (343 checks; o build falha se alguma falhar) |
 | `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | 11 projetos gerados, cada um com `mvn clean verify` |
 | `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
 
@@ -345,17 +364,17 @@
 TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
 ─────────────────────────────────────────────────────────────────────
 [1] CATÁLOGO         17 property-*.xml + 9 fileset-*.xml + DOCTYPE (26 entities)
-                     └─ xml-maven-plugin:transform + identity.xsl (generate-resources)
+                     └─ xml-maven-plugin:transform + archetype-metadata-identity.xsl (generate-resources)
 [2] PÓS-PROCESSADOR  34 fragmentos .groovy
-                     └─ SnippetComposer.groovy via gmaven:execute (process-resources)
-                        (local: src/main/groovy/SnippetComposer.groovy)
-[3] TESTES           unitários: 10 suítes / 296 checks (fase test)
+                     └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
+                        (local: src/main/groovy/ArchetypePostGenerateComposer.groovy)
+[3] TESTES           unitários: 18 suítes / 343 checks (fase test)
                      integração: 11 fixtures + verify.groovy (2) (fase integration-test)
 [4] INSTALAÇÃO       ~/.m2/repository + archetype-catalog.xml (fase install)
 
 TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 ─────────────────────────────────────────────────────────────────────
-[5] PRÉ (FORA DO JAR)   use-case + contrato JSON → Orchestrator (A7) lê o catálogo
+[5] PRÉ (FORA DO JAR)   use-case + contrato JSON → MavenFlagsViaLlmStarter (A7) lê o catálogo
                         em target/classes → mvn archetype:generate --batch-mode -D...
 [6] PROCESSAMENTO       archetype-metadata.xml + archetype-resources/ (Velocity)
                         → árvore do projeto gerado
@@ -371,10 +390,10 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
   são **gerados** a cada build — editá-los é trabalho perdido.
 * **O pré-processamento nunca é empacotado:** em todas as suas eras (bash Q&A →
   bash + JSON → LLM) ele viveu fora de `src/main/resources` (`src/main/pre-processamento-maven-flags-via-llm/`) — trocar de tecnologia jamais significou viajar no JAR.
-* **O catálogo precisa existir antes da inferência:** o Orchestrator lê
+* **O catálogo precisa existir antes da inferência:** o MavenFlagsViaLlmStarter lê
   `target/classes/META-INF/maven/archetype-metadata.xml`; portanto rode
   `mvn clean process-resources` antes de usá-lo.
-* **O catálogo não é alterado em código:** o Orchestrator lê as flags em runtime
+* **O catálogo não é alterado em código:** o MavenFlagsViaLlmStarter lê as flags em runtime
   (FR-013) — flag nova = 1 fragmento `property-*.xml` + registro no DOCTYPE.
 * **As flags são auto-descritivas:** o `defaultValue` nunca é vazio (FR-018) e o
   `validationRegex` é aplicado por quem emite a command line.
@@ -421,22 +440,21 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 **Local:** `src/main/pre-processamento-maven-flags-via-llm/`
 
-| # | Classe | Papel | Momento (runtime) |
-|---|--------|-------|-------------------|
-| 1 | `Orchestrator.groovy` | entry point da CLI; orquestra o fluxo completo | parse dos args, gate FR-001, leitura do `stdin` (entrada padrão do processo) e **chave de cache** (`makeCacheKey`) |
-| 2 | `ContractTypeResolver.groovy` | **inferência de tipo** de UM atributo (resolve o tipo Java; higieniza o nome) | passo 8 — resolve o `Tipo:nome` de cada atributo derivado do contrato |
-| 3 | `ContractEntityDeriver.groovy` | **derivação da entidade** a partir do contrato (nome, pacote, atributos) | passo 8 — deriva `entity_name`, `entity_name_package` e `custom_attributes_list` |
-| 4 | `FlagCatalogExtractor.groovy` | lê o catálogo de flags do metadata transformado (FR-005, FR-013, FR-018) | passo 3 — lê as **35 flags** de `target/classes/META-INF/maven/archetype-metadata.xml` |
-| 5 | `CatalogEntry.groovy` | invariantes de cada flag: `key` e `defaultValue` não-vazios, regex compilável (FR-018) | passo 3 — valida cada flag extraída |
-| 6 | `JsonCanonicalizer.groovy` | canonicaliza o JSON (representação estável, independente da ordem dos campos) | passo 4 — o `Orchestrator` usa o contrato canônico como parte da chave de cache |
-| 7 | `InvocationCache.groovy` | cache em JSONL fora do repositório (FR-011, FR-012, FR-017) | passo 6 — **consulta antes da LLM** (cache hit encerra) e passo 11 — gravação |
-| 8 | `FlagProposalMerger.groovy` | merge das fontes de valor + **proveniência** por flag (FR-006..FR-009, FR-020, FR-021) | passo 8 — consolida contrato > derivadas > LLM > defaults |
-| 9 | `CommandLineAssembler.groovy` | monta a command line final (FR-010), com escape de valores | passo 9 — último passo antes do stdout |
+| Pacote / arquivo | Responsabilidade | Componentes principais |
+|---|---|---|
+| `MavenFlagsViaLlmStarter.groovy` | bootstrap da CLI: carrega a aplicação e mapeia o retorno para `System.exit` | `MavenFlagsViaLlmStarter` |
+| `inference/` | fluxo do caso de uso, configuração/defaults e shell-out da inferência | `InferenceApplication`, `InferenceConfig`, `InferenceClient` |
+| `command/` | parsing dos argumentos e montagem da command line | `CommandLineArguments`, `CommandLineAssembler` |
+| `Sha256.groovy` | digest compartilhado por cache e contrato | `Sha256` |
+| `catalog/` | catálogo canônico lido do metadata em runtime | `CatalogEntry`, `FlagCatalogExtractor` |
+| `contract/` | ingestão do stdin, persistência do contrato e detecção de segredos | `ContractReader`, `ContractStore`, `ContractSecretScanner` |
+| `cache/` | canonicalização, chave e persistência do cache JSONL | `CacheKeyFactory`, `CacheStore`, `JsonCanonicalizer`, `InvocationCache` (legado) |
+| `domain/` | derivação da entidade, merge, validação e projeção de flags | `ContractTypeResolver`, `ContractEntityDeriver`, `FlagProposalMerger` + colaboradores |
+| `presentation/` | relatório de proveniência e console | `ProvenanceReportRenderer`, `CliOutput` |
 
-> ⚠️ **O `Orchestrator` é *self-contained*: a lógica de cada componente está *inline* nele** (marcadores `// Inlined <Classe> logic` e o bloco de espelhos no fim do arquivo). Motivo: o `gmaven` embarca Groovy 2.4.9 e não enxerga as classes irmãs compiladas com Groovy 4.0.28.
-> Os **módulos canônicos** são a fonte da verdade e existem como **gêmeos testáveis** — as 10 suítes unitárias carregam cada `.groovy` via `GroovyClassLoader` e comparam com a versão inline (paridade verificada em `ContractDerivationTest`), e `FlagCatalogExtractorDriftTest` garante que o catálogo lido reflete o metadata **sem lista de flags hardcoded**.
-> Os espelhos inline de `ContractTypeResolver`/`ContractEntityDeriver` levam o prefixo `Orchestrator` porque vivem no mesmo pacote dos canônicos — e um `GroovyClassLoader` guarda **uma classe por nome**: um espelho homônimo esconderia a classe canônica nos testes.
-> O `FlagProposalMerger` (gêmeo testável) **consome os módulos canônicos** por injeção de construtor (`ContractEntityDeriver` ← `ContractTypeResolver`); as suítes fazem a fiação por reflexão.
+> ⚠️ **O `MavenFlagsViaLlmStarter` é apenas um bootstrap:** ele indexa os `.groovy` do módulo e carrega `InferenceApplication` via `GroovyClassLoader`, preservando a invocação de um único arquivo (`groovy MavenFlagsViaLlmStarter.groovy ...`) mesmo com a implementação distribuída em pastas.
+> Os **módulos são a fonte da verdade em runtime** — as 18 suítes unitárias carregam cada `.groovy` via `GroovyClassLoader` e exercitam a implementação real, e `FlagCatalogExtractorDriftTest` garante que o catálogo lido reflete o metadata **sem lista de flags hardcoded**.
+> As dependências são passadas por construtor (`FlagProposalMerger` → `ContractEntityDeriver` → `ContractTypeResolver`); as suítes fazem a fiação via `GroovyClassLoader`/`loadClass`.
 
 #### Separação de responsabilidades: derivação da entidade × inferência de tipo 🧩
 
@@ -471,7 +489,7 @@ contrato JSON ──► ContractEntityDeriver ──► (por atributo) ──►
 #### Como executar (operador)
 
 ```bash
-groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy \
+groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy \
   --use-case-description "descrição do use-case" \
   --use-case-contract \
   < contract.json
@@ -482,7 +500,7 @@ groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy \
 
 **Pré-requisitos:**
 - **Groovy 4** no classpath (o script usa `groovy.json` / `groovy.xml`);
-- o catálogo precisa existir → rode `mvn clean process-resources` antes (o mecanismo lê `target/classes/META-INF/maven/archetype-metadata.xml` — `Orchestrator.groovy:116`).
+- o catálogo precisa existir → rode `mvn clean process-resources` antes (o mecanismo lê `target/classes/META-INF/maven/archetype-metadata.xml` — `InferenceConfig.catalogPath` / `FlagCatalogExtractor`).
 
 #### Argumentos
 
@@ -520,16 +538,16 @@ groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy \
 
 #### Verificação dos exit codes
 
-*Conferidos no `Orchestrator.groovy` — não inferidos.*
+*Conferidos no `InferenceApplication.run()` — não inferidos.*
 
 | Exit | Situação | Fonte |
 |---|---|---|
-| `0` | sucesso | `Orchestrator.groovy:170, 206` |
-| `2` | use-case ausente ou vazio (FR-001) | `Orchestrator.groovy:61-65` |
-| `2` | contrato ausente ou vazio (FR-003) | `Orchestrator.groovy:89-93` |
-| `3` | script de inferência externo falhou | `Orchestrator.groovy:179-180` |
-| `4` | catálogo de flags malformado ou ilegível (FR-018) | `Orchestrator.groovy:122-124` |
-| `5` | erro interno: args inválidos, JSON inválido, raiz não-objeto, falha na leitura do stdin | `Orchestrator.groovy:46-47, 83-84, 102-109` |
+| `0` | sucesso | `InferenceApplication.run` retorna 0; `MavenFlagsViaLlmStarter.main` chama `System.exit(0)` |
+| `2` | use-case ausente ou vazio (FR-001) | gate em `InferenceApplication.run` |
+| `2` | contrato ausente ou vazio (FR-003) | gate em `InferenceApplication.run` |
+| `3` | script de inferência externo falhou | catch em `InferenceApplication.run` / `InferenceClient` |
+| `4` | catálogo de flags malformado ou ilegível (FR-018) | catch em `InferenceApplication.run` / `FlagCatalogExtractor` |
+| `5` | erro interno: args inválidos, JSON inválido, raiz não-objeto, falha na leitura do stdin | catch em `InferenceApplication.run` |
 
 </details>
 
@@ -566,7 +584,7 @@ groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy \
 mvn clean install
 ```
 
-* A fase `install` executa, em ordem: as **10 suítes unitárias** do mecanismo LLM (fase `test`),
+* A fase `install` executa, em ordem: as **18 suítes unitárias** do mecanismo LLM e do pós-processador (fase `test`),
   as **11 fixtures** de integração (fase `integration-test`) e a publicação no repositório local.
   * ⚠️ A fase `integration-test` é **anterior** a `install` → `mvn clean install integration-test`
     roda a suíte de integração **duas vezes**. Use `mvn clean install`.
@@ -1030,7 +1048,7 @@ mvn clean install
         - Root Path: [_C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\src\main\resources\ **META-INF**_](src/main/resources/META-INF)
 
 
-  + **Orquestrador (mecanismo de inferência de flags):** [Orchestrator.groovy](src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy)
+  + **Orquestrador (mecanismo de inferência de flags):** [MavenFlagsViaLlmStarter.groovy](src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy)
     - Local: _"pre-processamento-maven-flags-via-llm"_
       - Root Path: [_src/main/pre-processamento-maven-flags-via-llm/_](src/main/pre-processamento-maven-flags-via-llm/)
 
@@ -1041,7 +1059,7 @@ mvn clean install
       ([`property-*.xml`](src/main/resources/META-INF/maven/archetype_metadata_properties/))
       e use o mecanismo de inferência LLM para montar a linha de comando a
       partir de uma descrição textual + um contrato JSON.
-    * O `Orchestrator` lê o catálogo **em runtime** _(FR-013)_:
+    * O `MavenFlagsViaLlmStarter` lê o catálogo **em runtime** _(FR-013)_:
       + **zero** lista de flags hardcoded.
       + Uma flag nova é reconhecida **sem nenhuma alteração no código dele**.
     * Veja o passo 1 abaixo, o passo 5 (registro da `ENTITY`) e
@@ -1348,12 +1366,12 @@ mvn archetype:generate \
 ##### O QUE NAO FOI FEITO (e nao precisa ser):
 
   * Nenhum script `user_*_input.sh` criado
-  * Nenhuma edicao no `Orchestrator.groovy`
+  * Nenhuma edicao no `MavenFlagsViaLlmStarter.groovy`
   * Nenhuma edicao no `maven_command_line_archetype_generate.sh`
   * Nenhuma lista de flags adicionada em lugar nenhum
-  * Nenhuma edicao no `SnippetComposer.groovy` (ele le as pastas automaticamente)
+  * Nenhuma edicao no `ArchetypePostGenerateComposer.groovy` (ele le as pastas automaticamente)
 
-  * **O `Orchestrator` nao precisa saber que `enable_s3_storage` existe.**
+  * **O `MavenFlagsViaLlmStarter` nao precisa saber que `enable_s3_storage` existe.**
   * Ele le o catalogo em runtime (FR-013).
   * O catalogo acabou de crescer -> a flag ja existe para o mecanismo.
 
@@ -1739,7 +1757,7 @@ Antes de executar, confira que o valor de `-Dpackage` **NÃO** contém o nome da
 
 **Em ambos os casos**, o seu modelo mental é o mesmo: descrição em cima,
 JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
-fica a cargo do mecanismo `Orchestrator.groovy`.
+fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 </details>
 
@@ -1763,7 +1781,7 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
   * O (`<resources>`) do pom **exclui** o (`archetype-metadata.xml`) da copia convencional,
     garantindo que so a versao transformada va para o classpath.
 
-* **IDENTITY.XSL**
+* **ARCHETYPE-METADATA-IDENTITY.XSL**
   * XSLT 1.0, template identidade: (`<xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates.../></xsl:copy></xsl:template>`).
   * Copia verbatim, forca reescrita do XML — efeito colateral desejado: o parser XSLT resolve as (`SYSTEM`) entities DOCTYPE
     e o output sai com os blocos inline (sem DOCTYPE/entities no XML final).
@@ -1773,12 +1791,12 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
     => 17 (`property-*.xml`) (1 por categoria de flag).
   * [`archetype_metadata_filesets/`](src/main/resources/META-INF/maven/archetype_metadata_filesets)
     => 9 (`fileset-*.xml`) (1 por setor da estrutura do projeto).
-  * [`identity.xsl`](src/main/resources/META-INF/maven/identity.xsl) => folha de estilo XSLT.
+  * [`archetype-metadata-identity.xsl`](src/main/resources/META-INF/maven/archetype-metadata-identity.xsl) => folha de estilo XSLT.
   * [`archetype-metadata.xml`](src/main/resources/META-INF/maven/archetype-metadata.xml) => core (DOCTYPE + (`&property-X;`)/(`&fileset-X;`)).
 
 * **FLUXO BUILD**
   * source (`archetype-metadata.xml`) (com (`&entity;`))
-    * => (`xml-maven-plugin:transform`) aplica (`identity.xsl`)
+    * => (`xml-maven-plugin:transform`) aplica (`archetype-metadata-identity.xsl`)
     * => (`target/classes/META-INF/maven/archetype-metadata.xml`) (XML completo, sem DOCTYPE)
     * => empacotado no JAR do arquetipo
     * => lido pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`).
@@ -1794,19 +1812,19 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
 
 * **MECANISMO**
   * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 3 diretorios.
-  * A [`List<String> SECTIONS`](src/main/groovy/SnippetComposer.groovy) no topo do compositor e a **fonte unica da verdade da ordem** (substitui o `ls -1` alfabetico implicito do bash legado).
+  * A [`List<String> SECTIONS`](src/main/groovy/ArchetypePostGenerateComposer.groovy) no topo do compositor e a **fonte unica da verdade da ordem** (substitui o `ls -1` alfabetico implicito do bash legado).
   * Resultado: o source continua sendo uma colecao de 34 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
 
 * **PLUGIN** — [`groovy-maven-plugin`](https://groovy.github.io/gmaven/) 2.1.1
   * Fase: (`process-resources`) (imediatamente apos (`xml-maven-plugin:transform`) montar o metadata em (`generate-resources`), e antes do (`package`) e do (`integration-test`)).
   * Goal: (`execute`) — invoca o script Groovy declarado em (`<source>`).
-  * Input : [`src/main/groovy/SnippetComposer.groovy`](src/main/groovy/SnippetComposer.groovy) (o compositor).
+  * Input : [`src/main/groovy/ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) (o compositor).
   * Output: (`${project.build.outputDirectory}/META-INF/archetype-post-generate.groovy`)
     (ou seja, (`target/classes/META-INF/...`), dentro do JAR do arquetipo).
   * O (`<resources>`) do pom **exclui** o (`archetype-post-generate.groovy`) da copia convencional,
     garantindo que so a versao remontada va para o classpath.
 
-* **COMPOSITOR** — [`SnippetComposer.groovy`](src/main/groovy/SnippetComposer.groovy)
+* **COMPOSITOR** — [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy)
   * Le os 11 arquivos de (`body/`) na ordem canonica da (`List<String> SECTIONS`); le os diretorios (`variables/`) e (`snippets/`) em ordem alfabetica via (`listFiles().sort { it.name }`).
   * Aplica **consolidacao de imports** em 3 passos:
     1. Para cada arquivo concatenado, remove (`^import …`) e (`^//[[:space:]]*import`) (espelha o (`remove_lines_with_import_keyword`) do bash legado).
@@ -1821,11 +1839,11 @@ fica a cargo do mecanismo `Orchestrator.groovy`.
     => 11 (`variables-*.groovy`) (1 por categoria de flag).
   * [`archetype_post_generate_snippets/`](src/main/resources/META-INF/archetype_post_generate_snippets)
     => 12 (`snippet-*.groovy`) (1 por comportamento condicional).
-  * [`SnippetComposer.groovy`](src/main/groovy/SnippetComposer.groovy) => o compositor Groovy de build-time.
+  * [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) => o compositor Groovy de build-time.
 
 * **FLUXO BUILD**
   * source 3 diretorios (`body/`)+(`variables/`)+(`snippets/`) + (`archetype-imports.groovy`)
-    * => (`SnippetComposer.groovy`) le na ordem da (`List<String> SECTIONS`), consolida imports
+    * => (`ArchetypePostGenerateComposer.groovy`) le na ordem da (`List<String> SECTIONS`), consolida imports
     * => (`target/classes/META-INF/archetype-post-generate.groovy`) (Groovy completo, sem duplicacao de imports)
     * => empacotado no JAR do arquetipo
     * => executado pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`), durante o pos-processamento do projeto gerado.

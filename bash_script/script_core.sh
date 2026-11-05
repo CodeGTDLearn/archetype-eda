@@ -38,7 +38,7 @@ source "${SCRIPT_FOLDER_WIN}\\create_archetype_metadata.sh"
 create_archetype_metadata_xml "${RECREATE_ARCHETYPE}" "${MAVEN_FOLDER_WIN}" "archetype-metadata.xml" "$SHOW_RECREATE_ARCHETYPE_LOG"
 
 # A.5.3) RE-CREATING ARCHETYPE-POST-GENERATE.GROOVY
-# Substituído em 2026-09-28 por SnippetComposer Groovy (src/main/groovy/eda/postgenerate/),
+# Substituído em 2026-09-28 por ArchetypePostGenerateComposer Groovy (src/main/groovy/),
 # executado via groovy-maven-plugin:2.1.1 na fase process-resources.
 # O script create_archetype_post_generate.sh permanece em disco como referência histórica.
 # source "${SCRIPT_FOLDER_WIN}\\create_archetype_post_generate.sh"

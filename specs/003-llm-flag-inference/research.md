@@ -14,7 +14,7 @@ This research consolidates the technology decisions behind the implementation pl
 - **Decision**: Implement the validator, merger, canonicalizer, assembler, and cache in Groovy 4.0.28.
 - **Rationale**:
   - Groovy 4.0.28 is already on the archetype's `maven-archetype-plugin:3.4.1` classpath (via the `groovy-bom` transitively declared by the plugin).
-  - `SnippetComposer.groovy` already uses Groovy 4.0.28 build-time via `gmaven:2.1.1` in phase `process-resources` (precedent from `.specify/assessments/groovy-snippet-injection/`).
+  - `ArchetypePostGenerateComposer.groovy` already uses Groovy 4.0.28 build-time via `gmaven:2.1.1` in phase `process-resources` (precedent from `.specify/assessments/groovy-snippet-injection/`).
   - The five new components (extractor, merger, assembler, canonicalizer, cache) are state-light and fit Groovy's scripting sweet spot.
 - **Alternatives considered**:
   - **Java 17**: would compile cleanly and avoid the Groovy classpath question, but require a separate `<source>` directory layout for the new module and a different plugin invocation. Rejected because Groovy is already proven in this same phase for the same purpose.
@@ -25,17 +25,17 @@ This research consolidates the technology decisions behind the implementation pl
 
 - **Decision**: Invoke the orchestrator script via a second `<execution>` in the existing `gmaven:2.1.1` `<plugin>` entry in `pom.xml`, at phase `process-resources`.
 - **Rationale**:
-  - The existing `<execution>` for `SnippetComposer.groovy` already wires `gmaven:2.1.1` at this phase. Adding a sibling `<execution>` is a minimal pom edit.
+  - The existing `<execution>` for `ArchetypePostGenerateComposer.groovy` already wires `gmaven:2.1.1` at this phase. Adding a sibling `<execution>` is a minimal pom edit.
   - `process-resources` runs after `generate-resources` (where `xml-maven-plugin` materializes `archetype-metadata.xml`) and before `package` (where the archetype jar is sealed) and before `integration-test` (where the 10 IT profiles run). This places the new mechanism exactly where it needs to be.
   - No new plugin dependency is added.
 - **Alternatives considered**:
-  - **`xml-maven-plugin:1.2.1` + `identity.xsl`**: rejected as the orchestrator because the orchestration logic (LLM call, cache, merge) is not a pure XML transform. `xml-maven-plugin` is still used for `archetype-metadata.xml` materialization, unchanged.
+  - **`xml-maven-plugin:1.2.1` + `archetype-metadata-identity.xsl`**: rejected as the orchestrator because the orchestration logic (LLM call, cache, merge) is not a pure XML transform. `xml-maven-plugin` is still used for `archetype-metadata.xml` materialization, unchanged.
   - **A new Maven plugin (mojo)**: rejected for the same reason as the Java approach above.
   - **Runtime invocation (outside `mvn`)**: rejected — would reintroduce the manual-prompt problem.
 
 ## Decision 3 — Flag catalog extraction via XInclude, parsed by `groovy-xml`
 
-- **Decision**: Read the canonical `archetype-metadata.xml` (already materialized by `xml-maven-plugin:1.2.1` + `identity.xsl` into `target/classes/META-INF/maven/archetype-metadata.xml` at the start of `process-resources`). Resolve the XInclude `<!ENTITY>` references to the 17 `property-*.xml` files. Parse the merged result with the Groovy 4.0.28 transitive `groovy-xml` (`XmlParser` or `XmlSlurper`).
+- **Decision**: Read the canonical `archetype-metadata.xml` (already materialized by `xml-maven-plugin:1.2.1` + `archetype-metadata-identity.xsl` into `target/classes/META-INF/maven/archetype-metadata.xml` at the start of `process-resources`). Resolve the XInclude `<!ENTITY>` references to the 17 `property-*.xml` files. Parse the merged result with the Groovy 4.0.28 transitive `groovy-xml` (`XmlParser` or `XmlSlurper`).
 - **Rationale**:
   - The XInclude references are already resolved by `xml-maven-plugin` at materialization time, so the orchestrator reads a flat, fully-merged XML — no second XInclude pass needed at runtime.
   - `groovy-xml` is already on the classpath; no new dependency.

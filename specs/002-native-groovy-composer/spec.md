@@ -6,6 +6,8 @@
 
 **Status**: Draft
 
+**Rename**: o compositor `SnippetComposer` foi renomeado para `ArchetypePostGenerateComposer` em 2026-11-04; o arquivo vive em `src/main/groovy/ArchetypePostGenerateComposer.groovy`.
+
 **Input**: Substituir o pre-processamento em bash de `archetype-post-generate.groovy` por composição nativa Groovy em build-time, eliminando dependência do bash e facilitando extensibilidade via flags/IA.
 
 **Decisão de origem**: `.specify/assessments/groovy-snippet-injection/decision.md` (verdict: **go**, Opção B do concept)
@@ -77,7 +79,7 @@ Antes de remover o script bash legado (`bash_script/create_archetype_post_genera
 - **FR-005**: O pipeline MUST ser executável em ambiente sem TTY (CI Linux headless) — zero `read`, `pause` ou equivalente que bloqueie esperando input humano.
 - **FR-006**: A configuração da ordem MUST estar em uma **única estrutura de dados literal legível** (uma `List<String>` no topo do script compositor), com um comentário curto explicando o papel de cada item.
 - **FR-007**: Cada snippet em `archetype_post_generate_snippets/` MUST começar com um bloco de comentário indicando qual flag (`enable_*` em `archetype_metadata_properties/`) o acopla, para suportar extensibilidade via flags/IA.
-- **FR-008**: O compositor MUST estar isolado em um único arquivo `.groovy` dedicado (ex.: `src/main/groovy/eda/postgenerate/SnippetComposer.groovy`) com cabeçalho explicativo da estratégia e Javadoc nas funções públicas.
+- **FR-008**: O compositor MUST estar isolado em um único arquivo `.groovy` dedicado (ex.: `src/main/groovy/ArchetypePostGenerateComposer.groovy`) com cabeçalho explicativo da estratégia e Javadoc nas funções públicas.
 - **FR-009**: A invocação do compositor MUST ocorrer na fase `process-resources` (imediatamente após `xml-maven-plugin:transform` em `generate-resources`, antes de `package`), através de um plugin Groovy build-time.
 - **FR-010**: O `archetype-post-generate.groovy` atualmente commitado em `src/main/resources/META-INF/` MUST ser removido do controle de versão (`.gitignore` ou equivalente) — passa a ser artefato gerado, não editado.
 - **FR-011**: O `bash_script/create_archetype_post_generate.sh` MUST deixar de ser invocado pelo `script_core.sh` no fluxo `mvn clean install` do archetype. O arquivo pode permanecer em disco como referência histórica, mas não pode estar no caminho de invocação.
@@ -86,7 +88,7 @@ Antes de remover o script bash legado (`bash_script/create_archetype_post_genera
 
 - **Snippet**: arquivo `.groovy` individual em uma das 3 pastas de entrada (`body/`, `snippets/`, `variables/`). Atributo: nome do arquivo (deve seguir convenção de prefixo `snippet-*` ou `variables-*`, ou estar em `body/` para arquivos fixos). Identifica uma unidade lógica de código Groovy que será concatenada no arquivo final.
 - **Section**: bloco nomeado no arquivo final (header, global-vars, path-vars-root, variables-list, snippets-list, footer, file-functions, folder-functions). Atributo: nome, posição na `SECTIONS`. Define a ordem em que cada grupo de snippets aparece.
-- **Composer Manifest**: `List<String>` ordenada com os nomes das seções, definida no topo do `SnippetComposer.groovy`. Atributo: lista de strings, comentário explicativo por entrada. É a "fonte da verdade" da ordem de montagem.
+- **Composer Manifest**: `List<String>` ordenada com os nomes das seções, definida no topo do `ArchetypePostGenerateComposer.groovy`. Atributo: lista de strings, comentário explicativo por entrada. É a "fonte da verdade" da ordem de montagem.
 - **Imported-Block**: conteúdo de `archetype_post_generate_body/archetype-imports.groovy`, prependido no topo do arquivo final. Atributo: conteúdo textual (linhas de `import …`).
 
 ## Success Criteria *(mandatory)*
