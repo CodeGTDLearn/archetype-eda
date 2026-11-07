@@ -23,9 +23,9 @@ Propor uma suíte de testes de integração, baseada no `maven-archetype-plugin`
   - `full` — todas as flags opcionais ligadas (stress test de conflitos).
   - `json-contract` — foco em `enable_json_entity_contracts` + `absolute_path_jsonfile_contract` (usa `verify.groovy`).
   - `binding-properties` — variações de `enable_binding_properties` (default/list/map/mutable/validated).
-- **Regra de dependência** — Quando uma flag "pai" for false, suas flags filhas são ignoradas na combinação. A relação pai→filha é obtida dos comentários `DEPENDS_ON` em `src/main/resources/META-INF/maven/archetype_metadata_properties/property-*.xml`.
+- **Regra de dependência** — Quando uma flag "pai" for false, suas flags filhas são ignoradas na combinação. A relação pai→filha é obtida dos comentários `DEPENDS_ON` em `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-*.xml`.
 - **Side-effects externos** — Mocks e stubs apenas; nenhuma chamada real a Git, Docker, rede.
-- **Defaults** — Flags não listadas no cenário usam o `defaultValue` declarado em cada `property-*.xml` em `src/main/resources/META-INF/maven/archetype_metadata_properties/`.
+- **Defaults** — Flags não listadas no cenário usam o `defaultValue` declarado em cada `property-*.xml` em `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`.
 - **Tempo de execução** — Sem orçamento fixo. A suíte não roda em CI; priorizar cobertura e simplicidade sobre velocidade.
 
 ## Out of Scope

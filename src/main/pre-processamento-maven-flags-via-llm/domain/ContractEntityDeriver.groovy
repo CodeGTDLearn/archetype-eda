@@ -48,6 +48,8 @@ class ContractEntityDeriver {
      *                                 projectType:.., enumType:..,
      *                                 enumConstants:..] per attribute
      *   "attributeList"     String  - the strict "Type:name,Type:name" list
+     *   "nestedTypes"       List    - [name:.., fields:[name:.., type:..]] per POJO
+     *   "enumTypes"         List    - [name:.., constants:[..], scope:..] per enum
      *   "warnings"          List    - loud derivation warnings
      */
     Map<String, Object> deriveFromContract(Map<String, Object> contract,
@@ -63,7 +65,7 @@ class ContractEntityDeriver {
 
         Set<String> catalogKeys = catalog == null ? Collections.emptySet() : new LinkedHashSet<>(catalog.keySet())
         List<Map<String, Object>> rawAttributes = attributeExtractor.extract(contract, catalogKeys)
-        Map<String, Object> assembly = attributeAssembler.assemble(rawAttributes)
+        Map<String, Object> assembly = attributeAssembler.assemble(rawAttributes, (String) name.get("entityName"))
 
         List<Map<String, Object>> attributes = (List<Map<String, Object>>) assembly.get("attributes")
         warnings.addAll((List<String>) assembly.get("warnings"))
@@ -71,6 +73,8 @@ class ContractEntityDeriver {
         derived.put("attributes", attributes)
         derived.put("attributeDetails", assembly.get("attributeDetails"))
         derived.put("attributeList", listFormatter.format(attributes))
+        derived.put("nestedTypes", assembly.get("nestedTypes"))
+        derived.put("enumTypes", assembly.get("enumTypes"))
         return derived
     }
 }

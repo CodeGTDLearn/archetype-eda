@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-26-JAVA_VERSION.XML ______________________________ -->
+<!-- FLAG: java_version -->
+<!--   DESCRIPTION : Versao do Java a ser usada no projeto. -->
+<!--   PROMPT      : Enter 'Java Version' -->
+<!--   TYPE        : enum (number) -->
+<!--   DEFAULT     : 21 -->
+<!--   DOMAIN      : 17 | 21 -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(17|21)$ -->
+<requiredProperty key="java_version">
+    <defaultValue>21</defaultValue>
+    <validationRegex>^(17|21)$</validationRegex>
+</requiredProperty>

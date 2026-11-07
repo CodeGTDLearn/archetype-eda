@@ -32,6 +32,7 @@ List<String> suites = [
         "src/test/archetype-post-generate/SnippetBindingPropertiesTestTest.groovy",
         "src/test/archetype-post-generate/SnippetCpanelTest.groovy",
         "src/test/archetype-post-generate/SnippetCustomEnumsTest.groovy",
+        "src/test/archetype-post-generate/SnippetCustomNestedTypesTest.groovy",
         "src/test/archetype-post-generate/SnippetDockerTest.groovy",
         "src/test/archetype-post-generate/SnippetEntityContractTest.groovy",
         "src/test/archetype-post-generate/SnippetExtraPomDependenciesTest.groovy",

@@ -7,16 +7,24 @@ package eda.postgenerate.pre_processamento_maven_flags_via_llm.domain
  *
  * Rules:
  *   1. A DECLARED java.lang type wins (FQN -> simple name, generics dropped).
+ *      An array value keeps the declared type but is reported: the entity has
+ *      no List<T>, so the field will not be a collection.
  *   2. A declared PROJECT type (a type outside java.lang - a domain class or
  *      an enum) is KEPT: the entity references it by its simple name, the
  *      archetype imports it (flag custom_attribute_imports) and/or generates
  *      the enum source (flag custom_enum_definitions). The attribute NAME
  *      then comes from the type itself (EnderecoCliente -> enderecoCliente).
+ *      An array of UPPERCASE strings carries the enum constants; an array
+ *      without them (or an object) falls back to String with a warning.
  *   3. Any OTHER declared type (a JDK type outside java.lang, a generic
  *      type) produces a LOUD WARNING and falls back to the type estimated
  *      from the VALUE.
  *   4. The estimate maps the runtime class of the value to a java.lang type;
  *      nested objects, arrays and null all fall back to String.
+ *
+ * Naming: the type of a nested object is PascalCase of its key, accents
+ * normalized to ASCII; an attribute/field name is camelCase. The conversion
+ * is shared by typeNameFor and sanitizeAttributeName.
  *
  * Production module. The MavenFlagsViaLlmStarter bootstrapper loads this class from its
  * descriptive file/folder; there is no inline duplicate.
@@ -48,6 +56,23 @@ class ContractTypeResolver {
     ]
 
     /**
+     * Java keywords/literals. A field name that collides with one of them
+     * receives the '_' suffix; a type name receives the 'Type' suffix.
+     */
+    private static final List<String> JAVA_KEYWORDS = [
+            "abstract", "assert", "boolean", "break", "byte", "case", "catch",
+            "char", "class", "const", "continue", "default", "do", "double",
+            "else", "enum", "extends", "final", "finally", "float", "for",
+            "goto", "if", "implements", "import", "instanceof", "int",
+            "interface", "long", "native", "new", "package", "private",
+            "protected", "public", "return", "short", "static", "strictfp",
+            "super", "switch", "synchronized", "this", "throw", "throws",
+            "transient", "try", "void", "volatile", "while",
+            "true", "false", "null", "_", "var", "record", "sealed",
+            "permits", "yield"
+    ]
+
+    /**
      * Resolves the Java type of ONE attribute.
      *
      * @param name the (already sanitized) attribute name - used in the warning
@@ -75,30 +100,65 @@ class ContractTypeResolver {
         String qualifiedType = null
         boolean projectType = false
         boolean enumType = false
+        boolean objectValue = value instanceof Map
         List<String> enumConstants = new ArrayList<String>()
         if (declared != null) {
             String raw = declared.toString().trim()
             if (!raw.isEmpty()) qualifiedType = raw
             String normalized = normalizeType(raw)
             if (normalized != null) {
+                // A declared java.lang type always wins, even for a nested
+                // object value: no POJO is derived for it. An array value is
+                // kept as the declared type, but the entity has no List<T>:
+                // the fallback to a non-collection field is loud.
                 type = normalized
+                if (isArrayValue(value)) {
+                    warning = "atributo '" + name + "': array/lista nao suportado - tipo declarado mantido"
+                }
             } else if (isProjectType(raw)) {
-                // A PROJECT type (outside java.lang) is a valid domain type:
-                // it is kept, referenced by its simple name and carried over
-                // to the archetype (import + enum generation).
-                type = simpleTypeName(raw)
-                projectType = true
                 List<String> constants = enumConstantsFor(value, enumValues)
-                if (!constants.isEmpty()) {
-                    enumType = true
-                    enumConstants = constants
+                if (objectValue) {
+                    // A project type declared for an OBJECT value cannot be
+                    // materialized: the contract value is the source of truth
+                    // for the structure, and the declared type would require
+                    // an import/POJO that the contract does not define.
+                    warning = "atributo '" + name + "': tipo declarado '" + declared +
+                            "' tem valor objeto - tipo String (sem POJO/import)"
+                    qualifiedType = null
+                } else if (isArrayValue(value) && constants.isEmpty()) {
+                    // A project type declared for an ARRAY without UPPERCASE
+                    // constants cannot represent the collection: the array is
+                    // not a POJO and the entity has no List<T>.
+                    warning = "atributo '" + name + "': tipo declarado '" + declared +
+                            "' tem valor array - tipo String (sem POJO/import/enum)"
+                    qualifiedType = null
+                } else {
+                    // A PROJECT type (outside java.lang) is a valid domain type:
+                    // it is kept, referenced by its simple name and carried over
+                    // to the archetype (import + enum generation). An array of
+                    // UPPERCASE strings is the enum signal (Java convention).
+                    type = simpleTypeName(raw)
+                    projectType = true
+                    if (!constants.isEmpty()) {
+                        enumType = true
+                        enumConstants = constants
+                    }
                 }
             } else {
                 warning = "atributo '" + name + "': tipo declarado '" + declared +
                         "' nao e um tipo de java.lang - tipo estimado pelo valor"
             }
         }
-        if (type == null) type = estimateType(value)
+        if (type == null) {
+            if (isArrayValue(value)) {
+                type = "String"
+                if (warning == null) {
+                    warning = "atributo '" + name + "': array/lista nao suportado - tipo String"
+                }
+            } else {
+                type = estimateType(value)
+            }
+        }
         TypeResolution out = new TypeResolution()
         out.type = type
         out.warning = warning
@@ -136,6 +196,81 @@ class ContractTypeResolver {
     }
 
     /**
+     * True when the declared type is a java.lang type (simple name or FQN).
+     * Such a type is rendered verbatim by the entity template.
+     */
+    boolean isJavaLangType(String raw) {
+        return normalizeType(raw) != null
+    }
+
+    /**
+     * True when the contract value is an array/collection.
+     */
+    boolean isArrayValue(Object value) {
+        if (value == null) return false
+        return value instanceof Collection || value.getClass().isArray()
+    }
+
+    /**
+     * The elements of an array/collection, in order.
+     */
+    List<Object> elements(Object value) {
+        List<Object> out = new ArrayList<Object>()
+        if (value == null) return out
+        if (value instanceof Collection) {
+            out.addAll((Collection<Object>) value)
+            return out
+        }
+        if (value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value)
+            for (int i = 0; i < length; i++) out.add(java.lang.reflect.Array.get(value, i))
+        }
+        return out
+    }
+
+    /**
+     * True when the value is a non-empty array of UPPERCASE strings, the Java
+     * convention for enum constants. It is the signal that turns a declared
+     * project type + array into an enum.
+     */
+    boolean isUppercaseEnumArray(Object value) {
+        if (!isArrayValue(value)) return false
+        List<Object> items = elements(value)
+        if (items.isEmpty()) return false
+        for (Object item : items) {
+            if (!(item instanceof String)) return false
+            String text = ((String) item).trim()
+            if (!(text ==~ /^[A-Z][A-Z0-9_]*$/)) return false
+        }
+        return true
+    }
+
+    /**
+     * The class name of a nested contract object: PascalCase of its key,
+     * accents normalized to ASCII, a leading digit prefixed with 'Type' and a
+     * Java keyword suffixed with 'Type'. The name is limited to 120 chars.
+     *
+     * Examples: "endereco" -> "Endereco"; "endereço" -> "Endereco";
+     * "endereco_complemento" -> "EnderecoComplemento"; "class" -> "ClassType".
+     */
+    String typeNameFor(String raw) {
+        List<String> parts = asciiParts(raw)
+        StringBuilder builder = new StringBuilder()
+        for (String part : parts) {
+            String word = normalizeWord(part)
+            builder.append(Character.toUpperCase(word.charAt(0)))
+            if (word.length() > 1) builder.append(word.substring(1))
+        }
+        String name = builder.toString()
+        if (name.isEmpty()) return null
+        if (Character.isDigit(name.charAt(0))) name = "Type" + name
+        if (JAVA_KEYWORDS.contains(name.toLowerCase(Locale.ROOT))) name = name + "Type"
+        if (name.length() > 120) name = name.substring(0, 120)
+        if (!(name ==~ /^[A-Za-z_][A-Za-z0-9_]*$/)) return null
+        return name
+    }
+
+    /**
      * The simple name of a declared type: "br.com.projeto.StatusPedido" ->
      * "StatusPedido".
      */
@@ -160,6 +295,9 @@ class ContractTypeResolver {
         }
         if (raw.isEmpty() && value instanceof String) {
             raw.add(value)
+        }
+        if (raw.isEmpty() && isUppercaseEnumArray(value)) {
+            raw.addAll(elements(value))
         }
         List<String> out = new ArrayList<String>()
         for (Object o : raw) {
@@ -216,21 +354,54 @@ class ContractTypeResolver {
      * satisfies the catalog regex ^[a-z][a-zA-Z0-9_]*$.
      */
     String sanitizeAttributeName(String raw) {
-        if (raw == null) return null
-        String s = raw.trim().replaceAll("[^A-Za-z0-9_]", "_")
+        List<String> parts = asciiParts(raw)
+        if (parts.isEmpty()) return null
+        StringBuilder builder = new StringBuilder()
+        for (int i = 0; i < parts.size(); i++) {
+            String word = normalizeWord(parts.get(i))
+            if (i == 0) {
+                builder.append(Character.toLowerCase(word.charAt(0)))
+            } else {
+                builder.append(Character.toUpperCase(word.charAt(0)))
+            }
+            if (word.length() > 1) builder.append(word.substring(1))
+        }
+        String s = builder.toString()
         if (s.isEmpty()) return null
         if (Character.isDigit(s.charAt(0))) s = "field_" + s
-        // Character.toLowerCase(char) returns a char: it MUST be converted to
-        // a String before the concatenation (a char + String is not a valid
-        // Groovy operation and raises MissingMethodException).
-        if (Character.isUpperCase(s.charAt(0))) s = Character.toLowerCase(s.charAt(0)).toString() + s.substring(1)
         // "ID" and "iD" are the SAME structural id as "id": collapse the
         // spelling so the entity template drops every variant and only emits
         // the primary key "<entityName>Id". Without this, "ID" became "iD"
         // and the template rendered a SECOND field next to the primary key.
         if (s.equalsIgnoreCase("id")) s = "id"
+        if (JAVA_KEYWORDS.contains(s)) s = s + "_"
         if (!(s ==~ /^[a-z][a-zA-Z0-9_]*$/)) return null
         return s
+    }
+
+    /**
+     * Splits a raw name into ASCII alphanumeric words. Accents are normalized
+     * away ("endereço" -> "endereco") and every separator (including '_', '-'
+     * and '.') is a word boundary.
+     */
+    private List<String> asciiParts(String raw) {
+        List<String> parts = new ArrayList<String>()
+        if (raw == null) return parts
+        String ascii = java.text.Normalizer.normalize(raw.trim(), java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+        for (String part : ascii.split("[^A-Za-z0-9]+")) {
+            if (part != null && !part.isEmpty()) parts.add(part)
+        }
+        return parts
+    }
+
+    /**
+     * Lowercases a word written in CAPS ("NOME" -> "nome") and preserves an
+     * already camelCase word ("nomePrincipal" stays "nomePrincipal").
+     */
+    private String normalizeWord(String part) {
+        if (part == part.toUpperCase(Locale.ROOT)) return part.toLowerCase(Locale.ROOT)
+        return part
     }
 
     /**
@@ -246,6 +417,7 @@ class ContractTypeResolver {
         if (!(s ==~ /^[A-Za-z_][A-Za-z0-9_]*$/)) return null
         if (Character.isDigit(s.charAt(0))) s = "field_" + s
         if (Character.isUpperCase(s.charAt(0))) s = Character.toLowerCase(s.charAt(0)).toString() + s.substring(1)
+        if (JAVA_KEYWORDS.contains(s)) s = s + "_"
         if (!(s ==~ /^[a-z][a-zA-Z0-9_]*$/)) return null
         return s
     }

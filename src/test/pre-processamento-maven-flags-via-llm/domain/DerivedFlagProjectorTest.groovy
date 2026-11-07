@@ -67,6 +67,19 @@ projector.apply(s6.values, s6.sources, s6.notes, catalog, s6.derived, s6.diagnos
 check("6.1 non-project attributes leave both flags at 'none'",
         s6.values.custom_attribute_imports == 'none' && s6.values.custom_enum_definitions == 'none')
 
+def s7 = fresh([])
+s7.derived.enumTypes = [
+        [name: 'Status', constants: ['ATIVO', 'CANCELADO'], scope: 'entity'],
+        [name: 'Uf', constants: ['SP', 'RJ'], scope: 'nested']
+]
+projector.apply(s7.values, s7.sources, s7.notes, catalog, s7.derived, s7.diagnostics)
+check("7.1 a payload entity enum is projected with its bare name",
+        s7.values.custom_enum_definitions == 'Status:ATIVO|CANCELADO;nested.Uf:SP|RJ')
+check("7.2 ...and no import is emitted", s7.values.custom_attribute_imports == 'none')
+check("7.3 ...both flags carry CONTRACT_DERIVED provenance",
+        s7.sources.custom_enum_definitions == 'CONTRACT_DERIVED' &&
+                s7.sources.custom_attribute_imports == 'CONTRACT_DERIVED')
+
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"
 if (failures > 0) throw new RuntimeException("${failures} CHECK(S) FAILED")

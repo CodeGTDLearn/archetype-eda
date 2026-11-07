@@ -31,6 +31,7 @@ class FlagProposalMerger {
     private final ContractValueReader valueReader
     private final FlagValidationPolicy validationPolicy
     private final DerivedFlagProjector derivedFlagProjector
+    private final NestedTypeFlagProjector nestedTypeFlagProjector
     private final InferenceEligibilityPolicy inferenceEligibilityPolicy
 
     FlagProposalMerger(ContractEntityDeriver deriver) {
@@ -41,6 +42,7 @@ class FlagProposalMerger {
         this.valueReader = new ContractValueReader()
         this.validationPolicy = new FlagValidationPolicy()
         this.derivedFlagProjector = new DerivedFlagProjector(validationPolicy)
+        this.nestedTypeFlagProjector = new NestedTypeFlagProjector(validationPolicy)
         this.inferenceEligibilityPolicy = new InferenceEligibilityPolicy()
     }
 
@@ -171,6 +173,9 @@ class FlagProposalMerger {
         // java.lang). They are referenced by their simple name in the entity,
         // so the metadata the archetype needs travels in two derived flags.
         derivedFlagProjector.apply(values, sources, notes, catalog, derived, diagnostics)
+        // The nested POJOs are projected AFTER the entity list is final: the
+        // flag is suppressed when the entity does not reference a nested type.
+        nestedTypeFlagProjector.apply(values, sources, notes, catalog, derived, diagnostics)
 
         // FR-009/FR-020: LLM proposals whose key is absent from the contract
         // are discarded - unless the key is on the allowlist AND the proposal

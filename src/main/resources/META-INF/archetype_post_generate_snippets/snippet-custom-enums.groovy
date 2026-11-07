@@ -8,7 +8,14 @@
 //
 // A bare "Tipo" is resolved against the package of the entity
 // (${package}.${entity_name_package}); a qualified "br.com.projeto.Tipo" is
-// generated in its own package.
+// generated in its own package. The relative marker "nested.Tipo" (used by the
+// payload-derived nested enums) is resolved against the entity's 'nested'
+// subpackage.
+//
+// NOTE: "nested." is a RESERVED marker. A real top-level package literally
+// named "nested" cannot be expressed in this flag: the marker always resolves
+// to the entity's nested subpackage. Any other layout must use a qualified
+// package name.
 //
 // An enum file that already exists is NEVER overwritten: the generation is
 // skipped with a warning, so an existing source is preserved.
@@ -46,7 +53,12 @@ if (custom_enum_definitions_value != null && !custom_enum_definitions_value.trim
 
             String enum_package = entity_package
             String simple_name = type_name
-            if (type_name.contains('.')) {
+            if (type_name.startsWith('nested.')) {
+                // Relative marker used by the payload-derived nested enums:
+                // the enum lives in the entity's 'nested' subpackage.
+                enum_package = entity_package + ".nested"
+                simple_name = type_name.substring('nested.'.length()).trim()
+            } else if (type_name.contains('.')) {
                 enum_package = type_name.substring(0, type_name.lastIndexOf('.')).trim()
                 simple_name = type_name.substring(type_name.lastIndexOf('.') + 1).trim()
             }

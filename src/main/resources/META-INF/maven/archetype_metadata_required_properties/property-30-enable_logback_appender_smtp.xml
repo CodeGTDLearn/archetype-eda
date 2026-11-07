@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-30-ENABLE_LOGBACK_APPENDER_SMTP.XML ______________ -->
+<!-- FLAG: enable_logback_appender_smtp -->
+<!--   DESCRIPTION : Habilita o appender SMTP do Logback (envio de logs por e-mail). -->
+<!--   PROMPT      : Enable 'Logback Appender SMTP' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_logback = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_logback_appender_smtp">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

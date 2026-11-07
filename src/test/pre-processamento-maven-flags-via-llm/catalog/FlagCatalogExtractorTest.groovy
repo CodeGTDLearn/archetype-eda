@@ -10,7 +10,7 @@
  *     The two empty defaults used to abort the starter with exit code 4
  *     BEFORE any inference ran - the mechanism was 100% out of operation;
  *   - entity_name_package has a usable, format-valid default ("myentity");
- *   - the catalog exposes exactly 35 flags (33 + custom_attribute_imports and
+ *   - the catalog exposes exactly 36 flags (34 + custom_attribute_imports and
  *     custom_enum_definitions, the FR-021 channels that carry the PROJECT
  *     types derived from the contract).
  *
@@ -38,7 +38,7 @@ def skip = { String name, String reason -> println "SKIP: ${name} (${reason})" }
 // ----------------------------------------------------------------------
 // 1) The REAL catalog, read from the property-*.xml fragments
 // ----------------------------------------------------------------------
-def propsDir = new File("src/main/resources/META-INF/maven/archetype_metadata_properties")
+def propsDir = new File("src/main/resources/META-INF/maven/archetype_metadata_required_properties")
 def slurper = new XmlSlurper()
 def realCatalog = new LinkedHashMap()
 def emptyDefaults = []
@@ -60,7 +60,7 @@ propsDir.listFiles().sort { it.name }.each { File f ->
     }
 }
 
-check("1.1 catalog has the 35 flags", realCatalog.size() == 35)
+check("1.1 catalog has the 36 flags", realCatalog.size() == 36)
 check("1.2 FR-018: no flag has an empty defaultValue", emptyDefaults.isEmpty())
 if (!emptyDefaults.isEmpty()) {
     println "       empty defaultValue: " + emptyDefaults.join(", ")
@@ -112,8 +112,30 @@ if (enumsFlag != null) {
         "br.com.projeto.StatusPedido:ATIVO|CANCELADO" ==~ enumsFlag.validationRegex)
     check("1.17 custom_enum_definitions accepts several definitions",
         "br.com.projeto.StatusPedido:ATIVO;Situacao:ABERTA" ==~ enumsFlag.validationRegex)
+    check("1.17b custom_enum_definitions accepts the relative nested marker",
+        "Status:ATIVO|CANCELADO;nested.Uf:SP|RJ" ==~ enumsFlag.validationRegex)
     check("1.18 custom_enum_definitions rejects a definition without constants",
         !("br.com.projeto.StatusPedido" ==~ enumsFlag.validationRegex))
+}
+
+// The NESTED POJOs derived from the contract.
+def nestedFlag = realCatalog.get("custom_nested_type_definitions")
+check("1.19 custom_nested_type_definitions is present", nestedFlag != null)
+if (nestedFlag != null) {
+    check("1.20 custom_nested_type_definitions default is 'none'", nestedFlag.defaultValue == "none")
+    check("1.21 custom_nested_type_definitions accepts one definition",
+        "Endereco|logradouro:String,numero:Integer" ==~ nestedFlag.validationRegex)
+    check("1.22 custom_nested_type_definitions accepts several/chained definitions",
+        "Endereco|logradouro:String,complemento:Complemento;Complemento|descricao:String" ==~
+                nestedFlag.validationRegex)
+    check("1.23 custom_nested_type_definitions accepts a generated enum field type",
+        "Endereco|uf:Uf" ==~ nestedFlag.validationRegex)
+    check("1.24 custom_nested_type_definitions rejects an entry without fields",
+        !("Endereco|" ==~ nestedFlag.validationRegex))
+    check("1.25 custom_nested_type_definitions rejects an entry without '|'",
+        !("Endereco" ==~ nestedFlag.validationRegex))
+    check("1.26 custom_nested_type_definitions rejects an uppercase field name",
+        !("Endereco|Logradouro:String" ==~ nestedFlag.validationRegex))
 }
 
 // Every remaining default must satisfy its own validationRegex, otherwise the
@@ -134,7 +156,7 @@ def extractor = extractorClass.newInstance()
 def builtMetadata = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 if (builtMetadata.exists()) {
     def extracted = extractor.extract(builtMetadata)
-    check("2.1 extractor reads the built catalog", extracted != null && extracted.size() == 35)
+    check("2.1 extractor reads the built catalog", extracted != null && extracted.size() == 36)
     check("2.2 extracted catalog has no contract flags",
         !extracted.containsKey("absolute_path_jsonfile_contract") &&
         !extracted.containsKey("enable_json_entity_contracts"))

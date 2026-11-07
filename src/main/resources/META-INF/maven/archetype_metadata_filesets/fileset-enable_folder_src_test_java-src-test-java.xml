@@ -1,0 +1,8 @@
+<!--  FILESET-ENABLE_FOLDER_SRC_TEST_JAVA-SRC_TEST_JAVA.XML  ________ -->
+<!-- SRC\TEST -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/test/java</directory>
+    <includes>
+        <include>**/*.java</include>
+    </includes>
+</fileSet>

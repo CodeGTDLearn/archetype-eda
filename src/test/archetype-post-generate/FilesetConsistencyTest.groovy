@@ -13,6 +13,7 @@ import java.util.regex.Pattern
 
 def metadata = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 def resourcesRoot = new File("src/main/resources/archetype-resources")
+def filesetFragmentsDir = new File("src/main/resources/META-INF/maven/archetype_metadata_filesets")
 
 int failures = 0
 def check = { String name, boolean cond ->
@@ -68,6 +69,9 @@ resourcesRoot.eachFileRecurse { File f ->
     if (f.isFile()) files << f.absolutePath.substring(resourcesRoot.absolutePath.length() + 1).replace('\\', '/')
 }
 check("1.3 the template tree has 110 files", files.size() == 110)
+check("1.4 the 18 fileset fragments exist (one per <fileSet>)",
+        filesetFragmentsDir.isDirectory() &&
+                filesetFragmentsDir.listFiles().findAll { it.name.endsWith(".xml") }.size() == 18)
 
 def subPath = { String file, String dir ->
     if (!dir) return file

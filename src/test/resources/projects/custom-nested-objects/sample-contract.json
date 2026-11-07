@@ -1,0 +1,16 @@
+{
+  "entityName": "Cliente",
+  "attributes": [
+    { "name": "nome", "value": "Acme Corp" },
+    {
+      "name": "endereco",
+      "value": {
+        "logradouro": "Rua A",
+        "numero": 10,
+        "complemento": {
+          "descricao": "Apto 12"
+        }
+      }
+    }
+  ]
+}

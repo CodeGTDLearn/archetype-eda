@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-21-PROJECT_DESCRIPTION.XML _______________________ -->
+<!-- FLAG: project_description -->
+<!--   DESCRIPTION : Descricao livre do projeto (uso geral / documentacao). -->
+<!--   PROMPT      : Project description -->
+<!--   TYPE        : text -->
+<!--   DEFAULT     : This is my Archetype -->
+<!--   DOMAIN      : texto livre (sem quebras de linha) -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^.{1,255}$ -->
+<requiredProperty key="project_description">
+    <defaultValue>This is my Archetype</defaultValue>
+    <validationRegex>^.{1,255}$</validationRegex>
+</requiredProperty>

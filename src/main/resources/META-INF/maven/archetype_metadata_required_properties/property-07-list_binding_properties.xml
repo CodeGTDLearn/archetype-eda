@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-07-LIST_BINDING_PROPERTIES.XML ___________________ -->
+<!-- FLAG: list_binding_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo list (carrega lista de arquivos .properties). -->
+<!--   PROMPT      : Enable 'List Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="list_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

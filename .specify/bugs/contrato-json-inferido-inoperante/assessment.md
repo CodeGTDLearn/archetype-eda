@@ -198,7 +198,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
 ### Metade B — derivação do pacote, ausente
 
-- `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:31-34` —
+- `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:31-34` —
   `entity_name_package` com default fixo `myentity`. **Nada** o deriva de `entity_name`.
 - `src/main/resources/META-INF/archetype_post_generate_body/archetype-global-variables.groovy:12` —
   o pós-processador apenas copia `properties?.entity_name`; não há derivação de pacote.
@@ -210,10 +210,10 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 - `src/main/resources/archetype-resources/src/main/java/__entity_name_package__/__entity_name__.java:37-51` —
   os campos extras são renderizados **somente** no ramo `#if(${enable_custom_attributes} == "true")`, e o
   tipo é usado **verbatim**: `private ${attrib.type} ${attrib.name};`.
-- `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:60-63` — a regex do
+- `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:60-63` — a regex do
   catálogo `^(false|[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*(,…)*)$` exige `Tipo:nome` em minúscula no nome e
   tipo sem ponto.
-- `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:44-47` —
+- `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:44-47` —
   `enable_custom_attributes` default `false` — o ramo que renderiza os atributos.
 
 ### Metade B — bloqueante: o caminho de cache HIT está quebrado (pré-existente, agora alcançável)
@@ -234,7 +234,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
   `assemble(proposal)` (`:163`, `:169`), isto é, **uma linha de comando** (FR-010). Não há como o mecanismo
   escrever no projeto gerado: ele roda **antes** de `mvn archetype:generate` e não conhece o diretório
   destino.
-- `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml` — o catálogo tem
+- `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` — o catálogo tem
   hoje **32** `<requiredProperty>`; **nenhum** transporta conteúdo de contrato. O único que já fez isso
   (`absolute_path_jsonfile_contract`) foi removido — e a remoção é documentada como decisão explícita em
   `.specify/bugs/flag-contrato-absoluto-obsoleta/fix.md` ("O contrato passa a existir **apenas** no prompt da
@@ -578,7 +578,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
   proveniência no `renderProvenanceReport()` (`:312-355`), parser do cache (`:521-551`).
 * `src/main/pre-processamento-maven-flags-via-llm/FlagProposalMerger.groovy` — **mesma** allowlist e a mesma
   derivação no módulo unit-testável irmão (`:61`, `:92`), para o mecanismo e o módulo não divergirem.
-* `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml` — só se a regex de
+* `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` — só se a regex de
   `custom_attributes_list` precisar ser alargada (`:60-63`); a regex atual já aceita `Tipo:nome` estrito.
 * `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-test-variables.groovy` —
   path do destino do snapshot (`:24-25`, ao lado de `srcTestResources`).

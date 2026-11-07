@@ -16,7 +16,7 @@
 
 ### User Story 1 - Mantenedor adiciona nova flag e novo snippet Groovy ao archetype (Priority: P1)
 
-O mantenedor do `archetype-v2-eda` precisa adicionar uma nova capacidade opcional (ex.: uma flag `enable_xxx` que ativa/desativa um comportamento no projeto gerado). Para isso, ele cria/atualiza três arquivos: `property-xxx.xml` em `archetype_metadata_properties/`, `variables-xxx.groovy` em `archetype_post_generate_variables/`, `snippet-xxx.groovy` em `archetype_post_generate_snippets/`, e adiciona o nome do novo snippet à lista ordenada de seções no script compositor. O ciclo completo entre editar e ver o snippet no arquivo gerado leva minutos, sem necessidade de tocar em nenhum script bash.
+O mantenedor do `archetype-v2-eda` precisa adicionar uma nova capacidade opcional (ex.: uma flag `enable_xxx` que ativa/desativa um comportamento no projeto gerado). Para isso, ele cria/atualiza três arquivos: `property-xxx.xml` em `archetype_metadata_required_properties/`, `variables-xxx.groovy` em `archetype_post_generate_variables/`, `snippet-xxx.groovy` em `archetype_post_generate_snippets/`, e adiciona o nome do novo snippet à lista ordenada de seções no script compositor. O ciclo completo entre editar e ver o snippet no arquivo gerado leva minutos, sem necessidade de tocar em nenhum script bash.
 
 **Why this priority**: é o caminho primário de evolução do archetype declarado como requisito estrutural (restrição R2 da decisão) — toda nova capacidade opcional entra por aqui. Sem isso, o archetype estagna e a dívida de manutenção cresce.
 
@@ -78,7 +78,7 @@ Antes de remover o script bash legado (`bash_script/create_archetype_post_genera
 - **FR-004**: O arquivo gerado MUST ser **byte-equivalente** à saída atual do `bash_script/create_archetype_post_generate.sh` (verificável por `diff` retornando vazio e por hash SHA-256).
 - **FR-005**: O pipeline MUST ser executável em ambiente sem TTY (CI Linux headless) — zero `read`, `pause` ou equivalente que bloqueie esperando input humano.
 - **FR-006**: A configuração da ordem MUST estar em uma **única estrutura de dados literal legível** (uma `List<String>` no topo do script compositor), com um comentário curto explicando o papel de cada item.
-- **FR-007**: Cada snippet em `archetype_post_generate_snippets/` MUST começar com um bloco de comentário indicando qual flag (`enable_*` em `archetype_metadata_properties/`) o acopla, para suportar extensibilidade via flags/IA.
+- **FR-007**: Cada snippet em `archetype_post_generate_snippets/` MUST começar com um bloco de comentário indicando qual flag (`enable_*` em `archetype_metadata_required_properties/`) o acopla, para suportar extensibilidade via flags/IA.
 - **FR-008**: O compositor MUST estar isolado em um único arquivo `.groovy` dedicado (ex.: `src/main/groovy/ArchetypePostGenerateComposer.groovy`) com cabeçalho explicativo da estratégia e Javadoc nas funções públicas.
 - **FR-009**: A invocação do compositor MUST ocorrer na fase `process-resources` (imediatamente após `xml-maven-plugin:transform` em `generate-resources`, antes de `package`), através de um plugin Groovy build-time.
 - **FR-010**: O `archetype-post-generate.groovy` atualmente commitado em `src/main/resources/META-INF/` MUST ser removido do controle de versão (`.gitignore` ou equivalente) — passa a ser artefato gerado, não editado.

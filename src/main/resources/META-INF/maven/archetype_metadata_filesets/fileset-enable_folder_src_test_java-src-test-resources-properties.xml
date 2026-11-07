@@ -1,0 +1,9 @@
+<!--  FILESET-ENABLE_FOLDER_SRC_TEST_JAVA-SRC_TEST_RESOURCES_PROPERTIES.XML  -->
+<!-- SRC\TEST\RESOURCES\PROPERTIES -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/test/resources/properties</directory>
+    <includes>
+        <include>**/*.yml</include>
+        <include>**/*.properties</include>
+    </includes>
+</fileSet>

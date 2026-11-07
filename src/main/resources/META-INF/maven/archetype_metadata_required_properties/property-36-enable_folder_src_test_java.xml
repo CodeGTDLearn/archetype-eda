@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-36-ENABLE_FOLDER_SRC_TEST_JAVA.XML _______________ -->
+<!-- FLAG: enable_folder_src_test_java -->
+<!--   DESCRIPTION : Habilita a geracao da pasta src/test/java (esqueleto de testes). -->
+<!--   PROMPT      : Enable 'Folder src/test/java' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_folder_src_test_java">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

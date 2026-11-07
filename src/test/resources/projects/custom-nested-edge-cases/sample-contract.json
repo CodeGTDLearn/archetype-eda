@@ -1,0 +1,23 @@
+{
+  "entityName": "Pedido",
+  "attributes": [
+    { "name": "nome", "value": "Pedido 1" },
+    {
+      "name": "pedido",
+      "value": {
+        "uf": "SP"
+      }
+    },
+    {
+      "name": "endereço",
+      "value": {
+        "class": "A",
+        "opção": "B",
+        "tags": ["a", "b"],
+        "pedidoAnterior": {
+          "uf": "RJ"
+        }
+      }
+    }
+  ]
+}

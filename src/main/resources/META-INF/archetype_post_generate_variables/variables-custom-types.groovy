@@ -7,9 +7,13 @@
 //   - custom_enum_definitions  : the enums the post-processor must generate,
 //                                one definition per enum:
 //                                "Tipo:CONSTANTE|CONSTANTE" (separated by ';').
+//   - custom_nested_type_definitions : the POJOs the post-processor must
+//                                generate for the nested contract objects:
+//                                "Tipo|Campo:Tipo,Campo:Tipo" (separated by ';').
 //
-// Both default to 'none' (the project carries no custom type).
+// All of them default to 'none' (the project carries no custom type).
 
 def custom_attribute_imports_value = "${properties?.custom_attribute_imports}"
 def custom_enum_definitions_value = "${properties?.custom_enum_definitions}"
+def custom_nested_type_definitions_value = "${properties?.custom_nested_type_definitions}"
 def entity_name_package_value = "${properties?.entity_name_package}"

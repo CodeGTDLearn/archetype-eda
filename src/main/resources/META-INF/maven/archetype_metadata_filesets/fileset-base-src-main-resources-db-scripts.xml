@@ -1,0 +1,9 @@
+<!--  FILESET-BASE-SRC-MAIN-RESOURCES-DB_SCRIPTS.XML  _______________ -->
+<!-- SRC\MAIN\RESOURCES\DB_SCRIPTS -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/main/resources/db_scripts</directory>
+    <includes>
+        <include>data.sql</include>
+        <include>schema.sql</include>
+    </includes>
+</fileSet>

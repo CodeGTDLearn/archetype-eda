@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-10-VALIDATED_BINDING_PROPERTIES.XML ______________ -->
+<!-- FLAG: validated_binding_properties -->
+<!--   DESCRIPTION : Habilita validacao automatica de schemas das properties. -->
+<!--   PROMPT      : Enable 'Validated Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : default_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="validated_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

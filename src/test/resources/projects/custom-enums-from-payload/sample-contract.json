@@ -1,0 +1,9 @@
+{
+  "entityName": "Pedido",
+  "id": 1,
+  "name": "Pedido 1",
+  "status": ["ATIVO", "CANCELADO"],
+  "endereco": {
+    "uf": ["SP", "RJ"]
+  }
+}

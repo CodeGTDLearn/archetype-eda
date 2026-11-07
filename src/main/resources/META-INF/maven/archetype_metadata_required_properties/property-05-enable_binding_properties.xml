@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-05-ENABLE_BINDING_PROPERTIES.XML _________________ -->
+<!-- FLAG: enable_binding_properties -->
+<!--   DESCRIPTION : Habilita o sistema de binding properties -->
+<!--                 (sub-modulos default/list/map em runtime). -->
+<!--   PROMPT      : Enable 'Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

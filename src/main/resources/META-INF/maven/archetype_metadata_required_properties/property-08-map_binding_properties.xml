@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-08-MAP_BINDING_PROPERTIES.XML ____________________ -->
+<!-- FLAG: map_binding_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo map (carrega mapa chave->arquivo). -->
+<!--   PROMPT      : Enable 'Map Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="map_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

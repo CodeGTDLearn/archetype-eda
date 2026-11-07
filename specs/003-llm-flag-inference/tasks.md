@@ -126,7 +126,7 @@
 
 **Goal**: The mechanism reads the canonical `archetype-metadata.xml` at every invocation; no hardcoded flag list exists in the mechanism.
 
-**Independent Test**: Add a temporary flag to `archetype_metadata_properties/property-authentication.xml` (e.g., `<requiredProperty key="enable_test_xyz">`); rebuild; invoke the mechanism with a contract that activates the new flag; assert the produced command line includes `-Denable_test_xyz=...`. Revert the XML; rebuild; assert the produced command line does NOT include `-Denable_test_xyz=...`. Maps to quickstart.md Scenario 5 and SC-003.
+**Independent Test**: Add a temporary flag to `archetype_metadata_required_properties/property-authentication.xml` (e.g., `<requiredProperty key="enable_test_xyz">`); rebuild; invoke the mechanism with a contract that activates the new flag; assert the produced command line includes `-Denable_test_xyz=...`. Revert the XML; rebuild; assert the produced command line does NOT include `-Denable_test_xyz=...`. Maps to quickstart.md Scenario 5 and SC-003.
 
 ### Tests for User Story 4
 

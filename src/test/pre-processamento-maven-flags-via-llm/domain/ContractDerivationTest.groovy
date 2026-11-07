@@ -113,7 +113,7 @@ contractMap.put("attributes", [id: 1024, nome_cachorro: "Caramelo", tosado: true
 def mergedMap = mergeMerger(contractMap, [:])
 check("2.1 attributes as a map are derived too",
         mergedMap.get("values").get("custom_attributes_list") ==
-                "Integer:id,String:nome_cachorro,Boolean:tosado")
+                "Integer:id,String:nomeCachorro,Boolean:tosado")
 
 // ---------------------------------------------------------------------------
 // 3) no explicit attribute collection -> the business fields ARE the attributes
@@ -128,7 +128,7 @@ contractFlat.put("api_port", "9090")      // a catalog flag: NOT an attribute
 def mergedFlat = mergeMerger(contractFlat, [:])
 check("3.1 business fields become the entity attributes",
         mergedFlat.get("values").get("custom_attributes_list") ==
-                "Integer:id,String:nome_cachorro,Integer:idade,Boolean:tosado")
+                "Integer:id,String:nomeCachorro,Integer:idade,Boolean:tosado")
 check("3.2 a catalog flag in the contract stays a flag, not an attribute",
         mergedFlat.get("values").get("api_port") == "9090")
 check("3.3 the flag keeps the CONTRACT source",
@@ -210,15 +210,15 @@ contractProject.put("attributes", [
 def mergedProject = mergeMerger(contractProject, [:])
 def valuesProject = mergedProject.get("values")
 
-check("7.1 a PROJECT type is kept in the attribute list",
-        valuesProject.get("custom_attributes_list").contains("EnderecoCliente:enderecoCliente"))
+check("7.1 a declared PROJECT type with an OBJECT value becomes String:endereco",
+        valuesProject.get("custom_attributes_list").contains("String:endereco"))
 check("7.2 ...the attribute is named after the TYPE",
         valuesProject.get("custom_attributes_list").contains("StatusPedido:statusPedido"))
 check("7.3 ...a PROJECT type without a textual value is kept too",
         valuesProject.get("custom_attributes_list").contains("Quantidade:quantidade"))
-check("7.4 the referenced types travel as imports",
+check("7.4 the referenced types travel as imports (the object value type is dropped)",
         valuesProject.get("custom_attribute_imports") ==
-                "br.com.projeto.EnderecoCliente,br.com.projeto.StatusPedido")
+                "br.com.projeto.StatusPedido")
 check("7.5 the enums travel as definitions",
         valuesProject.get("custom_enum_definitions") ==
                 "br.com.projeto.StatusPedido:ATIVO|CANCELADO;Situacao:ABERTA")
@@ -226,8 +226,8 @@ check("7.6 the imports are derived from the contract",
         mergedProject.get("sources").get("custom_attribute_imports") == "CONTRACT_DERIVED")
 check("7.7 the enum definitions are derived from the contract",
         mergedProject.get("sources").get("custom_enum_definitions") == "CONTRACT_DERIVED")
-check("7.8 no warning is raised for a PROJECT type",
-        !(mergedProject.get("warnings") as List).any { it.contains("EnderecoCliente") })
+check("7.8 a warning is raised for the object-valued declared type",
+        (mergedProject.get("warnings") as List).any { it.contains("EnderecoCliente") })
 check("7.9 the derived imports satisfy the catalog regex",
         valuesProject.get("custom_attribute_imports") ==~
                 catalogEntries.get("custom_attribute_imports").validationRegex)
@@ -284,10 +284,11 @@ contractNoEnum.put("attributes", [
         [name: "endereco", type: "br.com.projeto.EnderecoCliente", value: [rua: "X"]]
 ])
 def mergedNoEnum = mergeMerger(contractNoEnum, [:])
-check("8.8 a PROJECT type with a nested object is NOT an enum",
-        mergedNoEnum.get("values").get("custom_enum_definitions") == "none")
-check("8.9 ...but it IS imported",
-        mergedNoEnum.get("values").get("custom_attribute_imports") == "br.com.projeto.EnderecoCliente")
+check("8.8 a PROJECT type with a nested object is NOT an enum and becomes String",
+        mergedNoEnum.get("values").get("custom_enum_definitions") == "none" &&
+                mergedNoEnum.get("values").get("custom_attributes_list") == "String:endereco")
+check("8.9 ...and the declared type is NOT imported",
+        mergedNoEnum.get("values").get("custom_attribute_imports") == "none")
 
 // ---------------------------------------------------------------------------
 // 9) FR-021: the materialized contract path travels as CONTRACT_DERIVED

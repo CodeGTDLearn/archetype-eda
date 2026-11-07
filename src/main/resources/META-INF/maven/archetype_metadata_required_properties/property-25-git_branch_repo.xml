@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-25-GIT_BRANCH_REPO.XML ___________________________ -->
+<!-- FLAG: git_branch_repo -->
+<!--   DESCRIPTION : Branch principal do repositorio Git remoto. -->
+<!--   PROMPT      : Enter 'Git Branch' -->
+<!--   TYPE        : text -->
+<!--   DEFAULT     : master -->
+<!--   DOMAIN      : ^[A-Za-z0-9._/-]+$ -->
+<!--   DEPENDS_ON  : enable_git_support = true -->
+<!--   VALIDATION  : ^[A-Za-z0-9._/-]+$ -->
+<requiredProperty key="git_branch_repo">
+    <defaultValue>master</defaultValue>
+    <validationRegex>^[A-Za-z0-9._/-]+$</validationRegex>
+</requiredProperty>

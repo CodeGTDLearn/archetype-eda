@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-19-CUSTOM_NESTED_TYPE_DEFINITIONS.XML ____________ -->
+<!-- FLAG: custom_nested_type_definitions -->
+<!--   DESCRIPTION : Definicoes dos POJOs dos objetos aninhados do contrato: -->
+<!--                 'Tipo|Campo:Tipo,Campo:Tipo', separadas por ';'. -->
+<!--                 Derivada do contrato: cada objeto aninhado vira um POJO em -->
+<!--                 <package>.<entity_name_package>.nested. Os campos mantem as -->
+<!--                 chaves do contrato; a colisao muda apenas o nome da classe. -->
+<!--                 'none' quando nao ha objetos aninhados. -->
+<!--   PROMPT      : (interno - preenchido pelo mecanismo de inferencia LLM) -->
+<!--   TYPE        : list (nested types) -->
+<!--   DEFAULT     : none -->
+<!--   DOMAIN      : none OU lista de Tipo|Campo:Tipo (ponto e virgula) -->
+<!--   DEPENDS_ON  : enable_custom_attributes = true -->
+<!--   VALIDATION  : ^(none|[A-Z][A-Za-z0-9_]*\|[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*(,[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*)*)(;[A-Z][A-Za-z0-9_]*\|[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*(,[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*)*)*$ -->
+<requiredProperty key="custom_nested_type_definitions">
+    <defaultValue>none</defaultValue>
+    <validationRegex>^(none|[A-Z][A-Za-z0-9_]*\|[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*(,[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*)*)(;[A-Z][A-Za-z0-9_]*\|[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*(,[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*)*)*$</validationRegex>
+</requiredProperty>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-34-PROPERTIES_FILETYPE.XML _______________________ -->
+<!-- FLAG: properties_filetype -->
+<!--   DESCRIPTION : Formato do arquivo de properties: 1=properties, 2=yaml. -->
+<!--   PROMPT      : Enter 'Properties Filetype' -->
+<!--   TYPE        : enum (number) -->
+<!--   DEFAULT     : 1 -->
+<!--   DOMAIN      : 1 | 2 -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^[1-2]$ -->
+<requiredProperty key="properties_filetype">
+    <defaultValue>1</defaultValue>
+    <validationRegex>^[1-2]$</validationRegex>
+</requiredProperty>

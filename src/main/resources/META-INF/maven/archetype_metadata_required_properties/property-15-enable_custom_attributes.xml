@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-15-ENABLE_CUSTOM_ATTRIBUTES.XML __________________ -->
+<!-- FLAG: enable_custom_attributes -->
+<!--   DESCRIPTION : Habilita a inclusao de atributos customizados na entidade principal. -->
+<!--   PROMPT      : Add 'Custom Attributes' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_custom_attributes">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

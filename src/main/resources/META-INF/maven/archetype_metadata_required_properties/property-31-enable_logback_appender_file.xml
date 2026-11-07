@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-31-ENABLE_LOGBACK_APPENDER_FILE.XML ______________ -->
+<!-- FLAG: enable_logback_appender_file -->
+<!--   DESCRIPTION : Habilita o appender FILE do Logback (logs persistidos em arquivo). -->
+<!--   PROMPT      : Enable 'Logback Appender File' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_logback = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_logback_appender_file">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

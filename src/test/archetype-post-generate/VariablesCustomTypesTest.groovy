@@ -32,6 +32,7 @@ def evaluateVariables = { Properties properties ->
 captured = [
     custom_attribute_imports_value: custom_attribute_imports_value,
     custom_enum_definitions_value: custom_enum_definitions_value,
+    custom_nested_type_definitions_value: custom_nested_type_definitions_value,
     entity_name_package_value: entity_name_package_value
 ]
 """
@@ -45,6 +46,7 @@ captured = [
 def props = new Properties()
 props.put("custom_attribute_imports", "a.B,c.D")
 props.put("custom_enum_definitions", "Status:ATIVO|CANCELADO;Situacao:ABERTA")
+props.put("custom_nested_type_definitions", "Endereco|logradouro:String,numero:Integer")
 props.put("entity_name_package", "contractentity")
 
 def captured = evaluateVariables(props)
@@ -52,7 +54,10 @@ check("2.1 custom_attribute_imports is mapped",
         captured.get("custom_attribute_imports_value") == "a.B,c.D")
 check("2.2 custom_enum_definitions is mapped",
         captured.get("custom_enum_definitions_value") == "Status:ATIVO|CANCELADO;Situacao:ABERTA")
-check("2.3 entity_name_package is mapped",
+check("2.3 custom_nested_type_definitions is mapped",
+        captured.get("custom_nested_type_definitions_value") ==
+                "Endereco|logradouro:String,numero:Integer")
+check("2.4 entity_name_package is mapped",
         captured.get("entity_name_package_value") == "contractentity")
 
 // ---------------------------------------------------------------------------

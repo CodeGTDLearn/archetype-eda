@@ -185,4 +185,27 @@ if (contractsFolder.exists()) {
     )
 }
 
+// ---------------------------------------------------------------------------
+// FR-021 (negative case): this profile carries no nested objects, so the
+// entity MUST NOT use @Transient nor @JsonIgnore.
+// ---------------------------------------------------------------------------
+if (entitySource.contains('import jakarta.persistence.Transient;')) {
+    throw new IllegalStateException(
+        "verify.groovy: the entity must NOT import jakarta.persistence.Transient " +
+        "(no nested object in this profile). Entity: ${entityFile.path}"
+    )
+}
+if (entitySource.contains('@Transient')) {
+    throw new IllegalStateException(
+        "verify.groovy: the entity must NOT use @Transient (only nested fields may). " +
+        "Entity: ${entityFile.path}"
+    )
+}
+if (entitySource.contains('@JsonIgnore')) {
+    throw new IllegalStateException(
+        "verify.groovy: the entity must NOT use @JsonIgnore (the contract value stays in the API JSON). " +
+        "Entity: ${entityFile.path}"
+    )
+}
+
 return null

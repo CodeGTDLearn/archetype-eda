@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-13-ENTITY_NAME.XML _______________________________ -->
+<!-- FLAG: entity_name -->
+<!--   DESCRIPTION : Nome da entidade principal do projeto (PascalCase, ex.: MyEntity). -->
+<!--   PROMPT      : Digite o nome do 'Entity' -->
+<!--   TYPE        : entity_name -->
+<!--   DEFAULT     : MyEntity -->
+<!--   DOMAIN      : ^[A-Z][a-zA-Z0-9_]+$ -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^[A-Z][a-zA-Z0-9_]+$ -->
+<requiredProperty key="entity_name">
+    <defaultValue>MyEntity</defaultValue>
+    <validationRegex>^[A-Z][a-zA-Z0-9_]+$</validationRegex>
+</requiredProperty>

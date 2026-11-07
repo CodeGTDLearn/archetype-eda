@@ -1,0 +1,7 @@
+<!--  FILESET-ENABLE_GIT_SUPPORT-GITIGNORE.XML  _____________________ -->
+<fileSet encoding="UTF-8">
+    <directory></directory>
+    <includes>
+        <include>gitignore</include>
+    </includes>
+</fileSet>

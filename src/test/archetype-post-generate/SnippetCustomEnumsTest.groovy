@@ -95,6 +95,20 @@ if (f3.isFile()) {
 }
 
 // ---------------------------------------------------------------------------
+// 3b) The relative marker 'nested.Tipo' generates in the nested subpackage
+// ---------------------------------------------------------------------------
+def r3n = runSnippet("nested.Uf:SP|RJ", "contractentity", "it.pkg", null)
+def f3n = new File(r3n.srcMainJava.toFile(), "it/pkg/contractentity/nested/Uf.java")
+check("3.6 the relative marker generates in the nested subpackage", f3n.isFile())
+if (f3n.isFile()) {
+    def src = f3n.getText("UTF-8")
+    check("3.7 ...the generated source declares the nested package",
+            src.contains("package it.pkg.contractentity.nested;"))
+    check("3.8 ...and the enum carries its constants",
+            src.contains("public enum Uf") && src.contains("SP") && src.contains("RJ"))
+}
+
+// ---------------------------------------------------------------------------
 // 4) A qualified type name is generated in ITS OWN package
 // ---------------------------------------------------------------------------
 def r4 = runSnippet("br.com.projeto.StatusPedido:ATIVO|CANCELADO", "contractentity", "it.pkg", null)

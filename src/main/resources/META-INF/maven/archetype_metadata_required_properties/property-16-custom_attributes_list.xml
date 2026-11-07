@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-16-CUSTOM_ATTRIBUTES_LIST.XML ____________________ -->
+<!-- FLAG: custom_attributes_list -->
+<!--   DESCRIPTION : Lista de atributos no formato 'Tipo:nome', separados por virgula -->
+<!--                 (ex.: String:name). O 'id' e estrutural na entidade: quando -->
+<!--                 aparece no contrato/lista (id, Id, iD, ID), o template o -->
+<!--                 descarta e emite '<entityName>Id' como chave primaria. -->
+<!--                 Observacao: pode assumir a string 'false' quando enable_custom_attributes=false -->
+<!--                 (NAO TROCAR - Groovy depende). -->
+<!--   PROMPT      : Provide the 'Attributes' -->
+<!--   TYPE        : list (entity_list_attributes) -->
+<!--   DEFAULT     : String:name -->
+<!--   DOMAIN      : false OR lista de Tipo:nome (virgula) -->
+<!--   DEPENDS_ON  : enable_custom_attributes = true -->
+<!--   VALIDATION  : ^(false|[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*(,[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*)*)$ -->
+<requiredProperty key="custom_attributes_list">
+    <defaultValue>String:name</defaultValue>
+    <validationRegex>^(false|[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*(,[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*)*)$</validationRegex>
+</requiredProperty>

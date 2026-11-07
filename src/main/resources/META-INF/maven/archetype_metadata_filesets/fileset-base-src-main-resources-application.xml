@@ -1,0 +1,11 @@
+<!--  FILESET-BASE-SRC-MAIN-RESOURCES-APPLICATION.XML  ______________ -->
+<!-- SRC\MAIN\RESOURCES FILES -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/main/resources</directory>
+    <includes>
+        <include>application.yml</include>
+        <include>application.properties</include>
+        <include>logback-spring.xml</include>
+        <include>banner.txt</include>
+    </includes>
+</fileSet>

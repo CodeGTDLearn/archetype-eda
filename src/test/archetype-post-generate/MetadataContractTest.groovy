@@ -6,7 +6,7 @@
  * (documented for future i18n use) and is explicitly allowlisted here.
  */
 def metadata = new File("target/classes/META-INF/maven/archetype-metadata.xml")
-def fragmentsDir = new File("src/main/resources/META-INF/maven/archetype_metadata_properties")
+def fragmentsDir = new File("src/main/resources/META-INF/maven/archetype_metadata_required_properties")
 
 int failures = 0
 def check = { String name, boolean cond ->
@@ -26,7 +26,7 @@ def blocks = [:]
 def matcher = (text =~ /(?s)<requiredProperty\s+key="([^"]+)">\s*<defaultValue>(.*?)<\/defaultValue>\s*<validationRegex>(.*?)<\/validationRegex>/)
 matcher.each { m -> blocks[m[1]] = [defaultValue: m[2].trim(), regex: m[3].trim()] }
 
-check("1.2 the catalog has 35 flags", blocks.size() == 35)
+check("1.2 the catalog has 36 flags", blocks.size() == 36)
 check("1.3 every flag has a default value", blocks.every { it.value.defaultValue != null })
 check("1.4 every flag has a validation regex", blocks.every { it.value.regex != null })
 
@@ -40,8 +40,8 @@ blocks.each { key, value ->
 }
 check("1.5 every default value satisfies its own regex: ${regexFailures}", regexFailures.isEmpty())
 
-check("1.6 the 17 metadata fragments exist",
-        fragmentsDir.listFiles().findAll { it.name.endsWith(".xml") }.size() == 17)
+check("1.6 the 36 metadata fragments exist (one per flag)",
+        fragmentsDir.listFiles().findAll { it.name.endsWith(".xml") }.size() == 36)
 
 // ---------------------------------------------------------------------------
 // 2) No silently dead flag (declared but referenced nowhere)

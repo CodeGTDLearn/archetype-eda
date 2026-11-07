@@ -43,7 +43,7 @@ import java.util.regex.Pattern
 // explicando o papel.
 //
 // Para adicionar uma nova flag + snippet:
-//   1. Criar `property-xxx.xml` em `archetype_metadata_properties/`.
+//   1. Criar `property-xxx.xml` em `archetype_metadata_required_properties/`.
 //   2. Criar `variables-xxx.groovy` em `archetype_post_generate_variables/`.
 //   3. Criar `snippet-xxx.groovy` em `archetype_post_generate_snippets/`
 //      (com bloco de comentário `// FLAG: enable_xxx` no topo).

@@ -28,6 +28,7 @@
     * [src \ "MAIN" \ resources \ _META-INF_ \ _**"MAVEN"**_ \ ](src/main/resources/META-INF/maven)
     * 02 - Setores (**_FileSet_** + **_RequiredProperties_**):
       * **_Setor 01:_** [_FileSets_](src/main/resources/META-INF/maven/archetype_metadata_filesets)
+        * **Distribuicao atual:** **18 arquivos** `fileset-<flag>[-parte].xml`, com **um `<fileSet>` por arquivo** (sem numeracao).
         * **Packaged** Tag:
           * **Conceito:**
             - A tag `packaged` controla como os arquivos serao estruturados
@@ -118,7 +119,8 @@
         </fileSet> 
         ```
 
-      * **_Setor 02:_** [_RequiredProperty_](src/main/resources/META-INF/maven/archetype_metadata_properties)
+      * **_Setor 02:_** [_RequiredProperty_](src/main/resources/META-INF/maven/archetype_metadata_required_properties)
+         * **Distribuicao atual:** **36 arquivos** `property-<NN>-<flag>.xml` (numerados `01` a `36`), **um por flag**.
          * Conceito:
            - Define propriedades que serao capturadas pelo **_SWITCHES -D_** do Maven CLI
          * Utilidade Pratica:
@@ -247,7 +249,7 @@
 | `MavenFlagsViaLlmStarterTest` | 25 | gates do CLI (FR-001/002/003), stdout puro, contrato antes da inferência |
 | `cache/CacheKeyFactoryTest` | 6 | chave determinística e fingerprint do catálogo |
 | `cache/CacheStoreTest` | 18 | cache v2/v1, byte-equivalência, corrupção e guarda FR-017 |
-| `catalog/FlagCatalogExtractorTest` | 27 | catálogo real (35 flags), FR-018, defaults × regex |
+| `catalog/FlagCatalogExtractorTest` | 27 | catálogo real (36 flags), FR-018, defaults × regex |
 | `catalog/FlagCatalogExtractorDriftTest` | 12 | o catálogo segue o metadata sem lista hardcoded (FR-013) |
 | `command/CommandLineAssemblerTest` | 21 | formatação e escape da command line (FR-010) |
 | `command/CommandLineArgumentsTest` | 8 | parsing dos argumentos do CLI |
@@ -278,8 +280,8 @@
 |---|---|---|
 | `archetype-post-generate/ComposerTest` | 17 | composição canônica, idempotência, imports e helpers |
 | `archetype-post-generate/BuildArtifactsTest` | 16 | artefatos do build, descriptor e wiring dos plugins |
-| `archetype-post-generate/MetadataContractTest` | 11 | catálogo (35 flags), defaults × regex, fragmentos e flags mortas |
-| `archetype-post-generate/FilesetConsistencyTest` | 8 | cobertura dos filesets × árvore de templates |
+| `archetype-post-generate/MetadataContractTest` | 11 | catálogo (36 flags), defaults × regex, fragmentos e flags mortas |
+| `archetype-post-generate/FilesetConsistencyTest` | 9 | cobertura dos filesets × árvore de templates |
 | `archetype-post-generate/TemplateFlagConsistencyTest` | 11 | flags em templates/Velocity e guards JWT |
 | `archetype-post-generate/VariablesTest` | 15 | binding das 11 variáveis do pós-processador |
 | `archetype-post-generate/VariablesCustomTypesTest` | 5 | mapeamento de `custom_attribute_imports`/enums/`entity_name_package` |
@@ -298,9 +300,9 @@
 | `archetype-post-generate/SnippetPropertiesFiletypeTest` | 8 | filetype properties/yml |
 | `archetype-post-generate/SnippetSrcTestJavaTest` | 4 | remoção de `src/test/java` |
 | `archetype-post-generate/CoverageRegistryTest` | 10 | gate de cobertura (arquivos, runners, espelho de pastas e assets) |
-| **Total** | **240** | **22 suítes** |
+| **Total** | **241** | **22 suítes** |
 
-> Contagens verificadas em 2026-11-05; total geral: **48 suítes / 630 checks**. As fontes de verdade são `run-maven-flags-via-llm-tests.groovy` e `run-archetype-post-generate-tests.groovy`.
+> Contagens verificadas em 2026-11-05; total geral: **48 suítes / 631 checks**. As fontes de verdade são `run-maven-flags-via-llm-tests.groovy` e `run-archetype-post-generate-tests.groovy`.
 
 #### 2) Processamento (empacotado) 🏗️
 
@@ -311,9 +313,9 @@
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
-| A1 | Catálogo de flags — `archetype_metadata_properties` | `src/main/resources/META-INF/maven/archetype_metadata_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
-| A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | mapeia `archetype-resources/` → árvore do projeto gerado |
-| A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 26 entities (17 `property-*` + 9 `fileset-*`) |
+| A1 | Catálogo de flags — `archetype_metadata_required_properties` | `src/main/resources/META-INF/maven/archetype_metadata_required_properties/` | 36 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
+| A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | 18 arquivos, um `<fileSet>` cada; mapeia `archetype-resources/` → árvore do projeto gerado |
+| A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 54 entities (36 `property-<NN>-<flag>` + 18 `fileset-<flag>`) |
 | A4 | XSLT identidade | `src/main/resources/META-INF/maven/archetype-metadata-identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
 
 | Artefato | Local | Papel |
@@ -377,7 +379,7 @@
 ```text
 TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
 ─────────────────────────────────────────────────────────────────────
-[1] CATÁLOGO         17 property-*.xml + 9 fileset-*.xml + DOCTYPE (26 entities)
+[1] CATÁLOGO         36 property-*.xml + 18 fileset-*.xml + DOCTYPE (54 entities)
                      └─ xml-maven-plugin:transform + archetype-metadata-identity.xsl (generate-resources)
 [2] PÓS-PROCESSADOR  34 fragmentos .groovy
                      └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
@@ -408,7 +410,8 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
   `target/classes/META-INF/maven/archetype-metadata.xml`; portanto rode
   `mvn clean process-resources` antes de usá-lo.
 * **O catálogo não é alterado em código:** o MavenFlagsViaLlmStarter lê as flags em runtime
-  (FR-013) — flag nova = 1 fragmento `property-*.xml` + registro no DOCTYPE.
+  (FR-013) — flag nova = 1 fragmento `property-<NN>-<flag>.xml` + 1..N fragmentos
+  `fileset-<flag>[-parte].xml` (um `<fileSet>` cada) + registros no DOCTYPE.
 * **As flags são auto-descritivas:** o `defaultValue` nunca é vazio (FR-018) e o
   `validationRegex` é aplicado por quem emite a command line.
 
@@ -416,33 +419,11 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 * Metadata (entities + XSLT) → seção **"Formação do Archetype-Metadata.xml"**
 * Pós-processador (compositor Groovy) → seção **"Formação do Archetype-Post-Generate.groovy"**
-* Catálogo de flags (35) → seção **"Flags do mvn archetype:generate"**
+* Catálogo de flags (36) → seção **"Flags do mvn archetype:generate"**
 * Como adicionar uma flag → seção **"Acrescentando Novas Flags ➕️"**
 * Mecanismo (A7) → seção **"Mecanismo de 'Inferência via LLM' 🧠"**
 * Inferência via LLM (uso no OpenCode) → seção **"Usando a 'Inferência via LLM'"**
 * Testes → seções **"Testes de Integracao ✅"** e **"verify.groovy - Validacao por Fixture (Integracao) 🔬"**
-
----
-
-> **Sanity Check (Instrução para Agentes de Execução) 🛠️**
->
-> Ao ser solicitado para rodar o build completo (`mvn clean install`) e validar a integridade técnica, o agente DEVE auditar: (1) O `archetype-metadata.xml` (catálogo); (2) O `archetype-post-generate.groovy` (pós-processador); (3) Os testes unitários Groovy (todos os checks, agora inclusos no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das fixtures `custom-attributes` e `entity-contract`. 
->
-> (4) Me entregue um sumário final tabelado, com DOIS blocos: 
-> (4.1) UNITÁRIOS — Todas as suítes, todos os checks, quantas passaram e a lista de checks por suíte; 
-> (4.2) INTEGRAÇÃO — todas as fixtures, quantas passaram e qualquer `verify.groovy` que tenha falhado, nesse caso observando:
->
-> (5) Quanto ao Sumário Final:
-> (5.1) Quando o item falhar, mostre o trecho do log e sugira a correção. 
-> (5.2) Quando o item passar, confirme com 'Tudo verde' e o tempo total gasto.
->
-> (6) Formato obrigatório do relatório (100% em tabelas Markdown, nesta ordem): 
-> (6.1) Tabela de Setup [(1)-(3)]: colunas `Etapa | Comando / Verificacao | Resultado Obtido | Status | Tempo`. 
-> (6.2) Bloco (4.1) UNITÁRIOS: 
-> - Tabela Resumo Geral: colunas `# | Suite | Total de Checks | Passaram | Falharam | Status` (com linha final de Total).
-> - Uma tabela separada para CADA suíte listando TODOS os checks individuais: colunas `ID | Check | Resultado`.    
-> (6.3) Bloco (4.2) INTEGRAÇÃO: tabela única com todas as fixtures e linha final de Total: colunas `# | Fixture | Invoker Exit Code | Pos-Build verify.groovy | Verificações do verify.groovy | Status`.  
-> (6.4) Bloco (5) Sumário Final: tabela consolidada por bloco + linha `TOTAL GERAL`: colunas `Bloco | Escopo | Passaram | Falharam | Diagnostico / Correcao (5.1) | Confirmacao e Tempo (5.2)`.
 
 </details>
 
@@ -1067,7 +1048,7 @@ mvn clean install
     * O passo de adição de uma nova flag **NÃO** requer criar um script
       `user_*_input.sh` nem editar `maven_command_line_archetype_generate.sh`.
     * Em vez disso, declare a flag no catálogo canônico
-      ([`property-*.xml`](src/main/resources/META-INF/maven/archetype_metadata_properties/))
+      ([`property-<NN>-<flag>.xml`](src/main/resources/META-INF/maven/archetype_metadata_required_properties/))
       e use o mecanismo de inferência LLM para montar a linha de comando a
       partir de uma descrição textual + um contrato JSON.
     * O `MavenFlagsViaLlmStarter` lê o catálogo **em runtime** _(FR-013)_:
@@ -1086,7 +1067,7 @@ mvn clean install
       + `src/main/java/.../config/StorageProperties.java` (arquivo)
       + pasta `docker/minio/` com `docker-compose.yml` (pasta)
 
-  * **Total de arquivos tocados:** 7 CRIADOS + 3 EDITADOS (em 2 arquivos existentes)
+  * **Total de arquivos tocados:** 9 CRIADOS + 3 EDITADOS (em 2 arquivos existentes)
 
 ---
 
@@ -1141,14 +1122,16 @@ services:
 
 ---
 
-##### PASSO 2 - Criar a property 'PROPERTY-S3-STORAGE.XML':
+##### PASSO 2 - Criar a property 'PROPERTY-37-ENABLE_S3_STORAGE.XML':
 
-  * Local: [_archetype_metadata_properties_](src/main/resources/META-INF/maven/archetype_metadata_properties/)
-  * Nome do arquivo: `property-s3-storage.xml`
+  * Local: [_archetype_metadata_required_properties_](src/main/resources/META-INF/maven/archetype_metadata_required_properties/)
+  * Nome do arquivo: `property-37-enable_s3_storage.xml`
+  * Convencao: `property-<NN>-<flag>.xml`, com **um arquivo por flag**.
+    * `NN` = proximo numero livre na ordem canonica. O catalogo atual tem **36 arquivos** (`01` a `36`), entao esta flag seria a **`37`**.
   * Conteudo completo (FORMATO OBRIGATORIO):
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- PROPERTY-S3-STORAGE.XML _____________________________________ -->
+<!-- PROPERTY-37-ENABLE_S3_STORAGE.XML ___________________________ -->
 <!-- FLAG: enable_s3_storage -->
 <!--   DESCRIPTION : Habilita o armazenamento de arquivos em S3 -->
 <!--                  (MinIO local em desenvolvimento). -->
@@ -1174,66 +1157,77 @@ services:
   * Local: [archetype-metadata.xml](src/main/resources/META-INF/maven/archetype-metadata.xml)
   * Sao **DUAS** edicoes neste arquivo:
 
-  * Edicao A - Dentro do `<DOCTYPE>` (ordem alfabetica):
+  * Edicao A - Dentro do `<!DOCTYPE>` (ordem numerica, `01` -> `37`):
 ```xml
-    <!ENTITY property-properties-filetype SYSTEM "archetype_metadata_properties/property-properties-filetype.xml">
-    <!ENTITY property-s3-storage SYSTEM "archetype_metadata_properties/property-s3-storage.xml">
-    <!ENTITY property-src-test SYSTEM "archetype_metadata_properties/property-src-test.xml">
+    <!ENTITY property-36-enable_folder_src_test_java SYSTEM "archetype_metadata_required_properties/property-36-enable_folder_src_test_java.xml">
+    <!ENTITY property-37-enable_s3_storage SYSTEM "archetype_metadata_required_properties/property-37-enable_s3_storage.xml">
 ```
 
-  * Edicao B - Dentro do `<requiredProperties>` (ordem alfabetica):
+  * Edicao B - Dentro do `<requiredProperties>` (mesma ordem numerica):
 ```xml
-        &property-properties-filetype;
-        &property-s3-storage;
-        &property-src-test;
+        &property-36-enable_folder_src_test_java;
+        &property-37-enable_s3_storage;
 ```
     - **ATENCAO:** se este passo for esquecido, o arquivo criado no Passo 2 **nunca sera lido**.
 
 ---
 
-##### PASSO 4 - Criar o 'FILESET-S3-STORAGE.XML':
+##### PASSO 4 - Criar os 'FILESET-*.XML' (um arquivo por `<fileSet>`):
 
   * Local: [_archetype_metadata_filesets_](src/main/resources/META-INF/maven/archetype_metadata_filesets)
-  * Nome do arquivo: `fileset-s3-storage.xml`
-  * Este arquivo contem **os 2 arquivos e a pasta** que a flag traz:
+  * Convencao: `fileset-<flag>[-parte].xml` — sem prefixo numerico.
+    * **Um arquivo = um `<fileSet>`**.
+    * Quando a mesma flag precisa de varios `<fileSet>`, use um sufixo descritivo
+      (`-config`, `-docker-minio`, `-src-main-java-config`, ...).
+  * Como a flag traz **2 arquivos e 1 pasta**, crie **3 arquivos**:
+
 ```xml
-<!--  FILESET-S3-STORAGE.XML _____________________________________ -->
-        <!-- S3 / MINIO SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>config</directory>
-            <includes>
-                <include>s3-storage.properties</include>
-            </includes>
-        </fileSet>
-
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/java/config</directory>
-            <includes>
-                <include>StorageProperties.java</include>
-            </includes>
-        </fileSet>
-
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>docker/minio</directory>
-            <includes>
-                <include>**/*.*</include>
-            </includes>
-        </fileSet>
+<!--  FILESET-ENABLE_S3_STORAGE-CONFIG.XML  _____________________ -->
+<!-- S3 / MINIO SUPPORT - CONFIG -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>config</directory>
+    <includes>
+        <include>s3-storage.properties</include>
+    </includes>
+</fileSet>
 ```
-    - **REGRA:** tres `<fileSet>` no mesmo arquivo e permitido.
-    - Agrupa o que pertence a **mesma flag**.
+
+```xml
+<!--  FILESET-ENABLE_S3_STORAGE-SRC-MAIN-JAVA-CONFIG.XML  _______ -->
+<!-- S3 / MINIO SUPPORT - JAVA CONFIG -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/main/java/config</directory>
+    <includes>
+        <include>StorageProperties.java</include>
+    </includes>
+</fileSet>
+```
+
+```xml
+<!--  FILESET-ENABLE_S3_STORAGE-DOCKER-MINIO.XML  _______________ -->
+<!-- S3 / MINIO SUPPORT - DOCKER -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>docker/minio</directory>
+    <includes>
+        <include>**/*.*</include>
+    </includes>
+</fileSet>
+```
+    - **REGRA:** nunca agrupe varios `<fileSet>` no mesmo arquivo.
+    - A associacao com a flag fica no nome do arquivo, nao no agrupamento.
 
 ---
 
-##### PASSO 5 - Registrar o fileset no 'ARCHETYPE-METADATA.XML':
+##### PASSO 5 - Registrar os filesets no 'ARCHETYPE-METADATA.XML':
 
-  * No mesmo arquivo do Passo 3, dentro do `<fileSets>` (ordem alfabetica):
+  * No mesmo arquivo do Passo 3, faca **tres** edicoes no `<fileSets>`
+    (uma referencia para cada arquivo criado no Passo 4):
 ```xml
-        &fileset-maven;
-        &fileset-s3-storage;
-        &fileset-src-main-java;
-        &fileset-src-main-resources;
+        &fileset-enable_s3_storage-config;
+        &fileset-enable_s3_storage-docker-minio;
+        &fileset-enable_s3_storage-src-main-java-config;
 ```
+    - A ordem das referencias deve ser a mesma das entidades no `<!DOCTYPE>`.
 
 ---
 
@@ -1357,20 +1351,22 @@ mvn archetype:generate \
 
 ---
 
-##### RESUMO - 7 arquivos CRIADOS + 3 EDITADOS (em 2 arquivos existentes):
+##### RESUMO - 9 arquivos CRIADOS + 3 EDITADOS (em 2 arquivos existentes):
 
 | #  | Arquivo | Acao |
 |----|---------|------|
 | 01 | `archetype-resources/config/s3-storage.properties` | CRIAR |
 | 02 | `archetype-resources/src/main/java/config/StorageProperties.java` | CRIAR |
 | 03 | `archetype-resources/docker/minio/docker-compose.yml` | CRIAR |
-| 04 | `archetype_metadata_properties/property-s3-storage.xml` | CRIAR |
+| 04 | `archetype_metadata_required_properties/property-37-enable_s3_storage.xml` | CRIAR |
 | 05 | `archetype-metadata.xml` | **EDITAR** (2 pontos: DOCTYPE + requiredProperties) |
-| 06 | `archetype_metadata_filesets/fileset-s3-storage.xml` | CRIAR |
-| 07 | `archetype-metadata.xml` | **EDITAR** (1 ponto: fileSets) |
-| 08 | `archetype_post_generate_variables/variables-s3-storage.groovy` | CRIAR |
-| 09 | `archetype_post_generate_snippets/snippet-s3-storage.groovy` | CRIAR |
-| 10 | `projects/basic/archetype.properties` | **EDITAR** |
+| 06 | `archetype_metadata_filesets/fileset-enable_s3_storage-config.xml` | CRIAR |
+| 07 | `archetype_metadata_filesets/fileset-enable_s3_storage-src-main-java-config.xml` | CRIAR |
+| 08 | `archetype_metadata_filesets/fileset-enable_s3_storage-docker-minio.xml` | CRIAR |
+| 09 | `archetype-metadata.xml` | **EDITAR** (1 ponto: fileSets, com 3 referencias) |
+| 10 | `archetype_post_generate_variables/variables-s3-storage.groovy` | CRIAR |
+| 11 | `archetype_post_generate_snippets/snippet-s3-storage.groovy` | CRIAR |
+| 12 | `projects/basic/archetype.properties` | **EDITAR** |
 
 ---
 
@@ -1389,10 +1385,10 @@ mvn archetype:generate \
 ---
 
 #### 3) Padronização:
-  * **FORMATO OBRIGATORIO** _(o mesmo dos 17 arquivos existentes)_:
+  * **FORMATO OBRIGATORIO** _(o mesmo dos 36 arquivos existentes)_:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- PROPERTY-CPANEL.XML _______________________________________ -->
+<!-- PROPERTY-01-ENABLE_API_CPANEL.XML _________________________ -->
 <!-- FLAG: enable_api_cpanel -->
 <!--   DESCRIPTION : Habilita o painel administrativo do cPanel. -->
 <!--   PROMPT      : Enable 'API cPanel' -->
@@ -1408,11 +1404,14 @@ mvn archetype:generate \
     <validationRegex>^(true|false)$</validationRegex>
 </requiredProperty>
 ```
+    - **NOMENCLATURA:** `property-<NN>-<flag>.xml` — **um arquivo por flag**.
+      + `NN` = posicao na ordem canonica (`01` a `36`); o proximo numero livre seria `37`.
+      + O trecho `<flag>` deve ser **identico** ao `<requiredProperty key="...">`.
     - **REGRA CRITICA** _(FR-018)_: o `<defaultValue>` **NUNCA** pode ser vazio.
       + Vazio => o build quebra com **exit 4**.
       + Mensagem: `Flag 'X' has empty defaultValue. Catalog is invalid per FR-018.`
-    - **REGRA DE INDENTACAO**: **4 ESPACOS** _(nao 8)_. Veja os 17 arquivos
-      existentes em [_archetype_metadata_properties_](src/main/resources/META-INF/maven/archetype_metadata_properties/)
+    - **REGRA DE INDENTACAO**: **4 ESPACOS** _(nao 8)_. Veja os 36 arquivos
+      existentes em [_archetype_metadata_required_properties_](src/main/resources/META-INF/maven/archetype_metadata_required_properties/)
       como referencia canonica.
 
 
@@ -1431,55 +1430,65 @@ mvn archetype:generate \
 
   * Em sua nomenclatura, esse 'arquivo.XML' tera **_'obrigatoriamente'_**:
     * **'fileset-'** como prefixo
-    * apos o prefixo, um texto semelhante ao _'SWITCH -D'_ criado
-    * Exemplo:
-      * fileset-cpanel.xml
+    * apos o prefixo, o nome exato da _'SWITCH -D'_ criada
+    * um sufixo descritivo quando a flag tiver **mais de um** `<fileSet>`
+    * Exemplos:
+      * fileset-enable_api_cpanel_elk_log_system.xml
+      * fileset-enable_logback.xml
+      * fileset-enable_jwt_authentication.xml
+      * fileset-enable_folder_src_test_java-src-test-resources.xml
 
 
-  * **REGRA DE INDENTACAO**: **8 ESPACOS** para o `<fileSet>` e seus filhos
-    * Veja os 9 arquivos existentes em [_archetype_metadata_filesets_](src/main/resources/META-INF/maven/archetype_metadata_filesets)
+  * **REGRA DE DISTRIBUICAO**: **um arquivo = um `<fileSet>`**
+    * Nunca agrupe varios `<fileSet>` no mesmo arquivo.
+    * Se a flag precisar de varios `<fileSet>`, crie um arquivo para cada um,
+      diferenciando pelo sufixo (ex.: `-src-test-resources`, `-src-test-java`).
+
+
+  * **REGRA DE INDENTACAO**: **4 ESPACOS** para os filhos do `<fileSet>`; `<fileSet>` na coluna 1
+    * Veja os 18 arquivos existentes em [_archetype_metadata_filesets_](src/main/resources/META-INF/maven/archetype_metadata_filesets)
     * como referencia canonica.
 
 
-  * EXEMPLO 01 - **_'fileSet' de "PASTA"_** criado, dentro do arquivo 'fileset-cpanel.xml':
+  * EXEMPLO 01 - **_'fileSet' de "PASTA"_** criado no arquivo 'fileset-enable_api_cpanel_elk_log_system.xml':
 ```xml
-<!--  FILESET-LOGBACK.XML ___________________________________________ -->
-        <!-- LOGBACK ELK SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>ELK</directory>
-            <includes>
-                <include>**/*.*</include>
-            </includes>
-        </fileSet>
+<!--  FILESET-ENABLE_API_CPANEL_ELK_LOG_SYSTEM.XML  ______________ -->
+<!-- CPANEL / ELK SUPPORT -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>ELK</directory>
+    <includes>
+        <include>**/*.*</include>
+    </includes>
+</fileSet>
 ```
 
-* EXEMPLO 02 - _**'fileSet' de "PASTA"**_ criado no arquivo 'fileset-cpanel.xml':
+* EXEMPLO 02 - _**'fileSet' de "PASTA"**_ criado no arquivo 'fileset-enable_logback.xml':
 ```xml
-<!-- FILESET-LOGBACK.XML _______________________________________________ -->
-        <!-- LOGBACK SUPPORT -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/main/resources/logback-spring-config</directory>
-            <includes>
-                <include>**/*.xml</include>
-            </includes>
-        </fileSet>
+<!--  FILESET-ENABLE_LOGBACK.XML  ________________________________ -->
+<!-- LOGBACK SUPPORT -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/main/resources/logback-spring-config</directory>
+    <includes>
+        <include>**/*.xml</include>
+    </includes>
+</fileSet>
 ```
 
-* EXEMPLO 03 - **_'fileSet' de "ARQUIVO"_** criado no arquivo 'fileset-cpanel.xml':
+* EXEMPLO 03 - **_'fileSet' de "ARQUIVOS/PROPERTIES"_** criado no arquivo 'fileset-enable_folder_src_test_java-src-test-resources-properties.xml':
 ```xml
-<!-- FILESET-SRC-TEST.XML ______________________________________________ -->
-        <!--   SRC\TEST  -->
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory>src/test/resources</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>logback-test.xml</include>
-                <include>banner.txt</include>
-            </includes>
-        </fileSet>
+<!--  FILESET-ENABLE_FOLDER_SRC_TEST_JAVA-SRC_TEST_RESOURCES_PROPERTIES.XML  -->
+<!-- SRC\TEST\RESOURCES\PROPERTIES -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/test/resources/properties</directory>
+    <includes>
+        <include>**/*.yml</include>
+        <include>**/*.properties</include>
+    </includes>
+</fileSet>
 ```
-  * Varios `<fileSet>` no mesmo arquivo sao permitidos:
-    * Agrupa o que pertence a **mesma flag**.
+  * Quando a flag tem varios `<fileSet>`:
+    * Um arquivo `fileset-<flag>-<parte>.xml` para cada `<fileSet>`.
+    * O sufixo `<parte>` identifica a pasta/arquivo coberto.
 
   5. **Se** o 'novo Criterio' _realizar **"MANIPULACAO DE PASTAS OU ARQUIVOS"**_:
   * Insira a 'pasta/arquivo' a ser manipulado, dentro do 'ARCHETYPE', EM:
@@ -1637,7 +1646,7 @@ usando o mecanismo de inferência LLM.
 3.1. Localize o artefato EDA (`com.eda-archetype:eda-archetype`) no repositório local do Maven.
 3.2. Leia o CONTEÚDO EMPACOTADO no JAR (fonte de verdade para flags e geração):
      - `META-INF/maven/archetype-metadata.xml` — catálogo consolidado de propriedades.
-     - `META-INF/maven/archetype_metadata_properties/*.xml` — por flag: DESCRIPTION, PROMPT, TYPE,
+     - `META-INF/maven/archetype_metadata_required_properties/*.xml` — por flag: DESCRIPTION, PROMPT, TYPE,
        DEFAULT, DOMAIN, DEPENDS_ON, VALIDATION.
      - `META-INF/archetype-post-generate.groovy` — comportamento do pós-processador.
      - `archetype-resources/**` — templates (ex.: `package ${package}.${entity_name_package}`).
@@ -1663,7 +1672,7 @@ O archetype declara `package ${package}.${entity_name_package}`. Portanto:
 4.2 Propriedades obrigatórias
 Passe sempre (validação regex do catálogo empacotado):
 - `-Dentity_name_package=<entity_name em minúsculas>`
-  - Fonte empacotada: `archetype_metadata_properties/property-entity.xml`
+  - Fonte empacotada: `archetype_metadata_required_properties/property-14-entity_name_package.xml`
     (`DEFAULT=myentity`, `VALIDATION=^[a-z][a-z0-9_.]+$`, `DEPENDS_ON=entity_name`).
   - O archetype usa o valor **verbatim** como pacote (`src/main/java/<entity_name_package>/`);
     o default `myentity` existe apenas para satisfazer a exigência de `defaultValue` não vazio.
@@ -1672,7 +1681,7 @@ Passe sempre (validação regex do catálogo empacotado):
   - Quando o orquestrador de inferência é usado, ele deriva e emite esse valor
     automaticamente (comportamento do mecanismo, não do artefato).
 - `-Dentity_contract_path=<caminho do contrato .json>`
-  - Fonte empacotada: descrição de `entity_contract_path` em `property-entity.xml` e a lógica
+  - Fonte empacotada: descrição de `entity_contract_path` em `property-20-entity_contract_path.xml` e a lógica
     de cópia em `archetype-post-generate.groovy`.
   - Efeito: quando o arquivo existe E `enable_folder_src_test_java=true`, o contrato é copiado
     para `src/test/resources/contracts/contract.json` no projeto gerado.
@@ -1775,11 +1784,13 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 * **OBJETIVO**
   * Manter 1 arquivo final [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml) consumido pelo (`maven-archetype-plugin`),
-    mas organizado no source em modulos menores (17 snippets de propriedades + 9 de filesets).
+    mas organizado no source em modulos menores (**36 arquivos de propriedades + 18 de filesets**).
 
 * **MECANISMO**
-  * O XML "core" declara DOCTYPE com (`ENTITY property-X SYSTEM ".../property-X.xml"`) para cada snippet.
-  * O corpo referencia as entities como (`&property-X;`) (em (`requiredProperties`)) e (`&fileset-X;`) (em (`fileSets`)).
+  * O XML "core" declara DOCTYPE com (`ENTITY property-<NN>-<flag> SYSTEM ".../property-<NN>-<flag>.xml"`) para cada snippet de propriedade
+    e (`ENTITY fileset-<flag> SYSTEM ".../fileset-<flag>.xml"`) para cada snippet de fileset.
+  * O total e **54 entidades** (36 + 18).
+  * O corpo referencia as entities como (`&property-<NN>-<flag>;`) (em (`requiredProperties`)) e (`&fileset-<flag>;`) (em (`fileSets`)).
   * Resultado: o arquivo-fonte continua sendo um unico XML valido, legivel, com (`&`) no lugar dos blocos.
 
 * **PLUGIN** — [`xml-maven-plugin`](https://www.mojohaus.org/xml-maven-plugin/) 1.2.1
@@ -1797,12 +1808,12 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
     e o output sai com os blocos inline (sem DOCTYPE/entities no XML final).
 
 * **LAYOUT FISICO**
-  * [`archetype_metadata_properties/`](src/main/resources/META-INF/maven/archetype_metadata_properties)
-    => 17 (`property-*.xml`) (1 por categoria de flag).
+  * [`archetype_metadata_required_properties/`](src/main/resources/META-INF/maven/archetype_metadata_required_properties)
+    => **36** (`property-<NN>-<flag>.xml`) (**1 por flag**, numerados `01` a `36`).
   * [`archetype_metadata_filesets/`](src/main/resources/META-INF/maven/archetype_metadata_filesets)
-    => 9 (`fileset-*.xml`) (1 por setor da estrutura do projeto).
+    => **18** (`fileset-<flag>[-parte].xml`) (**1 `<fileSet>` por arquivo**, sem numeracao).
   * [`archetype-metadata-identity.xsl`](src/main/resources/META-INF/maven/archetype-metadata-identity.xsl) => folha de estilo XSLT.
-  * [`archetype-metadata.xml`](src/main/resources/META-INF/maven/archetype-metadata.xml) => core (DOCTYPE + (`&property-X;`)/(`&fileset-X;`)).
+  * [`archetype-metadata.xml`](src/main/resources/META-INF/maven/archetype-metadata.xml) => core (DOCTYPE com 54 entidades + (`&property-<NN>-<flag>;`)/(`&fileset-<flag>;`)).
 
 * **FLUXO BUILD**
   * source (`archetype-metadata.xml`) (com (`&entity;`))

@@ -70,6 +70,16 @@ templateFiles.each { File f ->
 check("4.1 every Velocity alias reads a catalog flag: ${badAliases}", badAliases.isEmpty())
 
 // ---------------------------------------------------------------------------
+// 4b) The nested-type flag is declared and actually used by the entity
+// ---------------------------------------------------------------------------
+def entityTemplate = new File(root, "src/main/java/__entity_name_package__/__entity_name__.java")
+check("4.2 the nested flag is declared in the catalog",
+        catalog.contains("custom_nested_type_definitions"))
+check("4.3 the entity template uses the nested flag",
+        entityTemplate.isFile() &&
+                entityTemplate.getText("UTF-8").contains("custom_nested_type_definitions"))
+
+// ---------------------------------------------------------------------------
 // 5) JWT is gated by enable_jwt_authentication in all four config templates
 // ---------------------------------------------------------------------------
 def configTemplates = [

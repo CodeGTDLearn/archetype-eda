@@ -6,7 +6,7 @@
 
 ## Problem Statement
 
-O fluxo de geração de projeto a partir de `com.eda-archetype:eda-archetype` é amarrado a `bash_script/` (≈28 scripts `.sh`, ~28 chamadas `inject_script` em `script_core.sh`, 4 ocorrências `read -n 1 -s` que travam em ambientes sem TTY) para capturar, via prompt interativo, o valor de 34 `requiredProperty` declaradas em 17 XMLs sob `src/main/resources/META-INF/maven/archetype_metadata_properties/`; o mantenedor único do projeto precisa manter essa cadeia de scripts sincronizada a cada nova flag, responder os mesmos prompts a cada geração e ainda assim não dispor de um contrato JSON explícito por caso de uso — fazendo a dor tripla (manutenção operacional, fricção de uso repetitivo e ausência de contrato formal) bloquear a intenção estratégica declarada de eliminar pré-processamento em bash do projeto, parcialmente cumprida em outro ciclo para o compositor do `archetype-post-generate.groovy`.
+O fluxo de geração de projeto a partir de `com.eda-archetype:eda-archetype` é amarrado a `bash_script/` (≈28 scripts `.sh`, ~28 chamadas `inject_script` em `script_core.sh`, 4 ocorrências `read -n 1 -s` que travam em ambientes sem TTY) para capturar, via prompt interativo, o valor de 34 `requiredProperty` declaradas em 17 XMLs sob `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`; o mantenedor único do projeto precisa manter essa cadeia de scripts sincronizada a cada nova flag, responder os mesmos prompts a cada geração e ainda assim não dispor de um contrato JSON explícito por caso de uso — fazendo a dor tripla (manutenção operacional, fricção de uso repetitivo e ausência de contrato formal) bloquear a intenção estratégica declarada de eliminar pré-processamento em bash do projeto, parcialmente cumprida em outro ciclo para o compositor do `archetype-post-generate.groovy`.
 
 ## Affected Users & Stakeholders
 
@@ -19,14 +19,14 @@ O fluxo de geração de projeto a partir de `com.eda-archetype:eda-archetype` é
 
 - Eliminar a dependência dos scripts bash de `bash_script/` que montam a linha `mvn archetype:generate` e capturam flags via prompt interativo. [source: `.specify/assessments/llm-flag-inference/intake.md`; `bash_script/script_core.sh` linhas 79–98] (confidence: high)
 - Tornar obrigatório um JSON contrato formal por caso de uso, com fail-fast explícito quando ausente. [source: `.specify/assessments/llm-flag-inference/intake.md` — Resolved Decisions] (confidence: high)
-- Manter o `archetype-metadata.xml` como única fonte de verdade das flags — nenhuma flag deve ser injetada por código fora dos 17 XMLs em `src/main/resources/META-INF/maven/archetype_metadata_properties/`. [source: enumeração de 34 `<requiredProperty>` via grep em 2026-10-12; `.specify/assessments/llm-flag-inference/intake.md`] (confidence: high)
+- Manter o `archetype-metadata.xml` como única fonte de verdade das flags — nenhuma flag deve ser injetada por código fora dos 17 XMLs em `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`. [source: enumeração de 34 `<requiredProperty>` via grep em 2026-10-12; `.specify/assessments/llm-flag-inference/intake.md`] (confidence: high)
 - Garantir que, no caminho feliz (descrição textual + JSON contrato cobrindo as decisões), o operador não receba nenhum prompt interativo. [ASSUMPTION — comportamento desejado declarado pelo mantenedor] (confidence: medium)
 - Reaproveitar, quando viável, o tooling já disponível no projeto (`xml-maven-plugin:1.2.1`, `gmaven:2.1.1` + Groovy 4.0.28, `SnippetComposer.groovy`) para evitar novo stack tecnológico. [source: `.specify/assessments/groovy-snippet-injection/decision.md`; `pom.xml`] (confidence: medium)
 - Atingir a integração com `github/spec-kit` por orientação textual nos templates de spec/plan/test, sem exigir fork do template nem ponto de injeção técnica. [source: `.specify/assessments/llm-flag-inference/intake.md` — Resolved Decisions] (confidence: medium)
 
 ## Non-Goals
 
-- Migrar ou reescrever os XMLs de descriptor (`archetype-metadata.xml` + 17 `property-*.xml` + 9 `fileset-*.xml`) — o catálogo é fonte de verdade e deve permanecer intocado. [source: `src/main/resources/META-INF/maven/archetype_metadata_properties/*.xml`; `.specify/assessments/llm-flag-inference/intake.md` — Resolved Decisions] (confidence: high)
+- Migrar ou reescrever os XMLs de descriptor (`archetype-metadata.xml` + 17 `property-*.xml` + 9 `fileset-*.xml`) — o catálogo é fonte de verdade e deve permanecer intocado. [source: `src/main/resources/META-INF/maven/archetype_metadata_required_properties/*.xml`; `.specify/assessments/llm-flag-inference/intake.md` — Resolved Decisions] (confidence: high)
 - Migrar `archetype-post-generate.groovy` novamente — já tratado em `.specify/assessments/groovy-snippet-injection/`. (confidence: high)
 - Adicionar cobertura automatizada de combinações de flag — já tratado em `.specify/assessments/archetype-integration-tests/`. (confidence: high)
 - Treinar, afinar ou trocar o LLM em uso — usar o LLM já disponível para o `github/spec-kit` e o opencode. (confidence: high)

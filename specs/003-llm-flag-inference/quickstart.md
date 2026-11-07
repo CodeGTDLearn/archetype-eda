@@ -176,7 +176,7 @@ groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.gr
 
 **Steps**:
 
-1. Temporarily add a new flag `enable_test_xyz` to `archetype_metadata_properties/property-authentication.xml` (or any existing property file). Rebuild.
+1. Temporarily add a new flag `enable_test_xyz` to `archetype_metadata_required_properties/property-authentication.xml` (or any existing property file). Rebuild.
 2. Run the mechanism with a description and contract that activate the new flag.
 3. Observe that the command line includes `-Denable_test_xyz=...`.
 4. Revert the XML change, rebuild.
@@ -277,7 +277,7 @@ groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.gr
 
 **Steps**:
 
-1. Temporarily add a new flag to `archetype_metadata_properties/property-authentication.xml` with empty default:
+1. Temporarily add a new flag to `archetype_metadata_required_properties/property-authentication.xml` with empty default:
    ```xml
    <requiredProperty key="enable_test_xyz">
        <defaultValue></defaultValue>

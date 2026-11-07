@@ -34,10 +34,10 @@ def pomText = pom.getText("UTF-8")
 check("2.1 the descriptor root is archetype-descriptor",
         metadataText.contains("<archetype-descriptor"))
 check("2.2 the identity transform removed the DOCTYPE", !metadataText.contains("<!DOCTYPE"))
-check("2.3 the catalog has 35 required properties",
-        (metadataText =~ /<requiredProperty\s+key=/).count == 35)
-check("2.4 the catalog carries 35 default values",
-        (metadataText =~ /<defaultValue>/).count == 35)
+check("2.3 the catalog has 36 required properties",
+        (metadataText =~ /<requiredProperty\s+key=/).count == 36)
+check("2.4 the catalog carries 36 default values",
+        (metadataText =~ /<defaultValue>/).count == 36)
 
 // ---------------------------------------------------------------------------
 // 3) Composed post-processor artifact

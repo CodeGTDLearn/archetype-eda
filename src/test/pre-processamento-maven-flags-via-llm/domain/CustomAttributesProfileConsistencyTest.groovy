@@ -88,7 +88,7 @@ if (builtMetadata.exists()) {
                 node.validationRegex.text().toString()))
     }
 } else {
-    def propsDir = new File("src/main/resources/META-INF/maven/archetype_metadata_properties")
+    def propsDir = new File("src/main/resources/META-INF/maven/archetype_metadata_required_properties")
     def slurper = new XmlSlurper()
     propsDir.listFiles().sort { it.name }.each { File f ->
         if (!f.name.endsWith(".xml")) return

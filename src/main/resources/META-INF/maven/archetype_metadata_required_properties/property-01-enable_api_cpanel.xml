@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-01-ENABLE_API_CPANEL.XML _________________________ -->
+<!-- FLAG: enable_api_cpanel -->
+<!--   DESCRIPTION : Habilita a API cPanel (endpoints auxiliares). -->
+<!--   PROMPT      : Enable 'API cPanel' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_api_cpanel">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

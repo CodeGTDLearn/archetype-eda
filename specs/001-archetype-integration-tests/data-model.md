@@ -22,7 +22,7 @@ A self-contained description of one scenario's flag values, plus a verification 
 
 **Validation rules**:
 - The `name` must be unique across all fixtures in `src/test/resources/projects/`.
-- Every key in `archetype_properties` must correspond to a `<requiredProperty key="…">` in `src/main/resources/META-INF/maven/archetype_metadata_properties/*.xml`.
+- Every key in `archetype_properties` must correspond to a `<requiredProperty key="…">` in `src/main/resources/META-INF/maven/archetype_metadata_required_properties/*.xml`.
 - Values must satisfy the `validationRegex` declared in the corresponding `requiredProperty`.
 - If `parent_flags_off[parent] = true`, then no child of `parent` may appear in `archetype_properties` (per spec FR-004).
 

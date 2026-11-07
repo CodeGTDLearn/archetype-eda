@@ -27,6 +27,42 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 ##
 ##
+## NESTED TYPES (contract): the POJOs derived from the nested objects of the
+## contract live in the 'nested' subpackage. The entity references each one by
+## its FULLY QUALIFIED name, so no import is emitted and a nested type can
+## never collide with a template import (Entity, Id, Data...). The
+## "@Transient" import exists only when at least one nested type is used.
+#set($nested_types = {})
+#if(${enable_custom_attributes} == "true" && ${custom_nested_type_definitions} != "none" && ${custom_nested_type_definitions} != "null")
+#set($nested_defs = ${custom_nested_type_definitions})
+#foreach($nested_def in $nested_defs.split(";"))
+#set($nested_def_trim = $nested_def.trim())
+#if($nested_def_trim.length() > 0 && $nested_def_trim.indexOf("|") > 0)
+#set($nested_type = $nested_def_trim.substring(0, $nested_def_trim.indexOf("|")).trim())
+#set($dummy = $nested_types.put($nested_type, true))
+#end
+#end
+#end
+#set($nested_package_full = "${package}")
+#if(${entity_name_package} != "" && ${entity_name_package} != "null")
+#set($nested_package_full = "${package}.${entity_name_package}")
+#end
+#set($nested_package_full = "${nested_package_full}.nested")
+#set($nested_types_used_list = [])
+#if(${enable_custom_attributes} == "true" && ${custom_attributes_list} != "none" && ${custom_attributes_list} != "false")
+#set($custom_attributes_value = ${custom_attributes_list})
+#foreach($attrib_import in $custom_attributes_value.split(","))
+#set($attrib_import_parts = $attrib_import.split(":"))
+#if($attrib_import_parts.size() > 1 && $nested_types.containsKey($attrib_import_parts[0].trim()))
+#set($dummy = $nested_types_used_list.add($attrib_import_parts[0].trim()))
+#end
+#end
+#end
+#if($nested_types_used_list.size() > 0)
+import jakarta.persistence.Transient;
+#end
+##
+##
 #if(${enable_lombok} == "true")
 ##
 import lombok.AllArgsConstructor;
@@ -81,14 +117,23 @@ public class ${entity_name} {
 
   #foreach($attrib in $attributes)
     ##
+  #if($nested_types.containsKey($attrib.type))
+  @Transient
+  private ${nested_package_full}.${attrib.type} ${attrib.name};
+  #else
   private ${attrib.type} ${attrib.name};
+  #end
     ##
   #end
 
   #if(${enable_lombok} == "false" && $attributes.size() > 0)
     #set($canonic_constructor_params = "")
     #foreach($attrib in $attributes)
-      #set($canonic_constructor_params = "${canonic_constructor_params}${attrib.type}:${attrib.name},")
+      #set($attrib_type = $attrib.type)
+      #if($nested_types.containsKey($attrib.type))
+        #set($attrib_type = "${nested_package_full}.${attrib.type}")
+      #end
+      #set($canonic_constructor_params = "${canonic_constructor_params}${attrib_type}:${attrib.name},")
     #end
     #set($canonic_constructor_params = $canonic_constructor_params.replaceAll(":"," "))
     #set($final_constructor_params = $canonic_constructor_params.replaceAll(",$", ""))
@@ -140,11 +185,15 @@ public class ${entity_name} {
 ##
   #foreach($attrib in $attributes)
   ##
-  public ${attrib.type} get${attrib.name.substring(0,1).toUpperCase()}${attrib.name.substring(1)}() {
+  #set($attrib_type = $attrib.type)
+  #if($nested_types.containsKey($attrib.type))
+    #set($attrib_type = "${nested_package_full}.${attrib.type}")
+  #end
+  public ${attrib_type} get${attrib.name.substring(0,1).toUpperCase()}${attrib.name.substring(1)}() {
     return this.${attrib.name};
   }
 
-  public void set${attrib.name.substring(0,1).toUpperCase()}${attrib.name.substring(1)}(${attrib.type} ${attrib.name}) {
+  public void set${attrib.name.substring(0,1).toUpperCase()}${attrib.name.substring(1)}(${attrib_type} ${attrib.name}) {
     this.${attrib.name} = ${attrib.name};
   }
   ##

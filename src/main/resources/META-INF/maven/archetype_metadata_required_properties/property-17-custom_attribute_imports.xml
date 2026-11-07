@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-17-CUSTOM_ATTRIBUTE_IMPORTS.XML __________________ -->
+<!-- FLAG: custom_attribute_imports -->
+<!--   DESCRIPTION : Lista de FQNs dos tipos do projeto referenciados pela -->
+<!--                 entidade (ex.: br.com.projeto.EnderecoCliente). Derivada do -->
+<!--                 contrato: cada tipo declarado fora de java.lang e declarado -->
+<!--                 com pacote gera um import na entidade principal. -->
+<!--                 Separados por virgula; 'none' quando nao ha tipos externos. -->
+<!--   PROMPT      : (interno - preenchido pelo mecanismo de inferencia LLM) -->
+<!--   TYPE        : list (imports) -->
+<!--   DEFAULT     : none -->
+<!--   DOMAIN      : none OU lista de FQNs (virgula) -->
+<!--   DEPENDS_ON  : enable_custom_attributes = true -->
+<!--   VALIDATION  : ^(none|([A-Za-z_][A-Za-z0-9_]*\.)+[A-Za-z_][A-Za-z0-9_]*(,([A-Za-z_][A-Za-z0-9_]*\.)+[A-Za-z_][A-Za-z0-9_]*)*)$ -->
+<requiredProperty key="custom_attribute_imports">
+    <defaultValue>none</defaultValue>
+    <validationRegex>^(none|([A-Za-z_][A-Za-z0-9_]*\.)+[A-Za-z_][A-Za-z0-9_]*(,([A-Za-z_][A-Za-z0-9_]*\.)+[A-Za-z_][A-Za-z0-9_]*)*)$</validationRegex>
+</requiredProperty>

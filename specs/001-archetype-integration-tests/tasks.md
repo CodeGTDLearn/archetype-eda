@@ -28,7 +28,7 @@
 
 - [x] T001 Clean install of the archetype in the local Maven repository in archetype-v2-eda/pom.xml (mvn clean install) — required by Constitution Principle VI **[completed: mvn clean install ran with exit code 0, archetype installed at C:\Users\edufi\.m2\repository\com\eda-archetype\eda-archetype\0.0.1-SNAPSHOT\, local archetype catalog updated at C:\Users\edufi\.m2\repository\archetype-catalog.xml; all 9 fixtures (basic + 8 new) PASS]**
 - [x] T002 Inventory the existing fixture set in archetype-v2-eda/src/test/resources/projects/basic/ — record current state before adding new fixtures **[completed: basic/ contains archetype.properties (1221 bytes) + goal.txt (now 13 bytes, clean/verify)]**
-- [x] T003 [P] Re-read archetype-v2-eda/src/main/resources/META-INF/maven/archetype_metadata_properties/property-*.xml (17 files) and confirm the DEPENDS_ON graph matches data-model.md §Fixture validation rules **[completed during /speckit.assess.research; graph documented in research.md and assessment/decision.md]**
+- [x] T003 [P] Re-read archetype-v2-eda/src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-*.xml (17 files) and confirm the DEPENDS_ON graph matches data-model.md §Fixture validation rules **[completed during /speckit.assess.research; graph documented in research.md and assessment/decision.md]**
 
 ---
 

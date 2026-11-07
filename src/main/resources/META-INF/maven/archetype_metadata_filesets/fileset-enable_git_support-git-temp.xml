@@ -1,0 +1,10 @@
+<!--  FILESET-ENABLE_GIT_SUPPORT-GIT_TEMP.XML  _____________________ -->
+<fileSet filtered="false" encoding="UTF-8">
+    <directory>git_temp</directory>
+    <includes>
+        <include>**/*</include>
+    </includes>
+    <excludes>
+        <exclude>config</exclude>
+    </excludes>
+</fileSet>

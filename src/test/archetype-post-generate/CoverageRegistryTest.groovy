@@ -21,7 +21,7 @@ main.eachFileRecurse { File f ->
         prodFiles << f
     }
 }
-check("1.1 the production tree has 68 Groovy files (InvocationCache removed)", prodFiles.size() == 68)
+check("1.1 the production tree has 73 Groovy files (nested types + derived enums)", prodFiles.size() == 73)
 check("1.2 the legacy InvocationCache is gone",
         !new File("src/main/pre-processamento-maven-flags-via-llm/cache/InvocationCache.groovy").exists())
 
@@ -89,7 +89,7 @@ check("3.1 every runner entry exists on disk: ${missing}", missing.isEmpty())
 def variableDir = new File("src/main/resources/META-INF/archetype_post_generate_variables")
 def snippetDir = new File("src/main/resources/META-INF/archetype_post_generate_snippets")
 check("4.1 there are 11 variable files", variableDir.listFiles().findAll { it.name.endsWith(".groovy") }.size() == 11)
-check("4.2 there are 12 snippet files", snippetDir.listFiles().findAll { it.name.endsWith(".groovy") }.size() == 12)
+check("4.2 there are 13 snippet files", snippetDir.listFiles().findAll { it.name.endsWith(".groovy") }.size() == 13)
 def unreferencedAssets = (variableDir.listFiles() + snippetDir.listFiles()).findAll { File f ->
     f.name.endsWith(".groovy") && !suiteText.contains(f.name.toLowerCase())
 }

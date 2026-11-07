@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-18-CUSTOM_ENUM_DEFINITIONS.XML ___________________ -->
+<!-- FLAG: custom_enum_definitions -->
+<!--   DESCRIPTION : Definicoes dos enums que o pos-processador deve gerar no -->
+<!--                 projeto: 'Tipo:CONSTANTE|CONSTANTE', separadas por ';'. -->
+<!--                 Derivada do contrato: tipo do projeto com valor textual ou -->
+<!--                 array de strings UPPERCASE (payload puro). -->
+<!--                 O marcador relativo 'nested.Tipo' gera o enum em -->
+<!--                 <package>.<entity_name_package>.nested (enum de campo -->
+<!--                 aninhado). O prefixo 'nested.' e RESERVADO: um pacote real -->
+<!--                 chamado 'nested' nao pode ser expresso nesta flag. -->
+<!--                 'none' quando nao ha enums. -->
+<!--   PROMPT      : (interno - preenchido pelo mecanismo de inferencia LLM) -->
+<!--   TYPE        : list (enums) -->
+<!--   DEFAULT     : none -->
+<!--   DOMAIN      : none OU lista de Tipo:CONSTANTE|CONSTANTE (ponto e virgula) -->
+<!--   DEPENDS_ON  : enable_custom_attributes = true -->
+<!--   VALIDATION  : ^(none|([A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\|[A-Z][A-Z0-9_]*)*(;([A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\|[A-Z][A-Z0-9_]*)*)*)$ -->
+<requiredProperty key="custom_enum_definitions">
+    <defaultValue>none</defaultValue>
+    <validationRegex>^(none|([A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\|[A-Z][A-Z0-9_]*)*(;([A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\|[A-Z][A-Z0-9_]*)*)*)$</validationRegex>
+</requiredProperty>

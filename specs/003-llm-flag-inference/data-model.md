@@ -81,7 +81,7 @@ A single flag as declared in the canonical archetype metadata. Read at runtime f
 
 ### Source
 
-`src/main/resources/META-INF/maven/archetype_metadata_properties/*.xml` (17 files). The `<requiredProperty key="…">` declarations across these files constitute the catalog (35 flags).
+`src/main/resources/META-INF/maven/archetype_metadata_required_properties/*.xml` (17 files). The `<requiredProperty key="…">` declarations across these files constitute the catalog (35 flags).
 
 ### Validation rules
 

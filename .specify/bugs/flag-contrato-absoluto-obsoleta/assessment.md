@@ -68,9 +68,9 @@ Reproduzido neste repositório em 2026-10-23 (Windows, Groovy 5.1.3, `target/cla
 - `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:229-300` — `merge()`: `pickFromContract()` lê **só o nível superior** (`contract.get(key)`); o gate FR-009 (`:248`, `:279`) exige a chave **literal** no contrato.
 - `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:181-217` — `extractCatalog()` rejeita `<defaultValue/>` vazio (FR-018) e aborta com exit 4.
 - `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:462-467` — `makeCacheKey()`: a chave de cache é `sha256(description + "\0" + contrato canônico)`, **sem** incorporate qualquer assinatura do catálogo ⇒ as entradas em cache permanecem válidas (as-is) após a mudança de catálogo.
-- `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:77-88` — `absolute_path_jsonfile_contract` com `<defaultValue/>` **vazio** e regex `^\/([^\/]+\/)*[^\/]+\.json$` (só caminho absoluto Linux).
-- `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:64-75` — `enable_json_entity_contracts` (default `false`), cuja única função é governar o par delete/copy de `contracts/`.
-- `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml:30-33` — `entity_name_package` com `<defaultValue/>` **vazio** → **primeiro** a disparar o FR-018.
+- `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:77-88` — `absolute_path_jsonfile_contract` com `<defaultValue/>` **vazio** e regex `^\/([^\/]+\/)*[^\/]+\.json$` (só caminho absoluto Linux).
+- `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:64-75` — `enable_json_entity_contracts` (default `false`), cuja única função é governar o par delete/copy de `contracts/`.
+- `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:30-33` — `entity_name_package` com `<defaultValue/>` **vazio** → **primeiro** a disparar o FR-018.
 - `target/classes/META-INF/maven/archetype-metadata.xml:200-203, 251-254` — o catálogo construído carrega os dois defaults vazios (34 flags).
 - `src/main/resources/META-INF/archetype_post_generate_body/archetype-global-variables.groovy:15` — `def absolute_path_jsonfile_contract = "${properties?.absolute_path_jsonfile_contract}"`; `:14` define `keep_json_entity_contracts`; `:16` define `json_entity_contracts_folder = "contracts"`.
 - `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-main-variables.groovy:27-28` — `Path srcMainResourcesContracts = srcMainResources.resolve(json_entity_contracts_folder)` e `Path jsonfileEntityContractSourcePath = Paths.get(absolute_path_jsonfile_contract)`.
@@ -103,7 +103,7 @@ Confiança: **alta**. Premissa e inoperância reproduzidas por execução real (
 
 **Preferred**: remover as duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `enable_json_entity_contracts`), eliminar o default vazio remanescente, invalidar o cache legado e reformular o perfil de IT. O contrato passa a existir **apenas** no prompt da LLM; a pasta `src/main/resources/contracts/` deixa de existir no projeto gerado.
 
-**Parte 1 — Catálogo** (`src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml`):
+**Parte 1 — Catálogo** (`src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml`):
 * Remover o bloco `<requiredProperty key="absolute_path_jsonfile_contract">` (linhas 77-88).
 * Remover o bloco `<requiredProperty key="enable_json_entity_contracts">` (linhas 64-75).
 * `entity_name_package`: `<defaultValue/>` → `<defaultValue>myentity</defaultValue>` — valor **completo e no formato correto** (casa com `^[a-z][a-z0-9_.]+$`), **eliminando a pendência do FR-018** que hoje aborta o mecanismo com exit 4. É o mesmo valor já esperado pelo check `0.4` do teste WIP.
@@ -141,7 +141,7 @@ Confiança: **alta**. Premissa e inoperância reproduzidas por execução real (
 * **B — Deprecar sem remover**: manter as duas flags com defaults sentinela, marcadas como obsoletas no catálogo e no README. Pro: menor blast radius — o `archetype:generate` em batch mode continua válido sem alteração nos consumidores. Contra: mantém 34 flags, mantém a exigência de valores sem sentido e deixa o fluxo morto documentado como vivo.
 
 **Files likely to change**:
-* `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml` — remover 2 flags, dar default a `entity_name_package`.
+* `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` — remover 2 flags, dar default a `entity_name_package`.
 * `src/main/resources/META-INF/archetype_post_generate_body/archetype-global-variables.groovy`
 * `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-main-variables.groovy`
 * `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-src-main-resources.groovy`

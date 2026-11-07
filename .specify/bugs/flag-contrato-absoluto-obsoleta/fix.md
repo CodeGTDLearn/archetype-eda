@@ -15,7 +15,7 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 
 | File | Change | Notes |
 |------|--------|-------|
-| `src/main/resources/META-INF/maven/archetype_metadata_properties/property-entity.xml` | modified | Removidos os blocos `enable_json_entity_contracts` (linhas 64-75) e `absolute_path_jsonfile_contract` (linhas 77-88). `entity_name_package`: `<defaultValue/>` → `<defaultValue>myentity</defaultValue>` — elimina o gate FR-018. Catálogo 34 → 32 flags. |
+| `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` | modified | Removidos os blocos `enable_json_entity_contracts` (linhas 64-75) e `absolute_path_jsonfile_contract` (linhas 77-88). `entity_name_package`: `<defaultValue/>` → `<defaultValue>myentity</defaultValue>` — elimina o gate FR-018. Catálogo 34 → 32 flags. |
 | `src/main/resources/META-INF/archetype_post_generate_body/archetype-global-variables.groovy` | modified | Removidas as definições `keep_json_entity_contracts`, `absolute_path_jsonfile_contract` e `json_entity_contracts_folder` (linhas 14-16). |
 | `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-main-variables.groovy` | modified | Removidos `srcMainResourcesContracts` e `jsonfileEntityContractSourcePath` (linhas 27-28). |
 | `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-src-main-resources.groovy` | **removed** | O arquivo continha **apenas** os ramos `deleteFolder`/`copyFile` de `contracts/`. Removido por inteiro — a pasta `contracts/` deixa de ser criada, apagada ou populada. |

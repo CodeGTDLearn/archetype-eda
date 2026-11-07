@@ -1,32 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE archetype-descriptor [
-    <!ENTITY property-api-general SYSTEM "archetype_metadata_properties/property-api-general.xml">
-    <!ENTITY property-authentication SYSTEM "archetype_metadata_properties/property-authentication.xml">
-    <!ENTITY property-binding-properties-tests SYSTEM "archetype_metadata_properties/property-binding-properties-tests.xml">
-    <!ENTITY property-binding-properties SYSTEM "archetype_metadata_properties/property-binding-properties.xml">
-    <!ENTITY property-cpanel SYSTEM "archetype_metadata_properties/property-cpanel.xml">
-    <!ENTITY property-docker SYSTEM "archetype_metadata_properties/property-docker.xml">
-    <!ENTITY property-entity SYSTEM "archetype_metadata_properties/property-entity.xml">
-    <!ENTITY property-general SYSTEM "archetype_metadata_properties/property-general.xml">
-    <!ENTITY property-github SYSTEM "archetype_metadata_properties/property-github.xml">
-    <!ENTITY property-java-version SYSTEM "archetype_metadata_properties/property-java-version.xml">
-    <!ENTITY property-language SYSTEM "archetype_metadata_properties/property-language.xml">
-    <!ENTITY property-logback SYSTEM "archetype_metadata_properties/property-logback.xml">
-    <!ENTITY property-lombok SYSTEM "archetype_metadata_properties/property-lombok.xml">
-    <!ENTITY property-pom-dependencies SYSTEM "archetype_metadata_properties/property-pom-dependencies.xml">
-    <!ENTITY property-properties-filetype SYSTEM "archetype_metadata_properties/property-properties-filetype.xml">
-    <!ENTITY property-project-i18n-language SYSTEM "archetype_metadata_properties/property-project-i18n-language.xml">
-    <!ENTITY property-src-test SYSTEM "archetype_metadata_properties/property-src-test.xml">
-    <!ENTITY fileset-cpanel SYSTEM "archetype_metadata_filesets/fileset-cpanel.xml">
-    <!ENTITY fileset-docker SYSTEM "archetype_metadata_filesets/fileset-docker.xml">
-    <!ENTITY fileset-github SYSTEM "archetype_metadata_filesets/fileset-github.xml">
-    <!ENTITY fileset-logback SYSTEM "archetype_metadata_filesets/fileset-logback.xml">
-    <!ENTITY fileset-maven SYSTEM "archetype_metadata_filesets/fileset-maven.xml">
-    <!ENTITY fileset-src-main-java SYSTEM "archetype_metadata_filesets/fileset-src-main-java.xml">
-    <!ENTITY fileset-src-main-resources SYSTEM "archetype_metadata_filesets/fileset-src-main-resources.xml">
-    <!ENTITY fileset-src-test-java SYSTEM "archetype_metadata_filesets/fileset-src-test-java.xml">
-    <!ENTITY fileset-src-test-resources SYSTEM "archetype_metadata_filesets/fileset-src-test-resources.xml">
+    <!ENTITY property-01-enable_api_cpanel SYSTEM "archetype_metadata_required_properties/property-01-enable_api_cpanel.xml">
+    <!ENTITY property-02-api_port SYSTEM "archetype_metadata_required_properties/property-02-api_port.xml">
+    <!ENTITY property-03-enable_jwt_authentication SYSTEM "archetype_metadata_required_properties/property-03-enable_jwt_authentication.xml">
+    <!ENTITY property-04-enable_binding_properties_tests SYSTEM "archetype_metadata_required_properties/property-04-enable_binding_properties_tests.xml">
+    <!ENTITY property-05-enable_binding_properties SYSTEM "archetype_metadata_required_properties/property-05-enable_binding_properties.xml">
+    <!ENTITY property-06-default_binding_properties SYSTEM "archetype_metadata_required_properties/property-06-default_binding_properties.xml">
+    <!ENTITY property-07-list_binding_properties SYSTEM "archetype_metadata_required_properties/property-07-list_binding_properties.xml">
+    <!ENTITY property-08-map_binding_properties SYSTEM "archetype_metadata_required_properties/property-08-map_binding_properties.xml">
+    <!ENTITY property-09-mutable_binding_properties SYSTEM "archetype_metadata_required_properties/property-09-mutable_binding_properties.xml">
+    <!ENTITY property-10-validated_binding_properties SYSTEM "archetype_metadata_required_properties/property-10-validated_binding_properties.xml">
+    <!ENTITY property-11-enable_api_cpanel_elk_log_system SYSTEM "archetype_metadata_required_properties/property-11-enable_api_cpanel_elk_log_system.xml">
+    <!ENTITY property-12-enable_docker SYSTEM "archetype_metadata_required_properties/property-12-enable_docker.xml">
+    <!ENTITY property-13-entity_name SYSTEM "archetype_metadata_required_properties/property-13-entity_name.xml">
+    <!ENTITY property-14-entity_name_package SYSTEM "archetype_metadata_required_properties/property-14-entity_name_package.xml">
+    <!ENTITY property-15-enable_custom_attributes SYSTEM "archetype_metadata_required_properties/property-15-enable_custom_attributes.xml">
+    <!ENTITY property-16-custom_attributes_list SYSTEM "archetype_metadata_required_properties/property-16-custom_attributes_list.xml">
+    <!ENTITY property-17-custom_attribute_imports SYSTEM "archetype_metadata_required_properties/property-17-custom_attribute_imports.xml">
+    <!ENTITY property-18-custom_enum_definitions SYSTEM "archetype_metadata_required_properties/property-18-custom_enum_definitions.xml">
+    <!ENTITY property-19-custom_nested_type_definitions SYSTEM "archetype_metadata_required_properties/property-19-custom_nested_type_definitions.xml">
+    <!ENTITY property-20-entity_contract_path SYSTEM "archetype_metadata_required_properties/property-20-entity_contract_path.xml">
+    <!ENTITY property-21-project_description SYSTEM "archetype_metadata_required_properties/property-21-project_description.xml">
+    <!ENTITY property-22-show_archetype_pos_processor_log SYSTEM "archetype_metadata_required_properties/property-22-show_archetype_pos_processor_log.xml">
+    <!ENTITY property-23-enable_git_support SYSTEM "archetype_metadata_required_properties/property-23-enable_git_support.xml">
+    <!ENTITY property-24-git_url_repo SYSTEM "archetype_metadata_required_properties/property-24-git_url_repo.xml">
+    <!ENTITY property-25-git_branch_repo SYSTEM "archetype_metadata_required_properties/property-25-git_branch_repo.xml">
+    <!ENTITY property-26-java_version SYSTEM "archetype_metadata_required_properties/property-26-java_version.xml">
+    <!ENTITY property-27-language SYSTEM "archetype_metadata_required_properties/property-27-language.xml">
+    <!ENTITY property-28-enable_logback SYSTEM "archetype_metadata_required_properties/property-28-enable_logback.xml">
+    <!ENTITY property-29-logback_console_type SYSTEM "archetype_metadata_required_properties/property-29-logback_console_type.xml">
+    <!ENTITY property-30-enable_logback_appender_smtp SYSTEM "archetype_metadata_required_properties/property-30-enable_logback_appender_smtp.xml">
+    <!ENTITY property-31-enable_logback_appender_file SYSTEM "archetype_metadata_required_properties/property-31-enable_logback_appender_file.xml">
+    <!ENTITY property-32-enable_lombok SYSTEM "archetype_metadata_required_properties/property-32-enable_lombok.xml">
+    <!ENTITY property-33-extra_POM_dependencies SYSTEM "archetype_metadata_required_properties/property-33-extra_POM_dependencies.xml">
+    <!ENTITY property-34-properties_filetype SYSTEM "archetype_metadata_required_properties/property-34-properties_filetype.xml">
+    <!ENTITY property-35-project_language SYSTEM "archetype_metadata_required_properties/property-35-project_language.xml">
+    <!ENTITY property-36-enable_folder_src_test_java SYSTEM "archetype_metadata_required_properties/property-36-enable_folder_src_test_java.xml">
+    <!ENTITY fileset-enable_api_cpanel_elk_log_system SYSTEM "archetype_metadata_filesets/fileset-enable_api_cpanel_elk_log_system.xml">
+    <!ENTITY fileset-enable_docker SYSTEM "archetype_metadata_filesets/fileset-enable_docker.xml">
+    <!ENTITY fileset-enable_git_support-git-temp SYSTEM "archetype_metadata_filesets/fileset-enable_git_support-git-temp.xml">
+    <!ENTITY fileset-enable_git_support-git-temp-config SYSTEM "archetype_metadata_filesets/fileset-enable_git_support-git-temp-config.xml">
+    <!ENTITY fileset-enable_git_support-gitignore SYSTEM "archetype_metadata_filesets/fileset-enable_git_support-gitignore.xml">
+    <!ENTITY fileset-base-readme SYSTEM "archetype_metadata_filesets/fileset-base-readme.xml">
+    <!ENTITY fileset-enable_logback SYSTEM "archetype_metadata_filesets/fileset-enable_logback.xml">
+    <!ENTITY fileset-base-maven-wrapper SYSTEM "archetype_metadata_filesets/fileset-base-maven-wrapper.xml">
+    <!ENTITY fileset-base-maven-root SYSTEM "archetype_metadata_filesets/fileset-base-maven-root.xml">
+    <!ENTITY fileset-base-src-main-java SYSTEM "archetype_metadata_filesets/fileset-base-src-main-java.xml">
+    <!ENTITY fileset-base-src-main-resources-application SYSTEM "archetype_metadata_filesets/fileset-base-src-main-resources-application.xml">
+    <!ENTITY fileset-base-src-main-resources-properties SYSTEM "archetype_metadata_filesets/fileset-base-src-main-resources-properties.xml">
+    <!ENTITY fileset-base-src-main-resources-protected-properties SYSTEM "archetype_metadata_filesets/fileset-base-src-main-resources-protected-properties.xml">
+    <!ENTITY fileset-base-src-main-resources-db-scripts SYSTEM "archetype_metadata_filesets/fileset-base-src-main-resources-db-scripts.xml">
+    <!ENTITY fileset-enable_jwt_authentication SYSTEM "archetype_metadata_filesets/fileset-enable_jwt_authentication.xml">
+    <!ENTITY fileset-enable_folder_src_test_java-src-test-java SYSTEM "archetype_metadata_filesets/fileset-enable_folder_src_test_java-src-test-java.xml">
+    <!ENTITY fileset-enable_folder_src_test_java-src-test-resources SYSTEM "archetype_metadata_filesets/fileset-enable_folder_src_test_java-src-test-resources.xml">
+    <!ENTITY fileset-enable_folder_src_test_java-src-test-resources-properties SYSTEM "archetype_metadata_filesets/fileset-enable_folder_src_test_java-src-test-resources-properties.xml">
 ]>
 
 <archetype-descriptor
@@ -37,34 +65,62 @@
         name="arch">
 
     <requiredProperties>
-        &property-api-general;
-        &property-authentication;
-        &property-binding-properties-tests;
-        &property-binding-properties;
-        &property-cpanel;
-        &property-docker;
-        &property-entity;
-        &property-general;
-        &property-github;
-        &property-java-version;
-        &property-language;
-        &property-logback;
-        &property-lombok;
-        &property-pom-dependencies;
-        &property-properties-filetype;
-        &property-project-i18n-language;
-        &property-src-test;
+        &property-01-enable_api_cpanel;
+        &property-02-api_port;
+        &property-03-enable_jwt_authentication;
+        &property-04-enable_binding_properties_tests;
+        &property-05-enable_binding_properties;
+        &property-06-default_binding_properties;
+        &property-07-list_binding_properties;
+        &property-08-map_binding_properties;
+        &property-09-mutable_binding_properties;
+        &property-10-validated_binding_properties;
+        &property-11-enable_api_cpanel_elk_log_system;
+        &property-12-enable_docker;
+        &property-13-entity_name;
+        &property-14-entity_name_package;
+        &property-15-enable_custom_attributes;
+        &property-16-custom_attributes_list;
+        &property-17-custom_attribute_imports;
+        &property-18-custom_enum_definitions;
+        &property-19-custom_nested_type_definitions;
+        &property-20-entity_contract_path;
+        &property-21-project_description;
+        &property-22-show_archetype_pos_processor_log;
+        &property-23-enable_git_support;
+        &property-24-git_url_repo;
+        &property-25-git_branch_repo;
+        &property-26-java_version;
+        &property-27-language;
+        &property-28-enable_logback;
+        &property-29-logback_console_type;
+        &property-30-enable_logback_appender_smtp;
+        &property-31-enable_logback_appender_file;
+        &property-32-enable_lombok;
+        &property-33-extra_POM_dependencies;
+        &property-34-properties_filetype;
+        &property-35-project_language;
+        &property-36-enable_folder_src_test_java;
     </requiredProperties>
 
     <fileSets>
-        &fileset-cpanel;
-        &fileset-docker;
-        &fileset-github;
-        &fileset-logback;
-        &fileset-maven;
-        &fileset-src-main-java;
-        &fileset-src-main-resources;
-        &fileset-src-test-java;
-        &fileset-src-test-resources;
+        &fileset-enable_api_cpanel_elk_log_system;
+        &fileset-enable_docker;
+        &fileset-enable_git_support-git-temp;
+        &fileset-enable_git_support-git-temp-config;
+        &fileset-enable_git_support-gitignore;
+        &fileset-base-readme;
+        &fileset-enable_logback;
+        &fileset-base-maven-wrapper;
+        &fileset-base-maven-root;
+        &fileset-base-src-main-java;
+        &fileset-base-src-main-resources-application;
+        &fileset-base-src-main-resources-properties;
+        &fileset-base-src-main-resources-protected-properties;
+        &fileset-base-src-main-resources-db-scripts;
+        &fileset-enable_jwt_authentication;
+        &fileset-enable_folder_src_test_java-src-test-java;
+        &fileset-enable_folder_src_test_java-src-test-resources;
+        &fileset-enable_folder_src_test_java-src-test-resources-properties;
     </fileSets>
 </archetype-descriptor>

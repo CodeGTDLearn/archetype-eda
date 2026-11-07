@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-06-DEFAULT_BINDING_PROPERTIES.XML ________________ -->
+<!-- FLAG: default_binding_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo default (carrega .properties fixo). -->
+<!--   PROMPT      : Enable 'Default Binding Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="default_binding_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

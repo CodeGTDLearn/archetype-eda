@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-20-ENTITY_CONTRACT_PATH.XML ______________________ -->
+<!-- FLAG: entity_contract_path -->
+<!--   DESCRIPTION : Caminho do arquivo JSON que contem o contrato do modulo. -->
+<!--                 Preenchido pelo mecanismo de inferencia LLM (que grava o -->
+<!--                 contrato extraido do prompt e emite o caminho aqui). Quando o -->
+<!--                 arquivo existe E enable_folder_src_test_java=true, o -->
+<!--                 pos-processador copia o contrato para -->
+<!--                 src/test/resources/contracts/contract.json no projeto -->
+<!--                 gerado - o contrato passa a ser a base do modulo. -->
+<!--   PROMPT      : (interno - preenchido pelo mecanismo de inferencia LLM) -->
+<!--   TYPE        : path -->
+<!--   DEFAULT     : none -->
+<!--   DOMAIN      : none OU caminho (absoluto ou relativo) para arquivo .json -->
+<!--   DEPENDS_ON  : enable_folder_src_test_java = true (a pasta de contratos -->
+<!--                  existe apenas quando a arvore de testes e mantida) -->
+<!--   VALIDATION  : ^(none|[^\r\n]*\.json)$ -->
+<requiredProperty key="entity_contract_path">
+    <defaultValue>none</defaultValue>
+    <validationRegex>^(none|[^\r\n]*\.json)$</validationRegex>
+</requiredProperty>

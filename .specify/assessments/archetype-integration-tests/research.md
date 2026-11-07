@@ -24,7 +24,7 @@
 
 ## Data & Constraints
 
-- **Surface area** — 34 `requiredProperty` flags across 17 `property-*.xml` files in `src/main/resources/META-INF/maven/archetype_metadata_properties/`. — [source: repo, count via `grep` of `requiredProperty key=`] (confidence: high)
+- **Surface area** — 34 `requiredProperty` flags across 17 `property-*.xml` files in `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`. — [source: repo, count via `grep` of `requiredProperty key=`] (confidence: high)
 - **Dependency graph** — Extracted from `DEPENDS_ON` comments in the same XMLs:
   - `enable_git_support` → `git_url_repo`, `git_branch_repo`
   - `enable_custom_attributes` → `custom_attributes_list`

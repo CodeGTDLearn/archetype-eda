@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-14-ENTITY_NAME_PACKAGE.XML _______________________ -->
+<!-- FLAG: entity_name_package -->
+<!--   DESCRIPTION : Pacote Java derivado (lowercase) de entity_name. -->
+<!--                 NAO TROCAR a derivacao - Groovy/templates dependem. -->
+<!--   PROMPT      : (auto-derivado de entity_name) -->
+<!--   TYPE        : package -->
+<!--   DEFAULT     : myentity -->
+<!--   DOMAIN      : ^[a-z][a-z0-9_.]+$ -->
+<!--   DEPENDS_ON  : E derivado de entity_name (em minusculas, sem -->
+<!--                  caracteres especiais). O default 'myentity' existe -->
+<!--                  para satisfazer o FR-018 (defaultValue nao vazio em -->
+<!--                  todo <requiredProperty>); quem gera o projeto DEVE -->
+<!--                  passar -Dentity_name_package=<entity_name em -->
+<!--                  minusculas> para que o pacote acompanhe o nome da -->
+<!--                  entidade. -->
+<!--   VALIDATION  : ^[a-z][a-z0-9_.]+$ -->
+<requiredProperty key="entity_name_package">
+    <defaultValue>myentity</defaultValue>
+    <validationRegex>^[a-z][a-z0-9_.]+$</validationRegex>
+</requiredProperty>

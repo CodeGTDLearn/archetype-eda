@@ -74,7 +74,7 @@ grep -rE 'read -n 1 -s|read -p' pom.xml src/ bash_script/script_core.sh bash_scr
 
 ### Passo 7: Validar adição de nova flag
 
-1. Criar `src/main/resources/META-INF/maven/archetype_metadata_properties/property-test-flag.xml`:
+1. Criar `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-test-flag.xml`:
    ```xml
    <requiredProperty key="enable_test_flag">
      <defaultValue>false</defaultValue>

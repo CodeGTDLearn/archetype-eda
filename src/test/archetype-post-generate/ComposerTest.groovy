@@ -2,7 +2,7 @@
  * Unit test for the build-time composer: ArchetypePostGenerateComposer.groovy.
  *
  * The composer is the Maven-side piece of the archetype: it merges the 11
- * body files, the 11 variables, the 12 snippets and the imports block into
+ * body files, the 11 variables, the 13 snippets and the imports block into
  * target/classes/META-INF/archetype-post-generate.groovy.
  *
  * This suite asserts the STRUCTURE and the IDEMPOTENCE (no golden master):
@@ -87,7 +87,7 @@ check("4.2 the sections are in the canonical order",
 def variables = new File("src/main/resources/META-INF/archetype_post_generate_variables").listFiles().findAll { it.isFile() }
 def snippets = new File("src/main/resources/META-INF/archetype_post_generate_snippets").listFiles().findAll { it.isFile() }
 check("5.1 the archetype has 11 variables", variables.size() == 11)
-check("5.2 the archetype has 12 snippets", snippets.size() == 12)
+check("5.2 the archetype has 13 snippets", snippets.size() == 13)
 def markerOf = { File f ->
     def m = (f.getText("UTF-8") =~ /(?m)^\/\/ ((?:VARIABLES|SNIPPET)-[A-Z0-9-]+\.GROOVY)/)
     return m.find() ? m.group(1) : null

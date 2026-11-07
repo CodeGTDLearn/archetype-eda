@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-28-ENABLE_LOGBACK.XML ____________________________ -->
+<!-- FLAG: enable_logback -->
+<!--   DESCRIPTION : Habilita o uso de Logback como sistema de log (logback-spring.xml). -->
+<!--   PROMPT      : Enable 'Logback' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_logback">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

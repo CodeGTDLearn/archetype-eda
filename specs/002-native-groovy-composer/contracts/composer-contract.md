@@ -24,7 +24,7 @@ src/main/resources/META-INF/
 - Conter apenas código Groovy sintaticamente válido.
 - Ser UTF-8 encoded (sem BOM, a menos que decisão posterior).
 - Terminar com newline.
-- (Para arquivos em `snippets/`) começar com um bloco de comentário `// FLAG: enable_xxx` (ou similar) referenciando a flag correspondente em `archetype_metadata_properties/`.
+- (Para arquivos em `snippets/`) começar com um bloco de comentário `// FLAG: enable_xxx` (ou similar) referenciando a flag correspondente em `archetype_metadata_required_properties/`.
 
 ### Configuração Groovy Build-Time
 

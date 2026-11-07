@@ -26,7 +26,9 @@ class DerivedFlagProjector {
                Map<String, String> notes, Map<String, CatalogEntry> catalog,
                Map<String, Object> derived, List<String> diagnostics) {
         List<Map<String, Object>> details = (List<Map<String, Object>>) derived.get("attributeDetails")
-        if (details == null || details.isEmpty()) return
+        List<Map<String, Object>> derivedEnums = (List<Map<String, Object>>) derived.get("enumTypes")
+        if ((details == null || details.isEmpty()) && (derivedEnums == null || derivedEnums.isEmpty())) return
+        if (details == null) details = new ArrayList<Map<String, Object>>()
 
         List<String> imports = new ArrayList<String>()
         Map<String, List<String>> enums = new LinkedHashMap<String, List<String>>()
@@ -59,6 +61,28 @@ class DerivedFlagProjector {
                 }
                 for (Object constant : (List<Object>) detail.get("enumConstants")) {
                     if (!constants.contains(constant)) constants.add((String) constant)
+                }
+            }
+        }
+
+        // Enums derived from the PAYLOAD convention (UPPERCASE arrays). Their
+        // scope decides the package: "entity" is the entity package (bare
+        // name), "nested" is the nested subpackage (the snippet resolves the
+        // "nested." marker).
+        if (derivedEnums != null) {
+            for (Map<String, Object> derivedEnum : derivedEnums) {
+                Object rawName = derivedEnum.get("name")
+                Object rawScope = derivedEnum.get("scope")
+                List<Object> constants = (List<Object>) derivedEnum.get("constants")
+                if (rawName == null || constants == null || constants.isEmpty()) continue
+                String key = "nested".equals(rawScope) ? "nested." + rawName.toString() : rawName.toString()
+                List<String> bucket = enums.get(key)
+                if (bucket == null) {
+                    bucket = new ArrayList<String>()
+                    enums.put(key, bucket)
+                }
+                for (Object constant : constants) {
+                    if (!bucket.contains(constant)) bucket.add(constant.toString())
                 }
             }
         }
