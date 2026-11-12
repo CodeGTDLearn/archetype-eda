@@ -1,1 +1,0 @@
-{"nodes": [{"id": "$graphify-root$_src_test_resources_projects_custom_enums_from_payload_verify_groovy", "label": "verify.groovy", "file_type": "code", "source_file": "src/test/resources/projects/custom-enums-from-payload/verify.groovy", "source_location": "L1"}], "edges": [], "raw_calls": [], "parse_errors": {"first_error_line": 16, "multiline_error": false}}

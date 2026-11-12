@@ -74,9 +74,12 @@ def keyMismatch = fragments.findAll { File f ->
 }
 check("1.3 every fragment is named property-<NN>-<key>.xml and the key matches: ${keyMismatch*.name}",
         keyMismatch.isEmpty())
-def numbers = fragments.collect { (it.name =~ NAMING)[0][1] as int }.sort()
+def namedFragments = fragments.findAll { NAMING.matcher(it.name).matches() }
+def numbers = namedFragments.collect { (it.name =~ NAMING)[0][1] as int }.sort()
 check("1.4 the NN sequence is contiguous and duplicate-free: ${numbers}",
-        numbers == numbers.toSet().sort() && numbers == (numbers.first()..numbers.last()).toList())
+        !numbers.isEmpty()
+                && numbers == numbers.toSet().sort()
+                && numbers == (numbers.first()..numbers.last()).toList())
 
 // ---------------------------------------------------------------------------
 // C. every fragment has an entity in the aggregator (1:1, both directions)

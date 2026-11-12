@@ -1,33 +1,33 @@
 # Graph Report - archetype-v2-eda  (2026-11-12)
 
 ## Corpus Check
-- 277 files · ~239,531 words
+- 325 files · ~204,641 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 126 file(s) not represented in the graph (top: .xml 63, .properties 23, (none) 22)
+- Unclassified: 132 file(s) not represented in the graph (top: .xml 63, .properties 30, (none) 21)
+- WARNING: 132 of 490 files seen (27%) have no supported extractor and are missing from this graph entirely. It may look complete while representing only part of the codebase.
 
 ## Summary
-- 1343 nodes · 1737 edges · 197 communities (76 shown, 121 thin omitted)
+- 1393 nodes · 1772 edges · 208 communities (63 shown, 145 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 67 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `00613c68`
+- Built from commit: `3f1f5729`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- assert
-- entity_name
+- steps
+- org.springframework.boot.test.context.SpringBootTest
 - ApplicationPropertiesValidationTest.java
 - Archetype WebService README
 - Data Model: Inferência LLM das flags do `mvn archetype:generate`
 - speckit.specify command
 - MapPropertiesTest
 - AuthenticationCredentials
-- messagedigest
 - Data Model: Native Groovy Composer
 - $
-- bufferedreader
+- MapPropertiesRecordTest
 - Concept: Multi-Fixture Integration-Test Matrix for eda-archetype
 - create_new_feature_branch.py
 - properties
@@ -41,11 +41,10 @@
 - extension.yml - assess extension manifest
 - path
 - Como localizar e ler o archetype
-- auto_commit.py
+- ApplicationPropertiesTest
 - 1. Mechanism invocation contract (operator-facing)
 - Suspected Code Paths
 - ListPropertiesRecordTest
-- mvnw
 - Quickstart Validation Guide: Inferência LLM das flags do `mvn archetype:generate`
 - Como resolver tipos e enums
 - Maven archetype build success and catalog XML screenshot
@@ -57,19 +56,15 @@
 - Five-Stage Assessment Pipeline (intake -> research -> define -> shape -> decide)
 - Spring Initializr Configuration Form
 - Como derivar flags de tipos aninhados
-- __entity_name__.java
 - User Scenarios & Testing *(mandatory)*
 - DevSecOps Principle
-- MapPropertiesImmutableTest
+- Matriz por cluster
 - Leia este arquivo primeiro
 - Bug Assessment: Flag `absolute_path_jsonfile_contract` obsoleta e sem fonte (o contrato JSON já chega inline no prompt da LLM)
 - AdminRoutes.java
 - ApiRoutes.java
-- data
 - $
 - Basic Project Goal
-- files
-- noargsconstructor
 - Full Project Goal
 - Bug Fix: Flag `absolute_path_jsonfile_contract` removida do catálogo (o contrato JSON já chega inline no prompt da LLM)
 - Minimal Project Goal
@@ -79,12 +74,6 @@
 - Checklist Template
 - com.eda-archetype:eda-archetype
 - ${groupId}:${artifactId}
-- Principle IV: Binding Duplo de Configuracao Externalizada
-- Principle V: Credenciais Nunca Entram no Repositorio
-- Principle I: Modularidade por Chave de Ativacao (NON-NEGOTIABLE)
-- Principle II: Convencao Fixa de Nomenclatura para Artefatos de Extensao (NON-NEGOTIABLE)
-- Principle III: Pacote por Funcionalidade no Codigo Gerado
-- Principle VI: Validar Antes de Culpar o Codigo
 - Option B - Custom Groovy/JUnit Driver (rejected)
 - Option C - Buy Instead of Build (non-option)
 - Create Feature Branch
@@ -92,12 +81,10 @@
 - Create Feature Branch
 - Git Branching Workflow Extension
 - Phase 0 Research: Inferência LLM das flags do `mvn archetype:generate`
-- jsonslurper
 - Auto-Commit Changes
 - Specification Quality Checklist: Inferência LLM das flags do `mvn archetype:generate`
 - Bug Verification: Contrato JSON dirige a entidade gerada e é persistido no módulo (`src/test/resources/contracts/`)
 - Auto-Commit Changes
-- groovyclassloader
 - Initialize Git Repository
 - Detect Git Remote URL
 - Validate Feature Branch
@@ -108,47 +95,37 @@
 - auto-commit.sh
 - initialize-repo.sh
 - STATUS — SUPERSEDED
-- rule
 - Implementation Drift (Recorded 2026-10-12, during `/speckit.implement`)
-- groovyresourceloader
-- jsonoutput
-- xmlslurper
-- temporaryfolder
-- test
 - Como aplicar precedência e validação
 - Como materializar e emitir o contrato
 - Como relatar proveniência
-- $
 - Entregáveis e relatórios
-- $
 - Índice — mapa dos arquivos e ordem de leitura
 - Papel e restrições do agente
-- $
-- $
 
 ## God Nodes (most connected - your core abstractions)
 1. `$` - 24 edges
 2. `Tasks: Inferência LLM das flags do `mvn archetype:generate`` - 21 edges
-3. `main()` - 20 edges
-4. `AuthenticationCredentials` - 20 edges
+3. `AuthenticationCredentials` - 20 edges
+4. `main()` - 20 edges
 5. `ListPropertiesTest` - 19 edges
 6. `ApplicationPropertiesValidationTest` - 16 edges
 7. `Quickstart Validation Guide: Inferência LLM das flags do `mvn archetype:generate`` - 16 edges
-8. `create-new-feature-branch.sh script` - 15 edges
-9. `MapPropertiesTest` - 15 edges
+8. `MapPropertiesTest` - 15 edges
+9. `create-new-feature-branch.sh script` - 15 edges
 10. `MapPropertiesImmutableTest` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `defaults-only IT profile goal (clean + verify)` --conceptually_related_to--> `Problem Definition: Inferência LLM das flags do mvn archetype:generate`  [INFERRED]
   src/test/resources/projects/defaults-only/goal.txt → .specify/assessments/llm-flag-inference/problem.md
-- `Eda Archetype README` --references--> `Idea Intake: Substituir bash pre-processor por composição nativa Groovy`  [INFERRED]
-  README.md → .specify/assessments/groovy-snippet-injection/intake.md
-- `Eda Archetype README` --references--> `Decision: Inferência LLM das flags — go (Opção B)`  [INFERRED]
-  README.md → .specify/assessments/llm-flag-inference/decision.md
-- `Decision: Multi-Fixture Integration-Test Matrix for eda-archetype` --conceptually_related_to--> `Constitution do EDA Archetype (v1.0.0)`  [AMBIGUOUS]
-  .specify/assessments/archetype-integration-tests/decision.md → .specify/memory/constitution.md
-- `Eda Archetype README` --references--> `Quickstart: Integration Test Matrix`  [EXTRACTED]
-  README.md → specs/001-archetype-integration-tests/quickstart.md
+- `ELK Stack Docker Compose` --rationale_for--> `Advanced Multi-layer Logging System`  [INFERRED]
+  src/main/resources/archetype-resources/docker/elk-compose.yml → src/main/resources/archetype-resources/README.md
+- `Spring Actuator` --conceptually_related_to--> `API Service (Spring Boot + Vaadin)`  [INFERRED]
+  src/main/resources/archetype-resources/README.md → src/main/resources/archetype-resources/docker/api-compose.yml
+- `Spring Boot + Vaadin WebService` --implements--> `API Service (Spring Boot + Vaadin)`  [INFERRED]
+  src/main/resources/archetype-resources/README.md → src/main/resources/archetype-resources/docker/api-compose.yml
+- `Swagger API Documentation` --conceptually_related_to--> `API Service (Spring Boot + Vaadin)`  [INFERRED]
+  src/main/resources/archetype-resources/README.md → src/main/resources/archetype-resources/docker/api-compose.yml
 
 ## Import Cycles
 - None detected.
@@ -172,19 +149,19 @@
 - **Maven Archetype Install and Catalog Lifecycle** — assets_archetype-log_archetype_install_log, assets_archetype-log_1_archetype_catalog_append, assets_archetype-log_2_archetype_catalog_filter [INFERRED 0.85]
 - **Spring Boot Project Initialization Flow** — assets_spr_init_config_spring_initializr_form, assets_spr_init_folder_structure_spring_project_layout, assets_spr_init_pom_spring_boot_pom_xml [INFERRED 0.85]
 
-## Communities (197 total, 121 thin omitted)
+## Communities (208 total, 145 thin omitted)
 
-### Community 1 - "entity_name"
-Cohesion: 0.25
-Nodes (9): annotation, AuthenticationService, RestController, Service, $, $, pattern, type (+1 more)
+### Community 0 - "steps"
+Cohesion: 0.10
+Nodes (19): name, runs-on, steps, jobs, build, name, on, pull_request (+11 more)
 
-### Community 2 - "ApplicationPropertiesValidationTest.java"
+### Community 1 - "org.springframework.boot.test.context.SpringBootTest"
 Cohesion: 0.08
-Nodes (40): after_each_test_method, api, assertdoesnotthrow, assertions, assertthrows, autowired, BeforeAll, bindable (+32 more)
+Nodes (11): $, $, $, $, $, $, $, $ (+3 more)
 
 ### Community 3 - "Archetype WebService README"
 Cohesion: 0.08
-Nodes (40): Advanced Multi-layer Logging System, Constructor Binding (Immutable), Credentials Protection Strategy (3-tier), DevSecOps, EhCache, Global GitIgnore Implementation, Grafana (typo 'Graphana' in README), JavaBean Binding (Mutable) (+32 more)
+Nodes (34): Constructor Binding (Immutable), DevSecOps, EhCache, Grafana (typo 'Graphana' in README), JavaBean Binding (Mutable), Logstash TCP-Socket Appender, Lombok, External Vault Path (WORKBASE/DEV/vault) (+26 more)
 
 ### Community 4 - "Data Model: Inferência LLM das flags do `mvn archetype:generate`"
 Cohesion: 0.05
@@ -192,31 +169,27 @@ Nodes (41): Cache entry shape, Cache key shape, Contract, Cross-entity invariant
 
 ### Community 5 - "speckit.specify command"
 Cohesion: 0.11
-Nodes (35): speckit.analyze command, speckit.assess.decide command, speckit.assess.define command, speckit.assess.intake command, speckit.assess.research command, speckit.assess.shape command, speckit.bug.assess command, speckit.bug.fix command (+27 more)
+Nodes (21): speckit.analyze command, speckit.assess.decide command, speckit.assess.define command, speckit.assess.intake command, speckit.assess.research command, speckit.assess.shape command, speckit.bug.assess command, speckit.bug.fix command (+13 more)
 
 ### Community 6 - "MapPropertiesTest"
 Cohesion: 0.08
-Nodes (21): collections, org.springframework.boot.context.properties.bind.ConstructorBinding, org.springframework.boot.context.properties.ConfigurationProperties, org.springframework.stereotype.Component, MapItem, MapProperties, MapPropertiesImmutable, Override (+13 more)
+Nodes (6): MapItem, MapProperties, MapPropertiesImmutable, MapPropertiesRecord, MapPropertiesImmutableTest, MapPropertiesTest
 
 ### Community 7 - "AuthenticationCredentials"
-Cohesion: 0.06
-Nodes (16): component, configurationproperties, lombok.Getter, lombok.Setter, notempty, org.springframework.validation.annotation.Validated, pattern, ApplicationProperties (+8 more)
+Cohesion: 0.07
+Nodes (3): ApplicationProperties, AdminCredentials, AuthenticationCredentials
 
 ### Community 9 - "Data Model: Native Groovy Composer"
 Cohesion: 0.11
-Nodes (23): Spec Quality Checklist: Native Groovy Composer, Composer Build-Time Contract, Byte-equivalence acceptance criterion, org.codehaus.gmaven:groovy-maven-plugin:2.1.1, Composer Manifest (List<String> SECTIONS), Data Model: Native Groovy Composer, Imported-Block Entity, Section Entity (+15 more)
-
-### Community 10 - "$"
-Cohesion: 0.10
-Nodes (21): bcryptpasswordencoder, bean, customizer, httpsecurity, immutablejwkset, jwk, jwkset, jwksource (+13 more)
+Nodes (19): Spec Quality Checklist: Native Groovy Composer, Composer Build-Time Contract, org.codehaus.gmaven:groovy-maven-plugin:2.1.1, Composer Manifest (List<String> SECTIONS), Data Model: Native Groovy Composer, Imported-Block Entity, Section Entity, Snippet Entity (+11 more)
 
 ### Community 12 - "Concept: Multi-Fixture Integration-Test Matrix for eda-archetype"
 Cohesion: 0.09
-Nodes (36): Concept: Multi-Fixture Integration-Test Matrix for eda-archetype, Decision: Multi-Fixture Integration-Test Matrix for eda-archetype, Idea Intake: Comprehensive Integration Test Suite for eda-archetype, Problem Definition: Lack of Regression Coverage Across eda-archetype Flag Combinations, Idea Research: Comprehensive Integration Test Suite for eda-archetype, Constitution do EDA Archetype (v1.0.0), Constitution Template, Apache maven-archetype#1032 precedent (PR merged 2026-09-21; 33 ITs passing) (+28 more)
+Nodes (33): Concept: Multi-Fixture Integration-Test Matrix for eda-archetype, Decision: Multi-Fixture Integration-Test Matrix for eda-archetype, Idea Intake: Comprehensive Integration Test Suite for eda-archetype, Problem Definition: Lack of Regression Coverage Across eda-archetype Flag Combinations, Idea Research: Comprehensive Integration Test Suite for eda-archetype, Constitution do EDA Archetype (v1.0.0), Constitution Template, Apache maven-archetype#1032 precedent (PR merged 2026-09-21; 33 ITs passing) (+25 more)
 
 ### Community 13 - "create_new_feature_branch.py"
-Cohesion: 0.11
-Nodes (39): dataclasses, datetime, importlib_util, json, os, Args, branch_token(), _byte_length() (+31 more)
+Cohesion: 0.05
+Nodes (37): _find_project_root(), main(), _parse_auto_commit_config(), _strip_quotes(), _value_after_colon(), Args, branch_token(), _byte_length() (+29 more)
 
 ### Community 14 - "properties"
 Cohesion: 0.04
@@ -224,7 +197,7 @@ Nodes (45): additionalProperties, type, oneOf, additionalProperties, properties,
 
 ### Community 15 - "ListPropertiesTest"
 Cohesion: 0.10
-Nodes (15): ListObjects, ListProperties, ListPropertiesImmutable, BeforeEach, Order, OrderAnnotation, Test, TestMethodOrder (+7 more)
+Nodes (5): ListObjects, ListProperties, ListPropertiesImmutable, ListPropertiesImmutableTest, ListPropertiesTest
 
 ### Community 16 - "common.ps1"
 Cohesion: 0.23
@@ -238,10 +211,6 @@ Nodes (15): Concept: Compositor nativo Groovy para archetype-post-generate.groov
 Cohesion: 0.16
 Nodes (24): branch_scope_prefix(), branch_token(), build_branch_name(), _byte_length(), check_existing_branches(), clean_branch_name(), extract_feature_num_from_branch(), _extract_highest_number() (+16 more)
 
-### Community 19 - "ApplicationPropertiesRecordTest"
-Cohesion: 0.25
-Nodes (7): ApplicationPropertiesRecordTest, ApplicationPropertiesRecord, BeforeEach, Order, OrderAnnotation, Test, TestMethodOrder
-
 ### Community 20 - "create-new-feature-branch.ps1"
 Cohesion: 0.16
 Nodes (15): ConvertTo-BranchToken(), ConvertTo-CleanBranchName(), Expand-BranchTemplate(), Get-AppToken(), Get-BranchName(), Get-BranchScopePrefix(), Get-GitAuthorToken(), Get-HighestNumberFromBranches() (+7 more)
@@ -252,19 +221,15 @@ Nodes (40): Dependencies & Execution Order, Format: `[ID] [P?] [Story] Descripti
 
 ### Community 22 - "extension.yml - assess extension manifest"
 Cohesion: 0.21
-Nodes (13): speckit.assess.decide command, speckit.assess.define command, speckit.assess.intake command, speckit.assess.research command, speckit.assess.shape command, extension.yml - assess extension manifest, speckit.bug.assess command, speckit.bug.fix command (+5 more)
+Nodes (11): speckit.assess.decide command, speckit.assess.define command, speckit.assess.intake command, speckit.assess.research command, speckit.assess.shape command, extension.yml - assess extension manifest, speckit.bug.assess command, speckit.bug.fix command (+3 more)
 
 ### Community 23 - "path"
 Cohesion: 0.07
-Nodes (12): path, paths, Bug Fix: Contrato JSON dirige a entidade gerada (derivação + allowlist FR-009) e é persistido no módulo (`src/test/resources/contracts/`), Changes, Deviations from Assessment, Diff Highlights, Follow-ups, Local Verification (+4 more)
+Nodes (10): Bug Fix: Contrato JSON dirige a entidade gerada (derivação + allowlist FR-009) e é persistido no módulo (`src/test/resources/contracts/`), Changes, Deviations from Assessment, Diff Highlights, Follow-ups, Local Verification, Summary, Tests Added or Updated (+2 more)
 
 ### Community 24 - "Como localizar e ler o archetype"
 Cohesion: 0.13
 Nodes (14): 1. Localizar o artefato, 2. Listar e extrair, 3.1 Catálogo consolidado, 3.2 Fragmentos por flag, 3.3 Pós-processador, 3.4 Templates, 3. O que ler, 4. Como interpretar o catálogo (+6 more)
-
-### Community 25 - "auto_commit.py"
-Cohesion: 0.10
-Nodes (28): pathlib, re, shutil, _find_project_root(), main(), _parse_auto_commit_config(), Path, Git extension: auto_commit.py Automatically commit changes after a Spec Kit… (+20 more)
 
 ### Community 26 - "1. Mechanism invocation contract (operator-facing)"
 Cohesion: 0.08
@@ -273,14 +238,6 @@ Nodes (25): 1. Mechanism invocation contract (operator-facing), 2. External infe
 ### Community 27 - "Suspected Code Paths"
 Cohesion: 0.05
 Nodes (36): Alternatives (com trade-offs), Bug Assessment: Contrato JSON no prompt não dirige a entidade gerada (FR-009) **e** o contrato não é persistido no projeto gerado, Documentação — divergente do código, Especificação — lacunas, Files likely to change, Metade B, Metade B — a premissa do relato, verificada como verdadeira, Metade B — bloqueante: o caminho de cache HIT está quebrado (pré-existente, agora alcançável) (+28 more)
-
-### Community 28 - "ListPropertiesRecordTest"
-Cohesion: 0.21
-Nodes (8): Override, ListPropertiesRecord, BeforeEach, Order, OrderAnnotation, Test, TestMethodOrder, ListPropertiesRecordTest
-
-### Community 29 - "mvnw"
-Cohesion: 0.38
-Nodes (8): mvnw script, clean(), die(), exec_maven(), hash_string(), set_java_home(), trim(), verbose()
 
 ### Community 30 - "Quickstart Validation Guide: Inferência LLM das flags do `mvn archetype:generate`"
 Cohesion: 0.12
@@ -310,10 +267,6 @@ Nodes (5): Archetype Catalog Append Step, archetype-catalog.xml File, Archetype 
 Cohesion: 0.17
 Nodes (11): 1. Entradas, 2. Nome da entidade, 3. Pacote da entidade, 4.1 Formas aceitas de `attributes`, 4.2 Campos de negócio, 4. Extração dos atributos, 5. Nome do atributo, 6. Lista de atributos (+3 more)
 
-### Community 38 - "Five-Stage Assessment Pipeline (intake -> research -> define -> shape -> decide)"
-Cohesion: 0.50
-Nodes (4): README - Idea Assessment Pipeline Extension, README - Bug Triage Workflow Extension, Five-Stage Assessment Pipeline (intake -> research -> define -> shape -> decide), Three-Stage Bug Triage Workflow (assess -> fix -> test)
-
 ### Community 39 - "Spring Initializr Configuration Form"
 Cohesion: 0.67
 Nodes (4): Spring Boot Project Metadata Model, Spring Initializr Configuration Form, Spring Boot Project Folder Structure, Spring Boot pom.xml Screenshot
@@ -322,21 +275,13 @@ Nodes (4): Spring Boot Project Metadata Model, Spring Initializr Configuration F
 Cohesion: 0.17
 Nodes (11): 1.1 Nome do POJO, 1.2 Campos do POJO, 1.3 Profundidade, 1.4 Objetos inválidos, 1. Objetos aninhados, 2. `contract_nested_type_definitions`, 3. `custom_entity_attribute_imports`, 4. `contract_enum_definitions` (+3 more)
 
-### Community 41 - "__entity_name__.java"
-Cohesion: 0.33
-Nodes (5): custom_import_trim, entity, generatedvalue, generationtype, id
-
 ### Community 42 - "User Scenarios & Testing *(mandatory)*"
 Cohesion: 0.12
 Nodes (16): Assumptions, Constitution Compliance, Edge Cases, Feature Specification: Inferência LLM das flags do `mvn archetype:generate`, Functional Requirements, Key Entities, Measurable Outcomes, Requirements *(mandatory)* (+8 more)
 
-### Community 43 - "DevSecOps Principle"
-Cohesion: 0.67
-Nodes (3): DevSecOps Triangle Diagram, DevSecOps Principle, Global Git Ignore Secret Patterns
-
-### Community 44 - "MapPropertiesImmutableTest"
-Cohesion: 0.26
-Nodes (6): BeforeEach, Order, OrderAnnotation, Test, TestMethodOrder, MapPropertiesImmutableTest
+### Community 44 - "Matriz por cluster"
+Cohesion: 0.18
+Nodes (10): `binding`, Como rodar, `contract`, `core`, Fixtures de integracao (matriz de flags), `logback`, Matriz por cluster, `multi` (+2 more)
 
 ### Community 45 - "Leia este arquivo primeiro"
 Cohesion: 0.20
@@ -345,10 +290,6 @@ Nodes (9): 1. O que fazer agora, 2. Entradas externas permitidas, 3. Fonte da ve
 ### Community 46 - "Bug Assessment: Flag `absolute_path_jsonfile_contract` obsoleta e sem fonte (o contrato JSON já chega inline no prompt da LLM)"
 Cohesion: 0.20
 Nodes (9): Bug Assessment: Flag `absolute_path_jsonfile_contract` obsoleta e sem fonte (o contrato JSON já chega inline no prompt da LLM), Open Questions, Proposed Remediation, Report (verbatim), Reproduction, Risks & Considerations, Root Cause Hypothesis, Suspected Code Paths (+1 more)
-
-### Community 50 - "$"
-Cohesion: 0.67
-Nodes (3): jparepository, org.springframework.stereotype.Repository, $
 
 ### Community 51 - "Basic Project Goal"
 Cohesion: 1.00
@@ -450,17 +391,9 @@ Nodes (9): 1. Forma canônica, 2. Nome do arquivo, 3. Diretório, 4. Conteúdo d
 Cohesion: 0.20
 Nodes (9): 1. Quando mostrar, 2. Quais flags listar, 3. Colunas, 4. Fontes, 5. Notas, 6. Descartadas, 7. Resumo, 8. O que não fazer (+1 more)
 
-### Community 221 - "$"
-Cohesion: 0.25
-Nodes (8): , collection, crudrepository, grantedauthority, lombok.AllArgsConstructor, optional, $, $
-
 ### Community 222 - "Entregáveis e relatórios"
 Cohesion: 0.25
 Nodes (7): 1. Classificação do módulo, 2. Relatório de tokens, 3. Economia, 4. Resumo final, Central, Entregáveis e relatórios, Secundário
-
-### Community 223 - "$"
-Cohesion: 0.29
-Nodes (7): org.springframework.stereotype.Service, Repository, $, $, userdetails, userdetailsservice, usernamenotfoundexception
 
 ### Community 224 - "Índice — mapa dos arquivos e ordem de leitura"
 Cohesion: 0.29
@@ -470,37 +403,33 @@ Nodes (6): 1. Arquivos de `utils/`, 2. Leituras técnicas no JAR, 3. Ordem globa
 Cohesion: 0.29
 Nodes (6): 1. Papel, 2. Restrições, 3. Fonte da verdade, 4. Se faltar uma regra, 5. Se o resultado estiver errado, Papel e restrições do agente
 
-### Community 226 - "$"
-Cohesion: 0.33
-Nodes (6): collectors, instant, jwtclaimsset, jwtencoder, jwtencoderparameters, $
-
-### Community 231 - "$"
-Cohesion: 0.67
-Nodes (3): JwtService, org.springframework.security.core.Authentication, $
-
 ## Ambiguous Edges - Review These
 - `Decision: Multi-Fixture Integration-Test Matrix for eda-archetype` → `Constitution do EDA Archetype (v1.0.0)`  [AMBIGUOUS]
   .specify/assessments/archetype-integration-tests/decision.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **430 isolated node(s):** `git-common.sh script`, `com.eda-archetype:eda-archetype`, `${groupId}:${artifactId}`, `AdminRoutes`, `ApiRoutes` (+425 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 732 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **121 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **42 isolated node(s):** `com.eda-archetype:eda-archetype`, `${groupId}:${artifactId}`, `Curated Integration-Test Matrix (4 scenarios)`, `maven-archetype-plugin integration-test goal`, `Scenario: binding-properties (sub-fixtures for enable_binding_properties variants)` (+37 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 771 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **145 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `entity_name` connect `org.springframework.boot.test.context.SpringBootTest` to `$`, `properties`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **What connects `com.eda-archetype:eda-archetype`, `${groupId}:${artifactId}`, `Curated Integration-Test Matrix (4 scenarios)` to the rest of the system?**
+  _42 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `steps` be split into smaller, more focused modules?**
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+- **Why does `properties` connect `properties` to `org.springframework.boot.test.context.SpringBootTest`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+- **Should `org.springframework.boot.test.context.SpringBootTest` be split into smaller, more focused modules?**
+  _Cohesion score 0.08489795918367347 - nodes in this community are weakly interconnected._
+- **Why does `$` connect `$` to `org.springframework.boot.test.context.SpringBootTest`?**
+  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+
+### Low-confidence Hints
+_AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._
+
 - **What is the exact relationship between `Decision: Multi-Fixture Integration-Test Matrix for eda-archetype` and `Constitution do EDA Archetype (v1.0.0)`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
-- **Why does `entity_name` connect `entity_name` to `$`, `$`, `$`, `properties`, `$`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
-- **Why does `properties` connect `properties` to `entity_name`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
-- **Why does `ApplicationPropertiesTest` connect `AuthenticationCredentials` to `ApplicationPropertiesValidationTest.java`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
-- **What connects `git-common.sh script`, `com.eda-archetype:eda-archetype`, `${groupId}:${artifactId}` to the rest of the system?**
-  _430 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `ApplicationPropertiesValidationTest.java` be split into smaller, more focused modules?**
-  _Cohesion score 0.0847457627118644 - nodes in this community are weakly interconnected._
-- **Should `Archetype WebService README` be split into smaller, more focused modules?**
-  _Cohesion score 0.07564102564102564 - nodes in this community are weakly interconnected._

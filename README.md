@@ -54,13 +54,9 @@
 
 </details>
 
-<details><summary><strong> ️Velocity Guidelines 📍</strong></summary>
+<details><summary><strong> Maven Archetype System 🏗️ </strong></summary>
 
-* [User Guide](https://velocity.apache.org/engine/2.4.1/user-guide.html)
-* [VTL Reference](https://velocity.apache.org/engine/2.4.1/vtl-reference.html)
-</details>
-
-<details><summary><strong>Cores do Maven Archetype System ⚛️</strong></summary>
+<details><summary><strong> >Cores ⚛️</strong></summary>
 
 **1) Flags p/ 'maven:Archetype:Generate':**
   * Arquivo: [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml):
@@ -69,7 +65,7 @@
     * Contendo:
       * as propriedades que serao capturadas para o uso no MVN CLI
       * Estrutura do Archetype e seus respectivos arquivos e pastas
-  * Formacao do arquivo: Ver o item **'Formação do arquivo Archetype-Metadata.xml'** desta documentacao
+  * Formacao do arquivo: Ver o item **'Archetype-Metadata.xml'** desta documentacao
   * Local:
     * [src \ "MAIN" \ resources \ _META-INF_ \ _**"MAVEN"**_ \ ](src/main/resources/META-INF/maven)
     * 02 - Setores (**_FileSet_** + **_RequiredProperties_**):
@@ -201,7 +197,7 @@
     * Arquivo Groovy de manejo de pastas/arquivos, **APOS** a geracao do ARchetype
     * Contendo:
       * Codigo Groovy de manejo de pastas/arquivos
-      * Formacao do arquivo: Ver item **'Formação do Archetype-Post-Generate.groovy'** desta documentacao
+      * Formacao do arquivo: Ver item **'Archetype-Post-Generate.groovy'** desta documentacao
     * Local: **NAO existe em `src/`**. O unico artefato final fica em [target/classes/META-INF/](target/classes/META-INF) e viaja dentro do JAR.
   * Visibilidade (importante):
     * `target/` esta no `.gitignore`, e o IDE normalmente o exclui da arvore do projeto — por isso o arquivo **nao aparece** no Project view.
@@ -221,9 +217,10 @@
 	* Arquivo de propriedades(requiredProperties) do archetype
 	* Responsavel pelo _**teste do Archetype**_
 	* Esse teste e realizado antes da montagem do Archetype
+
 </details>
 
-<details><summary><strong> Fluxo do Maven Archetype System 🔄</strong></summary>
+<details><summary><strong> >Fluxo 🔄 </strong></summary>
 
 * **Objetivo:** explicar a **essência** do `archetype:generate` do Maven — como os slots
   do JAR empacotado se relacionam entre si, e **por que** o Maven os separa.
@@ -313,6 +310,14 @@ integration-test  → archetype:integration-test (gera projeto, roda goal.txt, c
 install           → install + archetype:update-local-catalog
                                                (escreve ~/.m2/archetype-catalog.xml)
 ```
+
+</details>
+
+<details><summary><strong> >Velocity📍</strong></summary>
+
+* [User Guide](https://velocity.apache.org/engine/2.4.1/user-guide.html)
+* [VTL Reference](https://velocity.apache.org/engine/2.4.1/vtl-reference.html)
+</details>
 
 </details>
 
@@ -500,12 +505,117 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 #### Onde detalhar cada parte 🔎
 
-* Metadata (entities + XSLT) → seção **"Formação do Archetype-Metadata.xml"**
-* Pós-processador (compositor Groovy) → seção **"Formação do Archetype-Post-Generate.groovy"**
+* Metadata (entities + XSLT) → seção **"Archetype-Metadata.xml"**
+* Pós-processador (compositor Groovy) → seção **"Archetype-Post-Generate.groovy"**
 * Catálogo de flags (35) → seção **"Flags do mvn archetype:generate"**
 * Como adicionar uma flag → seção **"Acrescentando Novas Flags ➕️"**
 * Procedimento do agente (empacotado no JAR) → seção **"Procedimento para Especificação"**
+* Derivação (prompt → linha de comando do Maven) → seção **"A Anatomia da Derivação: do Prompt ao Maven CLI 🧠"**
 * Testabilidade → seção **"Testabilidade 🧪"** (camadas, tecnologias, pastas e comando de cada uma)
+
+</details>
+
+<details><summary><strong> Inferência de Contrato e Use-Case: do Prompt ao Maven CLI 
+🧠</strong></summary>
+
+* **A pergunta:** 
+  * o operador entrega um **use case** (texto) + um **contrato JSON**; 
+    * o `mvn archetype:generate` precisa de **35 flags `-D`**. 
+      * Quem faz a ponte?
+* **A resposta:** 
+  * o **agente**, seguindo os elementos (prompts + JSONs) empacotados dentro do JAR na pasta `utils/`. 
+  * Ele não chuta: 
+    * classifica cada chave do contrato, 
+    * aplica as regras de formação e 
+    * valida tudo contra o catálogo antes de emitir a linha de comando.
+
+#### 1) O que entra na SPec ou Prompt
+
+| Entrada | Exemplo |
+|---|---|
+| **Use case** | *"Cadastro de clientes de uma clínica. API REST com autenticação JWT na porta 8080."* |
+| **Contrato JSON** | `{"entityName":"Cliente","attributes":{"nome":"Maria","ativo":true,"nascimento":"1990-05-14"},"api_port":8080}` |
+
+#### 2) Onde cada informação vai parar
+
+O agente lê o contrato e separa as chaves em **três destinos** (exemplo com 3 flags do `mvn archetype:generate`):
+
+| Chave do contrato | Destino | Por quê |
+|---|---|---|
+| `api_port` | **flag literal** (`CONTRACT`) | a chave existe no catálogo → vira `-D` direto |
+| `entityName` | **flag derivada** (`CONTRACT_DERIVED`) | meta-chave → nomeia a entidade |
+| `nome`, `ativo`, `nascimento` | **atributos da entidade** | não existem no catálogo → viram campos Java |
+
+#### 3) O exemplo, ponta a ponta
+
+```text
+SPEC: USE CASE + CONTRATO
+        │
+        ├─ entityName = "Cliente" ──────────▶ -Dentity_name=Cliente
+        │                                     └─▶ -Dentity_package_name=cliente      (derivado: minúsculas)
+        │
+        ├─ api_port = 8080 ─────────────────▶ -Dapi_port=8080                        (CONTRACT: literal)
+        │
+        ├─ attributes
+        │   ├─ nome       = "Maria"      (string)  ─┐
+        │   ├─ ativo      =  true        (boolean)  ├─▶ -Dcustom_entity_attributes_list=
+        │   └─ nascimento = "1990-05-14" (string)  ─┘        String:nome,Boolean:ativo,String:nascimento
+        │                                                    (tipo estimado pelo VALOR, na ordem do contrato)
+        │
+        ├─ há atributos? ────────────────────▶ -Denable_custom_entity_attributes=true   (forçado)
+        │
+        └─ contrato materializado em disco ──▶ -Dentity_contract_file_path=…/<sha256>.json
+```
+
+#### 4) As três regras que mais surpreendem
+
+| Regra | Efeito |
+|---|---|
+| **O tipo vem do valor** | `true`→`Boolean` · inteiro que cabe em `int`→`Integer` · inteiro maior→`Long` · decimal→`Double` · string→`String` · objeto→POJO em `<pacote>.nested` · array→`String` |
+| **Valor explícito vence** | um `type` declarado no contrato tem precedência **se** for `java.lang` ou um **tipo do projeto**; `java.time.Instant`, `List<String>` etc. são rejeitados com aviso e o tipo volta a ser estimado pelo valor |
+| **Flag derivada em cascata** | `entity_package_name` vem de `entity_name`; `enable_custom_entity_attributes` é forçado a `true` quando há atributos; `entity_contract_file_path` só é emitido depois de gravar o contrato |
+
+**Precedência** (quem vence quando duas fontes discordam):
+
+```text
+CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case)  >  DEFAULT (catálogo)
+```
+
+* Um valor **literal** no contrato nunca é sobrescrito.
+* Um valor **inferido do use case** só entra quando o contrato silencia.
+* O **default** é o último recurso — e nunca é vazio (`FR-018`).
+
+#### 5) O portão final e o resultado
+
+Antes de montar a linha, **cada valor** passa pela `validationRegex` localizado em sua flag(`requiredProperties`):
+
+* valor válido → mantém valor e fonte;
+* valor inválido → cai no `defaultValue` **com aviso barulhento** (nunca em silêncio).
+  * ex.: derivar `api_port=abc` → a regex `^([1-9][0-9]{3,4})$` rejeita → o valor final vira `8080`.
+
+* exemplo de `validationRegex'`:
+```xml
+<requiredProperty key="enable_s3_storage">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>   <<< Exemplo
+</requiredProperty>
+```
+
+
+
+Uma linha única, sem prompt interativo:
+
+```bash
+mvn archetype:generate --batch-mode \
+  -DarchetypeGroupId=com.eda-archetype -DarchetypeArtifactId=eda-archetype -DarchetypeVersion=0.0.1-SNAPSHOT \
+  -DgroupId=org.clinica -DartifactId=cliente -Dpackage=org.clinica \
+  -Dentity_name=Cliente -Dentity_package_name=cliente \
+  -Denable_custom_entity_attributes=true \
+  -Dcustom_entity_attributes_list=String:nome,Boolean:ativo,String:nascimento \
+  -Dapi_port=8080 -Djava_version=21 …
+```
+
+> **Onde está o detalhe de cada coluna?** Em [`src/main/resources/utils/regras-de-formacao-do-contrato/`](src/main/resources/utils/regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
 
 </details>
 
@@ -581,7 +691,7 @@ mvn clean install
 
 <details><summary><strong>Fases de Construcao 🏗️</strong></summary>
 
-<details><summary><strong> Milestones 📅</strong></summary>
+<details><summary><strong> >Milestones 📅</strong></summary>
 
 * CRUD
   - Basic
@@ -732,7 +842,7 @@ mvn clean install
   - Log Kibana (logstash + Elasticsearch)
 </details>
 
-<details><summary><strong>Task Planning 📝️</strong></summary>
+<details><summary><strong> >Task Planning 📝️</strong></summary>
 
 1. DTO
   - Libraries
@@ -852,7 +962,7 @@ mvn clean install
   - Credentials(secrets) Vault 'Unpushaveis'
 </details>
 
-<details><summary><strong>Concluded Tasks ✅</strong></summary>
+<details><summary><strong> >Concluded Tasks ✅</strong></summary>
 
 - [x] Credentials protection
   - [x] Gitleaks / GitGuardian (Alternative Approaches)
@@ -973,7 +1083,7 @@ mvn clean install
   - [ ] Spring actuator (Graphana)
 </details>
 
-<details><summary><strong> Next Version 🔮️</strong></summary>
+<details><summary><strong> >Next Version 🔮️</strong></summary>
 
   - JpaSpecificationExecutor
   - Upload
@@ -1669,7 +1779,9 @@ fica a cargo do procedimento empacotado no JAR —
 
 </details>
 
-<details><summary><strong>Formação do Archetype-Metadata.xml 🏗️</strong></summary>
+<details><summary><strong> Montagem dos Arquivos de Archetype 🏗️ </strong></summary>
+
+<details><summary><strong> >Archetype-Metadata.xml 🏗️</strong></summary>
 
 * **OBJETIVO**
   * Manter 1 arquivo final [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml) consumido pelo (`maven-archetype-plugin`),
@@ -1712,7 +1824,7 @@ fica a cargo do procedimento empacotado no JAR —
     * => lido pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`).
 
 </details>
-<details><summary><strong>Formação do Archetype-Post-Generate.groovy 🧬</strong></summary>
+<details><summary><strong> >Archetype-Post-Generate.groovy 🧬</strong></summary>
 
 * **OBJETIVO**
   * Manter 1 arquivo final gerado em (`target/classes/META-INF/archetype-post-generate.groovy`) e consumido pelo (`maven-archetype-plugin`)
@@ -1766,6 +1878,9 @@ fica a cargo do procedimento empacotado no JAR —
   * **4. Equivalencia com o bash legado (historico)**: o compositor nasceu byte-equivalente a saida historica de (`bash_script/create_archetype_post_generate.sh`), script que **nao existe mais** no repositorio. Ele **nao era** byte-equivalente ao antigo arquivo commitado manualmente em (`src/main/resources/META-INF/`), que usava (`properties?.show_archetype_post_generate_log`) direto, sem variavel intermediaria (validado em T014). O criterio atual e o (`ComposerTest`) + o parse do artefato, nao o `diff` contra o bash.
 
 </details>
+
+</details>
+
 <details><summary><strong> Testabilidade 🧪 </strong></summary>
 
 * **ONDE OS TESTES VIVEM**
@@ -1896,6 +2011,97 @@ fica a cargo do procedimento empacotado no JAR —
     (5.4) Bloco (4) Sumario Final: tabela consolidada por bloco + linha `TOTAL GERAL`: colunas `Bloco | Escopo | Passaram | Falharam | Diagnostico / Correcao (4.1) | Confirmacao e Tempo (4.2)`.
     (5.5) Para testes que passaram use o emoji de 'checado' (verde); para testes que falharam use o emoji 'X' (vermelho).
     ```
+
+* **PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 02 Cenários) 🧪**
+
+  * Estes prompts **simulam o spec** que o operador entrega: 
+    * use case + contrato JSON. 
+    * Não fazem parte da suíte automatizada — eles exercitam o **agente**, não o build.
+  * Servem para validar o **alinhamento da inferência**: 
+    * se o agente derivar as flags erradas, 
+    * o projeto gerado sai torto e você percebe antes de rodar `mvn archetype:generate`.
+
+<details><summary><strong>Cenário A — contrato plano (3 atributos)</strong></summary>
+
+```text
+# TAREFA: Gerar módulo com o Maven Archetype EDA
+
+1. TIPO DE MÓDULO:
+[X] RAIZ
+[ ] SECUNDARIO
+
+2. PACKAGE BASE:
+br.com.loja
+
+3. USE-CASE:
+- Cadastro simplificado de produtos.
+- O cadastro coleta nome do produto, preço e quantidade em estoque.
+- O sistema expõe uma API REST na porta 8080.
+
+4. CONTRATO JSON do módulo:
+{
+  "nome_produto": "Teclado Mecânico",
+  "preco": 250.50,
+  "quantidade_estoque": 15
+}
+```
+
+  * **O que esperar:** 
+    * entidade `Produto` no pacote `br.com.loja.produto`; 
+    * `custom_entity_attributes_list=String:nome_produto, Double:preco,Integer:quantidade_estoque` (ordem do contrato, tipo estimado pelo valor);
+    * `enable_custom_entity_attributes=true`; 
+    * `entity_package_name=produto`; 
+    * `api_port=8080`.
+
+</details>
+
+<details><summary><strong>Cenário B — contrato aninhado (filho + neto)</strong></summary>
+
+```text
+# TAREFA: Gerar módulo com o Maven Archetype EDA
+
+1. TIPO DE MÓDULO:
+[X] RAIZ
+[ ] SECUNDARIO
+
+2. PACKAGE BASE:
+br.com.loja
+
+3. USE-CASE:
+- Cadastro de produtos com categoria e fabricante detalhados.
+- O cadastro coleta nome do produto, preço, quantidade em estoque,
+  os dados da categoria e os dados de origem do fabricante.
+- O sistema expõe uma API REST na porta 8080.
+
+4. CONTRATO JSON do módulo:
+{
+  "nome_produto": "Smartphone",
+  "preco": 1500.0,
+  "quantidade_estoque": 10,
+  "detalhes_categoria": {
+    "nome_categoria": "Eletrônicos",
+    "codigo_setor": "E01",
+    "fabricante_origem": {
+      "nome_empresa": "Tech Corp",
+      "cnpj_distribuidor": "12.345.678/0001-99"
+    }
+  }
+}
+```
+
+  * **O que esperar:** 
+    * os mesmos 3 atributos do Cenário A **mais** o objeto aninhado; 
+      * `contract_nested_type_definitions` com **2 POJOs**:
+        * `DetalhesCategoria` (campos `nomeCategoria`, `codigoSetor` e o filho `fabricanteOrigem`) e 
+        * `FabricanteOrigem` (campos `nomeEmpresa`, `cnpjDistribuidor`).
+    * Os POJOs nascem em `br.com.loja.produto.nested`, com campos em **camelCase** e o pai emitido antes do filho.
+    * Na entidade, o campo do objeto aninhado é referenciado por **FQN** e marcado com `@Transient`.
+    * **Sinal de alerta:** 
+      * se o agente devolver `detalhes_categoria` como `String`, a profundidade não foi reconhecida
+      * o contrato tem 2 níveis (filho + neto) e a regra manda virar POJO.
+
+</details>
+
 </details>
 
 <details><summary><strong>Flags do mvn archetype:generate 🤖</strong></summary>
