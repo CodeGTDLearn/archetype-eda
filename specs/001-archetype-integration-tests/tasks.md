@@ -66,31 +66,31 @@
   - `api_port=8080`
   - `enable_git_support=false`
   - `entity_name=MyEntity`
-  - `entity_name_package=myentity`
-  - `enable_custom_attributes=false`
-  - `custom_attributes_list=false`
-  - `enable_lombok=false`
-  - `enable_docker=false`
-  - `properties_filetype=1`
-  - `enable_binding_properties=false`
-  - `default_binding_properties=false`
-  - `list_binding_properties=false`
-  - `map_binding_properties=false`
-  - `enable_binding_properties_tests=false`
-  - `mutable_binding_properties=false`
-  - `validated_binding_properties=false`
-  - `enable_logback=false`
+  - `entity_package_name=myentity`
+  - `enable_custom_entity_attributes=false`
+  - `custom_entity_attributes_list=false`
+  - `enable_lombok_support=false`
+  - `enable_docker_support=false`
+  - `config_file_format=1`
+  - `enable_binding_external_properties=false`
+  - `enable_default_binding_external_properties=false`
+  - `enable_list_binding_external_properties=false`
+  - `enable_map_binding_external_properties=false`
+  - `enable_binding_external_properties_tests=false`
+  - `binding_external_properties_mutability=none`
+  - `enable_binding_external_properties_validation=false`
+  - `enable_logback_support=false`
   - `logback_console_type=1`
   - `enable_logback_appender_smtp=false`
   - `enable_logback_appender_file=false`
   - `enable_api_cpanel=false`
   - `enable_api_cpanel_elk_log_system=false`
   - `enable_jwt_authentication=false`
-  - `show_archetype_pos_processor_log=false`
-  - `extra_POM_dependencies=false`
+  - `show_archetype_post_generate_log=false`
+  - `extra_pom_dependencies=false`
   - `enable_folder_src_test_java=false`
-  - `language=pt`
-  - `project_language=pt`
+  - `llm_prompt_language=pt`
+  - `project_i18n_language=pt`
 
 **Checkpoint**: User Story 1 should be fully functional and testable independently — `mvn clean install integration-test -Darchetype.test.projects=minimal` reports one passing test.
 
@@ -115,34 +115,34 @@
   - `java_version=17`
   - `api_port=8080`
   - `enable_git_support=true`
-  - `git_url_repo=https://github.com/your-git-user/your-repo.git`
-  - `git_branch_repo=main`
+  - `git_repo_url=https://github.com/your-git-user/your-repo.git`
+  - `git_repo_branch=main`
   - `entity_name=MyEntity`
-  - `entity_name_package=myentity`
-  - `enable_custom_attributes=true`
-  - `custom_attributes_list=Long:id,String:name`
-  - `enable_lombok=true`
-  - `enable_docker=true`
-  - `properties_filetype=1`
-  - `enable_binding_properties=true`
-  - `default_binding_properties=true`
-  - `list_binding_properties=true`
-  - `map_binding_properties=true`
-  - `enable_binding_properties_tests=true`
-  - `mutable_binding_properties=1`
-  - `validated_binding_properties=true`
-  - `enable_logback=true`
+  - `entity_package_name=myentity`
+  - `enable_custom_entity_attributes=true`
+  - `custom_entity_attributes_list=Long:id,String:name`
+  - `enable_lombok_support=true`
+  - `enable_docker_support=true`
+  - `config_file_format=1`
+  - `enable_binding_external_properties=true`
+  - `enable_default_binding_external_properties=true`
+  - `enable_list_binding_external_properties=true`
+  - `enable_map_binding_external_properties=true`
+  - `enable_binding_external_properties_tests=true`
+  - `binding_external_properties_mutability=immutable`
+  - `enable_binding_external_properties_validation=true`
+  - `enable_logback_support=true`
   - `logback_console_type=2`
   - `enable_logback_appender_smtp=true`
   - `enable_logback_appender_file=true`
   - `enable_api_cpanel=true`
   - `enable_api_cpanel_elk_log_system=true` (parent flags cpanel+logback both true → this child is allowed)
   - `enable_jwt_authentication=true`
-  - `show_archetype_pos_processor_log=false`
-  - `extra_POM_dependencies=false`
+  - `show_archetype_post_generate_log=false`
+  - `extra_pom_dependencies=false`
   - `enable_folder_src_test_java=true`
-  - `language=pt`
-  - `project_language=pt`
+  - `llm_prompt_language=pt`
+  - `project_i18n_language=pt`
 
 **Checkpoint**: User Story 2 should be fully functional and testable independently — `mvn clean install integration-test -Darchetype.test.projects=full` reports one passing test.
 
@@ -152,11 +152,11 @@
 
 **Goal**: Confirm that the custom-attributes path produces an entity matching the declared attribute shape, not just a passing build.
 
-**Independent Test**: Run `mvn clean install integration-test -Darchetype.test.projects=custom-attributes` from archetype-v2-eda/; assert the generated project passes `mvn verify` AND the generated entity class contains the attributes declared in `custom_attributes_list`.
+**Independent Test**: Run `mvn clean install integration-test -Darchetype.test.projects=custom-attributes` from archetype-v2-eda/; assert the generated project passes `mvn verify` AND the generated entity class contains the attributes declared in `custom_entity_attributes_list`.
 
 ### Implementation for User Story 3
 
-> **Amended 2026-10-23** (`flag-contrato-absoluto-obsoleta`): the JSON-contract generation path was removed from the archetype. The scenario was renamed `json-contract` → `custom-attributes` and now exercises the shape carried by `custom_attributes_list` — a flag that remains in the catalog. The two JSON-contract flags (`enable_json_entity_contracts`, `absolute_path_jsonfile_contract`) no longer exist, and no manual path substitution is needed at run time.
+> **Amended 2026-10-23** (`flag-contrato-absoluto-obsoleta`): the JSON-contract generation path was removed from the archetype. The scenario was renamed `json-contract` → `custom-attributes` and now exercises the shape carried by `custom_entity_attributes_list` — a flag that remains in the catalog. The two JSON-contract flags (`enable_json_entity_contracts`, `absolute_path_jsonfile_contract`) no longer exist, and no manual path substitution is needed at run time.
 
 - [x] T013 [US3] Create fixture directory archetype-v2-eda/src/test/resources/projects/custom-attributes/ **[completed]**
 - [x] T014 [P] [US3] Create archetype-v2-eda/src/test/resources/projects/custom-attributes/goal.txt containing the literal two lines `clean` and `verify` **[completed: 12 bytes]**
@@ -171,35 +171,35 @@
   - `api_port=8080`
   - `enable_git_support=false`
   - `entity_name=ContractEntity`
-  - `entity_name_package=contractentity`
-  - `enable_custom_attributes=true`
-  - `custom_attributes_list=Long:id,String:name,String:createdAt`
-  - `enable_lombok=false`
-  - `enable_docker=false`
-  - `properties_filetype=1`
-  - `enable_binding_properties=false`
-  - `default_binding_properties=false`
-  - `list_binding_properties=false`
-  - `map_binding_properties=false`
-  - `enable_binding_properties_tests=false`
-  - `mutable_binding_properties=false`
-  - `validated_binding_properties=false`
-  - `enable_logback=false`
+  - `entity_package_name=contractentity`
+  - `enable_custom_entity_attributes=true`
+  - `custom_entity_attributes_list=Long:id,String:name,String:createdAt`
+  - `enable_lombok_support=false`
+  - `enable_docker_support=false`
+  - `config_file_format=1`
+  - `enable_binding_external_properties=false`
+  - `enable_default_binding_external_properties=false`
+  - `enable_list_binding_external_properties=false`
+  - `enable_map_binding_external_properties=false`
+  - `enable_binding_external_properties_tests=false`
+  - `binding_external_properties_mutability=none`
+  - `enable_binding_external_properties_validation=false`
+  - `enable_logback_support=false`
   - `logback_console_type=1`
   - `enable_logback_appender_smtp=false`
   - `enable_logback_appender_file=false`
   - `enable_api_cpanel=false`
   - `enable_api_cpanel_elk_log_system=false`
   - `enable_jwt_authentication=false`
-  - `show_archetype_pos_processor_log=true` (helps debug the custom-attributes path on first run)
-  - `extra_POM_dependencies=false`
+  - `show_archetype_post_generate_log=true` (helps debug the custom-attributes path on first run)
+  - `extra_pom_dependencies=false`
   - `enable_folder_src_test_java=false`
-  - `language=pt`
-  - `project_language=pt`
+  - `llm_prompt_language=pt`
+  - `project_i18n_language=pt`
 - [x] T017 [US3] Create archetype-v2-eda/src/test/resources/projects/custom-attributes/verify.groovy using the Apache Maven `verify.groovy` convention (variables `basedir`, `scriptdir`, `context`; return `null` or `true` to pass — see `apache/maven-archetype#1032` for the exact binding). The script must: **[completed: 2175 bytes; expectations hardcoded (entity name, package path, attribute name→type map) — no external file is read; locates generated entity via 4 candidate paths; asserts each attribute as `private <Type> <name>` regex; returns null on pass; throws on fail; makes NO network/Git/Docker calls per FR-007]**
   1. Locate the generated entity class file under `<basedir>/target/test-classes/projects/custom-attributes/target/generated-sources/.../ContractEntity.java` (resolve exact path empirically on first run; document the resolved path in a comment at the top of the file)
   2. Parse the entity class file as text
-  3. Assert that the entity class declares each attribute listed in `custom_attributes_list` (same attribute name → field type mapping)
+  3. Assert that the entity class declares each attribute listed in `custom_entity_attributes_list` (same attribute name → field type mapping)
   4. Return `null` (pass) or throw (fail) — never return non-null silently
 
 **Checkpoint**: User Story 3 should be fully functional and testable independently — `mvn clean install integration-test -Darchetype.test.projects=custom-attributes` reports one passing test that includes the `verify.groovy` execution.
@@ -210,55 +210,55 @@
 
 **Goal**: Provide one fixture per binding-properties sub-module (default, list, map, mutable, validated) so each binding variant is exercised independently — auditable surface for Constitution Principle IV.
 
-**Independent Test**: Run `mvn clean install integration-test -Darchetype.test.projects=binding-default-only,binding-list-only,binding-map-only,binding-mutable-only,binding-validated-only` from archetype-v2-eda/; assert each passes.
+**Independent Test**: Run `mvn clean install integration-test -Darchetype.test.projects=external-binding-default-only,external-binding-list-only,external-binding-map-only,external-binding-mutable-only,external-binding-validated-only` from archetype-v2-eda/; assert each passes.
 
 ### Implementation for User Story 4
 
-- [x] T018 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/binding-default-only/ **[completed]**
-- [x] T019 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/binding-list-only/ **[completed]**
-- [x] T020 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/binding-map-only/ **[completed]**
-- [x] T021 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/binding-mutable-only/ **[completed]**
-- [x] T022 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/binding-validated-only/ **[completed]**
+- [x] T018 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/external-binding-default-only/ **[completed]**
+- [x] T019 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/external-binding-list-only/ **[completed]**
+- [x] T020 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/external-binding-map-only/ **[completed]**
+- [x] T021 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/external-binding-mutable-only/ **[completed]**
+- [x] T022 [P] [US4] Create fixture directory archetype-v2-eda/src/test/resources/projects/external-binding-validated-only/ **[completed]**
 - [x] T023 [P] [US4] Create `goal.txt` (content `clean` / `verify`) in each of the 5 binding-properties fixture directories (5 files total) **[completed: 5 files, 12 bytes each]**
-- [x] T024 [US4] Create archetype-v2-eda/src/test/resources/projects/binding-default-only/archetype.properties with: **[completed: 1019 bytes; `enable_binding_properties=true`, `default_binding_properties=true`, others false]**
-  - `enable_binding_properties=true`
-  - `default_binding_properties=true`
-  - `list_binding_properties=false`
-  - `map_binding_properties=false`
-  - `mutable_binding_properties=false` (parent on but no sub-module has child-trigger; immutable path)
-  - `validated_binding_properties=false`
-  - All other flags set to the same minimal-safe values as US1 T009 (only `enable_binding_properties`, `default_binding_properties` differ from US1's all-off baseline)
-- [x] T025 [US4] Create archetype-v2-eda/src/test/resources/projects/binding-list-only/archetype.properties with: **[completed: 1013 bytes; `enable_binding_properties=true`, `list_binding_properties=true`, others false]**
-  - `enable_binding_properties=true`
-  - `default_binding_properties=false`
-  - `list_binding_properties=true`
-  - `map_binding_properties=false`
-  - `mutable_binding_properties=false`
-  - `validated_binding_properties=false`
+- [x] T024 [US4] Create archetype-v2-eda/src/test/resources/projects/external-binding-default-only/archetype.properties with: **[completed: 1019 bytes; `enable_binding_external_properties=true`, `enable_default_binding_external_properties=true`, others false]**
+  - `enable_binding_external_properties=true`
+  - `enable_default_binding_external_properties=true`
+  - `enable_list_binding_external_properties=false`
+  - `enable_map_binding_external_properties=false`
+  - `binding_external_properties_mutability=none` (parent on but no sub-module has child-trigger; immutable path)
+  - `enable_binding_external_properties_validation=false`
+  - All other flags set to the same minimal-safe values as US1 T009 (only `enable_binding_external_properties`, `enable_default_binding_external_properties` differ from US1's all-off baseline)
+- [x] T025 [US4] Create archetype-v2-eda/src/test/resources/projects/external-binding-list-only/archetype.properties with: **[completed: 1013 bytes; `enable_binding_external_properties=true`, `enable_list_binding_external_properties=true`, others false]**
+  - `enable_binding_external_properties=true`
+  - `enable_default_binding_external_properties=false`
+  - `enable_list_binding_external_properties=true`
+  - `enable_map_binding_external_properties=false`
+  - `binding_external_properties_mutability=none`
+  - `enable_binding_external_properties_validation=false`
   - All other flags set to the same minimal-safe values as US1 T009
-- [x] T026 [US4] Create archetype-v2-eda/src/test/resources/projects/binding-map-only/archetype.properties with: **[completed: 1011 bytes; `enable_binding_properties=true`, `map_binding_properties=true`, others false]**
-  - `enable_binding_properties=true`
-  - `default_binding_properties=false`
-  - `list_binding_properties=false`
-  - `map_binding_properties=true`
-  - `mutable_binding_properties=false`
-  - `validated_binding_properties=false`
+- [x] T026 [US4] Create archetype-v2-eda/src/test/resources/projects/external-binding-map-only/archetype.properties with: **[completed: 1011 bytes; `enable_binding_external_properties=true`, `enable_map_binding_external_properties=true`, others false]**
+  - `enable_binding_external_properties=true`
+  - `enable_default_binding_external_properties=false`
+  - `enable_list_binding_external_properties=false`
+  - `enable_map_binding_external_properties=true`
+  - `binding_external_properties_mutability=none`
+  - `enable_binding_external_properties_validation=false`
   - All other flags set to the same minimal-safe values as US1 T009
-- [x] T027 [US4] Create archetype-v2-eda/src/test/resources/projects/binding-mutable-only/archetype.properties with: **[completed: 1020 bytes; `mutable_binding_properties=1` per validation regex `^(false|([1-3]))$`]**
-  - `enable_binding_properties=true`
-  - `default_binding_properties=true`
-  - `list_binding_properties=false`
-  - `map_binding_properties=false`
-  - `mutable_binding_properties=1` (1 mutable property, exercises Constitution Principle IV)
-  - `validated_binding_properties=false`
+- [x] T027 [US4] Create archetype-v2-eda/src/test/resources/projects/external-binding-mutable-only/archetype.properties with: **[completed: 1020 bytes; `binding_external_properties_mutability=mutable` per validation regex `^(none|immutable|mutable)$`]**
+  - `enable_binding_external_properties=true`
+  - `enable_default_binding_external_properties=true`
+  - `enable_list_binding_external_properties=false`
+  - `enable_map_binding_external_properties=false`
+  - `binding_external_properties_mutability=mutable` (keeps the mutable variants, exercises Constitution Principle IV)
+  - `enable_binding_external_properties_validation=false`
   - All other flags set to the same minimal-safe values as US1 T009
-- [x] T028 [US4] Create archetype-v2-eda/src/test/resources/projects/binding-validated-only/archetype.properties with: **[completed: 1027 bytes; `validated_binding_properties=true` requires `default_binding_properties=true` per DEPENDS_ON rule]**
-  - `enable_binding_properties=true`
-  - `default_binding_properties=true`
-  - `list_binding_properties=false`
-  - `map_binding_properties=false`
-  - `mutable_binding_properties=false`
-  - `validated_binding_properties=true` (requires `default_binding_properties=true` per `property-binding-properties.xml` DEPENDS_ON)
+- [x] T028 [US4] Create archetype-v2-eda/src/test/resources/projects/external-binding-validated-only/archetype.properties with: **[completed: 1027 bytes; `enable_binding_external_properties_validation=true` requires `enable_default_binding_external_properties=true` per DEPENDS_ON rule]**
+  - `enable_binding_external_properties=true`
+  - `enable_default_binding_external_properties=true`
+  - `enable_list_binding_external_properties=false`
+  - `enable_map_binding_external_properties=false`
+  - `binding_external_properties_mutability=none`
+  - `enable_binding_external_properties_validation=true` (requires `enable_default_binding_external_properties=true` per `property-binding-properties.xml` DEPENDS_ON)
   - All other flags set to the same minimal-safe values as US1 T009
 
 **Checkpoint**: User Story 4 should be fully functional and testable independently — the 5 binding-properties fixtures all pass independently.
@@ -272,7 +272,7 @@
 - [x] T029 Run the full matrix end-to-end via `mvn clean install integration-test` from archetype-v2-eda/ and confirm all 8 fixtures (1 minimal + 1 full + 1 custom-attributes + 5 binding-properties) report as passing **[completed: full matrix ran via mvn clean install — 9/9 fixtures PASS (basic legacy + minimal + full + custom-attributes + 5 binding-properties variants). Total time: 18.985 s. verify.groovy ran successfully for custom-attributes and confirmed ContractEntity.java exists with all 3 expected attributes. NOTE: use `mvn integration-test` (not `mvn archetype:integration-test`); the latter fails with "Unable to get the archetypes' artifact which should have just been built" because it looks for the .jar in ~/.m2/ instead of target/]**
 - [ ] T030 [P] **Manual validation checklist (NOT part of automated suite)**: Inject a deliberate regression in archetype-v2-eda/src/main/resources/META-INF/archetype-post-generate.groovy (e.g., comment out one unconditional `deleteFile` line) and confirm at least one fixture fails with a diagnostic pointing at the change; then revert. **[Rationale for keeping manual]: automation requires mutating production source code (archetype-post-generate.groovy) which is risky — a failed restore would leave the archetype broken. T029 (full matrix, all 9 fixtures PASS) provides equivalent implicit coverage: any regression in the post-processor would break all 9 fixtures. Documented in quickstart.md §Verifying the matrix catches a real regression]**
 - [ ] T031 [P] **Manual validation checklist (NOT part of automated suite)**: Verify the offline-runnable constraint (Spec FR-007): after the first online run, disconnect from the network and re-run the full matrix; confirm all 8 fixtures still pass without network access. **[Rationale for keeping manual]: environmental test (network disconnect). FR-007 is satisfied by construction — verify.groovy does not make network calls (audited; FR-007 enforcement), and the archetype uses only local files. Documented in quickstart.md §Verifying the offline-runnable constraint]**
-- [ ] T032 [P] **Manual validation checklist (NOT part of automated suite)**: Verify the dependency rule (Spec FR-004): create a temporary fixture with `enable_logback=false` and a non-default child value (`logback_console_type=3`); confirm the archetype rejects or ignores the child's value unambiguously; then remove the temporary fixture. **[Rationale for keeping manual]: would require creating a fixture that intentionally violates FR-004 (parent=false + child with non-default value). The 8 existing fixtures already prove the rule by induction: none of them combine parent=false with a child having a non-default value. Documented in quickstart.md §Verifying the dependency rule]**
+- [ ] T032 [P] **Manual validation checklist (NOT part of automated suite)**: Verify the dependency rule (Spec FR-004): create a temporary fixture with `enable_logback_support=false` and a non-default child value (`logback_console_type=3`); confirm the archetype rejects or ignores the child's value unambiguously; then remove the temporary fixture. **[Rationale for keeping manual]: would require creating a fixture that intentionally violates FR-004 (parent=false + child with non-default value). The 8 existing fixtures already prove the rule by induction: none of them combine parent=false with a child having a non-default value. Documented in quickstart.md §Verifying the dependency rule]**
 - [x] T033 Update archetype-v2-eda/README.md to mention the new integration-test matrix and link to specs/001-archetype-integration-tests/quickstart.md for run instructions **[completed: appended `<details>` section "Testes de Integracao" at the end of README.md (50 new lines, +1213 total). Also created src/test/resources/projects/README.md as the per-fixture matrix guide and filled basic/goal.txt with the canonical `clean\nverify\n` content so the legacy scenario joins the matrix.]**
 
 ---
@@ -316,21 +316,21 @@
 
 ```bash
 # Launch all 5 fixture-directory creations together:
-Task: "Create fixture directory src/test/resources/projects/binding-default-only/"
-Task: "Create fixture directory src/test/resources/projects/binding-list-only/"
-Task: "Create fixture directory src/test/resources/projects/binding-map-only/"
-Task: "Create fixture directory src/test/resources/projects/binding-mutable-only/"
-Task: "Create fixture directory src/test/resources/projects/binding-validated-only/"
+Task: "Create fixture directory src/test/resources/projects/external-binding-default-only/"
+Task: "Create fixture directory src/test/resources/projects/external-binding-list-only/"
+Task: "Create fixture directory src/test/resources/projects/external-binding-map-only/"
+Task: "Create fixture directory src/test/resources/projects/external-binding-mutable-only/"
+Task: "Create fixture directory src/test/resources/projects/external-binding-validated-only/"
 
 # Launch all 5 goal.txt creations together:
 Task: "Create goal.txt (clean/verify) in each of the 5 binding-properties fixture directories"
 
 # Launch all 5 archetype.properties creations together:
-Task: "Create binding-default-only/archetype.properties with default_*=true"
-Task: "Create binding-list-only/archetype.properties with list_*=true"
-Task: "Create binding-map-only/archetype.properties with map_*=true"
-Task: "Create binding-mutable-only/archetype.properties with mutable=1"
-Task: "Create binding-validated-only/archetype.properties with validated=true + default_*=true"
+Task: "Create external-binding-default-only/archetype.properties with default_*=true"
+Task: "Create external-binding-list-only/archetype.properties with list_*=true"
+Task: "Create external-binding-map-only/archetype.properties with map_*=true"
+Task: "Create external-binding-mutable-only/archetype.properties with mutable=1"
+Task: "Create external-binding-validated-only/archetype.properties with validated=true + default_*=true"
 ```
 
 ---

@@ -114,7 +114,7 @@ def sources = (Map<String, String>) merged.get("sources")
 // ---------------------------------------------------------------------------
 // 4) The derived flags MUST be the flags the profile declares
 // ---------------------------------------------------------------------------
-["entity_name", "custom_attributes_list", "custom_attribute_imports", "custom_enum_definitions"].each { String flag ->
+["entity_name", "custom_entity_attributes_list", "custom_entity_attribute_imports", "contract_enum_definitions"].each { String flag ->
     check("4.1 the profile declares '${flag}'", declared.containsKey(flag))
     if (!declared.containsKey(flag)) return
     check("4.2 the derived '${flag}' is the one declared by the profile",
@@ -126,7 +126,7 @@ def sources = (Map<String, String>) merged.get("sources")
 // DERIVED from the contract.
 check("4.3 the entity name comes from the contract",
         "CONTRACT".equals(sources.get("entity_name")))
-["custom_attributes_list", "custom_attribute_imports", "custom_enum_definitions"].each { String flag ->
+["custom_entity_attributes_list", "custom_entity_attribute_imports", "contract_enum_definitions"].each { String flag ->
     check("4.4 the derived '${flag}' comes from the contract",
             "CONTRACT_DERIVED".equals(sources.get(flag)))
 }
@@ -134,28 +134,28 @@ check("4.3 the entity name comes from the contract",
 // ---------------------------------------------------------------------------
 // 5) The shape of the derived values
 // ---------------------------------------------------------------------------
-check("5.1 the attribute list is not empty", (values.get("custom_attributes_list") ?: "").length() > 0)
+check("5.1 the attribute list is not empty", (values.get("custom_entity_attributes_list") ?: "").length() > 0)
 check("5.2 the attribute list satisfies the catalog rule",
-        values.get("custom_attributes_list") ==~ catalog.get("custom_attributes_list").validationRegex)
+        values.get("custom_entity_attributes_list") ==~ catalog.get("custom_entity_attributes_list").validationRegex)
 check("5.3 the imports satisfy the catalog rule",
-        values.get("custom_attribute_imports") ==~ catalog.get("custom_attribute_imports").validationRegex)
+        values.get("custom_entity_attribute_imports") ==~ catalog.get("custom_entity_attribute_imports").validationRegex)
 check("5.4 the enum definitions satisfy the catalog rule",
-        values.get("custom_enum_definitions") ==~ catalog.get("custom_enum_definitions").validationRegex)
+        values.get("contract_enum_definitions") ==~ catalog.get("contract_enum_definitions").validationRegex)
 check("5.5 the PROJECT type names its attribute after the TYPE",
-        values.get("custom_attributes_list").contains("StatusPedido:statusPedido"))
+        values.get("custom_entity_attributes_list").contains("StatusPedido:statusPedido"))
 check("5.6 ...and after the type, for every project type",
-        values.get("custom_attributes_list").contains("Situacao:situacao") &&
-                values.get("custom_attributes_list").contains("AdminCredentials:adminCredentials"))
+        values.get("custom_entity_attributes_list").contains("Situacao:situacao") &&
+                values.get("custom_entity_attributes_list").contains("AdminCredentials:adminCredentials"))
 check("5.7 the referenced types travel as imports",
-        values.get("custom_attribute_imports").contains("it.pkg.domain.StatusPedido") &&
-                values.get("custom_attribute_imports").contains("it.pkg.contractentity.config.properties.credentials.AdminCredentials"))
+        values.get("custom_entity_attribute_imports").contains("it.pkg.domain.StatusPedido") &&
+                values.get("custom_entity_attribute_imports").contains("it.pkg.contractentity.config.properties.credentials.AdminCredentials"))
 check("5.8 the enums travel as definitions",
-        values.get("custom_enum_definitions").contains("it.pkg.domain.StatusPedido:ATIVO|CANCELADO") &&
-                values.get("custom_enum_definitions").contains("it.pkg.contractentity.Situacao:ABERTA"))
+        values.get("contract_enum_definitions").contains("it.pkg.domain.StatusPedido:ATIVO|CANCELADO") &&
+                values.get("contract_enum_definitions").contains("it.pkg.contractentity.Situacao:ABERTA"))
 check("5.9 the enum of the profile carries NO explicit constants for the referenced class",
-        !values.get("custom_enum_definitions").contains("AdminCredentials"))
+        !values.get("contract_enum_definitions").contains("AdminCredentials"))
 check("5.10 the JDK type outside java.lang still falls back to the value estimate",
-        values.get("custom_attributes_list").contains("String:createdAt"))
+        values.get("custom_entity_attributes_list").contains("String:createdAt"))
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

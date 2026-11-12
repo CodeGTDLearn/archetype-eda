@@ -6,10 +6,12 @@
 - **Fix**: ./fix.md
 - **Result**: verified
 
+> **Status**: documento histórico. As flags `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` foram removidas do catálogo (34 → 32) e não têm equivalente atual; o caminho do contrato passou a ser emitido pelo mecanismo de inferência em `entity_contract_file_path`.
+
 ## Summary
 
 O sintoma original **não reproduz mais**: o contrato deixou de ser inerte e agora dirige a entidade gerada
-(`entity_name`, `entity_name_package`, `enable_custom_attributes` e `custom_attributes_list` saem do contrato, com
+(`entity_name`, `entity_package_name`, `enable_custom_entity_attributes` e `custom_entity_attributes_list` saem do contrato, com
 fonte `CONTRACT` / `CONTRACT_DERIVED` no relatório de proveniência, contra `0 CONTRACT / 0 INFERENCE / 32 DEFAULT`
 antes). O caminho de cache HIT — que abortava com `StackOverflowError` (exit 1) — agora devolve a linha de comando
 com exit 0 e byte-idêntica. O contrato é materializado pelo mecanismo e **copiado byte a byte** para
@@ -24,16 +26,16 @@ inferida a partir de testes.
 
 | Check | Command / Action | Result | Notes |
 |-------|------------------|--------|-------|
-| Reproduction (post-fix) | Contrato de domínio do assessment por stdin → `groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "..." --use-case-contract --inference-bin <stub> --cache-dir <tmp>` (cache limpo) | **pass** | exit 0; `-Dentity_name=ContractEntity -Dentity_name_package=contractentity -Denable_custom_attributes=true -Dcustom_attributes_list=Long:id,String:name,String:createdAt`; proveniência `1 CONTRACT / 4 CONTRACT_DERIVED / 0 INFERENCE / 28 DEFAULT / 8 descartada(s)`. **O sintoma original (`32 DEFAULT`, contrato inerte) não reproduz.** |
+| Reproduction (post-fix) | Contrato de domínio do assessment por stdin → `groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "..." --use-case-contract --inference-bin <stub> --cache-dir <tmp>` (cache limpo) | **pass** | exit 0; `-Dentity_name=ContractEntity -Dentity_package_name=contractentity -Denable_custom_entity_attributes=true -Dcustom_entity_attributes_list=Long:id,String:name,String:createdAt`; proveniência `1 CONTRACT / 4 CONTRACT_DERIVED / 0 INFERENCE / 28 DEFAULT / 8 descartada(s)`. **O sintoma original (`32 DEFAULT`, contrato inerte) não reproduz.** |
 | Reproduction (cache HIT — o `StackOverflowError`) | Mesma invocação, 2ª vez (mesmo cache-dir) | **pass** | exit 0, `## Relatorio de Proveniencia - cache: HIT`, `StackOverflow` **ausente**, nenhum `ERROR:`. Antes: `StackOverflowError` + exit 1. |
 | New / updated tests | `groovy src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy` | **pass** | `ALL CHECKS PASSED` — 32 checks (derivação, tipo por valor, `java.lang`, formato estrito, precedências, *allowlist*, paridade Orchestrator × FlagProposalMerger, materialização determinística). |
 | New / updated tests | `groovy src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` | **pass** | `ALL CHECKS PASSED` — 34 checks (inclui a regressão do `StackOverflowError` com relatório realista e linha corrompida não fatal). |
 | New / updated tests | `groovy src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` | **pass** | `ALL CHECKS PASSED` — 24 checks (cenário E: *allowlist* do FR-009). |
-| New / updated tests | `groovy src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | **pass** | `ALL CHECKS PASSED` — 20 checks (lock de 33 flags + `entity_contract_path`). |
-| Regression suite | `mvn -o clean install integration-test` | **pass** | exit 0 — **23 `BUILD SUCCESS`, 0 `BUILD FAILURE`, 0 `[ERROR]`**; 11 fixtures: `basic`, `binding-default-only`, `binding-list-only`, `binding-map-only`, `binding-mutable-only`, `binding-validated-only`, `custom-attributes`, `defaults-only`, **`entity-contract`** (nova), `full`, `minimal`. |
+| New / updated tests | `groovy src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | **pass** | `ALL CHECKS PASSED` — 20 checks (lock de 33 flags + `entity_contract_file_path`). |
+| Regression suite | `mvn -o clean install integration-test` | **pass** | exit 0 — **23 `BUILD SUCCESS`, 0 `BUILD FAILURE`, 0 `[ERROR]`**; 11 fixtures: `basic`, `external-binding-default-only`, `external-binding-list-only`, `external-binding-map-only`, `external-binding-mutable-only`, `external-binding-validated-only`, `custom-attributes`, `defaults-only`, **`entity-contract`** (nova), `full`, `minimal`. |
 | Persistência no projeto gerado (IT) | Inspeção de `target/test-classes/projects/entity-contract/project/entity-contract/` | **pass** | `src/test/resources/contracts/contract.json` existe com **191 bytes, byte a byte idêntico** ao contrato fonte; a entidade gerada tem `private Integer id; private String name; private Boolean active;` — os tipos **estimados pelos valores** do contrato (1024 → `Integer`, "Acme Corp" → `String`, true → `Boolean`). |
-| Caso negativo (D2) | Varredura dos 11 projetos gerados | **pass** | Só `entity-contract` tem `src/test/resources/contracts/`; os outros 10 (incluindo `custom-attributes`, que tem `enable_folder_src_test_java=false` **e** um `entity_contract_path` válido) **não** têm a pasta. |
-| Contrato inexistente (ramo "aviso, não quebrar") | Snippet real do repo executado em harness isolado com `entity_contract_path=nao/existe/contrato.json` | **pass** | `WARNING: entity_contract_path 'nao/existe/contrato.json' does not exist - the contract was NOT persisted.` e **nenhuma** pasta/criada. A geração não quebra. |
+| Caso negativo (D2) | Varredura dos 11 projetos gerados | **pass** | Só `entity-contract` tem `src/test/resources/contracts/`; os outros 10 (incluindo `custom-attributes`, que tem `enable_folder_src_test_java=false` **e** um `entity_contract_file_path` válido) **não** têm a pasta. |
+| Contrato inexistente (ramo "aviso, não quebrar") | Snippet real do repo executado em harness isolado com `entity_contract_file_path=nao/existe/contrato.json` | **pass** | `WARNING: entity_contract_file_path 'nao/existe/contrato.json' does not exist - the contract was NOT persisted.` e **nenhuma** pasta/criada. A geração não quebra. |
 | Caminho feliz do snippet (cópia byte a byte) | Mesmo snippet, com caminho válido | **pass** | `PROBE_EXISTS=true`, `PROBE_IDENTICAL=true`, `PROBE_BYTES=191`. |
 | Guarda de chaves secret-like (FR-017 / Princípio V) | Contrato com `db_password` por stdin | **pass** | `WARNING: the contract contains keys that look like secrets: db_password` em stderr; e **`db_password` e `s3cr3t` estão AUSENTES** do corpo do relatório de proveniência **e** do `cache.jsonl` em disco. |
 | FR-012 (byte-equivalência) | Duas invocações com a mesma entrada | **pass** | Linhas de comando **byte-idênticas** (`True`); o arquivo materializado tem nome determinístico (`<sha256 do contrato canônico>.json`). |
@@ -44,15 +46,15 @@ inferida a partir de testes.
 Reprodução (post-fix) — o contrato agora dirige a entidade:
 
 ```
-mvn archetype:generate --batch-mode … -Dentity_name=ContractEntity -Dentity_name_package=contractentity
-  -Denable_custom_attributes=true -Dcustom_attributes_list=Long:id,String:name,String:createdAt
-  -Dentity_contract_path=C:/…/contracts/2bf965b2ed7236954a88505361e2e575973aef2a0bb86fe5b67bf753597039a0.json …
+mvn archetype:generate --batch-mode … -Dentity_name=ContractEntity -Dentity_package_name=contractentity
+  -Denable_custom_entity_attributes=true -Dcustom_entity_attributes_list=Long:id,String:name,String:createdAt
+  -Dentity_contract_file_path=C:/…/contracts/2bf965b2ed7236954a88505361e2e575973aef2a0bb86fe5b67bf753597039a0.json …
 
 | entity_name            | ContractEntity | CONTRACT        |  |
-| entity_name_package    | contractentity | CONTRACT_DERIVED |  |
-| enable_custom_attributes | true         | CONTRACT_DERIVED |  |
-| custom_attributes_list | Long:id,String:name,String:createdAt | CONTRACT_DERIVED |  |
-| entity_contract_path   | C:/…/contracts/2bf965b2….json | CONTRACT_DERIVED |  |
+| entity_package_name    | contractentity | CONTRACT_DERIVED |  |
+| enable_custom_entity_attributes | true         | CONTRACT_DERIVED |  |
+| custom_entity_attributes_list | Long:id,String:name,String:createdAt | CONTRACT_DERIVED |  |
+| entity_contract_file_path   | C:/…/contracts/2bf965b2….json | CONTRACT_DERIVED |  |
 **Resumo**: 1 CONTRACT / 4 CONTRACT_DERIVED / 0 INFERENCE / 28 DEFAULT / 8 descartada(s)
 ```
 
@@ -95,7 +97,7 @@ byte-a-byte identico ao contrato fonte: True  (191 vs 191 bytes)
 
 ## Residual Risks
 
-- **A linha de comando passou a ser específica da máquina** (`-Dentity_contract_path=<caminho local>`). É
+- **A linha de comando passou a ser específica da máquina** (`-Dentity_contract_file_path=<caminho local>`). É
   determinístico (mesmo contrato ⇒ mesmo caminho ⇒ linha byte-idêntica), mas **não é portátil entre máquinas**.
   É a consequência aceita da Opção 1 (canal por flag), registrada como *breaking change* em `cli-contract.md` §5.
 - **O `archetype:generate` standalone não pôde ser executado** neste ambiente: o archetype não é resolvido pelo
@@ -112,7 +114,7 @@ byte-a-byte identico ao contrato fonte: True  (191 vs 191 bytes)
 - **`specs/003-llm-flag-inference/data-model.md` está defasado** (chave de cache com *fingerprint*, campo `r` da
   entrada, nova entidade "Materialized Contract"). Não foi tocado por estar fora da lista de arquivos do
   assessment — registrado como follow-up no `fix.md`.
-- **Defeito pré-existente, ainda exposto:** com `enable_custom_attributes=true` o template não renderiza `@Id`
+- **Defeito pré-existente, ainda exposto:** com `enable_custom_entity_attributes=true` o template não renderiza `@Id`
   (`__entity_name__.java:75-95`) — a entidade gerada fica sem `@Id`, salvo se `id` estiver entre os atributos (e
   mesmo assim sem a anotação). Fora do escopo deste bug, mas a derivação amplia a exposição.
 - **Vazamento pré-existente:** a seção "Propostas do LLM descartadas" persiste no cache valores que a LLM

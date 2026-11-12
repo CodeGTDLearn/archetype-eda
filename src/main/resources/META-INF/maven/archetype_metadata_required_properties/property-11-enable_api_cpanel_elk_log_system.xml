@@ -6,13 +6,10 @@
 <!--   TYPE        : boolean -->
 <!--   DEFAULT     : false -->
 <!--   DOMAIN      : true | false -->
-<!--   DEPENDS_ON  : So faz sentido perguntar se a API cPanel estiver -->
-<!--                  habilitada (enable_api_cpanel = true) E o sistema -->
-<!--                  de log Logback tambem estiver habilitado (enable_ -->
-<!--                  logback = true). E a flag que combina dois modulos: -->
-<!--                  o painel cPanel e o envio de logs para o stack ELK -->
-<!--                  via Logback. Se qualquer um dos dois estiver -->
-<!--                  desligado, o sistema ja fixa o valor como false. -->
+<!--   DEPENDS_ON  : So faz sentido se o sistema de log Logback estiver -->
+<!--                  habilitado (enable_logback_support = true). Se o -->
+<!--                  Logback estiver desligado, o valor ja e fixado -->
+<!--                  como false. -->
 <!--   VALIDATION  : ^(true|false)$ -->
 <requiredProperty key="enable_api_cpanel_elk_log_system">
     <defaultValue>false</defaultValue>

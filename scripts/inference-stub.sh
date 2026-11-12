@@ -76,10 +76,10 @@ if [[ -n "$ENTITY_NAME" ]]; then
     EXTRA="$EXTRA,\"entity_name\":\"$ENTITY_NAME\""
 fi
 if [[ -n "$ATTRIBUTES" ]]; then
-    EXTRA="$EXTRA,\"enable_custom_attributes\":\"true\""
-    EXTRA="$EXTRA,\"custom_attributes_list\":\"$ATTRIBUTES\""
+    EXTRA="$EXTRA,\"enable_custom_entity_attributes\":\"true\""
+    EXTRA="$EXTRA,\"custom_entity_attributes_list\":\"$ATTRIBUTES\""
 fi
 
-printf '%s' "{\"enable_jwt_authentication\":\"false\",\"api_port\":\"8080\",\"enable_binding_properties\":\"false\",\"properties_filetype\":\"1\",\"language\":\"pt\"$EXTRA}"
+printf '%s' "{\"enable_jwt_authentication\":\"false\",\"api_port\":\"8080\",\"enable_binding_external_properties\":\"false\",\"config_file_format\":\"1\",\"llm_prompt_language\":\"pt\"$EXTRA}"
 echo ""
 exit 0

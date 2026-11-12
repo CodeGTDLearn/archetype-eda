@@ -11,8 +11,8 @@ package eda.postgenerate.pre_processamento_maven_flags_via_llm.domain
  *      no List<T>, so the field will not be a collection.
  *   2. A declared PROJECT type (a type outside java.lang - a domain class or
  *      an enum) is KEPT: the entity references it by its simple name, the
- *      archetype imports it (flag custom_attribute_imports) and/or generates
- *      the enum source (flag custom_enum_definitions). The attribute NAME
+ *      archetype imports it (flag custom_entity_attribute_imports) and/or generates
+ *      the enum source (flag contract_enum_definitions). The attribute NAME
  *      then comes from the type itself (EnderecoCliente -> enderecoCliente).
  *      An array of UPPERCASE strings carries the enum constants; an array
  *      without them (or an object) falls back to String with a warning.

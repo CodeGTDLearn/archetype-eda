@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-09-BINDING_EXTERNAL_PROPERTIES_MUTABILITY.XML ____ -->
+<!-- FLAG: binding_external_properties_mutability -->
+<!--   DESCRIPTION : Seleciona o estilo da classe que recebe o binding das -->
+<!--                 external properties: 'immutable' = record/campos final + -->
+<!--                 constructor binding; 'mutable' = bean com setters; -->
+<!--                 'none' = mantem todas as variantes no projeto gerado. -->
+<!--   PROMPT      : Select 'Binding External Properties Mutability' -->
+<!--   TYPE        : enum -->
+<!--   DEFAULT     : none -->
+<!--   DOMAIN      : none | immutable | mutable -->
+<!--   DEPENDS_ON  : So faz sentido perguntar se a flag de sistema -->
+<!--                  enable_binding_external_properties estiver ligada como true -->
+<!--                  E pelo menos um dos tres sub-modulos (default, list, -->
+<!--                  map) tambem estiver ligado como true. Caso contrario, -->
+<!--                  o proprio sistema ja fixa o valor como none. -->
+<!--   VALIDATION  : ^(none|immutable|mutable)$ -->
+<requiredProperty key="binding_external_properties_mutability">
+    <defaultValue>none</defaultValue>
+    <validationRegex>^(none|immutable|mutable)$</validationRegex>
+</requiredProperty>

@@ -86,7 +86,7 @@ String bigReportText = bigReport.toString()
 check("3.1 the realistic report is above the historical overflow threshold", bigReportText.length() > 1900)
 
 String key4 = "e" * 64
-String bigCmd = "mvn archetype:generate --batch-mode -Dentity_name=ContractEntity -Dentity_contract_path=C:/tmp/contracts/abc.json"
+String bigCmd = "mvn archetype:generate --batch-mode -Dentity_name=ContractEntity -Dentity_contract_file_path=C:/tmp/contracts/abc.json"
 cacheStore.write(dir.absolutePath, key4, bigCmd, bigReportText)
 
 def hit4 = null

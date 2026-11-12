@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-08-ENABLE_MAP_BINDING_EXTERNAL_PROPERTIES.XML _____________ -->
+<!-- FLAG: enable_map_binding_external_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo map (carrega mapa chave->arquivo). -->
+<!--   PROMPT      : Enable 'Map Binding External Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_external_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_map_binding_external_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

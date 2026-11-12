@@ -21,7 +21,12 @@ main.eachFileRecurse { File f ->
         prodFiles << f
     }
 }
-check("1.1 the production tree has 73 Groovy files (nested types + derived enums)", prodFiles.size() == 73)
+check("1.1 the production tree exposes the four post-processor asset folders", [
+        new File("src/main/resources/META-INF/archetype_post_generate_body"),
+        new File("src/main/resources/META-INF/archetype_post_generate_variables"),
+        new File("src/main/resources/META-INF/archetype_post_generate_generators"),
+        new File("src/main/resources/META-INF/archetype_post_generate_snippets")
+].every { dir -> dir.isDirectory() && dir.listFiles().any { it.name.endsWith(".groovy") } } && !prodFiles.isEmpty())
 check("1.2 the legacy InvocationCache is gone",
         !new File("src/main/pre-processamento-maven-flags-via-llm/cache/InvocationCache.groovy").exists())
 
@@ -39,12 +44,16 @@ def suiteText = suiteFiles.collect { it.getText("UTF-8").toLowerCase() }.join("\
 
 // Composition-only body files: asserted structurally by ComposerTest, not by
 // their own name. Explicit allowlist with a reason.
-def allowlist = ["archetype-imports.groovy", "archetype-header.groovy",
+def allowlist = ["body-01-imports.groovy", "body-02-header.groovy",
                  // data holders exercised through their owning component
                  "MaterializationResult.groovy", "TypeResolution.groovy", "ValidationResult.groovy"]
 
+def isPostProcessorAsset = { File f ->
+    f.absolutePath.replace('\\', '/').contains('/archetype_post_generate_')
+}
 def unreferenced = prodFiles.findAll { File f ->
-    !allowlist.contains(f.name) && !suiteText.contains(f.name.replace(".groovy", "").toLowerCase())
+    !allowlist.contains(f.name) && !isPostProcessorAsset(f) &&
+            !suiteText.contains(f.name.replace(".groovy", "").toLowerCase())
 }
 check("1.3 every production file is covered by a suite: ${unreferenced*.name}", unreferenced.isEmpty())
 
@@ -84,16 +93,75 @@ def missing = []
 check("3.1 every runner entry exists on disk: ${missing}", missing.isEmpty())
 
 // ---------------------------------------------------------------------------
-// 4) Post-processor assets are all composed and referenced
+// 4) Post-processor assets: naming, catalog and binding coverage
+//    (all counts/relations are DERIVED from the directories)
 // ---------------------------------------------------------------------------
+def bodyDir = new File("src/main/resources/META-INF/archetype_post_generate_body")
 def variableDir = new File("src/main/resources/META-INF/archetype_post_generate_variables")
 def snippetDir = new File("src/main/resources/META-INF/archetype_post_generate_snippets")
-check("4.1 there are 11 variable files", variableDir.listFiles().findAll { it.name.endsWith(".groovy") }.size() == 11)
-check("4.2 there are 13 snippet files", snippetDir.listFiles().findAll { it.name.endsWith(".groovy") }.size() == 13)
-def unreferencedAssets = (variableDir.listFiles() + snippetDir.listFiles()).findAll { File f ->
-    f.name.endsWith(".groovy") && !suiteText.contains(f.name.toLowerCase())
+def generatorDir = new File("src/main/resources/META-INF/archetype_post_generate_generators")
+def metadata = new File("target/classes/META-INF/maven/archetype-metadata.xml")
+
+def catalog = new HashSet<String>()
+if (metadata.isFile()) {
+    (metadata.getText("UTF-8") =~ /<requiredProperty\s+key="([^"]+)"/).each { m -> catalog << m[1] }
 }
-check("4.3 every snippet/variable is referenced by a suite: ${unreferencedAssets*.name}", unreferencedAssets.isEmpty())
+
+def listOf = { File dir -> dir.listFiles().findAll { it.isFile() && it.name.endsWith(".groovy") } }
+def variableAssets = listOf(variableDir)
+def snippetAssets = listOf(snippetDir)
+def generatorAssets = listOf(generatorDir)
+
+check("4.1 every variable is named variables-NN-<flag>.groovy",
+        variableAssets.every { it.name ==~ /^variables-\d{2}-[a-z][a-z0-9_]*\.groovy$/ })
+check("4.2 every snippet is named snippet-NN-<flag>[-<sub>].groovy",
+        snippetAssets.every { it.name ==~ /^snippet-\d{2}-[a-z][a-z0-9_]*(-[a-z0-9_]+)?\.groovy$/ })
+check("4.3 every generator is named generator-NN-<flag>.groovy",
+        generatorAssets.every { it.name ==~ /^generator-\d{2}-[a-z][a-z0-9_]*\.groovy$/ })
+
+// The flag is the part of the name after the NN. A snippet may append a
+// sub-axis (-default, -list, ...), so the flag is matched by prefix.
+def flagOf = { File f, String prefix ->
+    String remainder = f.name.replaceFirst(/^/ + prefix + /-\d{2}-/, "").replace(".groovy", "")
+    return catalog.findAll { remainder == it || remainder.startsWith(it + "-") }
+            .sort { -it.length() }
+            .find { true }
+}
+def allAssets = [[variableAssets, "variables"], [snippetAssets, "snippet"], [generatorAssets, "generator"]]
+def unresolved = []
+allAssets.each { assets, prefix ->
+    assets.each { f ->
+        if (flagOf(f, prefix) == null) unresolved << f.name
+    }
+}
+check("4.4 every asset resolves to a declared catalog flag: ${unresolved}", unresolved.isEmpty())
+
+// Every flag READ by the body/snippets/generators must have a variables
+// fragment - the binding layer is the single place that reads the flags.
+def readers = []
+[bodyDir, snippetDir, generatorDir].each { dir ->
+    dir.eachFileRecurse { File f ->
+        if (f.isFile() && f.name.endsWith(".groovy")) readers << f
+    }
+}
+def readFlags = new TreeSet<String>()
+readers.each { File f ->
+    (f.getText("UTF-8") =~ /properties\?\.([A-Za-z_][A-Za-z0-9_]*)/).each { m -> readFlags << m[1] }
+}
+readFlags.remove("package")
+def boundFlags = variableAssets.collect { flagOf(it, "variables") }.findAll { it != null } as Set
+def unbound = readFlags.findAll { !boundFlags.contains(it) }
+check("4.5 every flag read by the post-processor has a variables fragment: ${unbound}", unbound.isEmpty())
+
+// No orphan binding: every variables fragment's flag is read somewhere.
+// Two flags are bound for the post-processor but consumed by the VELOCITY
+// templates of the generated project (entity_name, custom_entity_attribute_
+// imports): they are explicitly allowlisted here.
+def bindingOnlyAllowlist = ["entity_name", "custom_entity_attribute_imports"]
+def readerText = readers.collect { it.getText("UTF-8") }.join("\n")
+def isUsedByReader = { String flag -> (readerText =~ (/\b/ + flag + /\b/)).find() }
+def orphanBindings = boundFlags.findAll { !isUsedByReader(it) && !bindingOnlyAllowlist.contains(it) }
+check("4.6 every variables fragment is consumed by a reader: ${orphanBindings}", orphanBindings.isEmpty())
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

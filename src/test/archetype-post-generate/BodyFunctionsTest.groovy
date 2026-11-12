@@ -1,11 +1,14 @@
 /**
  * Unit test for the post-processor FILE and FOLDER helpers.
- * Covers the 12 branches of archetype-file-functions.groovy and
- * archetype-folder-functions.groovy, including the same-path rename no-op.
+ * Covers the 12 branches of body-12-file-functions.groovy and
+ * body-13-folder-functions.groovy, including the same-path rename no-op.
  */
-def fileFns = new File("src/main/resources/META-INF/archetype_post_generate_body/archetype-file-functions.groovy").getText("UTF-8")
-def folderFns = new File("src/main/resources/META-INF/archetype_post_generate_body/archetype-folder-functions.groovy").getText("UTF-8")
-def functions = "import java.nio.file.Path\nimport java.nio.file.Paths\n" + fileFns + "\n" + folderFns
+def fileFns = new File("src/main/resources/META-INF/archetype_post_generate_body/body-12-file-functions.groovy").getText("UTF-8")
+def folderFns = new File("src/main/resources/META-INF/archetype_post_generate_body/body-13-folder-functions.groovy").getText("UTF-8")
+def javaFns = new File("src/main/resources/META-INF/archetype_post_generate_body/body-14-java-source-functions.groovy").getText("UTF-8")
+def elkFns = new File("src/main/resources/META-INF/archetype_post_generate_body/body-15-elk-functions.groovy").getText("UTF-8")
+def loggingVars = new File("src/main/resources/META-INF/archetype_post_generate_body/body-03-logging-variables.groovy").getText("UTF-8")
+def functions = "import java.nio.file.Path\nimport java.nio.file.Paths\n" + loggingVars + "\n" + fileFns + "\n" + folderFns + "\n" + javaFns + "\n" + elkFns
 
 int failures = 0
 def check = { String n, boolean c -> if (c) { println "PASS: ${n}" } else { println "FAIL: ${n}"; failures++ } }
@@ -14,7 +17,17 @@ def run = { Object target, String call ->
     def binding = new Binding()
     binding.setVariable("target", target)
     binding.setVariable("listTarget", target)
+    binding.setVariable("show_archetype_post_generate_log", "false")
     new GroovyShell(this.class.classLoader, binding).evaluate(functions + "\n" + call)
+}
+
+// Same, but returns the value of the last expression (the helper outcome).
+def runValue = { Object target, String call ->
+    def binding = new Binding()
+    binding.setVariable("target", target)
+    binding.setVariable("listTarget", target)
+    binding.setVariable("show_archetype_post_generate_log", "false")
+    return new GroovyShell(this.class.classLoader, binding).evaluate(functions + "\n" + call)
 }
 
 // ---------------------------------------------------------------------------
@@ -98,6 +111,51 @@ check("5.3 deleteFilesFromListFromFolder deletes only the listed files",
         !new File(dir8, "a.txt").exists() && !new File(dir8, "b.txt").exists() && new File(dir8, "keep.txt").isFile())
 check("5.4 deleteFilesFromListFromFolder no-ops on a missing directory",
         { run(new File(dir8, "missing").toPath(), "deleteFilesFromListFromFolder(target, ['x.txt'])"); true }())
+
+// ---------------------------------------------------------------------------
+// 6) The helpers return their outcome and never mutate the caller's list
+// ---------------------------------------------------------------------------
+def dir9 = File.createTempDir("fn-outcome-", ""); dir9.deleteOnExit()
+new File(dir9, "a.txt").setText("x", "UTF-8")
+check("6.1 deleteFile returns true when it deletes",
+        runValue(new File(dir9, "a.txt"), "deleteFile(target)") == true)
+check("6.2 deleteFile returns false on a missing file",
+        runValue(new File(dir9, "missing.txt"), "deleteFile(target)") == false)
+
+def SharedListSource = '''
+def files = ['b.txt', null, '  ']
+deleteFilesFromListFromFolder(target, files)
+files
+'''
+check("6.3 deleteFilesFromListFromFolder does not mutate the caller's list",
+        runValue(dir9.toPath(), SharedListSource).size() == 3)
+
+// ---------------------------------------------------------------------------
+// 7) Java source helpers
+// ---------------------------------------------------------------------------
+check("7.1 resolveEntityPackage appends the entity package",
+        runValue(null, "resolveEntityPackage('it.pkg', 'myentity')") == "it.pkg.myentity")
+check("7.2 resolveEntityPackage keeps the base package when the suffix is blank",
+        runValue(null, "resolveEntityPackage('it.pkg', '  ')") == "it.pkg")
+
+def dir10 = File.createTempDir("fn-java-", ""); dir10.deleteOnExit()
+check("7.3 writeJavaSourceIfAbsent writes a new source",
+        runValue(dir10.toPath(), "writeJavaSourceIfAbsent(target, 'Foo', 'class Foo {}')") != null &&
+                new File(dir10, "Foo.java").getText("UTF-8") == "class Foo {}")
+check("7.4 writeJavaSourceIfAbsent never overwrites an existing source",
+        runValue(dir10.toPath(), "writeJavaSourceIfAbsent(target, 'Foo', 'class Foo { }')") == null &&
+                new File(dir10, "Foo.java").getText("UTF-8") == "class Foo {}")
+
+// ---------------------------------------------------------------------------
+// 8) ELK helper (single owner of the ELK artifacts)
+// ---------------------------------------------------------------------------
+def dir11 = File.createTempDir("fn-elk-", ""); dir11.deleteOnExit()
+new File(dir11, "ELK/pipeline").mkdirs(); new File(dir11, "ELK/pipeline/x.conf").setText("x", "UTF-8")
+new File(dir11, "docker").mkdirs(); new File(dir11, "docker/elk-compose.yml").setText("x", "UTF-8")
+def elkLog = runValue(dir11.toPath(), "deleteElkArtifacts(target, target.resolve('docker'))")
+check("8.1 deleteElkArtifacts removes the ELK folder and the compose",
+        !new File(dir11, "ELK").exists() && !new File(dir11, "docker/elk-compose.yml").exists())
+check("8.2 deleteElkArtifacts reports the removal", elkLog.toString().contains("FOLDER_ELK"))
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

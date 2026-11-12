@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-13-BASE-SRC-MAIN-RESOURCES-PROTECTED_PROPERTIES.XML ____ -->
+<!-- SRC\MAIN\RESOURCES\PROTECTED_PROPERTIES -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/main/resources/protected_properties</directory>
+    <includes>
+        <include>**/*.properties</include>
+        <include>**/*.yml</include>
+    </includes>
+</fileSet>

@@ -30,13 +30,13 @@ Technical Context had **zero `NEEDS CLARIFICATION` markers** after the assessmen
 - **Alternatives considered**: Custom JUnit harness (rejected — concept Option B); external tool (rejected — concept Option C, none exists).
 
 ### Decision 2 — Fixture Layout: per-scenario subdirectory
-- **What**: One subdirectory per scenario: `src/test/resources/projects/{minimal, full, custom-attributes, binding-default-only, binding-list-only, binding-map-only, binding-mutable-only, binding-validated-only}/`. Each contains `archetype.properties` (flags) and `goal.txt` (`clean verify`). The `custom-attributes` fixture additionally has `verify.groovy`.
+- **What**: One subdirectory per scenario: `src/test/resources/projects/{minimal, full, custom-attributes, external-binding-default-only, external-binding-list-only, external-binding-map-only, external-binding-mutable-only, external-binding-validated-only}/`. Each contains `archetype.properties` (flags) and `goal.txt` (`clean verify`). The `custom-attributes` fixture additionally has `verify.groovy`.
 - **Why**: The directory IS the matrix; no central config to maintain. Adding a scenario = adding a directory.
 - **Alternatives considered**: Centralized matrix file (e.g., `matrix.json` enumerating scenarios) — adds a layer of indirection and a parser; the per-directory form is what the `integration-test` goal natively consumes.
 
 ### Decision 3 — `verify.groovy` only for `custom-attributes`
 - **What**: `mvn verify` is the acceptance signal for every fixture except `custom-attributes`, which additionally has a `verify.groovy` that asserts structural properties of the generated entity.
-- **Why**: Spec FR-002 (uniform build criterion) and FR-003 (structural assertion only where it adds signal). The declared `custom_attributes_list` must shape the generated entity — `mvn verify` is not sufficient for that signal.
+- **Why**: Spec FR-002 (uniform build criterion) and FR-003 (structural assertion only where it adds signal). The declared `custom_entity_attributes_list` must shape the generated entity — `mvn verify` is not sufficient for that signal.
 - **Alternatives considered**: `verify.groovy` for all scenarios — rejected because most scenarios only need build-passing; adds complexity without signal.
 
 ### Decision 4 — Dependency rule encoded per fixture, not globally

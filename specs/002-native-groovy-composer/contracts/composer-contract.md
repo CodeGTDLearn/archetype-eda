@@ -10,13 +10,14 @@ O compositor é um script Groovy de build-time invocado via `org.codehaus.gmaven
 
 ## Contrato de Entrada
 
-### Sistema de Arquivos (3 pastas)
+### Sistema de Arquivos (4 pastas)
 
 ```
 src/main/resources/META-INF/
-├── archetype_post_generate_body/        (11 arquivos fixos, prefixo archetype-)
-├── archetype_post_generate_variables/   (10 arquivos, prefixo variables-)
-└── archetype_post_generate_snippets/    (11 arquivos, prefixo snippet-)
+├── archetype_post_generate_body/        (15 arquivos fixos, prefixo body-)
+├── archetype_post_generate_variables/   (25 arquivos, prefixo variables-)
+├── archetype_post_generate_generators/  (3 arquivos, prefixo generator-)
+└── archetype_post_generate_snippets/    (19 arquivos, prefixo snippet-)
 ```
 
 ### Cada arquivo `.groovy` deve:
@@ -24,7 +25,7 @@ src/main/resources/META-INF/
 - Conter apenas código Groovy sintaticamente válido.
 - Ser UTF-8 encoded (sem BOM, a menos que decisão posterior).
 - Terminar com newline.
-- (Para arquivos em `snippets/`) começar com um bloco de comentário `// FLAG: enable_xxx` (ou similar) referenciando a flag correspondente em `archetype_metadata_required_properties/`.
+- (Para arquivos em `snippets/`) declarar o marcador `// SNIPPET-NN-<nome>.GROOVY` (o nome do arquivo em maiúsculas); o compositor falha no build se o marcador faltar.
 
 ### Configuração Groovy Build-Time
 
@@ -69,11 +70,11 @@ No `pom.xml` (raiz do archetype-v2-eda):
 - **Caminho**: `target/classes/META-INF/archetype-post-generate.groovy`
 - **Encoding**: UTF-8
 - **Tamanho**: ~1100 linhas (estimado; valor real capturado durante implementação)
-- **Estrutura**: 12 seções concatenadas em ordem canônica
+- **Estrutura**: 17 seções concatenadas em ordem canônica
 
 ### Empacotamento
 
-O `pom.xml` (raiz) deve adicionar `<exclude>META-INF/archetype-post-generate.groovy</exclude>` ao `<resources><resource>` que aponta para `src/main/resources`, para que o arquivo gerado em `target/classes/META-INF/` não seja sobrescrito pelo arquivo velho de `src/main/resources/META-INF/`.
+O `archetype-post-generate.groovy` não existe em `src/main/resources/META-INF/`; o `BuildArtifactsTest` 1.4 falha se o monólito for recriado. Assim, o único arquivo no classpath é o gerado em `target/classes/META-INF/`.
 
 ## Contrato de Execução
 
@@ -84,30 +85,29 @@ O `pom.xml` (raiz) deve adicionar `<exclude>META-INF/archetype-post-generate.gro
 
 ### Comportamento Esperado
 
-- Lê os 32 arquivos `.groovy` (11 + 10 + 11) das 3 pastas.
+- Lê os 62 arquivos `.groovy` (15 + 25 + 3 + 19) das 4 pastas.
 - Remove linhas `^import …` e `^//import …` (com espaços opcionais) de cada arquivo de `snippets/` e `variables/`.
-- Concatena em ordem canônica (12 seções).
-- Para `archetype_post_generate_body/archetype-imports.groovy`, aplica `replaceAll('/', '')` em cada linha (espelha o `tr -d '/'` do bash legado) e prependa no topo.
+- Concatena em ordem canônica (17 seções).
+- Para `archetype_post_generate_body/body-01-imports.groovy`, aplica `replaceAll('/', '')` em cada linha (espelha o `tr -d '/'` do bash legado) e prependa no topo.
 - Escreve o resultado em `target/classes/META-INF/archetype-post-generate.groovy`.
 
-### Garantias de Byte-Equivalência
+### Garantias de Equivalência (histórico)
 
-- O arquivo gerado MUST ser byte-equivalente à saída atual do `bash_script/create_archetype_post_generate.sh`.
-- Verificável por `diff` retornando vazio e por hash SHA-256.
-- Exceções: NENHUMA. Se houver divergência mínima, é regressão.
+- O compositor nasceu byte-equivalente à saída histórica do `bash_script/create_archetype_post_generate.sh`, que não existe mais no repositório.
+- O critério atual de regressão é o `ComposerTest` (estrutura, ordem, idempotência e parse) — ver T014.
 
 ## Contrato de Erros
 
 | Cenário | Comportamento |
 |---|---|
 | Pasta `body/` faltando | Falha com mensagem clara listando o que está faltando. Não gera arquivo parcial. |
-| Arquivo BODY canônico faltando (`archetype-header.groovy`, etc.) | Falha com mensagem clara. |
+| Arquivo BODY canônico faltando (`body-02-header.groovy`, etc.) | Falha com mensagem clara. |
 | Pasta `variables/` ou `snippets/` vazia | Falha com mensagem clara (não é aceitável gerar sem nenhum snippet). |
 | Arquivo `.groovy` com encoding inválido | Falha com mensagem de erro de encoding. |
 | Exceção Groovy em runtime | Falha com stacktrace completo. Não há supressão de erros. |
 
 ## Contrato de Compatibilidade
 
-- O `bash_script/create_archetype_post_generate.sh` permanece em disco como referência (não invocado).
-- O `archetype-post-generate.groovy` commitado em `src/main/resources/META-INF/` é removido (via `git rm` + `.gitignore`) após validação byte-a-byte.
+- O `bash_script/create_archetype_post_generate.sh` não existe mais no repositório.
+- O `archetype-post-generate.groovy` não existe em `src/main/resources/META-INF/`; a remoção do índice do git (`git rm --cached`) foi executada e a deleção está staged para o commit (T025). Não é necessário `.gitignore` para o arquivo gerado: `target/` já é ignorado.
 - O ciclo de testes IT (`mvn clean install` + `mvn integration-test`) MUST passar 9/9 perfis.

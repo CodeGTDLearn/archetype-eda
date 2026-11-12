@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-10-BASE-SRC-MAIN-JAVA.XML _____________________________ -->
+<!-- SRC\MAIN -->
+<fileSet filtered="true" packaged="true" encoding="UTF-8">
+    <directory>src/main/java</directory>
+    <includes>
+        <include>**/*.java</include>
+    </includes>
+</fileSet>

@@ -117,7 +117,7 @@ class FlagProposalMerger {
                             source = (String) derived.get("entityNameSource")
                         }
                         break
-                    case "entity_name_package":
+                    case "entity_package_name":
                         if (derived.get("entityName") != null) {
                             String pkg = ((String) derived.get("entityName")).toLowerCase(Locale.ROOT)
                             if (pkg ==~ /^[a-z][a-z0-9_.]+$/) {
@@ -126,13 +126,13 @@ class FlagProposalMerger {
                             }
                         }
                         break
-                    case "enable_custom_attributes":
+                    case "enable_custom_entity_attributes":
                         if (!(derived.get("attributes") as List).isEmpty()) {
                             value = "true"
                             source = "CONTRACT_DERIVED"
                         }
                         break
-                    case "custom_attributes_list":
+                    case "custom_entity_attributes_list":
                         if (!(derived.get("attributes") as List).isEmpty()) {
                             value = (String) derived.get("attributeList")
                             source = "CONTRACT_DERIVED"

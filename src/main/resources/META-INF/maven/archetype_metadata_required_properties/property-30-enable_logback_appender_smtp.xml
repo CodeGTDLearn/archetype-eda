@@ -6,7 +6,7 @@
 <!--   TYPE        : boolean -->
 <!--   DEFAULT     : false -->
 <!--   DOMAIN      : true | false -->
-<!--   DEPENDS_ON  : enable_logback = true -->
+<!--   DEPENDS_ON  : enable_logback_support = true -->
 <!--   VALIDATION  : ^(true|false)$ -->
 <requiredProperty key="enable_logback_appender_smtp">
     <defaultValue>false</defaultValue>

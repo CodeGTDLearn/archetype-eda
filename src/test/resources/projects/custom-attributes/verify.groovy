@@ -175,7 +175,7 @@ if (!referencedSource.contains('package it.pkg.contractentity.config.properties.
 // ---------------------------------------------------------------------------
 // FR-021 (negative case): this profile keeps enable_folder_src_test_java=false,
 // so the contracts folder MUST NOT exist in the generated project, even
-// though entity_contract_path points to a real contract file.
+// though entity_contract_file_path points to a real contract file.
 // ---------------------------------------------------------------------------
 def contractsFolder = new File(projectRoot, "src/test/resources/contracts")
 if (contractsFolder.exists()) {

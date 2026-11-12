@@ -9,7 +9,7 @@ def seed = { File root ->
 }
 
 def root = File.createTempDir("filetype-1-", ""); root.deleteOnExit(); seed(root)
-h.run(root, [properties_filetype: "1"], "snippet-properties-filetype.groovy")
+h.run(root, [config_file_format: "1"], "snippet-18-config_file_format.groovy")
 check("1.1 filetype=1 deletes every .yml under main", !new File(root, "src/main/resources/a.yml").exists() &&
         !new File(root, "src/main/resources/sub/b.yml").exists())
 check("1.2 filetype=1 keeps .properties under main", new File(root, "src/main/resources/b.properties").exists() == false &&
@@ -18,7 +18,7 @@ check("1.3 filetype=1 deletes every .yml under test", !new File(root, "src/test/
 check("1.4 filetype=1 keeps .properties under test", new File(root, "src/test/resources/c.properties").isFile())
 
 def root2 = File.createTempDir("filetype-2-", ""); root2.deleteOnExit(); seed(root2)
-h.run(root2, [properties_filetype: "2"], "snippet-properties-filetype.groovy")
+h.run(root2, [config_file_format: "2"], "snippet-18-config_file_format.groovy")
 check("2.1 filetype=2 deletes every .properties under main", !new File(root2, "src/main/resources/a.properties").exists() &&
         !new File(root2, "src/main/resources/sub/b.properties").exists())
 check("2.2 filetype=2 keeps .yml under main", new File(root2, "src/main/resources/a.yml").isFile())

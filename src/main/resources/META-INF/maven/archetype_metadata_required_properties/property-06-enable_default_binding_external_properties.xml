@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-06-ENABLE_DEFAULT_BINDING_EXTERNAL_PROPERTIES.XML _________ -->
+<!-- FLAG: enable_default_binding_external_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo default (carrega .properties fixo). -->
+<!--   PROMPT      : Enable 'Default Binding External Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_external_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_default_binding_external_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

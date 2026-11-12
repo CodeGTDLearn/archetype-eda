@@ -6,6 +6,8 @@
 - **Fix**: ./fix.md
 - **Result**: partial
 
+> **Status**: documento histórico. As flags `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` foram removidas do catálogo (34 → 32) e não têm equivalente atual; o caminho do contrato passou a ser emitido pelo mecanismo de inferência em `entity_contract_file_path`.
+
 ## Summary
 
 O sintoma original está **eliminado e verificado por reprodução direta**: o mecanismo deixou de abortar com `exit code 4` (FR-018, *"empty defaultValue"*) e passou a emitir uma linha de comando com as **32** flags do catálogo, **sem** `absolute_path_jsonfile_contract` nem `enable_json_entity_contracts`; o build completo e os **10** perfis de integração continuam verdes. Porém, a correção **descobriu um defeito latente pré-existente** no caminho de leitura do cache: `cacheLookup` estoura a pilha (`StackOverflowError`) ao processar o relatório de proveniência real (1965 caracteres), de modo que **toda invocação repetida falha com exit 1** — e uma única linha envenenada invalida o cache inteiro, inclusive para entradas diferentes. O defeito está em código **não alterado** pela correção, que era inalcançável enquanto o gate FR-018 abortava tudo antes; por isso o resultado é `partial` e não `verified`.
@@ -15,7 +17,7 @@ O sintoma original está **eliminado e verificado por reprodução direta**: o m
 | Check | Command / Action | Result | Notes |
 |-------|------------------|--------|-------|
 | Reprodução (post-fix) — comando exato do assessment | `'{"id":1024,…}' \| groovy src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy --use-case-description "criar entidade de teste" --use-case-contract` | **pass** | `exit 3` (antes: `exit 4`). O abort FR-018 (*"empty defaultValue"*) **não ocorre mais**; a execução avança até o passo de inferência e falha ali por limitação do Windows (stub `.sh` não executável via `CreateProcess`, erro 193) — pré-existente e documentada no `fix.md`. |
-| Reprodução (post-fix) — com stub executável | mesmo comando + `--inference-bin <stub .cmd>` + `--cache-dir <tmp>` | **pass** | `exit 0`. stdout = 1 linha de comando com **32** flags; `absolute_path_jsonfile_contract` **ausente**; `enable_json_entity_contracts` **ausente**; `-Dentity_name_package=myentity` presente. |
+| Reprodução (post-fix) — com stub executável | mesmo comando + `--inference-bin <stub .cmd>` + `--cache-dir <tmp>` | **pass** | `exit 0`. stdout = 1 linha de comando com **32** flags; `absolute_path_jsonfile_contract` **ausente**; `enable_json_entity_contracts` **ausente**; `-Dentity_package_name=myentity` presente. |
 | Cache HIT (2ª invocação, mesmo input) | mesma repetição com o mesmo `--cache-dir` | **fail** | `exit 1` — `java.lang.StackOverflowError` em `cacheLookup`. Ver *Output Excerpts* e *Residual Risks*. |
 | Blast radius da falha | run A (input X) → run B (**input Y**) → run C (input X) | **fail** | run A `exit 0`; run B `exit 1`; run C `exit 1`. Uma única linha longa no `cache.jsonl` envenena o cache para **todos** os inputs. |
 | Novos/atualizados testes | `groovy src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | **pass** | ALL CHECKS PASSED — 15 checks, 0 falhas. |
@@ -23,7 +25,7 @@ O sintoma original está **eliminado e verificado por reprodução direta**: o m
 | Testes (regressão do merge/proveniência) | `groovy …/ProvenanceReportTest.groovy` | **pass** | ALL CHECKS PASSED — 20 checks, 0 falhas. |
 | Suite de regressão (build + IT) | `mvn -o clean install` | **pass** | BUILD SUCCESS, `exit 0`. **10/10** perfis de IT com `Post-archetype-generation invoker exit code: 0`; `verify.groovy` executado (`Finished post-build script`); **0** ocorrências de `[ERROR]`. |
 | Geração batch mode | `mvn archetype:generate --batch-mode -DarchetypeGroupId=com.eda-archetype -DarchetypeArtifactId=eda-archetype -DarchetypeVersion=0.0.1-SNAPSHOT -DartifactId=verify-gen -DgroupId=verify -Dversion=0.1-SNAPSHOT -Dpackage=it.pkg` + a linha de comando emitida pelo mecanismo | **pass** | BUILD SUCCESS, `exit 0`. Entidade gerada em `src/main/java/it/pkg/myentity/MyEntity.java` (mais `MyEntityController/Repository/Service`, `ApiStarter`, `config/**`). Sem aviso de "Unknown property" nem de "property is required". `src/main/resources/contracts/` **ausente**. |
-| Invariantes do catálogo | leitura de `target/classes/META-INF/maven/archetype-metadata.xml` | **pass** | 32 flags · 0 defaults vazios · `absolute_path_jsonfile_contract` ausente · `enable_json_entity_contracts` ausente · `entity_name_package` = `myentity`. |
+| Invariantes do catálogo | leitura de `target/classes/META-INF/maven/archetype-metadata.xml` | **pass** | 32 flags · 0 defaults vazios · `absolute_path_jsonfile_contract` ausente · `enable_json_entity_contracts` ausente · `entity_package_name` = `myentity`. |
 | Pós-processador composto | varredura de `target/classes/META-INF/archetype-post-generate.groovy` | **pass** | **0** referências a `absolute_path_jsonfile_contract`, `enable_json_entity_contracts`, `srcMainResourcesContracts`, `jsonfileEntityContractSourcePath`, `keep_json_entity_contracts`, `json_entity_contracts_folder`. |
 | Invalidação do cache legado | `groovy …/verify-cache-invalidation.groovy` (script temporário) | **pass** | chave antiga `fa2f1cdf…` ≠ chave nova `89330dc7…`; `cacheLookup` com a chave nova **não** serviu a entrada legada → entrada legada **inalcançável**. |
 | Varredura mecânica de referências | `Select-String` em `*.xml,*.groovy,*.properties,*.sh` (todo o repo) | **pass** | 11 ocorrências, **todas intencionais**: 4 no artefato composto defasado (`src/main/resources/META-INF/archetype-post-generate.groovy`, excluído do build por `pom.xml:40`) e 7 nos guards de regressão do `FlagCatalogExtractorTest.groovy`. |
@@ -35,7 +37,7 @@ O sintoma original está **eliminado e verificado por reprodução direta**: o m
 
 ```
 ERROR: Flag catalog is malformed or unreadable.
-  Flag 'entity_name_package' has empty defaultValue. Catalog is invalid per FR-018.
+  Flag 'entity_package_name' has empty defaultValue. Catalog is invalid per FR-018.
 exit code 4
 ```
 
@@ -53,8 +55,8 @@ exit code 3
 
 ```
 mvn archetype:generate --batch-mode -Denable_api_cpanel=false -Dapi_port=8080 … -Dentity_name=MyEntity
-  -Dentity_name_package=myentity -Denable_custom_attributes=false
-  -Dcustom_attributes_list=Long:id,MyId:id,My_Id:my_id … -Dproject_language=pt -Denable_folder_src_test_java=false
+  -Dentity_package_name=myentity -Denable_custom_entity_attributes=false
+  -Dcustom_entity_attributes_list=Long:id,MyId:id,My_Id:my_id … -Dproject_i18n_language=pt -Denable_folder_src_test_java=false
 ## Relatorio de Proveniencia - cache: MISS
 **Resumo**: 0 CONTRACT / 0 INFERENCE / 32 DEFAULT / 2 descartada(s)
 exit code 0
@@ -100,8 +102,8 @@ at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:5078)   <-- 1 frame
 - **Limitação de ambiente não coberta**: o stub padrão `scripts/inference-stub.sh` não é executável no Windows (`CreateProcess error=193`), logo o caminho exato do `fix.md` não pôde ser exercitado aqui; a validação end-to-end usou um stub `.cmd` temporário **fora** do repositório. O comportamento em POSIX (onde o stub roda) não foi verificado.
 - **Geração sem coordenadas explícitas do arquétipo**: `mvn archetype:generate --batch-mode -D…` **sem** `-DarchetypeGroupId/-DarchetypeArtifactId/-DarchetypeVersion` resolve o arquétipo pelo catálogo local (`archetype-catalog.xml`, cuja entrada não declara `<version>`) e produz um projeto com **apenas** o `App.java` padrão do plugin — sem entidade, sem `config/`. Com coordenadas explícitas a geração está correta (verificado). É **pré-existente e alheio a esta correção** (não toquei em `<resources>`, no layout do `archetype-resources` nem na empacotagem), mas afeta diretamente a usabilidade da linha de comando emitida pelo mecanismo.
 - **Artefato composto defasado**: `src/main/resources/META-INF/archetype-post-generate.groovy` ainda contém o código antigo (4 ocorrências). É **inerte** — excluído do build por `pom.xml:40` e regenerado em `target/classes/` pelo `SnippetComposer` —, mas confunde leitores. Follow-up já registrado no `fix.md`.
-- **Bug adjacente ainda aberto**: `contrato-json-inferido-inoperante` — o gate FR-009 (`Orchestrator.groovy:248`, `:279`) exige chave **literal** no contrato, então um contrato de domínio (`entityName`, `attributes`) continua não alimentando flag nenhuma. Verificado nesta sessão: o resumo de proveniência mostra `0 CONTRACT / 0 INFERENCE / 32 DEFAULT / 2 descartada(s)` — a LLM propôs `api_port` e `enable_custom_attributes` e **ambas foram descartadas** por não constarem literalmente no contrato.
-- **`entity_name_package` desacoplado de `entity_name`**: default fixo `myentity` (aceito por decisão do maintainer). O pacote gerado foi `it/pkg/myentity` — correto quando o operador passa `-Dentity_name_package=<entity_name em minúsculas>`, mas `myentity` se a flag for omitida.
+- **Bug adjacente ainda aberto**: `contrato-json-inferido-inoperante` — o gate FR-009 (`Orchestrator.groovy:248`, `:279`) exige chave **literal** no contrato, então um contrato de domínio (`entityName`, `attributes`) continua não alimentando flag nenhuma. Verificado nesta sessão: o resumo de proveniência mostra `0 CONTRACT / 0 INFERENCE / 32 DEFAULT / 2 descartada(s)` — a LLM propôs `api_port` e `enable_custom_entity_attributes` e **ambas foram descartadas** por não constarem literalmente no contrato.
+- **`entity_package_name` desacoplado de `entity_name`**: default fixo `myentity` (aceito por decisão do maintainer). O pacote gerado foi `it/pkg/myentity` — correto quando o operador passa `-Dentity_package_name=<entity_name em minúsculas>`, mas `myentity` se a flag for omitida.
 
 ## Recommendation
 

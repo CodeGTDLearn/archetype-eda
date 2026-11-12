@@ -8,6 +8,52 @@
 * Este projeto partir da prova de conceito desenvolvida em out24(ferias BR) no projeto "archetype-v1-concept-proof"
 </details>
 
+<details><summary><strong>Tecnologias Utilizadas 🛠️</strong></summary>
+
+* Escopo: as tecnologias **deste projeto** (o gerador). A stack dos projetos **gerados** não faz parte desta seção.
+
+#### Núcleo do Archetype (build e empacotamento)
+
+| Tecnologia | Versão | Por quê |
+|---|---|---|
+| **Java** | 17 (build) / 21 (default gerado) | Linguagem base do archetype e dos projetos que ele gera. O default do catálogo é `java_version=21`; as fixtures de integração usam 17. |
+| **Apache Maven** | 3.9.x | Coração do projeto: lifecycle, build e distribuição do artefato via `~/.m2`. O archetype **é** um artefato Maven (`packaging=maven-archetype`). |
+| **Maven Archetype Plugin** | 3.4.1 | Mecanismo central: `archetype:generate` materializa a árvore do projeto, `archetype:jar` empacota o JAR, `integration-test` valida as fixtures e `update-local-catalog` registra o archetype no catálogo local. |
+| **Archetype Packaging** | 3.4.1 | Extension do Maven que habilita o `packaging=maven-archetype` e os **3 slots** do JAR (metadata + resources + post-generate). |
+
+#### Templates e Metadata
+
+| Tecnologia | Versão | Por quê |
+|---|---|---|
+| **Apache Velocity** | (via plugin) | Motor de templates do `filtered="true"`: renderiza os placeholders `${...}` nos `archetype-resources/` durante a geração. |
+| **XML + XML Entities + XSLT** | — | O catálogo de flags é fragmentado (35 `property-*.xml` + 18 `fileset-*.xml` + DOCTYPE com 53 entities) e materializado por um XSLT identidade — evita um XML monolítico e mantém cada flag revisável isoladamente. |
+| **XML Maven Plugin** | 1.2.1 | Executa a transformação XSLT na fase `generate-resources`, gerando o `archetype-metadata.xml` final em `target/classes`. |
+
+#### Scripts e Automação
+
+| Tecnologia | Versão | Por quê |
+|---|---|---|
+| **Apache Groovy** | 4.0.28 | Linguagem dos scripts do build: pós-processador (`archetype-post-generate.groovy`), compositor, CLI de inferência e os runners de suíte. Escolhida por rodar nativo dentro do Maven e manipular arquivos/JSON/XML com pouca cerimônia. |
+| **Groovy Maven Plugin** | 2.1.1 | Executa os scripts Groovy dentro do lifecycle (`process-resources` para compor o pós-processador, `test` para as suítes). |
+| **Bash** | — | Legado: eras anteriores do pré-processamento (Q&A e manipulação de JSON), substituído pelo Groovy/LLM. |
+
+#### Pré-processamento / Inferência
+
+| Tecnologia | Por quê |
+|---|---|
+| **LLM (inferência via shell-out)** | Pré-processamento: transforma use-case + contrato JSON na command line do `mvn archetype:generate`. Fica isolada atrás de `--inference-bin` (stub determinístico para CI) — o mecanismo não depende de um provider específico. |
+| **JSON** | Formato do contrato de use-case, do cache (`cache.jsonl`) e do relatório de proveniência. |
+| **SHA-256** | Chaves de cache determinísticas e fingerprint do catálogo/contrato. |
+
+#### Testes
+
+| Tecnologia | Versão | Por quê |
+|---|---|---|
+| **JUnit 4** | 4.13.2 | Única dependência declarada; cobre os testes convencionais do surefire (`**/*Test.java`). |
+| **Groovy (suítes próprias)** | 4.0.28 | As **56 suítes / 944 checks** são scripts Groovy com checks próprios (sem infra JUnit), executados pelo `groovy-maven-plugin` — o build falha se qualquer check falhar. |
+
+</details>
+
 <details><summary><strong> ️Velocity Guidelines 📍</strong></summary>
 
 * [User Guide](https://velocity.apache.org/engine/2.4.1/user-guide.html)
@@ -28,7 +74,7 @@
     * [src \ "MAIN" \ resources \ _META-INF_ \ _**"MAVEN"**_ \ ](src/main/resources/META-INF/maven)
     * 02 - Setores (**_FileSet_** + **_RequiredProperties_**):
       * **_Setor 01:_** [_FileSets_](src/main/resources/META-INF/maven/archetype_metadata_filesets)
-        * **Distribuicao atual:** **18 arquivos** `fileset-<flag>[-parte].xml`, com **um `<fileSet>` por arquivo** (sem numeracao).
+        * **Distribuicao atual:** **18 arquivos** `fileset-<NN>-<flag>[-parte].xml`, com **um `<fileSet>` por arquivo** (numerados `01` a `18`).
         * **Packaged** Tag:
           * **Conceito:**
             - A tag `packaged` controla como os arquivos serao estruturados
@@ -120,7 +166,7 @@
         ```
 
       * **_Setor 02:_** [_RequiredProperty_](src/main/resources/META-INF/maven/archetype_metadata_required_properties)
-         * **Distribuicao atual:** **36 arquivos** `property-<NN>-<flag>.xml` (numerados `01` a `36`), **um por flag**.
+         * **Distribuicao atual:** **35 arquivos** `property-<NN>-<flag>.xml` (numerados `02` a `36`, com lacuna em `01`), **um por flag**.
          * Conceito:
            - Define propriedades que serao capturadas pelo **_SWITCHES -D_** do Maven CLI
          * Utilidade Pratica:
@@ -150,19 +196,23 @@
                 - mvn archetype:generate -DarchetypeGroupId=seu.grupo
 
 **2) Manejo de Arquivos c/ Groovy (seguido da geracao do archetype):**
-  * Arquivo: [ARCHETYPE-POST-GENERATE.GROOVY](src/main/resources/META-INF/archetype-post-generate.groovy)
+  * Arquivo: [ARCHETYPE-POST-GENERATE.GROOVY (GERADO)](target/classes/META-INF/archetype-post-generate.groovy)
   * Conceito:
     * Arquivo Groovy de manejo de pastas/arquivos, **APOS** a geracao do ARchetype
     * Contendo:
       * Codigo Groovy de manejo de pastas/arquivos
       * Formacao do arquivo: Ver item **'Formação do Archetype-Post-Generate.groovy'** desta documentacao
-    * Local: [src \ "MAIN" \ resources \ _**META-INF**_ \ ](src/main/resources/META-INF)
+    * Local: **NAO existe em `src/`**. O unico artefato final fica em [target/classes/META-INF/](target/classes/META-INF) e viaja dentro do JAR.
+  * Visibilidade (importante):
+    * `target/` esta no `.gitignore`, e o IDE normalmente o exclui da arvore do projeto — por isso o arquivo **nao aparece** no Project view.
+    * Ele so existe depois do build: `mvn clean process-resources` (ou qualquer fase posterior) recria.
+    * Para abrir no IDE: `Ctrl+Shift+N` (IntelliJ) e digitar `archetype-post-generate.groovy`; ou abrir direto o caminho acima.
   * Conceito:
-    * Script GROOVY nativo (build-time) que COMPOE o `archetype-post-generate.groovy` a partir dos snippets em `META-INF/archetype_post_generate_body/`, `..._snippets/` e `..._variables/`. Substituiu o pre-processamento em bash (`bash_script/create_archetype_post_generate.sh`).
+    * Script GROOVY nativo (build-time) que COMPOE o `archetype-post-generate.groovy` a partir dos snippets em `META-INF/archetype_post_generate_body/`, `..._variables/`, `..._generators/` e `..._snippets/`. Substituiu o pre-processamento em bash (`bash_script/create_archetype_post_generate.sh`, que nao existe mais no repositorio).
   * Local:
     * [src \ "MAIN" \ groovy \](src/main/groovy/)
   * Invocado por: `org.codehaus.gmaven:groovy-maven-plugin:2.1.1` (goal `execute`) na fase `process-resources`. Configurado em `pom.xml` (raiz).
-  * Output: `target/classes/META-INF/archetype-post-generate.groovy` (gerado a cada build, equivalente ao output do bash legado).
+  * Output: `target/classes/META-INF/archetype-post-generate.groovy` (gerado a cada build; `mvn clean` apaga, o proximo build recria).
 
 
 **3) Testes Relativos ao Archetype:**
@@ -171,6 +221,99 @@
 	* Arquivo de propriedades(requiredProperties) do archetype
 	* Responsavel pelo _**teste do Archetype**_
 	* Esse teste e realizado antes da montagem do Archetype
+</details>
+
+<details><summary><strong> Fluxo do Maven Archetype System 🔄</strong></summary>
+
+* **Objetivo:** explicar a **essência** do `archetype:generate` do Maven — como os slots
+  do JAR empacotado se relacionam entre si, e **por que** o Maven os separa.
+
+#### Os três slots do archetype empacotado 📦
+
+* O archetype empacotado (`packaging=maven-archetype`) é um JAR com **três slots**
+  de **nomes fixos**, reconhecidos pelo plugin por constantes próprias
+  (`org.apache.maven.archetype.common.Constants`):
+
+| Slot no JAR | Constante | Obrigatório? |
+|---|---|---|
+| `META-INF/maven/archetype-metadata.xml` | `ARCHETYPE_DESCRIPTOR` | sim |
+| `archetype-resources/` | `ARCHETYPE_RESOURCES` | sim |
+| `META-INF/archetype-post-generate.groovy` | `ARCHETYPE_POST_GENERATION_SCRIPT` | opcional |
+
+* O slot **é** o nome da pasta/arquivo dentro do JAR — nada mais.
+* O `archetype:jar` (goal `jar`, fase `package`) empacota `target/classes` no JAR.
+
+#### 1) `archetype-metadata.xml` — o índice (não contém conteúdo) 📇
+
+* Descreve **o que** o archetype precisa e **o que fazer** com a pasta de templates:
+  * `<requiredProperties>` — as **variáveis** pedidas (`key`, `defaultValue`, `validationRegex`).
+  * `<fileSets>` — o **roteamento**: cada `<fileSet>` diz *qual diretório* de
+    `archetype-resources/` vira *qual lugar* da árvore gerada, e com que tratamento
+    (`filtered`, `packaged`, `encoding`, `includes`/`excludes`).
+* O metadata **nunca lista arquivos**: aponta pastas e deixa o `includes` filtrar.
+* **Motivação:** separar a *declaração* do *conteúdo*.
+  * o descritor é pequeno, revisável, substituível;
+  * o template pode ser gigante e nunca é lido pelo parser — só copiado.
+
+#### 2) `archetype-resources/` — o conteúdo (não sabe se existe) 📦
+
+* A árvore esqueleto do projeto a ser gerado. Única fonte do *conteúdo* dos arquivos.
+* O parser do metadata nunca entra aqui. Quem entra é o **gerador**, que usa o
+  metadata como instrução de montagem:
+  * `__entity_name_package__` no **nome** de arquivo/pasta → substituído pelo valor da flag;
+  * `${entity_name}` no **conteúdo** → renderizado pelo Velocity (só com `filtered="true"`).
+* **Motivação:** o template é puro "material virgem" — não carrega lógica de montagem.
+  Quem decide como usá-lo é o metadata.
+
+#### 3) `archetype-post-generate.groovy` — o pós-processamento (o único com poder) 🧬
+
+* Script Groovy executado **depois** da cópia.
+* Recebe, via `Binding` do `GroovyShell`:
+  * cada `requiredProperty` como **variável direta**;
+  * a variável `request` = `ArchetypeGenerationRequest` completo
+    (`request.properties`, `request.outputDirectory`, `request.artifactId`…).
+* **Motivação (a essencial):** o descritor é **estático e sem condição**.
+  * No modelo atual (`archetype-metadata.xml` do Maven 3.4.1) **não existe** forma de
+    dizer *"este fileSet só entra se a flag X for true"*.
+  * O `includeCondition` do modelo `FileSet` pertence ao modelo legado **1.x** e é
+    **rejeitado** pelo reader 3.4.1 (*"Unknown attribute"*).
+  * Logo: **quem decide manter/excluir por flag é o Groovy**.
+    Ele existe para o que a forma declarativa não consegue expressar.
+
+#### A relação: um pipeline de 3 tempos ⏱️
+
+```
+   metadata.xml          resources/          post-generate.groovy
+   ───────────────       ───────────         ─────────────────────
+   "O QUE preciso"  +   "O QUE copio"   →   "O QUE ajusto"
+   (variáveis)            (template bruto)     (mantém/exclui/renomeia)
+
+   declarado / passivo                         único que decide
+   estático / só conteúdo
+```
+
+* Cada slot é consumido em um **momento diferente da mesma execução** do
+  `archetype:generate`:
+  1. **Metadata primeiro** — o configurador lê o descritor, resolve as flags
+     (CLI > `defaultValue` > prompt), monta o `Properties`.
+  2. **Resources no meio** — o gerador percorre os `<fileSet>`, resolve os templates
+     correspondentes, aplica Velocity / `packaged` / `encoding`, e escreve a árvore.
+  3. **Groovy no fim** — roda sobre a árvore já escrita, com as mesmas flags em mãos.
+* **A lei da relação:** o metadata **dirige**, os resources **sofrem**,
+  o Groovy **corrige**.
+  * Nenhum dos dois primeiros sabe que o terceiro existe;
+  * o Groovy não pode adicionar ao contrato — só intervém no resultado.
+
+#### O ciclo do artefato (o `archetype-packaging` amarra tudo) 🔗
+
+```
+process-resources → resources
+package           → archetype:jar              (monta o JAR com os 3 slots)
+integration-test  → archetype:integration-test (gera projeto, roda goal.txt, compara)
+install           → install + archetype:update-local-catalog
+                                               (escreve ~/.m2/archetype-catalog.xml)
+```
+
 </details>
 
 <details><summary><strong> Maven Coordinates 📍</strong></summary>
@@ -246,23 +389,30 @@
 
 | Suíte | Checks | O que garante |
 |---|---|---|
-| `MavenFlagsViaLlmStarterTest` | 25 | gates do CLI (FR-001/002/003), stdout puro, contrato antes da inferência |
-| `cache/CacheKeyFactoryTest` | 6 | chave determinística e fingerprint do catálogo |
+| `MavenFlagsViaLlmStarterTest` | 37 | gates do CLI (FR-001/002/003), stdout puro, contrato antes da inferência, caminho do contrato no cache HIT |
+| `cache/CacheKeyFactoryTest` | 9 | chave determinística, fingerprint do catálogo e caminho materializado |
 | `cache/CacheStoreTest` | 18 | cache v2/v1, byte-equivalência, corrupção e guarda FR-017 |
-| `catalog/FlagCatalogExtractorTest` | 27 | catálogo real (36 flags), FR-018, defaults × regex |
+| `catalog/FlagCatalogExtractorTest` | 36 | catálogo real (35 flags), FR-018, defaults × regex |
 | `catalog/FlagCatalogExtractorDriftTest` | 12 | o catálogo segue o metadata sem lista hardcoded (FR-013) |
-| `command/CommandLineAssemblerTest` | 21 | formatação e escape da command line (FR-010) |
-| `command/CommandLineArgumentsTest` | 8 | parsing dos argumentos do CLI |
+| `commandLine/CommandLineAssemblerTest` | 21 | formatação e escape da command line (FR-010) |
+| `commandLine/CommandLineArgumentsTest` | 8 | parsing dos argumentos do CLI |
 | `contract/ContractReaderTest` | 7 | leitura do stdin e validação da raiz JSON do contrato |
 | `contract/ContractStoreTest` | 12 | materialização determinística, UTF-8, sobrescrita e falha do contrato |
 | `contract/ContractSecretScannerTest` | 7 | detecção de chaves sensíveis no contrato (FR-017) |
 | `domain/ContractDerivationTest` | 56 | derivação da entidade, precedência, imports/enums, colisão de nomes |
-| `domain/ContractTypeResolverTest` | 55 | inferência de tipo: `java.lang`, **tipo do projeto**, detecção de enum, normalização de constantes, nomenclatura pelo tipo |
+| `domain/ContractTypeResolverTest` | 92 | inferência de tipo: `java.lang`, **tipo do projeto**, detecção de enum, normalização de constantes, nomenclatura pelo tipo |
 | `domain/ContractAttributeExtractorTest` | 7 | extração de atributos (mapa, lista e contrato flat) |
-| `domain/ContractAttributeAssemblerTest` | 6 | montagem de atributos, descarte e metadados de enum |
+| `domain/ContractAttributeAssemblerTest` | 21 | montagem de atributos, descarte e metadados de enum |
+| `domain/ContractNestedTypeDeriverTest` | 53 | derivação de POJOs de objetos aninhados (profundidade, colisão e campos inválidos) |
+| `domain/ContractTypeNameRegistryTest` | 15 | unicidade e desambiguação de nomes de tipos |
+| `domain/ContractEnumDeriverTest` | 18 | enums derivados de arrays de strings MAIÚSCULAS |
 | `domain/ContractEntityNameResolverTest` | 6 | resolução do nome da entidade (aliases e fallback) |
 | `domain/ContractValueReaderTest` | 7 | leitura e serialização de valores do contrato |
-| `domain/DerivedFlagProjectorTest` | 9 | projeção de imports/enums derivados e precedência |
+| `domain/DerivedFlagProjectorTest` | 12 | projeção de imports/enums derivados e precedência |
+| `domain/NestedTypeFlagProjectorTest` | 17 | projeção/supressão de `contract_nested_type_definitions` |
+| `domain/NestedContractIntegrationTest` | 30 | contrato com objetos aninhados ponta a ponta |
+| `domain/NestedProfilesConsistencyTest` | 67 | consistência dos perfis e fixtures de aninhamento |
+| `domain/PayloadEnumIntegrationTest` | 17 | enums de payload ponta a ponta |
 | `domain/FlagValidationPolicyTest` | 6 | validação de flags e fallback FR-006 |
 | `domain/InferenceEligibilityPolicyTest` | 6 | allowlist e elegibilidade da inferência (FR-009) |
 | `domain/TypeNameListFormatterTest` | 3 | formatação `Type:name` |
@@ -272,7 +422,7 @@
 | `inference/InferenceClientTest` | 6 | parsing do stdout, exit code, JSON inválido e binário ausente |
 | `presentation/CliOutputTest` | 11 | roteamento stdout/stderr, headers, warnings e erros |
 | `presentation/ProvenanceReportRendererTest` | 10 | merge + relatório de proveniência (FR-020) |
-| **Total** | **390** | **26 suítes** |
+| **Total** | **671** | **33 suítes** |
 
 ##### Pós-processador (`run-archetype-post-generate-tests.groovy`)
 
@@ -280,18 +430,19 @@
 |---|---|---|
 | `archetype-post-generate/ComposerTest` | 17 | composição canônica, idempotência, imports e helpers |
 | `archetype-post-generate/BuildArtifactsTest` | 16 | artefatos do build, descriptor e wiring dos plugins |
-| `archetype-post-generate/MetadataContractTest` | 11 | catálogo (36 flags), defaults × regex, fragmentos e flags mortas |
+| `archetype-post-generate/MetadataContractTest` | 11 | catálogo (35 flags), defaults × regex, fragmentos e flags mortas |
 | `archetype-post-generate/FilesetConsistencyTest` | 9 | cobertura dos filesets × árvore de templates |
-| `archetype-post-generate/TemplateFlagConsistencyTest` | 11 | flags em templates/Velocity e guards JWT |
-| `archetype-post-generate/VariablesTest` | 15 | binding das 11 variáveis do pós-processador |
-| `archetype-post-generate/VariablesCustomTypesTest` | 5 | mapeamento de `custom_attribute_imports`/enums/`entity_name_package` |
+| `archetype-post-generate/TemplateFlagConsistencyTest` | 13 | flags em templates/Velocity e guards JWT |
+| `archetype-post-generate/VariablesTest` | 15 | binding das variáveis do pós-processador (derivado do diretório) |
+| `archetype-post-generate/VariablesCustomTypesTest` | 6 | mapeamento de `custom_entity_attribute_imports`/enums/`entity_package_name` |
 | `archetype-post-generate/BodyFunctionsTest` | 14 | helpers de arquivo e pasta |
 | `archetype-post-generate/BodyVariablesTest` | 17 | variáveis de caminho e pastas do projeto gerado |
 | `archetype-post-generate/SnippetAuthenticationTest` | 6 | snippet de autenticação/JWT |
-| `archetype-post-generate/SnippetBindingPropertiesTest` | 16 | snippet de binding properties |
-| `archetype-post-generate/SnippetBindingPropertiesTestTest` | 17 | snippet de testes de binding properties |
+| `archetype-post-generate/SnippetBindingExternalPropertiesTest` | 16 | snippet de binding properties |
+| `archetype-post-generate/SnippetBindingExternalPropertiesTestTest` | 17 | snippet de testes de binding properties |
 | `archetype-post-generate/SnippetCpanelTest` | 6 | snippet de ELK/logstash |
-| `archetype-post-generate/SnippetCustomEnumsTest` | 23 | geração de enums customizados |
+| `archetype-post-generate/SnippetContractEnumsTest` | 26 | geração de enums customizados |
+| `archetype-post-generate/SnippetContractNestedTypesTest` | 26 | geração de POJOs de objetos aninhados |
 | `archetype-post-generate/SnippetDockerTest` | 2 | snippet de docker |
 | `archetype-post-generate/SnippetEntityContractTest` | 7 | persistência do contrato (FR-023) |
 | `archetype-post-generate/SnippetExtraPomDependenciesTest` | 7 | dependências extras no pom |
@@ -300,9 +451,9 @@
 | `archetype-post-generate/SnippetPropertiesFiletypeTest` | 8 | filetype properties/yml |
 | `archetype-post-generate/SnippetSrcTestJavaTest` | 4 | remoção de `src/test/java` |
 | `archetype-post-generate/CoverageRegistryTest` | 10 | gate de cobertura (arquivos, runners, espelho de pastas e assets) |
-| **Total** | **241** | **22 suítes** |
+| **Total** | **273** | **23 suítes** |
 
-> Contagens verificadas em 2026-11-05; total geral: **48 suítes / 631 checks**. As fontes de verdade são `run-maven-flags-via-llm-tests.groovy` e `run-archetype-post-generate-tests.groovy`.
+> Contagens verificadas em 2026-11-11; total geral: **56 suítes / 944 checks** (33 suítes / 671 checks de pré-processamento + 23 suítes / 273 checks de pós-processador). As fontes de verdade são `run-maven-flags-via-llm-tests.groovy` e `run-archetype-post-generate-tests.groovy`.
 
 #### 2) Processamento (empacotado) 🏗️
 
@@ -313,15 +464,15 @@
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
-| A1 | Catálogo de flags — `archetype_metadata_required_properties` | `src/main/resources/META-INF/maven/archetype_metadata_required_properties/` | 36 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
+| A1 | Catálogo de flags - `archetype_metadata_required_properties` | `src/main/resources/META-INF/maven/archetype_metadata_required_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
 | A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | 18 arquivos, um `<fileSet>` cada; mapeia `archetype-resources/` → árvore do projeto gerado |
-| A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 54 entities (36 `property-<NN>-<flag>` + 18 `fileset-<flag>`) |
+| A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 53 entities (35 `property-<NN>-<flag>` + 18 `fileset-<NN>-<flag>`) |
 | A4 | XSLT identidade | `src/main/resources/META-INF/maven/archetype-metadata-identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
 
 | Artefato | Local | Papel |
 |----------|-------|-------|
 | Templates | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
-| Fixtures de integração | `src/test/resources/projects/*` | 12 projetos gerados pelo `integration-test`, cada um validado com `mvn clean verify` |
+| Fixtures de integração | `src/test/resources/projects/*` | 15 projetos gerados pelo `integration-test`, cada um validado com `mvn clean verify` |
 
 * **Montagem do catálogo:** fragmentos (A1 + A2) + DOCTYPE (A3) →
   `xml-maven-plugin:transform` + `archetype-metadata-identity.xsl` (A4) na fase
@@ -339,7 +490,7 @@
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
-| A5 | Pós-processador — `body/` + `variables/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,snippets}/` | 34 fragmentos Groovy (11 `body/` + 11 `variables/` + 12 `snippets/`) |
+| A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 62 fragmentos Groovy (15 `body/` + 25 `variables/` + 3 `generators/` + 19 `snippets/`) |
 | A6 | Compositor do pós-processador | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
 
 * **Montagem:** `ArchetypePostGenerateComposer` (A6) via `groovy-maven-plugin:execute` na fase
@@ -348,7 +499,7 @@
 * **O que faz em runtime:** mantém / exclui por flag; persiste o contrato em
   `src/test/resources/contracts/contract.json` (FR-023, quando
   `enable_folder_src_test_java=true`); gera enums customizados; log opcional
-  (`show_archetype_pos_processor_log`).
+  (`show_archetype_post_generate_log`).
 * Histórico: arquivo único editado à mão → compositor bash
   (`bash_script/create_archetype_post_generate.sh`) → compositor nativo Groovy
   (commit `63.0`).
@@ -358,9 +509,9 @@
 | Fase | Plugin | Entrada | Saída |
 |------|--------|---------|-------|
 | `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
-| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 34 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
-| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-maven-flags-via-llm-tests.groovy` + `run-archetype-post-generate-tests.groovy` | 48 suítes unitárias (630 checks; o build falha se alguma falhar) |
-| `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | 12 projetos gerados, cada um com `mvn clean verify` |
+| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 62 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
+| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-maven-flags-via-llm-tests.groovy` + `run-archetype-post-generate-tests.groovy` | 56 suítes unitárias (944 checks; o build falha se alguma falhar) |
+| `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | 15 projetos gerados, cada um com `mvn clean verify` |
 | `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
 
 > **Comando canônico:** `mvn clean install`
@@ -379,13 +530,13 @@
 ```text
 TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
 ─────────────────────────────────────────────────────────────────────
-[1] CATÁLOGO         36 property-*.xml + 18 fileset-*.xml + DOCTYPE (54 entities)
+[1] CATÁLOGO         35 property-*.xml + 18 fileset-*.xml + DOCTYPE (53 entities)
                      └─ xml-maven-plugin:transform + archetype-metadata-identity.xsl (generate-resources)
-[2] PÓS-PROCESSADOR  34 fragmentos .groovy
+[2] PÓS-PROCESSADOR  62 fragmentos .groovy
                      └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
                         (local: src/main/groovy/ArchetypePostGenerateComposer.groovy)
-[3] TESTES           unitários: 48 suítes / 630 checks (fase test)
-                     integração: 12 fixtures + verify.groovy (4) (fase integration-test)
+[3] TESTES           unitários: 56 suítes / 944 checks (fase test)
+                     integração: 15 fixtures + verify.groovy (7) (fase integration-test)
 [4] INSTALAÇÃO       ~/.m2/repository + archetype-catalog.xml (fase install)
 
 TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
@@ -411,7 +562,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
   `mvn clean process-resources` antes de usá-lo.
 * **O catálogo não é alterado em código:** o MavenFlagsViaLlmStarter lê as flags em runtime
   (FR-013) — flag nova = 1 fragmento `property-<NN>-<flag>.xml` + 1..N fragmentos
-  `fileset-<flag>[-parte].xml` (um `<fileSet>` cada) + registros no DOCTYPE.
+  `fileset-<NN>-<flag>[-parte].xml` (um `<fileSet>` cada) + registros no DOCTYPE.
 * **As flags são auto-descritivas:** o `defaultValue` nunca é vazio (FR-018) e o
   `validationRegex` é aplicado por quem emite a command line.
 
@@ -419,7 +570,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 * Metadata (entities + XSLT) → seção **"Formação do Archetype-Metadata.xml"**
 * Pós-processador (compositor Groovy) → seção **"Formação do Archetype-Post-Generate.groovy"**
-* Catálogo de flags (36) → seção **"Flags do mvn archetype:generate"**
+* Catálogo de flags (35) → seção **"Flags do mvn archetype:generate"**
 * Como adicionar uma flag → seção **"Acrescentando Novas Flags ➕️"**
 * Mecanismo (A7) → seção **"Mecanismo de 'Inferência via LLM' 🧠"**
 * Inferência via LLM (uso no OpenCode) → seção **"Usando a 'Inferência via LLM'"**
@@ -438,7 +589,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 |---|---|---|
 | `MavenFlagsViaLlmStarter.groovy` | bootstrap da CLI: carrega a aplicação e mapeia o retorno para `System.exit` | `MavenFlagsViaLlmStarter` |
 | `inference/` | fluxo do caso de uso, configuração/defaults e shell-out da inferência | `InferenceApplication`, `InferenceConfig`, `InferenceClient` |
-| `command/` | parsing dos argumentos e montagem da command line | `CommandLineArguments`, `CommandLineAssembler` |
+| `commandLine/` | parsing dos argumentos e montagem da command line | `CommandLineArguments`, `CommandLineAssembler` |
 | `Sha256.groovy` | digest compartilhado por cache e contrato | `Sha256` |
 | `catalog/` | catálogo canônico lido do metadata em runtime | `CatalogEntry`, `FlagCatalogExtractor` |
 | `contract/` | ingestão do stdin, persistência do contrato e detecção de segredos | `ContractReader`, `ContractStore`, `ContractSecretScanner` |
@@ -447,7 +598,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 | `presentation/` | relatório de proveniência e console | `ProvenanceReportRenderer`, `CliOutput` |
 
 > ⚠️ **O `MavenFlagsViaLlmStarter` é apenas um bootstrap:** ele indexa os `.groovy` do módulo e carrega `InferenceApplication` via `GroovyClassLoader`, preservando a invocação de um único arquivo (`groovy MavenFlagsViaLlmStarter.groovy ...`) mesmo com a implementação distribuída em pastas.
-> Os **módulos são a fonte da verdade em runtime** — as 48 suítes unitárias carregam cada `.groovy` via `GroovyClassLoader` e exercitam a implementação real, e `FlagCatalogExtractorDriftTest` garante que o catálogo lido reflete o metadata **sem lista de flags hardcoded**.
+> Os **módulos são a fonte da verdade em runtime** — as 56 suítes unitárias carregam cada `.groovy` via `GroovyClassLoader` e exercitam a implementação real, e `FlagCatalogExtractorDriftTest` garante que o catálogo lido reflete o metadata **sem lista de flags hardcoded**.
 > As dependências são passadas por construtor (`FlagProposalMerger` → `ContractEntityDeriver` → `ContractTypeResolver`); as suítes fazem a fiação via `GroovyClassLoader`/`loadClass`.
 
 #### Separação de responsabilidades: derivação da entidade × inferência de tipo 🧩
@@ -465,20 +616,37 @@ As duas etapas que transformam o contrato JSON em atributos da entidade são **c
 contrato JSON ──► ContractEntityDeriver ──► (por atributo) ──► ContractTypeResolver ──► "Integer:id,String:name"
                               │                                            │
                               │                                            └─► TypeResolution { type, warning }
-                              └─► attributeList ──► flag custom_attributes_list ──► merge ──► command line
+                              └─► attributeList ──► flag custom_entity_attributes_list ──► merge ──► command line
 ```
 
 **Regra de inferência de tipo** (`ContractTypeResolver.resolve`):
 
 1. **Tipo declarado de `java.lang` vence** — normalizado para o nome simples (`java.lang.String` → `String`; genéricos são removidos).
-2. **Tipo do projeto** (fora de `java.lang`: uma classe de domínio ou um enum) → **é preservado**. A entidade o referencia pelo **nome simples** e o **nome do atributo vem do próprio tipo** (`EnderecoCliente` → `enderecoCliente`, `StatusPedido` → `statusPedido`). O tipo viaja em `custom_attribute_imports` (import) e/ou em `custom_enum_definitions` (enum gerado pelo pós-processador).
+2. **Tipo do projeto** (fora de `java.lang`: uma classe de domínio ou um enum) → **é preservado**. A entidade o referencia pelo **nome simples** e o **nome do atributo vem do próprio tipo** (`EnderecoCliente` → `enderecoCliente`, `StatusPedido` → `statusPedido`). O tipo viaja em `custom_entity_attribute_imports` (import) e/ou em `contract_enum_definitions` (enum gerado pelo pós-processador).
 3. **Qualquer outro tipo declarado** (`java.time.Instant`, `List<String>`, tipos genéricos) → **warning explícito** e *fallback* para a estimativa pelo valor.
 4. **Estimativa pelo valor** — conforme o tipo em memória do valor: `Integer` → `Integer`, `Long`/`BigInteger` → `Long`, `BigDecimal`/`Double`/`Float` → `Double`, `Boolean` → `Boolean`, texto → `String`.
-5. **Objeto JSON, array ou `null`** → `String` (quando não há tipo declarado).
+5. **Objeto JSON aninhado** → é derivado como **POJO** em `<entity_package>.nested`; **array de strings MAIÚSCULAS** → vira **enum** (`Status` no pacote da entidade, `nested.Uf` no pacote `nested`); **qualquer outro array ou `null`** → `String` (com aviso quando não há tipo declarado).
 6. **O nome do atributo é único** — a entidade não pode repetir um campo. Quando dois atributos share o mesmo tipo do projeto, o primeiro fica com o nome do tipo (`statusPedido`) e o segundo mantém o nome do contrato (`statusAnterior`); um nome ainda duplicado descarta o atributo com **aviso**.
 7. **Dois tipos com o mesmo nome simples e pacotes diferentes** (ex.: `br.com.projeto.Pedido` e `br.com.outro.Pedido`) são avisados: a entidade não consegue importar os dois.
 
 > O nome do atributo também é higienizado (`ContractTypeResolver.sanitizeAttributeName`): caracteres inválidos viram `_`, o primeiro caractere é minúsculo (o regex do catálogo exige `^[a-z][a-zA-Z0-9_]*$`) e um nome sem caractere válido é descartado com warning.
+
+#### Objetos aninhados e enums de payload 🧱
+
+- O contrato pode trazer **objetos aninhados**, não apenas escalares.
+- Cada objeto aninhado vira um **POJO** em `<package>.<entity_package_name>.nested`.
+- A entidade referencia o POJO pelo **nome totalmente qualificado** e marca o campo com `@Transient`.
+- A flag derivada é `contract_nested_type_definitions`, no formato
+  `Tipo|Campo:Tipo,Campo:Tipo` (vários separados por `;`).
+- O POJO é gerado apenas quando a entidade referencia o tipo em `custom_entity_attributes_list`.
+- Profundidade máxima: **25 gerações**; acima disso, o campo cai para `String` com aviso.
+- Objeto vazio, nome inválido ou nenhum campo válido → `String` com aviso.
+- **Enum de payload**: array cujos elementos são todos strings MAIÚSCULAS vira enum.
+  - enum de atributo da entidade → pacote da entidade (`Status`);
+  - enum de campo aninhado → pacote `nested` (marcador `nested.Uf`).
+- POJO e enum existentes **nunca são sobrescritos** (warning e skip).
+- Nomes de tipos colididos são desambiguados por `ContractTypeNameRegistry`.
+- Fixtures de referência: `custom-nested-objects`, `custom-nested-edge-cases`, `custom-enums-from-payload`.
 
 #### Como executar (operador)
 
@@ -493,7 +661,7 @@ groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.gr
 > No shell, `< contract.json` redireciona o arquivo para esse fluxo.
 
 **Pré-requisitos:**
-- **Groovy 4** no classpath (o script usa `groovy.json` / `groovy.xml`);
+- **Groovy 4** no classpath (o script usa `groovy.json` / `groovy.xml`). O build usa 4.0.28 via `groovy-maven-plugin`; a versão do Groovy local pode variar (aqui 5.1.3), então prefira `mvn test` para a suíte;
 - o catálogo precisa existir → rode `mvn clean process-resources` antes (o mecanismo lê `target/classes/META-INF/maven/archetype-metadata.xml` — `InferenceConfig.catalogPath` / `FlagCatalogExtractor`).
 
 #### Argumentos
@@ -506,13 +674,15 @@ groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.gr
 | `--contract-dir "<path>"` | não | onde o contrato é materializado (default: `<cache-dir>/contracts/`) |
 | `--inference-bin "<path>"` | não | script externo de inferência (LLM); default: `scripts/inference-stub.sh` (stub determinístico para CI) |
 
+> `-Deda.llm.debug=true` (system property) imprime uma linha extra `Catalog: ...` no **stdout**; sem debug, o stdout contém apenas a command line.
+
 #### O que ele faz
 
 1. **Gate da descrição** (FR-001) — ausente/vazia → exit 2, **sem consumir o stdin**.
 2. **Lê o contrato** do `stdin` (FR-003) — vazio → exit 2; JSON inválido ou raiz não-objeto → exit 5.
 3. **Lê o catálogo** de flags do metadata transformado (FR-005/013/018) → inválido → exit 4.
-4. **Canonicaliza o contrato** e deriva a **chave de cache** = SHA-256(fingerprint do catálogo + descrição + contrato canônico).
-5. **Materializa o contrato** em disco (FR-023) → o caminho sai em `entity_contract_path`.
+4. **Canonicaliza o contrato** e **materializa** em disco (FR-023) → o caminho sai em `entity_contract_file_path`.
+5. Deriva a **chave de cache** = SHA-256(fingerprint do catálogo + descrição + contrato canônico + caminho materializado).
 6. **Consulta o cache** (FR-011/012) — em *hit*, imprime a command line cacheada e sai (exit 0), **sem chamar a LLM**.
 7. **Chama a inferência externa** (LLM) com `--use-case-description-file` + `--use-case-contract-file` → exit ≠ 0 → exit 3.
 8. **Merge** das fontes de valor + **proveniência** por flag (FR-020); valor que viola o `validationRegex` → **default do catálogo** + aviso.
@@ -526,7 +696,7 @@ groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.gr
 |---|---|---|
 | 1 | Contrato JSON | valor declarado pelo operador (FR-007) |
 | 2 | Derivação do contrato (pelo próprio mecanismo) | ex.: caminho do contrato materializado (FR-023) |
-| 3 | Semântica da entidade derivada do contrato | nome, pacote, lista de atributos, `enable_custom_attributes` (FR-009 amended) |
+| 3 | Semântica da entidade derivada do contrato | nome, pacote, lista de atributos, `enable_custom_entity_attributes` (FR-009 amended) |
 | 4 | Valor inferido pela LLM | aceito **só** se a key estiver no contrato **ou** na allowlist do FR-009 |
 | 5 | Default do catálogo | último recurso (FR-008) |
 
@@ -550,7 +720,10 @@ groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.gr
 
 #### Pré-requisitos
 
-* **Java 21** e **Maven 3.9.x** (ambiente validado: Maven 3.9.16 + Java 21).
+* **Java 17+** e **Maven 3.9.x** (build/teste validado com Maven 3.9.16 + Java 17.0.2).
+  * O default do catálogo é `java_version=21`: um projeto gerado **sem** `-Djava_version` exige Java 21 para compilar.
+  * As fixtures de integração usam `java_version=17`.
+  * A `constitution.md` e o `specs/001` declaram Java 17; o README não deve tratar 21 como pré-requisito único.
 * Conferir a instalação: `mvn -version`.
 * Maven 'nao se atualiza' → instalar a versao mais recente:
   * Encontrar a versao mais recente em [Apache Maven](https://maven.apache.org/install.html)
@@ -577,13 +750,15 @@ groovy src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.gr
 mvn clean install
 ```
 
-* A fase `install` executa, em ordem: as **48 suítes unitárias** do mecanismo LLM e do pós-processador (fase `test`),
-  as **12 fixtures** de integração (fase `integration-test`) e a publicação no repositório local.
+* A fase `install` executa, em ordem: as **56 suítes unitárias** do mecanismo LLM e do pós-processador (fase `test`),
+  as **15 fixtures** de integração (fase `integration-test`) e a publicação no repositório local.
   * ⚠️ A fase `integration-test` é **anterior** a `install` → `mvn clean install integration-test`
     roda a suíte de integração **duas vezes**. Use `mvn clean install`.
 * Opções:
-  * `-Darchetype.test.skip=true` → instala **sem** rodar as 12 fixtures;
-  * `-Darchetype.test.projects=minimal` → roda **apenas** a fixture indicada.
+  * `-Darchetype.test.skip=true` → instala **sem** rodar as 15 fixtures;
+  * não há filtro por nome no plugin 3.4.1: `-Darchetype.test.projects` **não existe**.
+    Para rodar uma fixture isolada, aponte `-Darchetype.test.projectsDirectory` para um diretório
+    que contenha apenas ela (ex.: uma cópia em `target/it-single/`).
 * O registro no catálogo local é feito pelo `maven-archetype-plugin:3.4.1:update-local-catalog`,
   disparado na fase `install`.
 
@@ -1035,7 +1210,7 @@ mvn clean install
       - Root Path: [_C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\src\test\resources\projects\ **basic**_](src/test/resources/projects/basic)
 
 
-  + **Pos-Processador:** [_"ARCHETYPE-POS-GENERATE"_.GROOVY](src/main/resources/META-INF/archetype-post-generate.groovy)
+  + **Pos-Processador:** [_"ARCHETYPE-POS-GENERATE"_.GROOVY (GERADO)](target/classes/META-INF/archetype-post-generate.groovy)
     - Local: _"META-INF"_
         - Root Path: [_C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\src\main\resources\ **META-INF**_](src/main/resources/META-INF)
 
@@ -1127,7 +1302,7 @@ services:
   * Local: [_archetype_metadata_required_properties_](src/main/resources/META-INF/maven/archetype_metadata_required_properties/)
   * Nome do arquivo: `property-37-enable_s3_storage.xml`
   * Convencao: `property-<NN>-<flag>.xml`, com **um arquivo por flag**.
-    * `NN` = proximo numero livre na ordem canonica. O catalogo atual tem **36 arquivos** (`01` a `36`), entao esta flag seria a **`37`**.
+    * `NN` = proximo numero livre na ordem canonica. O catalogo atual tem **35 arquivos** (`02` a `36`), entao esta flag seria a **`37`**.
   * Conteudo completo (FORMATO OBRIGATORIO):
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1175,14 +1350,18 @@ services:
 ##### PASSO 4 - Criar os 'FILESET-*.XML' (um arquivo por `<fileSet>`):
 
   * Local: [_archetype_metadata_filesets_](src/main/resources/META-INF/maven/archetype_metadata_filesets)
-  * Convencao: `fileset-<flag>[-parte].xml` — sem prefixo numerico.
+  * Convencao: `fileset-<NN>-<flag>[-parte].xml`.
+    * `NN` = posicao na ordem canonica dos `<fileSet>` (hoje `01` a `18`); o proximo numero livre seria **`19`**.
+      - O `NN` e a **ordem** do `<fileSet>` no bloco `<fileSets>` — e o que torna a ordem visivel no nome do arquivo.
+      - Escala **propria** dos filesets: nao reaproveita o `NN` das properties (8 filesets `base-*` nao tem flag, e uma flag pode ter varios filesets).
     * **Um arquivo = um `<fileSet>`**.
     * Quando a mesma flag precisa de varios `<fileSet>`, use um sufixo descritivo
       (`-config`, `-docker-minio`, `-src-main-java-config`, ...).
   * Como a flag traz **2 arquivos e 1 pasta**, crie **3 arquivos**:
 
 ```xml
-<!--  FILESET-ENABLE_S3_STORAGE-CONFIG.XML  _____________________ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-19-ENABLE_S3_STORAGE-CONFIG.XML ___________________ -->
 <!-- S3 / MINIO SUPPORT - CONFIG -->
 <fileSet filtered="true" encoding="UTF-8">
     <directory>config</directory>
@@ -1193,7 +1372,8 @@ services:
 ```
 
 ```xml
-<!--  FILESET-ENABLE_S3_STORAGE-SRC-MAIN-JAVA-CONFIG.XML  _______ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-20-ENABLE_S3_STORAGE-SRC-MAIN-JAVA-CONFIG.XML _____ -->
 <!-- S3 / MINIO SUPPORT - JAVA CONFIG -->
 <fileSet filtered="true" encoding="UTF-8">
     <directory>src/main/java/config</directory>
@@ -1204,7 +1384,8 @@ services:
 ```
 
 ```xml
-<!--  FILESET-ENABLE_S3_STORAGE-DOCKER-MINIO.XML  _______________ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-21-ENABLE_S3_STORAGE-DOCKER-MINIO.XML ____________ -->
 <!-- S3 / MINIO SUPPORT - DOCKER -->
 <fileSet filtered="true" encoding="UTF-8">
     <directory>docker/minio</directory>
@@ -1223,38 +1404,37 @@ services:
   * No mesmo arquivo do Passo 3, faca **tres** edicoes no `<fileSets>`
     (uma referencia para cada arquivo criado no Passo 4):
 ```xml
-        &fileset-enable_s3_storage-config;
-        &fileset-enable_s3_storage-docker-minio;
-        &fileset-enable_s3_storage-src-main-java-config;
+        &fileset-19-enable_s3_storage-config;
+        &fileset-20-enable_s3_storage-docker-minio;
+        &fileset-21-enable_s3_storage-src-main-java-config;
 ```
     - A ordem das referencias deve ser a mesma das entidades no `<!DOCTYPE>`.
+    - A ordem e a **ordem numerica** (`19`, `20`, `21`) — o `NN` do nome do arquivo e a posicao no bloco.
 
 ---
 
-##### PASSO 6 - Criar o 'VARIABLES-S3-STORAGE.GROOVY':
+##### PASSO 6 - Criar o 'VARIABLES-NN-S3-STORAGE.GROOVY':
 
   * Local: [_archetype_post_generate_variables_](src/main/resources/META-INF/archetype_post_generate_variables)
-  * Nome do arquivo: `variables-s3-storage.groovy`
+  * Nome do arquivo: `variables-NN-s3-storage.groovy` (`NN` = proximo numero livre)
   * Objetivo: "ler" a flag e storing em uma variavel Groovy:
 ```groovy
-// -----------------------------------------------------------------------------// VARIABLES-S3-STORAGE.GROOVY -----------------------------------------------
+// -----------------------------------------------------------------------------// VARIABLES-NN-S3-STORAGE.GROOVY -----------------------------------------------
 def keep_s3_storage = "${properties?.enable_s3_storage}"
 ```
     - **CONVENCAO:** o nome da variavel costuma ser `keep_` + nome da flag.
+    - O marcador `// VARIABLES-NN-S3-STORAGE.GROOVY` deve ser **exatamente o nome do arquivo em MAIUSCULAS** (o compositor valida no build).
 
 ---
 
-##### PASSO 7 - Criar o 'SNIPPET-S3-STORAGE.GROOVY' (a manobra real):
+##### PASSO 7 - Criar o 'SNIPPET-NN-S3-STORAGE.GROOVY' (a manobra real):
 
   * Local: [_archetype_post_generate_snippets_](src/main/resources/META-INF/archetype_post_generate_snippets)
-  * Nome do arquivo: `snippet-s3-storage.groovy`
+  * Nome do arquivo: `snippet-NN-s3-storage.groovy` (`NN` = proximo numero livre)
   * Aqui esta a **logica condicional** (manipulacao de pasta/arquivo):
 
   * **CASO 1 - Apagar ARQUIVO:**
 ```groovy
-import java.nio.file.Path
-import java.nio.file.Paths
-
 // -----------------------------------------------------------------------------
 
 
@@ -1262,7 +1442,7 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET-S3-STORAGE.GROOVY -------------------------------------------------
+// SNIPPET-NN-S3-STORAGE.GROOVY -------------------------------------------------
 if (keep_s3_storage == 'false') {
 
     Path s3PropertiesPath =
@@ -1284,7 +1464,7 @@ if (keep_s3_storage == 'false') {
 
 
 
-// SNIPPET-S3-STORAGE.GROOVY -------------------------------------------------
+// SNIPPET-NN-S3-STORAGE.GROOVY -------------------------------------------------
 if (keep_s3_storage == 'false') {
 
     Path minioFolder =
@@ -1296,8 +1476,8 @@ if (keep_s3_storage == 'false') {
     deleteFolder(minioFolder.toFile())
 }
 ```
-    - **REGRA IMPORTANTE:** os `import` ficam na **linha 1, coluna 1**.
-    - Sem espaco antes. Sem indentacao.
+    - **REGRA IMPORTANTE:** `import` **nao** e declarado no snippet. O compositor remove `import`/`//import` de todos os fragmentos e usa o preludio `archetype_post_generate_body/body-01-imports.groovy`, onde `Path`, `Paths` e `Files` ja estao ativos.
+    - Se precisar de um import novo, adicione em `body-01-imports.groovy` como `//import ...` (o compositor remove as barras).
 
 ---
 
@@ -1315,14 +1495,16 @@ enable_s3_storage=false
 ##### PASSO 9 - Recriar o ARCHETYPE e TESTAR:
 
   * O arquivo `archetype-post-generate.groovy` e **GERADO**, nao editado.
+  * O arquivo final fica em `target/classes/META-INF/` (fora do git e normalmente fora da arvore do IDE); `mvn clean` apaga e o proximo build recria.
   * O build monta ele a partir das pastas:
 ```bash
-archetype_post_generate_body/          (11 arquivos, ordem fixa)
-archetype_post_generate_variables/      (11 arquivos, alfabetico)
-archetype_post_generate_snippets/       (12 arquivos, alfabetico)
+archetype_post_generate_body/          (15 arquivos, ordem fixa)
+archetype_post_generate_variables/     (25 arquivos, ordem do NN)
+archetype_post_generate_generators/    (3 arquivos, ordem do NN)
+archetype_post_generate_snippets/      (19 arquivos, ordem do NN)
 ```
-    - `variables-s3-storage.groovy` entra em ordem alfabetica.
-    - `snippet-s3-storage.groovy` tambem.
+    - `variables-NN-s3-storage.groovy` entra na ordem do NN.
+    - `snippet-NN-s3-storage.groovy` idem.
 
   * Rodar o build:
 ```bash
@@ -1360,12 +1542,12 @@ mvn archetype:generate \
 | 03 | `archetype-resources/docker/minio/docker-compose.yml` | CRIAR |
 | 04 | `archetype_metadata_required_properties/property-37-enable_s3_storage.xml` | CRIAR |
 | 05 | `archetype-metadata.xml` | **EDITAR** (2 pontos: DOCTYPE + requiredProperties) |
-| 06 | `archetype_metadata_filesets/fileset-enable_s3_storage-config.xml` | CRIAR |
-| 07 | `archetype_metadata_filesets/fileset-enable_s3_storage-src-main-java-config.xml` | CRIAR |
-| 08 | `archetype_metadata_filesets/fileset-enable_s3_storage-docker-minio.xml` | CRIAR |
+| 06 | `archetype_metadata_filesets/fileset-19-enable_s3_storage-config.xml` | CRIAR |
+| 07 | `archetype_metadata_filesets/fileset-21-enable_s3_storage-src-main-java-config.xml` | CRIAR |
+| 08 | `archetype_metadata_filesets/fileset-20-enable_s3_storage-docker-minio.xml` | CRIAR |
 | 09 | `archetype-metadata.xml` | **EDITAR** (1 ponto: fileSets, com 3 referencias) |
-| 10 | `archetype_post_generate_variables/variables-s3-storage.groovy` | CRIAR |
-| 11 | `archetype_post_generate_snippets/snippet-s3-storage.groovy` | CRIAR |
+| 10 | `archetype_post_generate_variables/variables-NN-s3-storage.groovy` | CRIAR |
+| 11 | `archetype_post_generate_snippets/snippet-NN-s3-storage.groovy` | CRIAR |
 | 12 | `projects/basic/archetype.properties` | **EDITAR** |
 
 ---
@@ -1385,32 +1567,30 @@ mvn archetype:generate \
 ---
 
 #### 3) Padronização:
-  * **FORMATO OBRIGATORIO** _(o mesmo dos 36 arquivos existentes)_:
+  * **FORMATO OBRIGATORIO** _(o mesmo dos 35 arquivos existentes)_:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- PROPERTY-01-ENABLE_API_CPANEL.XML _________________________ -->
-<!-- FLAG: enable_api_cpanel -->
-<!--   DESCRIPTION : Habilita o painel administrativo do cPanel. -->
-<!--   PROMPT      : Enable 'API cPanel' -->
+<!-- PROPERTY-12-ENABLE_DOCKER_SUPPORT.XML _____________________________ -->
+<!-- FLAG: enable_docker_support -->
+<!--   DESCRIPTION : Habilita o suporte a Docker (Dockerfile + docker-compose) no projeto gerado. -->
+<!--   PROMPT      : Enable Docker Support -->
 <!--   TYPE        : boolean -->
 <!--   DEFAULT     : false -->
 <!--   DOMAIN      : true | false -->
-<!--   DEPENDS_ON  : So faz sentido se enable_logback = true. -->
-<!--                  Se o Logback estiver desligado, o valor -->
-<!--                  ja e fixado como false. -->
+<!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(true|false)$ -->
-<requiredProperty key="enable_api_cpanel">
+<requiredProperty key="enable_docker_support">
     <defaultValue>false</defaultValue>
     <validationRegex>^(true|false)$</validationRegex>
 </requiredProperty>
 ```
     - **NOMENCLATURA:** `property-<NN>-<flag>.xml` — **um arquivo por flag**.
-      + `NN` = posicao na ordem canonica (`01` a `36`); o proximo numero livre seria `37`.
+      + `NN` = posicao na ordem canonica (`02` a `36`); o proximo numero livre seria `37`.
       + O trecho `<flag>` deve ser **identico** ao `<requiredProperty key="...">`.
     - **REGRA CRITICA** _(FR-018)_: o `<defaultValue>` **NUNCA** pode ser vazio.
       + Vazio => o build quebra com **exit 4**.
       + Mensagem: `Flag 'X' has empty defaultValue. Catalog is invalid per FR-018.`
-    - **REGRA DE INDENTACAO**: **4 ESPACOS** _(nao 8)_. Veja os 36 arquivos
+    - **REGRA DE INDENTACAO**: **4 ESPACOS** _(nao 8)_. Veja os 35 arquivos
       existentes em [_archetype_metadata_required_properties_](src/main/resources/META-INF/maven/archetype_metadata_required_properties/)
       como referencia canonica.
 
@@ -1430,13 +1610,22 @@ mvn archetype:generate \
 
   * Em sua nomenclatura, esse 'arquivo.XML' tera **_'obrigatoriamente'_**:
     * **'fileset-'** como prefixo
-    * apos o prefixo, o nome exato da _'SWITCH -D'_ criada
+    * apos o prefixo, o **'NN'** (2 digitos) — a posicao na ordem canonica dos `<fileSet>`
+    * apos o `NN`, o nome exato da _'SWITCH -D'_ criada
     * um sufixo descritivo quando a flag tiver **mais de um** `<fileSet>`
     * Exemplos:
-      * fileset-enable_api_cpanel_elk_log_system.xml
-      * fileset-enable_logback.xml
-      * fileset-enable_jwt_authentication.xml
-      * fileset-enable_folder_src_test_java-src-test-resources.xml
+      * fileset-01-enable_api_cpanel_elk_log_system.xml
+      * fileset-07-enable_logback_support.xml
+      * fileset-15-enable_jwt_authentication.xml
+      * fileset-17-enable_folder_src_test_java-src-test-resources.xml
+
+
+  * **FORMATO DO ARQUIVO** _(o mesmo dos 35 arquivos de properties existentes)_:
+    * **linha 1**: `<?xml version="1.0" encoding="UTF-8"?>`
+    * **linha 2**: o comentario de identificacao — `<!-- FILESET-<NN>-<FLAG>.XML ______ -->`
+      (1 espaco apos `<!--` e 1 antes do run de `_`, como nas properties)
+    * **linha 3+**: o `<fileSet>` (4 ESPACOS de indentacao nos filhos)
+    * **um unico** `<fileSet>` por arquivo
 
 
   * **REGRA DE DISTRIBUICAO**: **um arquivo = um `<fileSet>`**
@@ -1450,9 +1639,10 @@ mvn archetype:generate \
     * como referencia canonica.
 
 
-  * EXEMPLO 01 - **_'fileSet' de "PASTA"_** criado no arquivo 'fileset-enable_api_cpanel_elk_log_system.xml':
+  * EXEMPLO 01 - **_'fileSet' de "PASTA"_** criado no arquivo 'fileset-01-enable_api_cpanel_elk_log_system.xml':
 ```xml
-<!--  FILESET-ENABLE_API_CPANEL_ELK_LOG_SYSTEM.XML  ______________ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-01-ENABLE_API_CPANEL_ELK_LOG_SYSTEM.XML __________ -->
 <!-- CPANEL / ELK SUPPORT -->
 <fileSet filtered="true" encoding="UTF-8">
     <directory>ELK</directory>
@@ -1462,9 +1652,10 @@ mvn archetype:generate \
 </fileSet>
 ```
 
-* EXEMPLO 02 - _**'fileSet' de "PASTA"**_ criado no arquivo 'fileset-enable_logback.xml':
+* EXEMPLO 02 - _**'fileSet' de "PASTA"**_ criado no arquivo 'fileset-07-enable_logback_support.xml':
 ```xml
-<!--  FILESET-ENABLE_LOGBACK.XML  ________________________________ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-07-ENABLE_LOGBACK_SUPPORT.XML __________________ -->
 <!-- LOGBACK SUPPORT -->
 <fileSet filtered="true" encoding="UTF-8">
     <directory>src/main/resources/logback-spring-config</directory>
@@ -1474,9 +1665,10 @@ mvn archetype:generate \
 </fileSet>
 ```
 
-* EXEMPLO 03 - **_'fileSet' de "ARQUIVOS/PROPERTIES"_** criado no arquivo 'fileset-enable_folder_src_test_java-src-test-resources-properties.xml':
+* EXEMPLO 03 - **_'fileSet' de "ARQUIVOS/PROPERTIES"_** criado no arquivo 'fileset-18-enable_folder_src_test_java-src-test-resources-properties.xml':
 ```xml
-<!--  FILESET-ENABLE_FOLDER_SRC_TEST_JAVA-SRC_TEST_RESOURCES_PROPERTIES.XML  -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-18-ENABLE_FOLDER_SRC_TEST_JAVA-SRC_TEST_RESOURCES_PROPERTIES.XML  -->
 <!-- SRC\TEST\RESOURCES\PROPERTIES -->
 <fileSet filtered="true" encoding="UTF-8">
     <directory>src/test/resources/properties</directory>
@@ -1487,7 +1679,7 @@ mvn archetype:generate \
 </fileSet>
 ```
   * Quando a flag tem varios `<fileSet>`:
-    * Um arquivo `fileset-<flag>-<parte>.xml` para cada `<fileSet>`.
+    * Um arquivo `fileset-<NN>-<flag>-<parte>.xml` para cada `<fileSet>`.
     * O sufixo `<parte>` identifica a pasta/arquivo coberto.
 
   5. **Se** o 'novo Criterio' _realizar **"MANIPULACAO DE PASTAS OU ARQUIVOS"**_:
@@ -1501,10 +1693,10 @@ mvn archetype:generate \
 
 
   * Em sua nomenclatura, esse 'arquivo.GROOVY' tera **_'obrigatoriamente'_**:
-    * **'variables-'**(PLURAL) como prefixo
+    * **'variables-NN-'**(PLURAL) como prefixo (`NN` = proximo numero livre)
     * apos o prefixo, um texto semelhante ao _'SWITCH -D'_ criado
     * Exemplo:
-      * variables-cpanel.groovy
+      * variables-NN-cpanel.groovy
 
 
   * _Dentro deste 'arquivo.GROOVY'_, a 'property' tera **nome semelhante** ao da _'SWITCH -D'_
@@ -1513,12 +1705,12 @@ mvn archetype:generate \
   * EXEMPLO:
 
 ```groovy
-// -----------------------------------------------------------------------------// VARIABLES-LOGBACK.GROOVY --------------------------------------------------
-def keep_logback = "${properties?.enable_logback}"
+// -----------------------------------------------------------------------------// VARIABLES-NN-LOGBACK.GROOVY --------------------------------------------------
+def keep_logback_support = "${properties?.enable_logback_support}"
 ```
   * **CONVENCAO** _(nao obrigatoria)_: o nome da variavel costuma ser
     `keep_` + nome da flag, em `snake_case`.
-    + `enable_logback` -> `keep_logback`
+    + `enable_logback_support` -> `keep_logback_support`
     + `enable_api_cpanel_elk_log_system` -> `keep_cpanel_elk_log_system`
 
 
@@ -1528,13 +1720,14 @@ def keep_logback = "${properties?.enable_logback}"
 
 
   * Em sua nomenclatura, esse 'arquivo.GROOVY' tera **_'obrigatoriamente'_**:
-    * **'snippet-'** como prefixo
+    * **'snippet-NN-'** como prefixo (`NN` = proximo numero livre)
     * apos o prefixo, um texto semelhante ao _'SWITCH -D'_ criado
     * Exemplo:
-      * snippet-cpanel.groovy
+      * snippet-NN-cpanel.groovy
 
 
-  * _Os IMPORTES_(se houver), NAO TERAO ESPACOS 'ANTES DELES' iniciando-se EXATAMENTE na linha '01'
+  * _Os IMPORTES_ NAO sao declarados no fragmento: o compositor remove `import`/`//import` de todos os fragmentos e usa o preludio `archetype_post_generate_body/body-01-imports.groovy`. Se precisar de um import novo, adicione-o la como `//import ...`.
+  * Se o fragmento **GERA fontes Java**, use `generator-NN-<flag>.groovy` em `archetype_post_generate_generators/` (mesmas regras de marcador e `NN`).
 
 
   * EXEMPLO de remocao de **_"FILE"_**:
@@ -1549,8 +1742,8 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET-LOGBACK.GROOVY --------------------------------------------------------
-if (keep_logback == 'true' && keep_cpanel_elk_log_system == 'false') {
+// SNIPPET-NN-LOGBACK.GROOVY --------------------------------------------------------
+if (keep_logback_support == 'true' && keep_cpanel_elk_log_system == 'false') {
 
     Path logstachPath =
             Paths.get(request.outputDirectory,
@@ -1577,7 +1770,7 @@ import java.nio.file.Paths
 
 
 
-// SNIPPET-BINDING-PROPERTIES.GROOVY --------------------------------------------
+// SNIPPET-NN-BINDING-PROPERTIES.GROOVY --------------------------------------------
 if (keep_binding_properties == 'false') {
 
     Path bindingPropertiesPath =
@@ -1649,39 +1842,39 @@ usando o mecanismo de inferência LLM.
      - `META-INF/maven/archetype_metadata_required_properties/*.xml` — por flag: DESCRIPTION, PROMPT, TYPE,
        DEFAULT, DOMAIN, DEPENDS_ON, VALIDATION.
      - `META-INF/archetype-post-generate.groovy` — comportamento do pós-processador.
-     - `archetype-resources/**` — templates (ex.: `package ${package}.${entity_name_package}`).
+     - `archetype-resources/**` — templates (ex.: `package ${package}.${entity_package_name}`).
      Se estiver operando no repositório-fonte, os mesmos arquivos estão em `src/main/resources/`.
 3.3. Use a seção **"Usando a 'Inferência via LLM'"** DESTE README — documentação do mecanismo,
 não do JAR — apenas para o que o conteúdo empacotado NÃO cobre com 100% de precisão:
-     - contrato JSON → atributos da entidade (`custom_attributes_list`);
+     - contrato JSON → atributos da entidade (`custom_entity_attributes_list`);
      - resolução de tipos (`java.lang` × tipos do projeto × enums);
      - precedência de `attributes` sobre campos avulsos;
-     - materialização/emissão de `entity_contract_path`;
+     - materialização/emissão de `entity_contract_file_path`;
      - cache, proveniência e relatório de tokens.
 3.4. Não use o código interno do mecanismo de inferência para redescobrir semântica de flags:
 ela já está no catálogo empacotado.
 
 4. Regras obrigatórias do archetype (EDA)
 4.1 Package (REGRA CRÍTICA)
-O archetype declara `package ${package}.${entity_name_package}`. Portanto:
-- `-Dpackage` é o **pacote-base (parent)**; o archetype concatena `entity_name_package` automaticamente.
+O archetype declara `package ${package}.${entity_package_name}`. Portanto:
+- `-Dpackage` é o **pacote-base (parent)**; o archetype concatena `entity_package_name` automaticamente.
 - **Nunca** inclua o nome da entidade em `-Dpackage`.
 - ✅ Correto (entidade `Cliente`): `-Dpackage=org.clinica` → `package org.clinica.cliente;`
 - ❌ Errado: `-Dpackage=org.clinica.cliente` → gera `package org.clinica.cliente.cliente;`
 
 4.2 Propriedades obrigatórias
 Passe sempre (validação regex do catálogo empacotado):
-- `-Dentity_name_package=<entity_name em minúsculas>`
-  - Fonte empacotada: `archetype_metadata_required_properties/property-14-entity_name_package.xml`
+- `-Dentity_package_name=<entity_name em minúsculas>`
+  - Fonte empacotada: `archetype_metadata_required_properties/property-14-entity_package_name.xml`
     (`DEFAULT=myentity`, `VALIDATION=^[a-z][a-z0-9_.]+$`, `DEPENDS_ON=entity_name`).
-  - O archetype usa o valor **verbatim** como pacote (`src/main/java/<entity_name_package>/`);
+  - O archetype usa o valor **verbatim** como pacote (`src/main/java/<entity_package_name>/`);
     o default `myentity` existe apenas para satisfazer a exigência de `defaultValue` não vazio.
   - O valor correto é sempre `entity_name` em minúsculas — passe explicitamente, inclusive ao
     operar o archetype direto.
   - Quando o orquestrador de inferência é usado, ele deriva e emite esse valor
     automaticamente (comportamento do mecanismo, não do artefato).
-- `-Dentity_contract_path=<caminho do contrato .json>`
-  - Fonte empacotada: descrição de `entity_contract_path` em `property-20-entity_contract_path.xml` e a lógica
+- `-Dentity_contract_file_path=<caminho do contrato .json>`
+  - Fonte empacotada: descrição de `entity_contract_file_path` em `property-20-entity_contract_file_path.xml` e a lógica
     de cópia em `archetype-post-generate.groovy`.
   - Efeito: quando o arquivo existe E `enable_folder_src_test_java=true`, o contrato é copiado
     para `src/test/resources/contracts/contract.json` no projeto gerado.
@@ -1704,7 +1897,7 @@ e uma justificativa curta.
 5.2. Confirme o checklist (em voz alta, na resposta):
   - [ ] `package` = base (sem o nome da entidade)
   - [ ] `entity_name` = PascalCase
-  - [ ] `entity_name_package` = minúsculas derivado de `entity_name`
+  - [ ] `entity_package_name` = minúsculas derivado de `entity_name`
 5.3. Execute `mvn archetype:generate`.
 5.4. **Validação pós-geração (obrigatória):** abra `Cliente.java` (ou `<Entity>.java`) e leia a primeira linha 
 `package ...;`.
@@ -1741,10 +1934,10 @@ Antes de executar, confira que o valor de `-Dpackage` **NÃO** contém o nome da
   `endereco`, `telefone`, `ativo`): não existem no catálogo de flags do
   archetype.
   Eles passam como contexto para o LLM inferir e **viram os atributos da
-  entidade** — o mecanismo monta a `custom_attributes_list` a partir deles,
+  entidade** — o mecanismo monta a `custom_entity_attributes_list` a partir deles,
   com o tipo estimado pelo valor (`id: 1024` → `Integer:id`,
   `ativo: true` → `Boolean:ativo`). Não viram `-D` "soltos" na linha de
-  comando: viram `-Dcustom_attributes_list=...`.
+  comando: viram `-Dcustom_entity_attributes_list=...`.
 * **Chaves de flag** (`enable_jwt_authentication`, `api_port`): existem no
   catálogo. São elas que efetivamente viram
   `-Denable_jwt_authentication=true -Dapi_port=8080` na saída.
@@ -1759,7 +1952,7 @@ Antes de executar, confira que o valor de `-Dpackage` **NÃO** contém o nome da
   `java.lang` é usado como está; um **tipo do projeto** (fora de `java.lang`)
   é preservado: a entidade o referencia pelo nome simples, **o atributo passa
   a se chamar pelo tipo** (`Convenio` → `convenio`) e o tipo viaja em
-  `custom_attribute_imports` (import) e/ou `custom_enum_definitions` (enum
+  `custom_entity_attribute_imports` (import) e/ou `contract_enum_definitions` (enum
   gerado pelo pós-processador).
 * O contrato **é a base do módulo**: o mecanismo o grava em disco e o
   archetype o copia para `src/test/resources/contracts/contract.json` no
@@ -1784,13 +1977,13 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 * **OBJETIVO**
   * Manter 1 arquivo final [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml) consumido pelo (`maven-archetype-plugin`),
-    mas organizado no source em modulos menores (**36 arquivos de propriedades + 18 de filesets**).
+    mas organizado no source em modulos menores (**35 arquivos de propriedades + 18 de filesets**).
 
 * **MECANISMO**
   * O XML "core" declara DOCTYPE com (`ENTITY property-<NN>-<flag> SYSTEM ".../property-<NN>-<flag>.xml"`) para cada snippet de propriedade
-    e (`ENTITY fileset-<flag> SYSTEM ".../fileset-<flag>.xml"`) para cada snippet de fileset.
-  * O total e **54 entidades** (36 + 18).
-  * O corpo referencia as entities como (`&property-<NN>-<flag>;`) (em (`requiredProperties`)) e (`&fileset-<flag>;`) (em (`fileSets`)).
+    e (`ENTITY fileset-<NN>-<flag> SYSTEM ".../fileset-<NN>-<flag>.xml"`) para cada snippet de fileset.
+  * O total e **53 entidades** (35 + 18).
+  * O corpo referencia as entities como (`&property-<NN>-<flag>;`) (em (`requiredProperties`)) e (`&fileset-<NN>-<flag>;`) (em (`fileSets`)).
   * Resultado: o arquivo-fonte continua sendo um unico XML valido, legivel, com (`&`) no lugar dos blocos.
 
 * **PLUGIN** — [`xml-maven-plugin`](https://www.mojohaus.org/xml-maven-plugin/) 1.2.1
@@ -1809,11 +2002,11 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 * **LAYOUT FISICO**
   * [`archetype_metadata_required_properties/`](src/main/resources/META-INF/maven/archetype_metadata_required_properties)
-    => **36** (`property-<NN>-<flag>.xml`) (**1 por flag**, numerados `01` a `36`).
+    => **35** (`property-<NN>-<flag>.xml`) (**1 por flag**, numerados `02` a `36`).
   * [`archetype_metadata_filesets/`](src/main/resources/META-INF/maven/archetype_metadata_filesets)
-    => **18** (`fileset-<flag>[-parte].xml`) (**1 `<fileSet>` por arquivo**, sem numeracao).
+    => **18** (`fileset-<NN>-<flag>[-parte].xml`) (**1 `<fileSet>` por arquivo**, numerados `01` a `18`).
   * [`archetype-metadata-identity.xsl`](src/main/resources/META-INF/maven/archetype-metadata-identity.xsl) => folha de estilo XSLT.
-  * [`archetype-metadata.xml`](src/main/resources/META-INF/maven/archetype-metadata.xml) => core (DOCTYPE com 54 entidades + (`&property-<NN>-<flag>;`)/(`&fileset-<flag>;`)).
+  * [`archetype-metadata.xml`](src/main/resources/META-INF/maven/archetype-metadata.xml) => core (DOCTYPE com 53 entidades + (`&property-<NN>-<flag>;`)/(`&fileset-<NN>-<flag>;`)).
 
 * **FLUXO BUILD**
   * source (`archetype-metadata.xml`) (com (`&entity;`))
@@ -1828,12 +2021,13 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 * **OBJETIVO**
   * Manter 1 arquivo final gerado em (`target/classes/META-INF/archetype-post-generate.groovy`) e consumido pelo (`maven-archetype-plugin`)
     durante o pos-processamento do projeto gerado,
-    mas organizado no source em modulos menores (11 arquivos de (`body/`) + 11 de (`variables/`) + 12 de (`snippets/`)).
+    mas organizado no source em modulos menores (15 arquivos de (`body/`) + 25 de (`variables/`) + 3 de (`generators/`) + 19 de (`snippets/`)).
 
 * **MECANISMO**
-  * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 3 diretorios.
+  * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 4 diretorios.
   * A [`List<String> SECTIONS`](src/main/groovy/ArchetypePostGenerateComposer.groovy) no topo do compositor e a **fonte unica da verdade da ordem** (substitui o `ls -1` alfabetico implicito do bash legado).
-  * Resultado: o source continua sendo uma colecao de 34 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
+  * Resultado: o source continua sendo uma colecao de 62 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
+  * Visibilidade: (`target/`) esta no (`.gitignore`) e o IDE normalmente o exclui — o arquivo **nao aparece** na arvore do projeto. Use `mvn clean process-resources` e abra (`target/classes/META-INF/archetype-post-generate.groovy`), ou `Ctrl+Shift+N` no IntelliJ.
 
 * **PLUGIN** — [`groovy-maven-plugin`](https://groovy.github.io/gmaven/) 2.1.1
   * Fase: (`process-resources`) (imediatamente apos (`xml-maven-plugin:transform`) montar o metadata em (`generate-resources`), e antes do (`package`) e do (`integration-test`)).
@@ -1841,28 +2035,29 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
   * Input : [`src/main/groovy/ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) (o compositor).
   * Output: (`${project.build.outputDirectory}/META-INF/archetype-post-generate.groovy`)
     (ou seja, (`target/classes/META-INF/...`), dentro do JAR do arquetipo).
-  * O (`<resources>`) do pom **exclui** o (`archetype-post-generate.groovy`) da copia convencional,
-    garantindo que so a versao remontada va para o classpath.
+  * O (`archetype-post-generate.groovy`) **nao existe** em (`src/main/resources/META-INF/`). O (`BuildArtifactsTest`) 1.4 falha se alguem recriar o monolito; assim o unico arquivo no classpath e o remontado.
 
 * **COMPOSITOR** — [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy)
-  * Le os 11 arquivos de (`body/`) na ordem canonica da (`List<String> SECTIONS`); le os diretorios (`variables/`) e (`snippets/`) em ordem alfabetica via (`listFiles().sort { it.name }`).
+  * Le os 15 arquivos de (`body/`) na ordem canonica da (`List<String> SECTIONS`); le os diretorios (`variables/`), (`generators/`) e (`snippets/`) em ordem do `NN` via (`listFiles().sort { it.name }`).
   * Aplica **consolidacao de imports** em 3 passos:
     1. Para cada arquivo concatenado, remove (`^import …`) e (`^//[[:space:]]*import`) (espelha o (`remove_lines_with_import_keyword`) do bash legado).
-    2. Prepende o conteudo de (`archetype_post_generate_body/archetype-imports.groovy`) no topo, aplicando (`replaceAll('/', '')`) em cada linha (espelha o (`tr -d '/'`) do bash legado).
+    2. Prepende o conteudo de (`archetype_post_generate_body/body-01-imports.groovy`) no topo, aplicando (`replaceAll('/', '')`) em cada linha (espelha o (`tr -d '/'`) do bash legado).
     3. Concatena tudo e grava em (`target/classes/META-INF/archetype-post-generate.groovy`).
-  * Sanity check: falha com (`IllegalStateException`) listando o arquivo faltando se qualquer arquivo obrigatorio de (`body/`) estiver ausente, ou se (`variables/`)/(`snippets/`) estiverem vazios.
+  * Sanity check: falha com (`IllegalStateException`) listando o arquivo faltando se qualquer arquivo obrigatorio de (`body/`) estiver ausente, ou se (`variables/`)/(`generators/`)/(`snippets/`) estiverem vazios.
 
 * **LAYOUT FISICO**
   * [`archetype_post_generate_body/`](src/main/resources/META-INF/archetype_post_generate_body)
-    => 11 arquivos canonicos (1 header, 1 global-vars, 5 path-vars, 1 footer, 1 file-functions, 1 folder-functions, 1 imports).
+    => 15 arquivos canonicos (1 imports, 1 header, 1 logging, 1 global-vars, 5 path-vars, 1 binding-artifact-registry, 1 footer, 4 helpers).
   * [`archetype_post_generate_variables/`](src/main/resources/META-INF/archetype_post_generate_variables)
-    => 11 (`variables-*.groovy`) (1 por categoria de flag).
+    => 25 (`variables-NN-*.groovy`) (1 por categoria de flag).
+  * [`archetype_post_generate_generators/`](src/main/resources/META-INF/archetype_post_generate_generators)
+    => 3 (`generator-NN-*.groovy`) (geram fontes Java: enums, tipos aninhados e contrato).
   * [`archetype_post_generate_snippets/`](src/main/resources/META-INF/archetype_post_generate_snippets)
-    => 12 (`snippet-*.groovy`) (1 por comportamento condicional).
+    => 19 (`snippet-NN-*.groovy`) (1 por comportamento condicional).
   * [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) => o compositor Groovy de build-time.
 
 * **FLUXO BUILD**
-  * source 3 diretorios (`body/`)+(`variables/`)+(`snippets/`) + (`archetype-imports.groovy`)
+  * source 4 diretorios (`body/`)+(`variables/`)+(`generators/`)+(`snippets/`) + (`body-01-imports.groovy`)
     * => (`ArchetypePostGenerateComposer.groovy`) le na ordem da (`List<String> SECTIONS`), consolida imports
     * => (`target/classes/META-INF/archetype-post-generate.groovy`) (Groovy completo, sem duplicacao de imports)
     * => empacotado no JAR do arquetipo
@@ -1871,8 +2066,8 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 * **⚠️ ADVERTENCIAS** (particularidades deste mecanismo)
   * **1. Plugin estagnado**: o (`groovy-maven-plugin:2.1.1`) nao recebe release desde **2019-08-04** — risco latente se o (`groovy-bom`) do archetype-plugin migrar para Groovy 5/6.
   * **2. Override de Groovy 4.0.28 via (`<dependencies>`) nao pega**: o gmaven roda em classloader proprio com Groovy 2.4.9 default. O composer funciona com 2.4.9, mas o override documentado em `specs/002-native-groovy-composer/research.md` Decisao 2 e parcialmente falso (validado em T019).
-  * **3. Arquivo de source legado**: o (`archetype-post-generate.groovy`) em (`src/main/resources/META-INF/`) e um artefato composto antigo, excluido do JAR pelo (`<resources>`) em (`pom.xml:38-41`). O composer grava a versao usada em (`target/classes/META-INF/archetype-post-generate.groovy`); edicoes no arquivo de source nao sao aplicadas ao build e nao devem ser feitas.
-  * **4. Equivalencia byte-a-byte com o bash legado**: o output do composer e byte-equivalente a saida historica de (`bash_script/create_archetype_post_generate.sh`), **mas nao e byte-equivalente** ao arquivo commitado manualmente em (`src/main/resources/META-INF/`) (esse foi editado a posteriori para usar (`properties?.show_archetype_pos_processor_log`) direto, sem variavel intermediaria — validado em T014).
+  * **3. Arquivo de source legado (nao existe mais)**: o (`archetype-post-generate.groovy`) que ficava em (`src/main/resources/META-INF/`) nao existe mais no working tree. A remocao do indice do git (`git rm --cached`) ja foi executada; a delecao esta staged e sera efetivada no commit (T025). O (`BuildArtifactsTest`) 1.4 impede que o monolito volte. A unica fonte de verdade e o composer, que grava (`target/classes/META-INF/archetype-post-generate.groovy`) a cada build.
+  * **4. Equivalencia com o bash legado (historico)**: o compositor nasceu byte-equivalente a saida historica de (`bash_script/create_archetype_post_generate.sh`), script que **nao existe mais** no repositorio. Ele **nao era** byte-equivalente ao antigo arquivo commitado manualmente em (`src/main/resources/META-INF/`), que usava (`properties?.show_archetype_post_generate_log`) direto, sem variavel intermediaria (validado em T014). O criterio atual e o (`ComposerTest`) + o parse do artefato, nao o `diff` contra o bash.
 
 </details>
 <details><summary><strong>Testes de Integracao ✅</strong></summary>
@@ -1899,10 +2094,10 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
       * **Sanity Check Completo:** 
 ```text
         Faca um sanity check completo do projeto archetype-v2-eda, na ordem:
-        (1) Confirme os pre-requisitos: Java 21 e Maven 3.9.x instalados.
+        (1) Confirme os pre-requisitos: Java 17+ e Maven 3.9.x instalados (o default do archetype é java_version=21).
         (2) Prepare o catalogo com `mvn clean process-resources` para que `target/classes/META-INF/maven/archetype-metadata.xml` exista.
         (3) Rode os testes de integracao com `mvn clean integration-test` — isto cobre todas as suites unitarias 
-        Groovy (todos os checks, agora inclusas no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das fixtures `custom-attributes` e `entity-contract`. 
+        Groovy (todos os checks, agora inclusas no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das 7 fixtures que o possuem (ex.: `custom-attributes`, `custom-nested-objects`, `entity-contract`).
         (4) Me entregue um sumario final tabelado, com DOIS blocos: 
         (4.1) UNITARIOS — Todas as suites, todos os checks, quantas passaram e a lista de checks por suite; 
         (4.2) INTEGRACAO — todas as fixtures, quantas passaram e qualquer `verify.groovy` que tenha falhado, nesse caso observando:
@@ -1920,7 +2115,7 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 ```
 
 * **FIXTURES** (em [src/test/resources/projects/](src/test/resources/projects))
-  * `basic/`, `minimal/`, `full/`, `custom-attributes/`, `entity-contract/`, `defaults-only/`, `binding-default-only/`, `binding-list-only/`, `binding-map-only/`, `binding-mutable-only/`, `binding-validated-only/`.
+  * `basic/`, `minimal/`, `full/`, `custom-attributes/`, `custom-enums-from-payload/`, `custom-nested-edge-cases/`, `custom-nested-objects/`, `entity-contract/`, `defaults-only/`, `external-binding-default-only/`, `external-binding-list-only/`, `external-binding-map-only/`, `external-binding-mutable-only/`, `external-binding-validated-only/`, `id-normalization/`.
   * Detalhes tecnicos completos: [specs/001-archetype-integration-tests/quickstart.md](specs/001-archetype-integration-tests/quickstart.md).
 
 </details>
@@ -1929,11 +2124,11 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 * **OBJETIVO**
   * Script Groovy executado **apos** o `mvn verify` em fixtures de teste de integracao. Atua como **assercao estrutural pos-build** sobre o projeto Spring Boot gerado (NAO e teste unitario).
-  * Atualmente 2 fixtures usam `verify.groovy`: [`src/test/resources/projects/custom-attributes/verify.groovy`](src/test/resources/projects/custom-attributes/verify.groovy) e [`src/test/resources/projects/entity-contract/verify.groovy`](src/test/resources/projects/entity-contract/verify.groovy).
+  * Atualmente **7 fixtures** usam `verify.groovy`: [`custom-attributes`](src/test/resources/projects/custom-attributes/verify.groovy), [`custom-enums-from-payload`](src/test/resources/projects/custom-enums-from-payload/verify.groovy), [`custom-nested-edge-cases`](src/test/resources/projects/custom-nested-edge-cases/verify.groovy), [`custom-nested-objects`](src/test/resources/projects/custom-nested-objects/verify.groovy), [`entity-contract`](src/test/resources/projects/entity-contract/verify.groovy), [`full`](src/test/resources/projects/full/verify.groovy) e [`id-normalization`](src/test/resources/projects/id-normalization/verify.groovy).
 
 * **O QUE FAZ** (exemplo `custom-attributes`)
   * Procura `ContractEntity.java` em 5 caminhos candidatos.
-  * Valida via regex que existem os campos `private Long id`, `private String name`, `private String createdAt`,
+  * Valida via regex que existem os campos `private Long contractEntityId`, `private String name`, `private String createdAt`,
     `private StatusPedido statusPedido`, `private Situacao situacao`, `private AdminCredentials adminCredentials`.
   * Valida os **tipos do projeto** (FR-021/FR-024): a entidade importa `it.pkg.domain.StatusPedido` e
     `it.pkg.contractentity.config.properties.credentials.AdminCredentials`, **nao** importa
@@ -1943,6 +2138,7 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
     e que a pasta do enum gerado contem **apenas** o enum (nada e gerado para uma classe referenciada).
   * Lanca `IllegalStateException` se entity ausente ou atributo faltar.
   * E **auto-contido** — hardcoda a expectativa e nao depende do JSON copiado.
+  * Valida que, sem objeto aninhado, a entidade **nao** usa `@Transient` nem `@JsonIgnore`.
   * No caso negativo do FR-023, verifica que a pasta `src/test/resources/contracts/` **nao** existe
     quando `enable_folder_src_test_java=false`.
 
@@ -1954,7 +2150,7 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 * **COMO RODAR (OpenCode)**
   * **Rodar via fixture (com verify automatico):**
     ```txt
-    Rode so a fixture `entity-contract` com `mvn clean integration-test -Darchetype.test.projects=entity-contract` e me de o resultado, incluindo a saida do `verify.groovy`.
+    Rode o `mvn clean integration-test` e me mostre apenas o resultado da fixture `entity-contract`, incluindo a saida do `verify.groovy`. (O plugin 3.4.1 nao tem filtro por nome; veja `archetype.test.projectsDirectory` na secao de instalacao.)
     ```
   * **Debug manual do verify:**
     ```txt
@@ -1987,10 +2183,10 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
   * **Sanity check completo (1 comando)**:
     ```txt
     Faca um sanity check completo do projeto archetype-v2-eda, na ordem:
-    (1) Confirme os pre-requisitos: Java 21 e Maven 3.9.x instalados.
+    (1) Confirme os pre-requisitos: Java 17+ e Maven 3.9.x instalados (o default do archetype é java_version=21).
     (2) Prepare o catalogo com `mvn clean process-resources` para que `target/classes/META-INF/maven/archetype-metadata.xml` exista.
     (3) Rode os testes de integracao com `mvn clean integration-test` — isto cobre todas as suites unitarias 
-    Groovy (todos os checks, agora inclusas no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das fixtures `custom-attributes` e `entity-contract`. 
+    Groovy (todos os checks, agora inclusas no build), todas as fixtures de `src/test/resources/projects/`, e o `verify.groovy` das 7 fixtures que o possuem (ex.: `custom-attributes`, `custom-nested-objects`, `entity-contract`).
     (4) Me entregue um sumario final tabelado, com DOIS blocos: 
     (4.1) UNITARIOS — Todas as suites, todos os checks, quantas passaram e a lista de checks por suite; 
     (4.2) INTEGRACAO — todas as fixtures, quantas passaram e qualquer `verify.groovy` que tenha falhado, nesse caso observando:
@@ -2007,10 +2203,10 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
     ```
 </details>
 
-<details><summary><strong>Flags do mvn archetype:generate</strong></summary>
+<details><summary><strong>Flags do mvn archetype:generate 🤖</strong></summary>
 
-* **NOTA**: as flags se dividem em *de pergunta* (aparecem no prompt interativo do archetype:generate) e *de 
-  resposta* (vão no archetype.properties do perfil de teste). A flag entity_name_package é **derivada** — nunca é 
+* **NOTA**: as flags se dividem em *de pergunta* (aparecem no prompt interativo do archetype:generate) e *de
+  resposta* (vão no archetype.properties do perfil de teste). A flag entity_package_name é **derivada** — nunca é
   perguntada ao usuário.
 
 ---
@@ -2024,7 +2220,7 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
   * Efeito: escreve a `<description>` do `pom.xml` e o texto do `README.md`.
   * Sem dependência.
 
-* **`show_archetype_pos_processor_log`**
+* **`show_archetype_post_generate_log`**
   * Padrão: `false`
   * Efeito: quando `true`, imprime no console todo o relatório de deleção/renomeação acumulado no pós-processador.
   * Sem dependência.
@@ -2033,24 +2229,24 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 * **`java_version`**
   * Padrão: `21` (aceita `17` ou `21`)
-  * Efeito: define `java.version` e `maven.compiler.release` no `pom.xml`.
+  * Efeito: define `<java.version>` no `pom.xml`; o `maven.compiler.release` é derivado pelo parent do Spring Boot.
   * Sem dependência.
 
-#### 1.3 Idioma — dois eixos independentes
+#### 1.3 Idioma — flags reservadas
 
-* **`language`**
+* **`llm_prompt_language`**
   * Padrão: `pt`
-  * Efeito: define **apenas o idioma do prompt de texto enviado ao LLM** no fluxo `llm-flag-inference`. Não altera nenhum arquivo do projeto gerado.
+  * Efeito: **reservada** — hoje nenhum componente lê a flag; o script externo recebe apenas a descrição e o contrato. Não altera arquivos nem o prompt.
   * Sem dependência.
 
-* **`project_language`**
+* **`project_i18n_language`**
   * Padrão: `pt`
-  * Efeito: filtra os resources de i18n — só o idioma escolhido permanece no projeto final.
+  * Efeito: **reservada para i18n futura** — hoje não há resources de i18n no template e a flag não altera o projeto gerado. O `MetadataContractTest` a mantém explicitamente como declarada e não consumida.
   * Sem dependência.
 
 #### 1.4 Dependências externas
 
-* **`extra_POM_dependencies`**
+* **`extra_pom_dependencies`**
   * Padrão: `false`
   * Efeito: quando não é `false`, o pós-processador lê o `pom.xml` gerado linha a linha e insere cada `groupId:artifactId:version[:scope]` dentro da primeira tag `<dependencies>` encontrada. Sem `scope` → assume `compile`.
   * Sem dependência.
@@ -2068,28 +2264,28 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
     LLM (a flag está na *allowlist* do FR-009). O default do catálogo só entra como último
     recurso.
 
-* **`entity_name_package`**
+* **`entity_package_name`**
   * Padrão: `myentity` (literal do catálogo — exigido pelo FR-018, que proíbe default vazio)
   * Efeito: o archetype **usa o valor verbatim** como pacote (não há `${entity_name,,}` no
-    template). Passar `-Dentity_name_package=<entity_name em minúsculas>` é o que faz o
+    template). Passar `-Dentity_package_name=<entity_name em minúsculas>` é o que faz o
     pacote acompanhar o nome da entidade.
-  * *Derivação:* quando o contrato não traz `entity_name_package`, o mecanismo LLM o deriva
+  * *Derivação:* quando o contrato não traz `entity_package_name`, o mecanismo LLM o deriva
     do nome resolvido da entidade (em minúsculas) — fonte `CONTRACT_DERIVED` no relatório de
     proveniência.
   * **Depende de:** `entity_name`
 
-* **`enable_custom_attributes`**
+* **`enable_custom_entity_attributes`**
   * Padrão: `false`
   * Efeito: habilita a inclusão de campos extras na entidade.
   * Sem dependência.
   * *Derivação:* é **forçado** a `true` sempre que o contrato traz atributos — sem isso o
     template nem renderiza os campos.
 
-* **`custom_attributes_list`**
+* **`custom_entity_attributes_list`**
   * Padrão: `String:name`
   * Efeito: cada par `Tipo:nome` gera um campo na entidade.
   * O `id` e estrutural: o campo e `<entity_name em camelCase>Id` (ex.: `KitchenChef` -> `kitchenChefId`; `PET` -> `petId`).
-  * **Depende de:** `enable_custom_attributes = true`
+  * **Depende de:** `enable_custom_entity_attributes = true`
   * *Derivação:* o mecanismo monta a lista **a partir do contrato**, no formato estrito
     `Tipo:nome,Tipo:nome` (sem espaços, na ordem do contrato). O **tipo é estimado pelo
     valor** do atributo (`Boolean`, `Integer`, `Long`, `Double`, `String`); um `type`
@@ -2098,29 +2294,45 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
     **nomeia o atributo pelo próprio tipo** (`EnderecoCliente` → `enderecoCliente`). Um
     `type` fora dessas duas categorias (ex.: `java.time.Instant`, `List<String>`) é
     rejeitado com **aviso** e o valor volta a ser estimado pelo valor do atributo.
+    Um **objeto JSON aninhado** não cai nessa estimativa: ele é derivado como POJO em
+    `<entity_package>.nested` (ver `contract_nested_type_definitions`).
 
-* **`custom_attribute_imports`**
+* **`custom_entity_attribute_imports`**
   * Padrão: `none`
   * Efeito: lista de FQNs dos **tipos do projeto** referenciados pela entidade — o template
     emite um `import` para cada um (o import do próprio pacote da entidade é omitido).
-  * **Depende de:** `enable_custom_attributes = true`
+  * **Depende de:** `enable_custom_entity_attributes = true`
   * *Derivação:* preenchida pelo mecanismo a partir do contrato: cada atributo com `type`
     fora de `java.lang` **e com pacote declarado** contribui com seu FQN.
   * Validação: `none` ou uma lista de FQNs separados por vírgula.
 
-* **`custom_enum_definitions`**
+* **`contract_enum_definitions`**
   * Padrão: `none`
   * Efeito: os **enums** que o pós-processador gera no projeto gerado, no formato
     `Tipo:CONSTANTE|CONSTANTE` (vários enums separados por `;`).
-  * **Depende de:** `enable_custom_attributes = true`
+  * **Depende de:** `enable_custom_entity_attributes = true`
   * *Derivação:* preenchida pelo mecanismo a partir do contrato: um tipo do projeto com
     **valor textual** é um enum. As constantes vêm de `enumValues`/`values` quando
     declaradas; caso contrário, do próprio valor observado (`"ATIVO"` → `ATIVO`).
     Um `Tipo` sem pacote é gerado no pacote da entidade; um `Tipo` com pacote é gerado no
-    próprio pacote. Um arquivo de enum já existente **não é sobrescrito**.
+    próprio pacote; o marcador relativo `nested.Tipo` gera o enum em `<entity_package>.nested`.
+    Um arquivo de enum já existente **não é sobrescrito**.
   * Validação: `none` ou uma lista de definições no formato acima.
 
-* **`entity_contract_path`**
+* **`contract_nested_type_definitions`**
+  * Padrão: `none`
+  * Efeito: os **POJOs** que o pós-processador gera para os objetos aninhados do contrato,
+    no formato `Tipo|Campo:Tipo,Campo:Tipo` (vários separados por `;`), no pacote
+    `<package>.<entity_package_name>.nested`.
+  * **Depende de:** `enable_custom_entity_attributes = true`
+  * *Derivação:* preenchida pelo mecanismo a partir do contrato: cada objeto aninhado vira
+    um POJO; a entidade o referencia pelo nome totalmente qualificado e marca o campo com
+    `@Transient`. O POJO só é gerado quando o tipo aparece em `custom_entity_attributes_list`.
+  * Objeto vazio, nome inválido, nenhum campo válido ou profundidade acima de **25 gerações**
+    → `String` com aviso. POJO já existente **não é sobrescrito**.
+  * Validação: `none` ou uma lista de definições no formato acima.
+
+* **`entity_contract_file_path`**
   * Padrão: `none`
   * Efeito: caminho do arquivo JSON do contrato do módulo. É preenchido pelo mecanismo de
     inferência LLM, que grava o contrato extraído do prompt e emite o caminho aqui.
@@ -2138,7 +2350,7 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 >
 > **Parcialmente revogado em 2026-10-23** (`contrato-json-inferido-inoperante`): o contrato deixou de ser
 > apenas conteúdo do prompt. O mecanismo o **materializa em disco** e emite o caminho em
-> `entity_contract_path`; o pós-processador o copia para `src/test/resources/contracts/contract.json`
+> `entity_contract_file_path`; o pós-processador o copia para `src/test/resources/contracts/contract.json`
 > (quando `enable_folder_src_test_java = true`). A extração do nome da entidade e dos atributos a partir
 > do contrato no prompt está em
 > `.specify/bugs/contrato-json-inferido-inoperante/assessment.md`.
@@ -2151,11 +2363,6 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 * **`api_port`**
   * Padrão: `8080`
   * Efeito: define `server.port` no `application.properties`/`.yml`. Validação `^([1-9][0-9]{3,4})$`.
-  * Sem dependência.
-
-* **`enable_api_cpanel`**
-  * Padrão: `false`
-  * Efeito: mantém a pasta `ELK/` na raiz do projeto.
   * Sem dependência.
 
 ---
@@ -2171,7 +2378,7 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 ### 5. Containers
 
-* **`enable_docker`**
+* **`enable_docker_support`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta a pasta `docker/` inteira (inclui `docker-compose.yml` e `Dockerfile`).
   * Sem dependência.
@@ -2185,12 +2392,12 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
   * Efeito: quando `true`, renomeia `git_temp/` → `.git/` e `gitignore` → `.gitignore`. Quando `false`, deleta ambos.
   * Sem dependência.
 
-* **`git_url_repo`**
+* **`git_repo_url`**
   * Padrão: `https://github.com/your-git-user/your-repo.git`
   * Efeito: usado no `git remote add origin <url>`.
   * **Depende de:** `enable_git_support = true`
 
-* **`git_branch_repo`**
+* **`git_repo_branch`**
   * Padrão: `master`
   * Efeito: usado no `git checkout -b <branch>`.
   * **Depende de:** `enable_git_support = true`
@@ -2199,39 +2406,41 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 ### 7. Produtividade
 
-* **`enable_lombok`**
+* **`enable_lombok_support`**
   * Padrão: `false`
-  * Efeito: injeta `org.projectlombok:lombok` no `pom.xml` e configura `annotationProcessorPaths` no `maven-compiler-plugin`.
+  * Efeito: injeta `org.projectlombok:lombok` no `pom.xml` e exclui o Lombok do jar executável no `spring-boot-maven-plugin`. Não há `annotationProcessorPaths` explícito.
   * Sem dependência.
+  * **Nome anterior:** `enable_lombok` — renomeada; quem usa `-Denable_lombok` precisa migrar para `-Denable_lombok_support`.
 
 ---
 
 ### 8. Observabilidade
 
-* **`enable_logback`**
+* **`enable_logback_support`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta `logback-spring.xml`, `logback-test.xml`, a pasta `logback-spring-config/`, a pasta `ELK/` e `docker/elk-compose.yml`.
   * Sem dependência.
+  * **Nome anterior:** `enable_logback` — renomeada; quem usa `-Denable_logback` precisa migrar para `-Denable_logback_support`.
 
 * **`logback_console_type`**
   * Padrão: `1`
-  * Efeito: `1` = deleta os 3 consoles custom (usa o console default do Spring); `2` = mantém o console granular colorido; `3` = mantém o console tabular.
-  * **Depende de:** `enable_logback = true`
+  * Efeito: `1` = deleta os 3 consoles custom (usa o console default do Spring); `2` = mantém o console **tabular**; `3` = mantém o console **granular** (colorido).
+  * **Depende de:** `enable_logback_support = true`
 
 * **`enable_logback_appender_smtp`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta `appender-smtp-email.xml` de `logback-spring-config/`.
-  * **Depende de:** `enable_logback = true`
+  * **Depende de:** `enable_logback_support = true`
 
 * **`enable_logback_appender_file`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta `appender-rolfile-file.xml` de `logback-spring-config/`.
-  * **Depende de:** `enable_logback = true`
+  * **Depende de:** `enable_logback_support = true`
 
 * **`enable_api_cpanel_elk_log_system`**
   * Padrão: `false`
   * Efeito: quando `true`, mantém `appender-tcp-elk-logstash.xml`, a pasta `ELK/` e `docker/elk-compose.yml`. Quando `false`, os três são removidos.
-  * **Depende de:** `enable_api_cpanel = true` **E** `enable_logback = true`
+  * **Depende de:** `enable_logback_support = true`
 
 ---
 
@@ -2239,46 +2448,46 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 #### 9.1 Formato do arquivo
 
-* **`properties_filetype`**
+* **`config_file_format`**
   * Padrão: `1`
   * Efeito: `1` = deleta todos os `.yml` de `src/main/resources/` e `src/test/resources/` recursivamente; `2` = deleta todos os `.properties`. Apenas um formato sobrevive.
   * Sem dependência.
 
 #### 9.2 Sistema de binding
 
-* **`enable_binding_properties`**
+* **`enable_binding_external_properties`**
   * Padrão: `false`
   * Efeito: liga o sistema inteiro. Quando `false` (ou quando nenhum sub-módulo está ligado), deleta `config/properties/`, `list_properties/`, `map_properties/` e os arquivos `application_list.*` / `application_map.*`.
   * Sem dependência.
 
-* **`default_binding_properties`**
+* **`enable_default_binding_external_properties`**
   * Padrão: `false`
   * Efeito: mantém `ApplicationProperties.java` e `ApplicationPropertiesRecord.java` na pasta `config/properties/`. Quando `false`, ambos são deletados.
-  * **Depende de:** `enable_binding_properties = true`
+  * **Depende de:** `enable_binding_external_properties = true`
 
-* **`list_binding_properties`**
+* **`enable_list_binding_external_properties`**
   * Padrão: `false`
   * Efeito: mantém a pasta `config/properties/list_properties/` com `ListObjects.java`, `ListProperties.java`, `ListPropertiesImmutable.java`, `ListPropertiesRecord.java` e os resources `application_list.*`.
-  * **Depende de:** `enable_binding_properties = true`
+  * **Depende de:** `enable_binding_external_properties = true`
 
-* **`map_binding_properties`**
+* **`enable_map_binding_external_properties`**
   * Padrão: `false`
   * Efeito: mantém a pasta `config/properties/map_properties/` com `MapItem.java`, `MapProperties.java`, `MapPropertiesImmutable.java`, `MapPropertiesRecord.java` e os resources `application_map.*`.
-  * **Depende de:** `enable_binding_properties = true`
+  * **Depende de:** `enable_binding_external_properties = true`
 
-* **`mutable_binding_properties`**
-  * Padrão: `false`
-  * Efeito: `1` = mantém apenas as variantes imutáveis; `2` = mantém apenas as variantes mutáveis. Age sobre as classes `.java` do main e do test, deletando as que não combinam com a escolha.
-  * **Depende de:** `enable_binding_properties = true` **E** pelo menos um dos três sub-módulos ligado
+* **`binding_external_properties_mutability`**
+  * Padrão: `none`
+  * Efeito: `immutable` = mantém apenas as variantes imutáveis (record/campos `final` + constructor binding); `mutable` = mantém apenas as variantes mutáveis (bean com setters); `none` = mantém todas as variantes. Age sobre as classes `.java` do main e do test, deletando as que não combinam com a escolha.
+  * **Depende de:** `enable_binding_external_properties = true` **E** pelo menos um dos três sub-módulos ligado
 
-* **`validated_binding_properties`**
+* **`enable_binding_external_properties_validation`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta `ApplicationPropertiesValidationTest.java` e `ApplicationPropertiesRecordValidationTest.java` do projeto de testes.
-  * **Depende de:** `default_binding_properties = true`
+  * **Depende de:** `enable_default_binding_external_properties = true`
 
 #### 9.3 Testes do binding
 
-* **`enable_binding_properties_tests`**
+* **`enable_binding_external_properties_tests`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta `src/test/java/<Entity>/config/properties/` e `src/test/resources/properties/` inteiros.
   * **Depende de:** `enable_folder_src_test_java = true` **E** pelo menos um sub-módulo de binding ligado
@@ -2301,37 +2510,35 @@ fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
 
 ```text
 enable_folder_src_test_java = true
-  └─→ enable_binding_properties_tests
+  └─→ enable_binding_external_properties_tests
 
-enable_binding_properties = true
-  ├─→ default_binding_properties = true
-  │     └─→ validated_binding_properties = true
-  ├─→ list_binding_properties = true
-  ├─→ map_binding_properties = true
-  └─→ mutable_binding_properties (false | 1 | 2 | 3)
+enable_binding_external_properties = true
+  ├─→ enable_default_binding_external_properties = true
+  │     └─→ enable_binding_external_properties_validation = true
+  ├─→ enable_list_binding_external_properties = true
+  ├─→ enable_map_binding_external_properties = true
+  └─→ binding_external_properties_mutability (none | immutable | mutable)
 
-enable_logback = true
+enable_logback_support = true
   ├─→ logback_console_type
   ├─→ enable_logback_appender_smtp
   ├─→ enable_logback_appender_file
   └─→ enable_api_cpanel_elk_log_system
 
-enable_api_cpanel = true
-  └─→ enable_api_cpanel_elk_log_system
-
 enable_git_support = true
-  ├─→ git_url_repo
-  └─→ git_branch_repo
+  ├─→ git_repo_url
+  └─→ git_repo_branch
 
-enable_custom_attributes = true
-  ├─→ custom_attributes_list
-  ├─→ custom_attribute_imports
-  └─→ custom_enum_definitions
+enable_custom_entity_attributes = true
+  ├─→ custom_entity_attributes_list
+  ├─→ custom_entity_attribute_imports
+  ├─→ contract_enum_definitions
+  └─→ contract_nested_type_definitions
 
 entity_name
-  └─→ entity_name_package (derivada pelo mecanismo LLM a partir de entity_name)
+  └─→ entity_package_name (derivada pelo mecanismo LLM a partir de entity_name)
 
 enable_folder_src_test_java = true
-  └─→ entity_contract_path (contrato copiado para src/test/resources/contracts/)
+  └─→ entity_contract_file_path (contrato copiado para src/test/resources/contracts/)
 ```
 </details>

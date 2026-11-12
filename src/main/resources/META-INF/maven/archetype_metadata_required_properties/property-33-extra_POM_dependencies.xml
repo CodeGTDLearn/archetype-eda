@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- PROPERTY-33-EXTRA_POM_DEPENDENCIES.XML ____________________ -->
-<!-- FLAG: extra_POM_dependencies -->
+<!-- FLAG: extra_pom_dependencies -->
 <!--   DESCRIPTION : Lista de dependencias Maven extras a serem injetadas -->
 <!--                 no pom.xml do projeto gerado. Cada dependencia segue -->
 <!--                 o formato canonico 'groupId:artifactId:version[:scope]', -->
@@ -23,7 +23,7 @@
 <!--   DOMAIN      : false OR lista de groupId:artifactId:version[:scope] (virgula) -->
 <!--   DEPENDS_ON  : nao aplicavel -->
 <!--   VALIDATION  : ^(false|([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?)(,([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?))*)$ -->
-<requiredProperty key="extra_POM_dependencies">
+<requiredProperty key="extra_pom_dependencies">
     <defaultValue>false</defaultValue>
     <validationRegex>^(false|([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?)(,([A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[0-9][A-Za-z0-9._-]*(:[A-Za-z]+)?))*)$</validationRegex>
 </requiredProperty>

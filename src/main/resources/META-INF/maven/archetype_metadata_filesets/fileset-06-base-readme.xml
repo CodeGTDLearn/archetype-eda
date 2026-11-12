@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-06-BASE-README.XML _____________________________________ -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory></directory>
+    <includes>
+        <include>README.md</include>
+    </includes>
+</fileSet>

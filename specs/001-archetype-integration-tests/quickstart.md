@@ -15,7 +15,7 @@ This guide walks a maintainer through running the new test matrix locally and ve
   mvn clean install
   ```
 * Network access to Maven Central (first run only, to fetch Spring Boot 4.0.0, Lombok, Logback, etc.). Subsequent runs can be offline.
-* (Optional, for the `custom-attributes` fixture) The attribute list the fixture declares in `custom_attributes_list` — the entity shape the `verify.groovy` asserts against.
+* (Optional, for the `custom-attributes` fixture) The attribute list the fixture declares in `custom_entity_attributes_list` — the entity shape the `verify.groovy` asserts against.
 
 ## What ships in this feature
 
@@ -25,12 +25,12 @@ Under `src/test/resources/projects/`, one new subdirectory per scenario (plus th
 |---|---|---|
 | `minimal/` | All optional flags off. Baseline. | No |
 | `full/` | All optional flags on. Stress. | No |
-| `custom-attributes/` | `enable_custom_attributes=true` + `custom_attributes_list`. | **Yes** |
-| `binding-default-only/` | Parent on + only `default_*` on. | No |
-| `binding-list-only/` | Parent on + only `list_*` on. | No |
-| `binding-map-only/` | Parent on + only `map_*` on. | No |
-| `binding-mutable-only/` | Parent on + `mutable_binding_properties` set to `1`. | No |
-| `binding-validated-only/` | Parent on + `default_*` on + `validated_*` on. | No |
+| `custom-attributes/` | `enable_custom_entity_attributes=true` + `custom_entity_attributes_list`. | **Yes** |
+| `external-binding-default-only/` | Parent on + only `default_*` on. | No |
+| `external-binding-list-only/` | Parent on + only `list_*` on. | No |
+| `external-binding-map-only/` | Parent on + only `map_*` on. | No |
+| `external-binding-mutable-only/` | Parent on + `binding_external_properties_mutability` set to `mutable`. | No |
+| `external-binding-validated-only/` | Parent on + `default_*` on + `validated_*` on. | No |
 
 Each fixture directory contains:
 * `archetype.properties` — flag values for that scenario.
@@ -71,11 +71,11 @@ To prove the matrix is doing its job, induce a regression and confirm the corres
 3. **Re-run**: at least one fixture should fail with a diagnostic pointing at the changed file.
 4. **Revert**: restore the change; re-run; all fixtures should pass again.
 
-For the `custom-attributes` scenario specifically, edit `custom_attributes_list` in the fixture's `archetype.properties` to drop an attribute and re-run: the `verify.groovy` should report the missing attribute (not just a generic build failure).
+For the `custom-attributes` scenario specifically, edit `custom_entity_attributes_list` in the fixture's `archetype.properties` to drop an attribute and re-run: the `verify.groovy` should report the missing attribute (not just a generic build failure).
 
 ## Verifying the dependency rule (FR-004)
 
-Pick a parent flag with known children (e.g., `enable_logback` with children `logback_console_type`, `enable_logback_appender_smtp`, `enable_logback_appender_file`). In one of the binding-properties sub-fixtures (or a temporary new fixture), set the parent to `false` and a child to a non-default value. The archetype generation must fail with the child's value being ignored, or — depending on the archetype's behavior — the child value being passed but unused. Either way, the failure must be unambiguous.
+Pick a parent flag with known children (e.g., `enable_logback_support` with children `logback_console_type`, `enable_logback_appender_smtp`, `enable_logback_appender_file`). In one of the binding-properties sub-fixtures (or a temporary new fixture), set the parent to `false` and a child to a non-default value. The archetype generation must fail with the child's value being ignored, or — depending on the archetype's behavior — the child value being passed but unused. Either way, the failure must be unambiguous.
 
 ## Verifying isolation (FR-001)
 
@@ -97,7 +97,7 @@ After the first online run, disconnect from the network and re-run the matrix. A
 |---|---|---|
 | All fixtures fail with "unknown property" | A flag in `archetype.properties` is not declared in any `property-*.xml`. | Re-check the property name against `property-*.xml`. |
 | One fixture fails, others pass | The failing fixture's flags exercise a code path with a regression. | Inspect the build log; cross-reference with `archetype-post-generate.groovy` for the relevant `if` block. |
-| `custom-attributes` reports a missing attribute | The declared `custom_attributes_list` no longer matches what the `verify.groovy` asserts (or violates the catalog's `validationRegex`). | Re-check the attribute list against the fixture's `verify.groovy` expectations and the `custom_attributes_list` validation rule. |
+| `custom-attributes` reports a missing attribute | The declared `custom_entity_attributes_list` no longer matches what the `verify.groovy` asserts (or violates the catalog's `validationRegex`). | Re-check the attribute list against the fixture's `verify.groovy` expectations and the `custom_entity_attributes_list` validation rule. |
 | Build hangs on dependency download | First run only — Maven is downloading Spring Boot 4.0.0, Lombok, etc. | Wait. Subsequent runs use the local cache. |
 | `mvn integration-test` reports "no projects found" | The `src/test/resources/projects/` directory is empty or the filter is wrong. | Verify the directory layout; re-check `-Darchetype.test.projects` value. |
 | `mvn archetype:integration-test` reports "Unable to get the archetypes' artifact which should have just been built" | You ran the goal directly without installing the archetype first. | Use `mvn clean install integration-test` instead, or run `mvn clean install` followed by `mvn integration-test`. |

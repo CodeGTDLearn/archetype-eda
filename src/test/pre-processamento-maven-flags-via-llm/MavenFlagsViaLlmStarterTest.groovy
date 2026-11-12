@@ -72,6 +72,12 @@ def runStarter = { List<String> extraArgs, String stdin ->
 
 def VALID_CONTRACT = '{\n  "entityName": "GateEntity",\n  "attributes": [ { "name": "id", "value": 1 } ]\n}\n'
 
+// Reads a -D<flag>=<value> token from the command line, unquoting it when needed.
+def flagValue = { String line, String flag ->
+    def m = line =~ /-D${flag}=("([^"]*)"|\S+)/
+    return m.find() ? (m.group(2) != null ? m.group(2) : m.group(1)) : null
+}
+
 // ---------------------------------------------------------------------------
 // 1) FR-001 - the description gate (checked BEFORE the contract, and BEFORE
 //    any inference). stdin MUST NOT be consumed in these cases.
@@ -121,6 +127,11 @@ check("3.3 ...the contract drove the entity (not the catalog default)",
         r7.out.contains("-Dentity_name=GateEntity"))
 check("3.4 ...the provenance report went to stderr, not stdout",
         r7.err.contains("Relatorio de Proveniencia") && !r7.out.contains("Relatorio de Proveniencia"))
+def contractPath3 = flagValue(r7.out, "entity_contract_file_path")
+check("3.5 ...the materialized contract path is emitted",
+        contractPath3 != null && !contractPath3.trim().isEmpty())
+check("3.6 ...and the materialized contract file exists",
+        contractPath3 != null && new File(contractPath3).isFile())
 
 // ---------------------------------------------------------------------------
 // 4) Malformed contract root (FR-002: the root MUST be a JSON object)
@@ -145,6 +156,43 @@ def r10 = runStarter(["--use-case-description", "d", "--inference-bin",
 check("6.1 the contract gate fires before the inference shell-out", r10.code == 2)
 check("6.2 ...the inference script was never invoked (no 'inference script failed')",
         !r10.err.contains("External inference script failed"))
+
+// ---------------------------------------------------------------------------
+// 7) FR-023 - the emitted contract path follows --contract-dir, including on
+//    a cache HIT (the path is part of the cache key)
+// ---------------------------------------------------------------------------
+def contractCache = new File(workDir, "cache-contract-dir")
+def contractsA = new File(workDir, "contracts-a")
+def contractsB = new File(workDir, "contracts-b")
+
+def r11 = runStarter(["--use-case-description", "contract dir", "--use-case-contract",
+                      "--inference-bin", stubPath, "--cache-dir", contractCache.absolutePath,
+                      "--contract-dir", contractsA.absolutePath], VALID_CONTRACT)
+def pathA = flagValue(r11.out, "entity_contract_file_path")
+check("7.1 the first run emits the contract path", r11.code == 0 && pathA != null)
+check("7.2 ...inside the requested contract directory",
+        pathA != null && pathA.replace('\\', '/').startsWith(contractsA.absolutePath.replace('\\', '/')))
+check("7.3 ...and the file exists", pathA != null && new File(pathA).isFile())
+
+// Delete only the materialized contracts; keep cache.jsonl.
+contractsA.deleteDir()
+
+def r12 = runStarter(["--use-case-description", "contract dir", "--use-case-contract",
+                      "--inference-bin", stubPath, "--cache-dir", contractCache.absolutePath,
+                      "--contract-dir", contractsB.absolutePath], VALID_CONTRACT)
+def pathB = flagValue(r12.out, "entity_contract_file_path")
+check("7.4 changing --contract-dir is a cache MISS", r12.code == 0 && r12.err.contains("cache: MISS"))
+check("7.5 the new contract directory is emitted",
+        pathB != null && pathB.replace('\\', '/').startsWith(contractsB.absolutePath.replace('\\', '/')))
+check("7.6 ...the new file exists", pathB != null && new File(pathB).isFile())
+check("7.7 ...and the stale path is NOT emitted", pathB != null && pathB != pathA)
+check("7.8 ...while the old file is gone", pathA != null && !new File(pathA).exists())
+
+def r13 = runStarter(["--use-case-description", "contract dir", "--use-case-contract",
+                      "--inference-bin", stubPath, "--cache-dir", contractCache.absolutePath,
+                      "--contract-dir", contractsB.absolutePath], VALID_CONTRACT)
+check("7.9 the same configuration is a cache HIT", r13.code == 0 && r13.err.contains("cache: HIT"))
+check("7.10 ...with a byte-identical command line (FR-012)", r13.out == r12.out)
 
 workDir.deleteDir()
 

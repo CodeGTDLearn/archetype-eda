@@ -5,6 +5,8 @@
 - **Verdict**: go
 - **Artifacts reviewed**: intake.md? yes | research.md? yes | problem.md? yes | concept.md? yes
 
+> **Historical note**: this document predates the removal of `absolute_path_jsonfile_contract` and `enable_json_entity_contracts` from the catalog (34 → 32 flags). They have no current equivalent; the contract path is now emitted by the inference mechanism into `entity_contract_file_path`.
+
 ## Scorecard
 
 | Criterion | Rating | Justification |

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-32-ENABLE_LOMBOK_SUPPORT.XML _____________________ -->
+<!-- FLAG: enable_lombok_support -->
+<!--   DESCRIPTION : Habilita o uso de Lombok (anotacoes para reduzir boilerplate). -->
+<!--   PROMPT      : Enable 'Lombok Support' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_lombok_support">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

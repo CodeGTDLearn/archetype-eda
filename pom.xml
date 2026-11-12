@@ -37,7 +37,6 @@
         <directory>src/main/resources</directory>
         <excludes>
           <exclude>META-INF/maven/archetype-metadata.xml</exclude>
-        <exclude>META-INF/archetype-post-generate.groovy</exclude>
         </excludes>
       </resource>
     </resources>
@@ -59,6 +58,17 @@
           <includes>
             <include>**/*Test.java</include>
           </includes>
+          <!--
+            The archetype integration run copies WHOLE generated projects into
+            target/test-classes/projects (each one carrying its own target/).
+            Those nested classes are not ours: without this exclude surefire
+            scans them and dies with "wrong name: it/pkg/..." before any suite
+            runs. Kept here (and not as a "mvn clean" ritual) so a dirty target
+            can never mask the real test result.
+          -->
+          <excludes>
+            <exclude>projects/**</exclude>
+          </excludes>
         </configuration>
       </plugin>
       <plugin>

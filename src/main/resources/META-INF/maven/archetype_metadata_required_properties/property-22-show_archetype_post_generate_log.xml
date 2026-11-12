@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-22-SHOW_ARCHETYPE_POST_GENERATE_LOG.XML __________ -->
+<!-- FLAG: show_archetype_post_generate_log -->
+<!--   DESCRIPTION : Exibe o log detalhado da pos-geracao (archetype-post-generate.groovy) -->
+<!--                 durante a geracao do projeto. -->
+<!--   PROMPT      : Show 'Archetype Post Generate Log' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : nao aplicavel -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="show_archetype_post_generate_log">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

@@ -35,20 +35,29 @@ def mkEntry = { String k, String d, String r ->
 def cacheKeyFactory = cacheKeyFactoryClass.newInstance(canonicalizerClass.newInstance())
 
 // ----------------------------------------------------------------------
-// 1) cache key embeds the catalog fingerprint -> a catalog change
-//    invalidates every previously cached command line
+// 1) cache key embeds the catalog fingerprint and the materialized contract
+//    path -> a catalog change or a contract-dir change invalidates it
 // ----------------------------------------------------------------------
 String fpA = "a" * 64
 String fpB = "b" * 64
-String keyStable1 = (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA)
-String keyStable2 = (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA)
-String keyOtherCatalog = (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpB)
+String contractPathA = "C:/tmp/contracts/a.json"
+String contractPathB = "C:/tmp/contracts/b.json"
+String keyStable1 = (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA, contractPathA)
+String keyStable2 = (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA, contractPathA)
+String keyOtherCatalog = (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpB, contractPathA)
 
 check("1.1 cache key is deterministic for the same inputs", keyStable1 == keyStable2)
 check("1.2 cache key changes when the catalog fingerprint changes",
     keyStable1 != keyOtherCatalog)
 check("1.3 legacy key (no fingerprint) is NOT reachable",
-    keyStable1 != (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", ""))
+    keyStable1 != (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", "", contractPathA))
+check("1.4 cache key changes when the materialized contract path changes",
+    keyStable1 != (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA, contractPathB))
+check("1.5 a null materialized contract path is distinct from a real path",
+    keyStable1 != (String) cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA, null))
+check("1.6 a null materialized contract path is deterministic",
+    cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA, null) ==
+        cacheKeyFactory.makeKey("desc", "{\"k\":1}", fpA, null))
 
 // fingerprint: same catalog -> same digest; different catalog -> different digest
 def catA = new LinkedHashMap()
@@ -57,11 +66,11 @@ def catB = new LinkedHashMap()
 catB.put("api_port", mkEntry("api_port", "9090", "\\d{1,5}"))
 def catC = new LinkedHashMap()
 catC.put("api_port", mkEntry("api_port", "8080", "\\d{1,5}"))
-check("1.4 fingerprint is stable for the same catalog",
+check("1.7 fingerprint is stable for the same catalog",
     cacheKeyFactory.fingerprint(catA) == cacheKeyFactory.fingerprint(catC))
-check("1.5 fingerprint changes when a defaultValue changes",
+check("1.8 fingerprint changes when a defaultValue changes",
     cacheKeyFactory.fingerprint(catA) != cacheKeyFactory.fingerprint(catB))
-check("1.6 fingerprint is a sha256 hex digest",
+check("1.9 fingerprint is a sha256 hex digest",
     ((String) cacheKeyFactory.fingerprint(catA)) ==~ /^[0-9a-f]{64}$/)
 
 println ""

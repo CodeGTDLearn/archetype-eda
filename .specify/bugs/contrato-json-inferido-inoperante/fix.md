@@ -5,6 +5,8 @@
 - **Assessment**: ./assessment.md
 - **Status**: applied
 
+> **Status**: documento histórico. As flags `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` foram removidas do catálogo (34 → 32) e não têm equivalente atual; o caminho do contrato passou a ser emitido pelo mecanismo de inferência em `entity_contract_file_path`.
+
 ## Summary
 
 O contrato JSON que o operador entrega no prompt deixou de ser **inerte** e passou a **dirigir a entidade
@@ -19,21 +21,21 @@ segunda invocação sair com exit 1 — foi corrigido (parser JSON em vez de reg
 
 | File | Change | Notes |
 |------|--------|-------|
-| `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy` | modified | Deriva a entidade do contrato (FR-021/FR-022); *allowlist* do FR-009 para `entity_name`; nova fonte de proveniência `CONTRACT_DERIVED`; materializa o contrato em disco e emite `-Dentity_contract_path` (FR-023); guarda de chaves secret-like; `cacheLookup` passa a parsear JSON (corrige o `StackOverflowError`); novo argumento `--contract-dir`. |
+| `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy` | modified | Deriva a entidade do contrato (FR-021/FR-022); *allowlist* do FR-009 para `entity_name`; nova fonte de proveniência `CONTRACT_DERIVED`; materializa o contrato em disco e emite `-Dentity_contract_file_path` (FR-023); guarda de chaves secret-like; `cacheLookup` passa a parsear JSON (corrige o `StackOverflowError`); novo argumento `--contract-dir`. |
 | `src/main/pre-processamento-maven-flags-via-llm/FlagProposalMerger.groovy` | modified | Espelho exato da lógica acima no módulo unit-testável (o `Orchestrator` precisa ser auto-contido). A paridade é assegurada por teste. |
-| `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` | modified | Nova flag `entity_contract_path` (default `none`, regex `^(none\|[^\r\n]*\.json)$`). Catálogo: 32 → **33** flags. |
+| `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` | modified | Nova flag `entity_contract_file_path` (default `none`, regex `^(none\|[^\r\n]*\.json)$`). Catálogo: 32 → **33** flags. |
 | `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-entity-contract.groovy` | added | Copia o contrato para `src/test/resources/contracts/contract.json` **guardado por `enable_folder_src_test_java`**; caminho absoluto ou relativo (resolvido contra o CWD e contra a raiz do projeto, subindo níveis); arquivo ausente ⇒ aviso, nunca quebra a geração. |
 | `scripts/inference-stub.sh` | modified | O stub passa a **derivar a entidade do contrato** (nome + lista de atributos), exercitando o caminho ponta a ponta sem LLM real. |
-| `src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy` | added test | 38 checks: derivação (mapa/lista/campos de negócio), tipo por valor, tipo declarado, restrição `java.lang`, formato estrito, `enable_custom_attributes` forçado, precedências, *allowlist*, **paridade Orchestrator × FlagProposalMerger**, materialização determinística. |
+| `src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy` | added test | 38 checks: derivação (mapa/lista/campos de negócio), tipo por valor, tipo declarado, restrição `java.lang`, formato estrito, `enable_custom_entity_attributes` forçado, precedências, *allowlist*, **paridade Orchestrator × FlagProposalMerger**, materialização determinística. |
 | `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` | modified | Sumário do relatório passa a contar `CONTRACT_DERIVED`; nova seção 5: regressão do `StackOverflowError` (relatório realista > 1900 chars) e linha corrompida não fatal. |
 | `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` | modified | Cenário E: *allowlist* do FR-009 (proposta aceita **não** aparece como descartada); flag fora da *allowlist* continua descartada. |
-| `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | modified | Lock do catálogo: 32 → **33** flags; checks do `entity_contract_path` (default não-vazio, default válida, aceita `.json`, rejeita o resto). |
-| `src/test/resources/projects/entity-contract/*` | added | Perfil de IT: contrato com `entityName` + `attributes` (valores), `enable_folder_src_test_java=true`, `entity_contract_path` apontando para o contrato. `verify.groovy` exige: (1) o contrato existe em `src/test/resources/contracts/contract.json`; (2) conteúdo **byte a byte** igual ao contrato fonte; (3) a entidade gerada corresponde ao contrato. |
-| `src/test/resources/projects/custom-attributes/archetype.properties` | modified | Passa a oferecer `entity_contract_path` — este perfil mantém `enable_folder_src_test_java=false` e passa a ser o **caso negativo** da persistência. |
+| `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | modified | Lock do catálogo: 32 → **33** flags; checks do `entity_contract_file_path` (default não-vazio, default válida, aceita `.json`, rejeita o resto). |
+| `src/test/resources/projects/entity-contract/*` | added | Perfil de IT: contrato com `entityName` + `attributes` (valores), `enable_folder_src_test_java=true`, `entity_contract_file_path` apontando para o contrato. `verify.groovy` exige: (1) o contrato existe em `src/test/resources/contracts/contract.json`; (2) conteúdo **byte a byte** igual ao contrato fonte; (3) a entidade gerada corresponde ao contrato. |
+| `src/test/resources/projects/custom-attributes/archetype.properties` | modified | Passa a oferecer `entity_contract_file_path` — este perfil mantém `enable_folder_src_test_java=false` e passa a ser o **caso negativo** da persistência. |
 | `src/test/resources/projects/custom-attributes/verify.groovy` | modified | Asserção negativa: a pasta `src/test/resources/contracts/` **não** pode existir com `enable_folder_src_test_java=false`. |
 | `specs/003-llm-flag-inference/spec.md` | modified | FR-009 emendada (*allowlist*); **FR-017 emendada** (exceção do módulo gerado + regra "sem credenciais"); FR-020 emendada (fonte `CONTRACT_DERIVED` + novo formato do sumário); **FR-021** (derivação da entidade), **FR-022** (pacote acompanha a entidade), **FR-023** (persistência do contrato); Key Entities e Princípio V atualizados. |
 | `specs/003-llm-flag-inference/contracts/cli-contract.md` | modified | §1: novo `--contract-dir`; §1: aviso de chaves secret-like; §2: papel do script (estimar `entity_name`; a lista de atributos é do mecanismo); §3: parser do cache; §5: *breaking changes* (33 flags, semântica do FR-009, sumário, parser, FR-017). |
-| `README.md` | modified | §2 Domínio reescrito (derivação real de `entity_name_package`, `entity_contract_path`); §10 (consequência da pasta de contratos); grafo de dependências; seção "campos de negócio vs. chaves de flag" (campos de negócio **viram atributos**); lista de fixtures e `verify.groovy` corrigidas (`json-contract/` → `custom-attributes/` + `entity-contract/`). |
+| `README.md` | modified | §2 Domínio reescrito (derivação real de `entity_package_name`, `entity_contract_file_path`); §10 (consequência da pasta de contratos); grafo de dependências; seção "campos de negócio vs. chaves de flag" (campos de negócio **viram atributos**); lista de fixtures e `verify.groovy` corrigidas (`json-contract/` → `custom-attributes/` + `entity-contract/`). |
 
 ## Diff Highlights
 
@@ -41,7 +43,7 @@ Derivção determinística da entidade (Orchestrator e FlagProposalMerger):
 
 ```groovy
 // Step 3: entity semantics derived from the contract
-case "custom_attributes_list":
+case "custom_entity_attributes_list":
     if (!(derived.get("attributes") as List).isEmpty()) {
         value = (String) derived.get("attributeList")
         source = "CONTRACT_DERIVED"
@@ -62,7 +64,7 @@ Canal de persistência (o contrato chega ao módulo gerado):
 ```groovy
 // FR-021: materializado ANTES da consulta de cache (o cache HIT também precisa do arquivo)
 String contractFilePath = materializeContract(contractDir, canonicalContract, contractJson)
-derivedOverrides.put("entity_contract_path", contractFilePath)
+derivedOverrides.put("entity_contract_file_path", contractFilePath)
 ```
 
 Parser do cache (corrige o `StackOverflowError`):
@@ -78,7 +80,7 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
   * tipo estimado pelo valor (`Integer`/`Long`/`Double`/`Boolean`/`String`);
   * tipo declarado tem precedência; tipo fora de `java.lang` é rejeitado **com aviso**;
   * formato estrito `Tipo:nome,…` validado contra a regex do catálogo;
-  * `enable_custom_attributes` forçado a `true`; pacote acompanha a entidade;
+  * `enable_custom_entity_attributes` forçado a `true`; pacote acompanha a entidade;
   * explicit contract value vence a derivação;
   * *allowlist*: `entity_name` aceito e **não** listado como descartado; flag fora da *allowlist* continua descartada;
   * **paridade** Orchestrator × FlagProposalMerger (6 cenários);
@@ -87,7 +89,7 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
   (regressão do `StackOverflowError` com relatório realista; linha corrompida não invalida o cache).
 - `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` — cenário E (*allowlist* do FR-009).
 - `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` — lock de 33 flags + checks do
-  `entity_contract_path`.
+  `entity_contract_file_path`.
 - `src/test/resources/projects/entity-contract/verify.groovy` — **novo**: contrato persistido, byte a byte, e
   entidade correspondente ao contrato.
 - `src/test/resources/projects/custom-attributes/verify.groovy` — caso negativo: sem pasta de contratos.
@@ -95,21 +97,21 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
 ## Local Verification
 
 - `mvn -o clean install integration-test` → **BUILD SUCCESS**, exit 0 — 23 `BUILD SUCCESS`, 0 `BUILD FAILURE`;
-  11 fixtures: `basic`, `binding-default-only`, `binding-list-only`, `binding-map-only`,
-  `binding-mutable-only`, `binding-validated-only`, `custom-attributes`, `defaults-only`, **`entity-contract`**,
+  11 fixtures: `basic`, `external-binding-default-only`, `external-binding-list-only`, `external-binding-map-only`,
+  `external-binding-mutable-only`, `external-binding-validated-only`, `custom-attributes`, `defaults-only`, **`entity-contract`**,
   `full`, `minimal`.
 - `groovy src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy` → `ALL CHECKS PASSED` (exit 0).
 - `groovy src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` → `ALL CHECKS PASSED` (exit 0).
 - `groovy src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy` → `ALL CHECKS PASSED` (exit 0).
 - `groovy src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` → `ALL CHECKS PASSED` (exit 0).
 - Mecanismo ponta a ponta (contrato de domínio, cache limpo):
-  * 1ª invocação: exit 0, `-Dentity_name=ContractEntity -Dentity_name_package=contractentity
-    -Denable_custom_attributes=true -Dcustom_attributes_list=Long:id,String:name,String:createdAt
-    -Dentity_contract_path=<cache>/contracts/<sha256>.json`;
+  * 1ª invocação: exit 0, `-Dentity_name=ContractEntity -Dentity_package_name=contractentity
+    -Denable_custom_entity_attributes=true -Dcustom_entity_attributes_list=Long:id,String:name,String:createdAt
+    -Dentity_contract_file_path=<cache>/contracts/<sha256>.json`;
   * relatório: `1 CONTRACT / 4 CONTRACT_DERIVED / 0 INFERENCE / 28 DEFAULT / 8 descartada(s)`;
   * **2ª invocação (cache HIT): exit 0** (antes: `StackOverflowError`, exit 1) e linha de comando
     **byte-idêntica** (FR-012);
-  * contrato de campos de negócio (estilo README): `custom_attributes_list=Integer:id,String:nome_cachorro,
+  * contrato de campos de negócio (estilo README): `custom_entity_attributes_list=Integer:id,String:nome_cachorro,
     String:dono,Integer:idade,Boolean:tosado`.
 - Contrato persistido verificado no projeto gerado:
   `target/test-classes/projects/entity-contract/project/entity-contract/src/test/resources/contracts/contract.json`
@@ -126,7 +128,7 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
    e registrada: a **FR-017 foi emendada** (exceção do módulo gerado) e o Princípio V foi revisto — com uma
    **guarda de chaves secret-like** no mecanismo (aviso em stderr, nunca no relatório de proveniência, para
    não violar a própria FR-017).
-2. **O canal é uma flag de catálogo com o caminho do arquivo materializado** (`entity_contract_path` +
+2. **O canal é uma flag de catálogo com o caminho do arquivo materializado** (`entity_contract_file_path` +
    `--contract-dir`), e não o JSON inline nem variável de ambiente — as três alternativas do assessment foram
    apresentadas e a **Opção 1** foi aprovada.
 3. **O contrato NÃO sobrevive à limpeza de `src/test/resources`.** O assessment propunha que ele sobrevivesse
@@ -148,7 +150,7 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
      último;
    * lista malformada ⇒ **falha ruidosa** (aviso em stderr + nota no relatório), sem exit ≠ 0 (o FR-010
      exige sempre uma linha de comando);
-   * `entity_name_package` ⇒ derivado do `entity_name` (o campo `package` do contrato é um pacote completo e
+   * `entity_package_name` ⇒ derivado do `entity_name` (o campo `package` do contrato é um pacote completo e
      causaria dupla prefixação);
    * `cacheLookup` ⇒ corrigido **neste** bug (é pré-requisito para validar o resto).
 7. **Fora do escopo, por decisão do maintainer (D3):** o *teste de esquema* que roda **dentro do projeto
@@ -189,7 +191,7 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
 - **`specs/003-llm-flag-inference/data-model.md` está defasado** (a chave do cache já carrega o *fingerprint*
   do catálogo desde o bug irmão, a entrada tem o campo `r` e agora há a entidade "Materialized Contract").
   Não foi tocado por estar fora da lista de arquivos do assessment.
-- **A linha de comando passou a ser específica da máquina**: `-Dentity_contract_path=<caminho local>`. É
+- **A linha de comando passou a ser específica da máquina**: `-Dentity_contract_file_path=<caminho local>`. É
   determinístico (mesmo contrato ⇒ mesmo caminho) e byte-idêntico entre invocações, mas deixa de ser portátil
   entre máquinas. Se isso incomodar, a alternativa é reemitir a linha sem a flag e passar o contrato por
   `EDA_ENTITY_CONTRACT_PATH` (variável de ambiente) — decisão de produto, não de implementação.
@@ -200,6 +202,6 @@ Object obj = new JsonSlurper().parseText(line)   // era um regex recursivo -> Pa
 - **Vazamento pré-existente (não corrigido):** a seção "Propostas do LLM descartadas" do relatório persiste
   no cache valores derivados do contrato (ex.: `ContractEntity`). O relatório em si não carrega campos do
   contrato fora do catálogo, mas valores propostos pela LLM a partir do contrato ficam no disco do cache.
-- **Defeito pré-existente, ainda exposto:** com `enable_custom_attributes=true`, o template não renderiza o
+- **Defeito pré-existente, ainda exposto:** com `enable_custom_entity_attributes=true`, o template não renderiza o
   bloco `@Id`/`@GeneratedValue` — a entidade gerada fica sem `@Id`, salvo se `id` estiver entre os atributos
   (e mesmo assim, sem a anotação). Fora do escopo deste bug, mas a derivação amplia a exposição.

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-08-BASE-MAVEN-WRAPPER.XML _____________________________ -->
+<!-- MAVEN WRAPPER -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>.mvn/wrapper</directory>
+    <includes>
+        <include>**/*.properties</include>
+    </includes>
+</fileSet>

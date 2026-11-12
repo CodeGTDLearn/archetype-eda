@@ -5,9 +5,9 @@
 import java.nio.file.Path
 
 def body = new File("src/main/resources/META-INF/archetype_post_generate_body")
-def files = ["archetype-global-variables.groovy", "archetype-path-root-variables.groovy",
-             "archetype-path-src-main-variables.groovy", "archetype-path-src-test-variables.groovy",
-             "archetype-path-logback-variables.groovy", "archetype-path-security-variables.groovy"]
+def files = ["body-03-logging-variables.groovy", "body-04-global-variables.groovy", "body-05-path-root-variables.groovy",
+             "body-06-path-src-main-variables.groovy", "body-07-path-src-test-variables.groovy",
+             "body-08-path-logback-variables.groovy", "body-09-path-security-variables.groovy"]
 def source = files.collect { new File(body, it).getText("UTF-8") }.join("\n")
 
 int failures = 0
@@ -17,7 +17,7 @@ def root = File.createTempDir("body-vars-", ""); root.deleteOnExit()
 def properties = new Properties()
 properties.put("package", "it.pkg")
 properties.put("entity_name", "MyEntity")
-properties.put("entity_name_package", "myentity")
+properties.put("entity_package_name", "myentity")
 
 def binding = new Binding()
 binding.setVariable("request", [outputDirectory: root.parentFile.absolutePath, artifactId: root.name])
@@ -26,7 +26,7 @@ def names = ["projectRootFolder", "srcMainJava", "srcMainJavaEntityFolder", "src
              "srcMainResourcesProperties", "srcTestJava", "srcTestResources",
              "srcTestJavaEntityConfigPropertiesFolder", "filePathAppKey", "filePathAppPub",
              "folderJwtPath", "logbackAppenderSmtpPathFile", "logbackAppenderRolFilePathFile",
-             "rootGitIgnoreFile", "rootGitFolder", "rootDockerFolder", "rootELKFolder"]
+             "rootGitIgnoreFile", "rootGitFolder", "rootDockerFolder", "rootELKFolder", "log_text"]
 def capture = "captured = [" + names.collect { "${it}: ${it}" }.join(", ") + "]"
 new GroovyShell(binding).evaluate(source + "\n" + capture)
 def p = (Map) binding.getVariable("captured")
@@ -51,6 +51,8 @@ check("1.14 rootGitIgnoreFile points to the generated 'gitignore'", eq("rootGitI
 check("1.15 rootGitFolder", eq("rootGitFolder", "${root.absolutePath}/git_temp"))
 check("1.16 rootDockerFolder", eq("rootDockerFolder", "${root.absolutePath}/docker"))
 check("1.17 rootELKFolder", eq("rootELKFolder", "${root.absolutePath}/ELK"))
+check("1.18 the log buffer starts with the post-processor header",
+        p["log_text"]?.toString()?.contains("ARCHETYPE-POST-GENERATE LOG:  STARTING"))
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

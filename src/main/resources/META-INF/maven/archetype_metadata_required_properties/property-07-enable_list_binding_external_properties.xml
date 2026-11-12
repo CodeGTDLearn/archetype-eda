@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PROPERTY-07-ENABLE_LIST_BINDING_EXTERNAL_PROPERTIES.XML ____________ -->
+<!-- FLAG: enable_list_binding_external_properties -->
+<!--   DESCRIPTION : Habilita o sub-modulo list (carrega lista de arquivos .properties). -->
+<!--   PROMPT      : Enable 'List Binding External Properties' -->
+<!--   TYPE        : boolean -->
+<!--   DEFAULT     : false -->
+<!--   DOMAIN      : true | false -->
+<!--   DEPENDS_ON  : enable_binding_external_properties = true -->
+<!--   VALIDATION  : ^(true|false)$ -->
+<requiredProperty key="enable_list_binding_external_properties">
+    <defaultValue>false</defaultValue>
+    <validationRegex>^(true|false)$</validationRegex>
+</requiredProperty>

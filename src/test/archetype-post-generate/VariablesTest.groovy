@@ -1,93 +1,91 @@
 /**
- * Unit test for every post-processor VARIABLES file (11/11).
- * Each variable file maps archetype properties to the locals the snippets
- * consume; a missing property must become the string "null".
+ * Unit test for every post-processor VARIABLES file.
+ *
+ * The suite is DERIVED from the directory: every `variables-NN-<flag>.groovy`
+ * must bind the catalog flag of the same name to the local of the same name,
+ * and a missing property must become the string "null" (the convention the
+ * snippets rely on). There is no hard-coded count: adding a flag only requires
+ * adding the fragment.
+ *
+ * Run from repo root:
+ *   groovy src/test/archetype-post-generate/VariablesTest.groovy
+ * (also executed by the build - see src/test/groovy/run-archetype-post-generate-tests.groovy)
  */
 def dir = new File("src/main/resources/META-INF/archetype_post_generate_variables")
+def metadata = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 
 int failures = 0
 def check = { String n, boolean c -> if (c) { println "PASS: ${n}" } else { println "FAIL: ${n}"; failures++ } }
 
-def capture = { String fileName, Map<String, String> props, List<String> names ->
-    def source = new File(dir, fileName).getText("UTF-8")
+def catalog = new HashSet<String>()
+if (metadata.isFile()) {
+    (metadata.getText("UTF-8") =~ /<requiredProperty\s+key="([^"]+)"/).each { m -> catalog << m[1] }
+}
+check("0.1 the built catalog exists", metadata.isFile())
+
+def files = dir.listFiles().findAll { it.isFile() && it.name.endsWith(".groovy") }.sort { it.name }
+check("0.2 there is at least one variable fragment", !files.isEmpty())
+
+def NAMING = ~/^variables-(\d{2})-([a-z][a-z0-9_]*)\.groovy$/
+def flagOf = { File f ->
+    def m = NAMING.matcher(f.name)
+    return m.matches() ? m.group(2) : null
+}
+
+check("0.3 every variable file follows variables-NN-<flag>.groovy: " +
+        files.findAll { flagOf(it) == null }*.name,
+        files.every { flagOf(it) != null })
+
+def notInCatalog = files.findAll { flagOf(it) != null && !catalog.contains(flagOf(it)) }
+check("0.4 every variable flag is declared in the catalog: ${notInCatalog*.name}", notInCatalog.isEmpty())
+
+// The file must bind the local of the SAME name and read properties?.<flag>.
+def badBinding = files.findAll { File f ->
+    String flag = flagOf(f)
+    if (flag == null) return false
+    String text = f.getText("UTF-8")
+    return !text.contains("def ${flag} = \"\${properties?.${flag}}\"")
+}
+check("0.5 every variable binds its flag to the local of the same name: ${badBinding*.name}",
+        badBinding.isEmpty())
+
+// ---------------------------------------------------------------------------
+// 1) Values are mapped, and a missing property becomes the string "null"
+// ---------------------------------------------------------------------------
+def evaluate = { File f, String flag, Map<String, String> props ->
     def properties = new Properties()
     props.each { k, v -> properties.put(k, v) }
     def binding = new Binding()
     binding.setVariable("properties", properties)
-    def captureScript = "captured = [" + names.collect { "${it}: ${it}" }.join(", ") + "]"
-    new GroovyShell(binding).evaluate(source + "\n" + captureScript)
+    def captureScript = "captured = [${flag}: ${flag}]"
+    new GroovyShell(binding).evaluate(f.getText("UTF-8") + "\n" + captureScript)
     return (Map) binding.getVariable("captured")
 }
 
-check("0.1 all 11 variable files exist",
-        dir.listFiles().findAll { it.name.endsWith(".groovy") }.size() == 11)
+def unmapped = []
+def notNulled = []
+files.each { File f ->
+    String flag = flagOf(f)
+    if (flag == null) return
 
-// 1) authentication
-def auth = capture("variables-authentication.groovy", [enable_jwt_authentication: "true"], ["keep_jwt_authentication"])
-check("1.1 authentication maps enable_jwt_authentication", auth.keep_jwt_authentication == "true")
-check("1.2 authentication missing property -> 'null'",
-        capture("variables-authentication.groovy", [:], ["keep_jwt_authentication"]).keep_jwt_authentication == "null")
+    def mapped = evaluate(f, flag, [(flag): "sample-${flag}"])
+    if (mapped[flag] != "sample-${flag}") unmapped << f.name
 
-// 2) binding properties
-def binding = capture("variables-binding-properties.groovy",
-        [enable_binding_properties: "true", map_binding_properties: "true", list_binding_properties: "false",
-         default_binding_properties: "true", mutable_binding_properties: "2", validated_binding_properties: "true"],
-        ["keep_binding_properties", "keep_map_binding_properties", "keep_list_binding_properties",
-         "keep_default_binding_properties", "mutable_binding_properties_choice", "keep_validated_binding_properties"])
-check("2.1 binding maps every sub-flag",
-        binding.keep_binding_properties == "true" && binding.keep_map_binding_properties == "true" &&
-                binding.keep_list_binding_properties == "false" && binding.keep_default_binding_properties == "true" &&
-                binding.mutable_binding_properties_choice == "2" && binding.keep_validated_binding_properties == "true")
+    def missing = evaluate(f, flag, [:])
+    if (missing[flag] != "null") notNulled << f.name
+}
+check("1.1 every variable maps its flag value: ${unmapped}", unmapped.isEmpty())
+check("1.2 a missing property becomes the string 'null': ${notNulled}", notNulled.isEmpty())
 
-// 3) binding properties tests
-def bindingTests = capture("variables-binding-properties-test.groovy",
-        [enable_binding_properties_tests: "true"], ["keep_binding_properties_tests"])
-check("3.1 binding-tests maps enable_binding_properties_tests", bindingTests.keep_binding_properties_tests == "true")
+// ---------------------------------------------------------------------------
+// 2) One fragment per flag: no duplicates, no gaps in the sequence
+// ---------------------------------------------------------------------------
+def flags = files.collect { flagOf(it) }.findAll { it != null }
+check("2.1 no duplicated flag across variable fragments", flags.size() == flags.toSet().size())
 
-// 4) cpanel
-def cpanel = capture("variables-cpanel.groovy", [enable_api_cpanel_elk_log_system: "true"], ["keep_cpanel_elk_log_system"])
-check("4.1 cpanel maps enable_api_cpanel_elk_log_system", cpanel.keep_cpanel_elk_log_system == "true")
-check("4.2 cpanel missing property -> 'null'",
-        capture("variables-cpanel.groovy", [:], ["keep_cpanel_elk_log_system"]).keep_cpanel_elk_log_system == "null")
-
-// 5) custom types (already covered by VariablesCustomTypesTest; kept here for 11/11)
-def custom = capture("variables-custom-types.groovy",
-        [custom_attribute_imports: "a.B", custom_enum_definitions: "T:X", entity_name_package: "pkg"],
-        ["custom_attribute_imports_value", "custom_enum_definitions_value", "entity_name_package_value"])
-check("5.1 custom types maps the three contract channels",
-        custom.custom_attribute_imports_value == "a.B" && custom.custom_enum_definitions_value == "T:X" &&
-                custom.entity_name_package_value == "pkg")
-
-// 6) docker
-def docker = capture("variables-docker.groovy", [enable_docker: "true"], ["keep_docker"])
-check("6.1 docker maps enable_docker", docker.keep_docker == "true")
-
-// 7) extra pom dependencies
-def extra = capture("variables-extra-pom-dependencies.groovy", [extra_POM_dependencies: "a:b:1"], ["extra_POM_dependencies"])
-check("7.1 extra pom dependencies are passed through", extra.extra_POM_dependencies == "a:b:1")
-
-// 8) github
-def github = capture("variables-github.groovy", [enable_git_support: "true"], ["keep_git_support"])
-check("8.1 github maps enable_git_support", github.keep_git_support == "true")
-
-// 9) logback
-def logback = capture("variables-logback.groovy",
-        [enable_logback: "true", logback_console_type: "3",
-         enable_logback_appender_smtp: "true", enable_logback_appender_file: "false"],
-        ["keep_logback", "console_type", "keep_appender_smtp", "keep_appender_file"])
-check("9.1 logback maps the four sub-flags",
-        logback.keep_logback == "true" && logback.console_type == "3" &&
-                logback.keep_appender_smtp == "true" && logback.keep_appender_file == "false")
-
-// 10) properties filetype
-def filetype = capture("variables-properties-filetype.groovy", [properties_filetype: "2"], ["properties_filetype_choice"])
-check("10.1 filetype maps properties_filetype", filetype.properties_filetype_choice == "2")
-
-// 11) src test java
-def srcTest = capture("variables-src-test-java.groovy", [enable_folder_src_test_java: "true"], ["keep_src_test_java"])
-check("11.1 src-test-java maps enable_folder_src_test_java", srcTest.keep_src_test_java == "true")
-check("11.2 src-test-java missing property -> 'null'",
-        capture("variables-src-test-java.groovy", [:], ["keep_src_test_java"]).keep_src_test_java == "null")
+def numbers = files.findAll { flagOf(it) != null }.collect { (it.name =~ NAMING)[0][1] as int }.sort()
+check("2.2 the NN sequence is strictly increasing and unique",
+        numbers == numbers.toSet().sort() && numbers.every { it >= 2 && it <= 36 })
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

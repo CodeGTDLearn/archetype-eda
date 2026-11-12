@@ -39,7 +39,7 @@ O `archetype-post-generate.groovy` é hoje composto, em build-time, por concaten
 - [NEEDS CLARIFICATION: A topologia atual (imports/defs globais no topo, snippets intermediários, helpers no rodapé) pode ser repensada desde que a ordem obrigatória dos snippets seja preservada.]
 - [NEEDS CLARIFICATION: Os snippets compartilham estado via Groovy (defs globais, helpers `deleteFile`/`deleteFolder`/`copyFile`/etc.). A estratégia deve preservar esse compartilhamento.]
 - [NEEDS CLARIFICATION: O usuário aceita a estratégia mais simples, "1 arquivo consolidado gerado uma vez e congelado", desde que seja nativa Groovy.]
-- [NEEDS CLARIFICATION: O ciclo de testes IT (`mvn clean install` + `mvn integration-test` nos 9 perfis `basic`, `full`, `minimal`, `binding-default-only`, `binding-list-only`, `binding-map-only`, `binding-mutable-only`, `binding-validated-only`, `json-contract`) deve continuar passando. Idealmente, a invocação do composer deve ser movida para uma fase do archetype principal (anterior ao `integration-test`) para que os testes herdem o arquivo já montado.]
+- [NEEDS CLARIFICATION: O ciclo de testes IT (`mvn clean install` + `mvn integration-test` nos 9 perfis `basic`, `full`, `minimal`, `external-binding-default-only`, `external-binding-list-only`, `external-binding-map-only`, `external-binding-mutable-only`, `external-binding-validated-only`, `json-contract`) deve continuar passando. Idealmente, a invocação do composer deve ser movida para uma fase do archetype principal (anterior ao `integration-test`) para que os testes herdem o arquivo já montado.]
 
 ## Decisions Captured (during intake conversation)
 

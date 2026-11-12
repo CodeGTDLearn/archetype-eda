@@ -13,7 +13,7 @@
 - **Trade-offs**:
   - Wins: zero código novo no archetype; entra em uso no mesmo dia; serve como linha de base para medir o que se ganha com B.
   - Sacrifícios: nenhum catálogo de flags; se a LLM alucinar uma flag inválida (ex.: `enable_jwt=false` em vez de `enable_jwt_authentication=false`), o `mvn archetype:generate` falha em runtime com mensagem confusa; sem reprodutibilidade byte-a-byte (mesma descrição pode gerar comandos diferentes entre execuções se a temperatura não for fixada); o custo de tokens é pago a cada invocação sem mitigação automatizada.
-  - Riscos principais: alucinação de flags inexistentes em `archetype-metadata.xml`; alucinação de tipos (ex.: `mutable_binding_properties=2`, que casa `number` mas fura o `validationRegex ^(false|([1-3]))$`); aplicação de valor inválido para campos validados sem aviso.
+  - Riscos principais: alucinação de flags inexistentes em `archetype-metadata.xml`; alucinação de tipos (ex.: `binding_external_properties_mutability=2`, que casa o `TYPE` mas fura o `validationRegex ^(none|immutable|mutable)$`); aplicação de valor inválido para campos validados sem aviso.
 - **Rabbit holes**:
   - Definir o prompt template e suas guard-rails contra alucinação, o que naturalmente leva a embutir o catálogo de flags no prompt — isso é o que B resolve estruturalmente.
   - Decidir a precedência entre descrição textual e JSON contrato (B responde com o validador; A responde com texto livre no prompt).

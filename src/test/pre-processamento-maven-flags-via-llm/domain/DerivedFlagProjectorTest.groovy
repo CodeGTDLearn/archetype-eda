@@ -14,45 +14,45 @@ int failures = 0
 def check = { String n, boolean c -> if (c) { println "PASS: ${n}" } else { println "FAIL: ${n}"; failures++ } }
 
 def catalog = [
-        custom_attribute_imports: entryClass.newInstance('custom_attribute_imports', 'none', '^.*$', ''),
-        custom_enum_definitions : entryClass.newInstance('custom_enum_definitions', 'none', '^.*$', '')
+        custom_entity_attribute_imports: entryClass.newInstance('custom_entity_attribute_imports', 'none', '^.*$', ''),
+        contract_enum_definitions : entryClass.newInstance('contract_enum_definitions', 'none', '^.*$', '')
 ]
 def fresh = { details ->
-    [values: [custom_attribute_imports: 'none', custom_enum_definitions: 'none'],
+    [values: [custom_entity_attribute_imports: 'none', contract_enum_definitions: 'none'],
      sources: [:], notes: [:], warnings: [], diagnostics: [],
      derived: [attributeDetails: details, warnings: []]]
 }
 
 def s1 = fresh([[projectType: true, qualifiedType: 'br.com.StatusPedido', type: 'StatusPedido', enumType: true, enumConstants: ['ATIVO']]])
 projector.apply(s1.values, s1.sources, s1.notes, catalog, s1.derived, s1.diagnostics)
-check("1.1 the qualified import is projected", s1.values.custom_attribute_imports == 'br.com.StatusPedido')
+check("1.1 the qualified import is projected", s1.values.custom_entity_attribute_imports == 'br.com.StatusPedido')
 check("1.2 the enum definition is projected",
-        s1.values.custom_enum_definitions == 'br.com.StatusPedido:ATIVO')
+        s1.values.contract_enum_definitions == 'br.com.StatusPedido:ATIVO')
 check("1.3 both flags carry CONTRACT_DERIVED provenance",
-        s1.sources.custom_attribute_imports == 'CONTRACT_DERIVED' &&
-                s1.sources.custom_enum_definitions == 'CONTRACT_DERIVED')
+        s1.sources.custom_entity_attribute_imports == 'CONTRACT_DERIVED' &&
+                s1.sources.contract_enum_definitions == 'CONTRACT_DERIVED')
 
 def s2 = fresh([])
 projector.apply(s2.values, s2.sources, s2.notes, catalog, s2.derived, s2.diagnostics)
 check("2.1 no attribute details leaves the flags unchanged",
-        s2.values.custom_attribute_imports == 'none' && s2.sources.isEmpty())
+        s2.values.custom_entity_attribute_imports == 'none' && s2.sources.isEmpty())
 
 def s3 = fresh([[projectType: true, qualifiedType: 'br.com.StatusPedido', type: 'StatusPedido', enumType: true, enumConstants: ['ATIVO']]])
-s3.values.custom_enum_definitions = 'X:Y'
-s3.sources.custom_enum_definitions = 'CONTRACT'
+s3.values.contract_enum_definitions = 'X:Y'
+s3.sources.contract_enum_definitions = 'CONTRACT'
 projector.apply(s3.values, s3.sources, s3.notes, catalog, s3.derived, s3.diagnostics)
-check("3.1 an explicit CONTRACT value wins over the derived value", s3.values.custom_enum_definitions == 'X:Y')
+check("3.1 an explicit CONTRACT value wins over the derived value", s3.values.contract_enum_definitions == 'X:Y')
 
 def strictCatalog = [
-        custom_attribute_imports: entryClass.newInstance('custom_attribute_imports', 'none', '^none$', ''),
-        custom_enum_definitions : entryClass.newInstance('custom_enum_definitions', 'none', '^none$', '')
+        custom_entity_attribute_imports: entryClass.newInstance('custom_entity_attribute_imports', 'none', '^none$', ''),
+        contract_enum_definitions : entryClass.newInstance('contract_enum_definitions', 'none', '^none$', '')
 ]
 def s4 = fresh([[projectType: true, qualifiedType: 'br.com.StatusPedido', type: 'StatusPedido', enumType: false, enumConstants: []]])
 projector.apply(s4.values, s4.sources, s4.notes, strictCatalog, s4.derived, s4.diagnostics)
 check("4.1 an invalid derived value falls back to the default (FR-006)",
-        s4.values.custom_attribute_imports == 'none' && s4.sources.custom_attribute_imports == 'DEFAULT')
+        s4.values.custom_entity_attribute_imports == 'none' && s4.sources.custom_entity_attribute_imports == 'DEFAULT')
 check("4.2 the rejection is noted and diagnosed",
-        s4.notes.custom_attribute_imports?.contains('FR-006') && !s4.diagnostics.isEmpty())
+        s4.notes.custom_entity_attribute_imports?.contains('FR-006') && !s4.diagnostics.isEmpty())
 
 def s5 = fresh([
         [projectType: true, qualifiedType: 'br.com.a.StatusPedido', type: 'StatusPedido', enumType: false, enumConstants: []],
@@ -65,7 +65,7 @@ check("5.1 two simple-name clashes produce a loud warning",
 def s6 = fresh([[projectType: false, qualifiedType: null, type: 'String', enumType: false, enumConstants: []]])
 projector.apply(s6.values, s6.sources, s6.notes, catalog, s6.derived, s6.diagnostics)
 check("6.1 non-project attributes leave both flags at 'none'",
-        s6.values.custom_attribute_imports == 'none' && s6.values.custom_enum_definitions == 'none')
+        s6.values.custom_entity_attribute_imports == 'none' && s6.values.contract_enum_definitions == 'none')
 
 def s7 = fresh([])
 s7.derived.enumTypes = [
@@ -74,11 +74,11 @@ s7.derived.enumTypes = [
 ]
 projector.apply(s7.values, s7.sources, s7.notes, catalog, s7.derived, s7.diagnostics)
 check("7.1 a payload entity enum is projected with its bare name",
-        s7.values.custom_enum_definitions == 'Status:ATIVO|CANCELADO;nested.Uf:SP|RJ')
-check("7.2 ...and no import is emitted", s7.values.custom_attribute_imports == 'none')
+        s7.values.contract_enum_definitions == 'Status:ATIVO|CANCELADO;nested.Uf:SP|RJ')
+check("7.2 ...and no import is emitted", s7.values.custom_entity_attribute_imports == 'none')
 check("7.3 ...both flags carry CONTRACT_DERIVED provenance",
-        s7.sources.custom_enum_definitions == 'CONTRACT_DERIVED' &&
-                s7.sources.custom_attribute_imports == 'CONTRACT_DERIVED')
+        s7.sources.contract_enum_definitions == 'CONTRACT_DERIVED' &&
+                s7.sources.custom_entity_attribute_imports == 'CONTRACT_DERIVED')
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

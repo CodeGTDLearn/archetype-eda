@@ -32,7 +32,7 @@ Create a curated multi-fixture integration test matrix for `com.eda-archetype:ed
 | Principle | Applicable? | Compliance | Notes |
 |-----------|-------------|------------|-------|
 | **I. Modularidade por Chave de Ativação** (NON-NEGOTIABLE) | Yes | ✅ Pass | The matrix is the explicit expression of this principle in test form: each fixture asserts that a flag does what it claims, and the `DEPENDS_ON` rule enforces that a disabled parent disables its children. |
-| **II. Convenção Fixa de Nomenclatura** (NON-NEGOTIABLE) | Yes | ✅ Pass | New fixtures follow the existing `src/test/resources/projects/<name>/archetype.properties` convention. Naming of fixture subdirectories (`minimal`, `full`, `custom-attributes`, `binding-default-only`, etc.) is consistent with the archetype's existing `archetype-` prefix discipline. |
+| **II. Convenção Fixa de Nomenclatura** (NON-NEGOTIABLE) | Yes | ✅ Pass | New fixtures follow the existing `src/test/resources/projects/<name>/archetype.properties` convention. Naming of fixture subdirectories (`minimal`, `full`, `custom-attributes`, `external-binding-default-only`, etc.) is consistent with the archetype's existing `archetype-` prefix discipline. |
 | **III. Pacote por Funcionalidade no Código Gerado** | Indirect | ✅ Pass | The matrix exercises the *generator*; it does not change the *generated* code's package layout. Generated projects continue to follow this principle; the tests simply verify the existing behavior is preserved. |
 | **IV. Binding Duplo de Configuração Externalizada** | Yes | ✅ Pass | The `binding-properties` scenario explicitly provides one fixture per sub-module (default, list, map, mutable, validated) so the immutable and mutable variants are exercised independently. This is the auditable surface for Principle IV. |
 | **V. Credenciais Nunca Entram no Repositório** | Yes | ✅ Pass | Fixtures use the same placeholder credentials already in `archetype-resources/protected_properties/*.properties` (admin_credentials, application_keys, authentication_credentials). No new credentials are introduced; the existing non-secret placeholders are reused. |
@@ -79,12 +79,12 @@ archetype-v2-eda/
 │               ├── basic/               # (existing, may be migrated to `minimal`)
 │               ├── minimal/             # NEW: all optional flags off
 │               ├── full/                # NEW: all optional flags on
-│               ├── custom-attributes/       # NEW: enable_custom_attributes + verify.groovy
-│               ├── binding-default-only/    # NEW: enable_binding_properties + default_*
-│               ├── binding-list-only/       # NEW: enable_binding_properties + list_*
-│               ├── binding-map-only/        # NEW: enable_binding_properties + map_*
-│               ├── binding-mutable-only/    # NEW: + mutable_binding_properties
-│               └── binding-validated-only/  # NEW: + validated_binding_properties
+│               ├── custom-attributes/       # NEW: enable_custom_entity_attributes + verify.groovy
+│               ├── external-binding-default-only/    # NEW: enable_binding_external_properties + default_*
+│               ├── external-binding-list-only/       # NEW: enable_binding_external_properties + list_*
+│               ├── external-binding-map-only/        # NEW: enable_binding_external_properties + map_*
+│               ├── external-binding-mutable-only/    # NEW: + binding_external_properties_mutability
+│               └── external-binding-validated-only/  # NEW: + enable_binding_external_properties_validation
 └── bash_script/                         # (untouched per FR-011)
 ```
 

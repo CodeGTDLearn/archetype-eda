@@ -15,7 +15,7 @@ check("1.1 entity_name is allowlisted", policy.isEligible('entity_name', null) &
 check("1.2 a non-allowlisted flag present in the contract is eligible",
         policy.isEligible('api_port', [api_port: '9090']))
 check("1.3 a non-allowlisted flag absent from the contract is NOT eligible",
-        !policy.isEligible('mutable_binding_properties', [api_port: '9090']))
+        !policy.isEligible('binding_external_properties_mutability', [api_port: '9090']))
 check("1.4 a flag absent from the contract is not eligible",
         !policy.isEligible('log_level', [api_port: '9090']))
 check("1.5 a null contract only allows the allowlist",

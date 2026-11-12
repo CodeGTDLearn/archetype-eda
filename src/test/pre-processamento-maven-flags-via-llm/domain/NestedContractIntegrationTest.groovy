@@ -4,8 +4,8 @@
  *   FlagProposalMerger -> ContractEntityDeriver -> ContractAttributeAssembler
  *   -> ContractNestedTypeDeriver -> NestedTypeFlagProjector.
  *
- * Covers the contract flag custom_nested_type_definitions and its interaction
- * with custom_attributes_list (entity references the nested POJO by simple
+ * Covers the contract flag contract_nested_type_definitions and its interaction
+ * with custom_entity_attributes_list (entity references the nested POJO by simple
  * name; the fields keep the contract keys).
  *
  * No JUnit infra in this repo; runnable directly:
@@ -38,14 +38,14 @@ def check = { String name, boolean cond ->
 def mkEntry = { String k, String d, String r -> catalogEntryClass.newInstance(k, d, r, "") }
 def catalog = new LinkedHashMap()
 catalog.put("entity_name", mkEntry("entity_name", "MyEntity", '^[A-Z][a-zA-Z0-9_]+$'))
-catalog.put("entity_name_package", mkEntry("entity_name_package", "myentity", '^[a-z][a-z0-9_.]+$'))
-catalog.put("enable_custom_attributes", mkEntry("enable_custom_attributes", "false", '^(true|false)$'))
-catalog.put("custom_attributes_list", mkEntry("custom_attributes_list", "none", '^(none|false|[A-Z][A-Za-z0-9_]*:[a-z][a-zA-Z0-9_]*(,[A-Z][A-Za-z0-9_]*:[a-z][a-zA-Z0-9_]*)*)$'))
-catalog.put("custom_attribute_imports", mkEntry("custom_attribute_imports", "none",
+catalog.put("entity_package_name", mkEntry("entity_package_name", "myentity", '^[a-z][a-z0-9_.]+$'))
+catalog.put("enable_custom_entity_attributes", mkEntry("enable_custom_entity_attributes", "false", '^(true|false)$'))
+catalog.put("custom_entity_attributes_list", mkEntry("custom_entity_attributes_list", "none", '^(none|false|[A-Z][A-Za-z0-9_]*:[a-z][a-zA-Z0-9_]*(,[A-Z][A-Za-z0-9_]*:[a-z][a-zA-Z0-9_]*)*)$'))
+catalog.put("custom_entity_attribute_imports", mkEntry("custom_entity_attribute_imports", "none",
         '^(none|([A-Za-z_][A-Za-z0-9_]*\\.)+[A-Za-z_][A-Za-z0-9_]*(,([A-Za-z_][A-Za-z0-9_]*\\.)+[A-Za-z_][A-Za-z0-9_]*)*)$'))
-catalog.put("custom_enum_definitions", mkEntry("custom_enum_definitions", "none",
+catalog.put("contract_enum_definitions", mkEntry("contract_enum_definitions", "none",
         '^(none|([A-Za-z_][A-Za-z0-9_]*\\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\\|[A-Z][A-Z0-9_]*)*(;([A-Za-z_][A-Za-z0-9_]*\\.)*[A-Za-z_][A-Za-z0-9_]*:[A-Z][A-Z0-9_]*(\\|[A-Z][A-Z0-9_]*)*)*)$'))
-catalog.put("custom_nested_type_definitions", mkEntry("custom_nested_type_definitions", "none",
+catalog.put("contract_nested_type_definitions", mkEntry("contract_nested_type_definitions", "none",
         '^(none|[A-Z][A-Za-z0-9_]*\\|[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*(,[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*)*)(;[A-Z][A-Za-z0-9_]*\\|[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*(,[a-z][a-zA-Z0-9_]*:[A-Za-z_][A-Za-z0-9_.]*)*)*$'))
 
 def merger = mergerClass.newInstance(deriverClass.newInstance(resolverClass.newInstance()))
@@ -65,17 +65,17 @@ def values = merged.get("values")
 def sources = merged.get("sources")
 
 check("1.1 the entity references the nested POJO by its simple name",
-        values.get("custom_attributes_list").contains("Endereco:endereco"))
+        values.get("custom_entity_attributes_list").contains("Endereco:endereco"))
 check("1.2 ...the other fields are unaffected",
-        values.get("custom_attributes_list").contains("String:nome"))
+        values.get("custom_entity_attributes_list").contains("String:nome"))
 check("1.3 the nested flag carries the POJO and its fields",
-        values.get("custom_nested_type_definitions") ==
+        values.get("contract_nested_type_definitions") ==
                 "Endereco|logradouro:String,numero:Integer")
 check("1.4 ...with CONTRACT_DERIVED provenance",
-        sources.get("custom_nested_type_definitions") == "CONTRACT_DERIVED")
+        sources.get("contract_nested_type_definitions") == "CONTRACT_DERIVED")
 check("1.5 the nested flag satisfies the catalog regex",
-        values.get("custom_nested_type_definitions") ==~
-                catalog.get("custom_nested_type_definitions").validationRegex)
+        values.get("contract_nested_type_definitions") ==~
+                catalog.get("contract_nested_type_definitions").validationRegex)
 
 // ---------------------------------------------------------------------------
 // 2) Nested objects inside nested objects are all generated
@@ -87,10 +87,10 @@ deep.put("attributes", [
 ])
 def mergedDeep = merge(deep)
 check("2.1 the child nested object is generated too",
-        mergedDeep.get("values").get("custom_nested_type_definitions") ==
+        mergedDeep.get("values").get("contract_nested_type_definitions") ==
                 "Endereco|logradouro:String,complemento:Complemento;Complemento|numero:Integer,bairro:String")
 check("2.2 ...and the parent field references the child type",
-        mergedDeep.get("values").get("custom_nested_type_definitions").contains("complemento:Complemento"))
+        mergedDeep.get("values").get("contract_nested_type_definitions").contains("complemento:Complemento"))
 
 // ---------------------------------------------------------------------------
 // 3) An array field becomes String and is reported
@@ -102,7 +102,7 @@ arrayContract.put("attributes", [
 ])
 def mergedArray = merge(arrayContract)
 check("3.1 an array field becomes String in the nested POJO",
-        mergedArray.get("values").get("custom_nested_type_definitions") == "Endereco|tags:String")
+        mergedArray.get("values").get("contract_nested_type_definitions") == "Endereco|tags:String")
 check("3.2 ...and a warning is raised",
         ((List) mergedArray.get("warnings")).any { it.contains("tags") })
 
@@ -111,24 +111,24 @@ check("3.2 ...and a warning is raised",
 // ---------------------------------------------------------------------------
 def suppressed = new LinkedHashMap()
 suppressed.put("entityName", "Cliente")
-suppressed.put("custom_attributes_list", "String:nome")
+suppressed.put("custom_entity_attributes_list", "String:nome")
 suppressed.put("attributes", [[name: "endereco", value: [logradouro: "Rua A"]]])
 def mergedSuppressed = merge(suppressed)
 check("4.1 an explicit list without the nested type suppresses the flag",
-        mergedSuppressed.get("values").get("custom_nested_type_definitions") == "none")
+        mergedSuppressed.get("values").get("contract_nested_type_definitions") == "none")
 
 // ---------------------------------------------------------------------------
 // 5) An explicit nested flag always wins
 // ---------------------------------------------------------------------------
 def explicit = new LinkedHashMap()
 explicit.put("entityName", "Cliente")
-explicit.put("custom_nested_type_definitions", "Explicito|a:String")
+explicit.put("contract_nested_type_definitions", "Explicito|a:String")
 explicit.put("attributes", [[name: "endereco", value: [logradouro: "Rua A"]]])
 def mergedExplicit = merge(explicit)
 check("5.1 an explicit nested flag wins over the derivation",
-        mergedExplicit.get("values").get("custom_nested_type_definitions") == "Explicito|a:String")
+        mergedExplicit.get("values").get("contract_nested_type_definitions") == "Explicito|a:String")
 check("5.2 ...and keeps the CONTRACT source",
-        mergedExplicit.get("sources").get("custom_nested_type_definitions") == "CONTRACT")
+        mergedExplicit.get("sources").get("contract_nested_type_definitions") == "CONTRACT")
 
 // ---------------------------------------------------------------------------
 // 6) A contract without nested objects keeps the flag at 'none'
@@ -138,7 +138,7 @@ flat.put("entityName", "Cliente")
 flat.put("attributes", [[name: "nome", value: "Acme"]])
 def mergedFlat = merge(flat)
 check("6.1 a contract without nested objects keeps the flag at 'none'",
-        mergedFlat.get("values").get("custom_nested_type_definitions") == "none")
+        mergedFlat.get("values").get("contract_nested_type_definitions") == "none")
 
 // ---------------------------------------------------------------------------
 // 7) A java.lang declared type wins over an object value (no POJO)
@@ -148,9 +148,9 @@ declared.put("entityName", "Cliente")
 declared.put("attributes", [[name: "payload", type: "String", value: [a: 1]]])
 def mergedDeclared = merge(declared)
 check("7.1 a declared java.lang type wins over the object value",
-        mergedDeclared.get("values").get("custom_attributes_list") == "String:payload")
+        mergedDeclared.get("values").get("custom_entity_attributes_list") == "String:payload")
 check("7.2 ...and no POJO is derived for it",
-        mergedDeclared.get("values").get("custom_nested_type_definitions") == "none")
+        mergedDeclared.get("values").get("contract_nested_type_definitions") == "none")
 
 // ---------------------------------------------------------------------------
 // 8) A reserved project type name never collides with a derived POJO
@@ -163,9 +163,9 @@ reserved.put("attributes", [
 ])
 def mergedReserved = merge(reserved)
 check("8.1 the declared project type is imported",
-        mergedReserved.get("values").get("custom_attribute_imports") == "br.com.projeto.EnderecoCliente")
+        mergedReserved.get("values").get("custom_entity_attribute_imports") == "br.com.projeto.EnderecoCliente")
 check("8.2 ...and the nested object becomes its own POJO",
-        mergedReserved.get("values").get("custom_nested_type_definitions").startsWith("EnderecoAntigo|"))
+        mergedReserved.get("values").get("contract_nested_type_definitions").startsWith("EnderecoAntigo|"))
 
 // ---------------------------------------------------------------------------
 // 9) A project type + array: UPPERCASE elements are the enum constants
@@ -177,12 +177,12 @@ enumArray.put("attributes", [
 ])
 def mergedEnumArray = merge(enumArray)
 check("9.1 a project type + UPPERCASE array keeps the project type",
-        mergedEnumArray.get("values").get("custom_attributes_list").contains("StatusPedido:statusPedido"))
+        mergedEnumArray.get("values").get("custom_entity_attributes_list").contains("StatusPedido:statusPedido"))
 check("9.2 ...and the elements become the enum constants",
-        mergedEnumArray.get("values").get("custom_enum_definitions") ==
+        mergedEnumArray.get("values").get("contract_enum_definitions") ==
                 "br.com.projeto.StatusPedido:ATIVO|CANCELADO")
 check("9.3 ...and the project type is imported",
-        mergedEnumArray.get("values").get("custom_attribute_imports") == "br.com.projeto.StatusPedido")
+        mergedEnumArray.get("values").get("custom_entity_attribute_imports") == "br.com.projeto.StatusPedido")
 
 def enumLower = new LinkedHashMap()
 enumLower.put("entityName", "Cliente")
@@ -191,10 +191,10 @@ enumLower.put("attributes", [
 ])
 def mergedEnumLower = merge(enumLower)
 check("9.4 a project type + lowercase array becomes String",
-        mergedEnumLower.get("values").get("custom_attributes_list") == "String:status")
+        mergedEnumLower.get("values").get("custom_entity_attributes_list") == "String:status")
 check("9.5 ...without import nor enum",
-        mergedEnumLower.get("values").get("custom_attribute_imports") == "none" &&
-                mergedEnumLower.get("values").get("custom_enum_definitions") == "none")
+        mergedEnumLower.get("values").get("custom_entity_attribute_imports") == "none" &&
+                mergedEnumLower.get("values").get("contract_enum_definitions") == "none")
 check("9.6 ...and the fallback is reported",
         ((List) mergedEnumLower.get("warnings")).any { it.contains("array") })
 
@@ -206,7 +206,7 @@ enumOverride.put("attributes", [
 ])
 def mergedEnumOverride = merge(enumOverride)
 check("9.7 the explicit enumValues win over the lowercase array",
-        mergedEnumOverride.get("values").get("custom_enum_definitions") ==
+        mergedEnumOverride.get("values").get("contract_enum_definitions") ==
                 "br.com.projeto.StatusPedido:ATIVO|CANCELADO")
 
 def langArray = new LinkedHashMap()
@@ -214,7 +214,7 @@ langArray.put("entityName", "Cliente")
 langArray.put("attributes", [[name: "codigos", type: "Integer", value: [1, 2]]])
 def mergedLangArray = merge(langArray)
 check("9.8 java.lang + array keeps the declared type",
-        mergedLangArray.get("values").get("custom_attributes_list") == "Integer:codigos")
+        mergedLangArray.get("values").get("custom_entity_attributes_list") == "Integer:codigos")
 check("9.9 ...and the fallback is reported",
         ((List) mergedLangArray.get("warnings")).any { it.contains("array") })
 
@@ -229,13 +229,13 @@ naming.put("attributes", [
 ])
 def mergedNaming = merge(naming)
 check("10.1 the entity name is reserved (PedidoType)",
-        mergedNaming.get("values").get("custom_nested_type_definitions").startsWith("PedidoType|"))
+        mergedNaming.get("values").get("contract_nested_type_definitions").startsWith("PedidoType|"))
 check("10.2 the accented attribute is camelCase",
-        mergedNaming.get("values").get("custom_attributes_list").contains("Endereco:endereco"))
+        mergedNaming.get("values").get("custom_entity_attributes_list").contains("Endereco:endereco"))
 check("10.3 ...and the accented field is ASCII-normalized",
-        mergedNaming.get("values").get("custom_nested_type_definitions").contains("opcao:String"))
+        mergedNaming.get("values").get("contract_nested_type_definitions").contains("opcao:String"))
 check("10.4 ...and the keyword field keeps the '_' suffix",
-        mergedNaming.get("values").get("custom_nested_type_definitions").contains("class_:String"))
+        mergedNaming.get("values").get("contract_nested_type_definitions").contains("class_:String"))
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

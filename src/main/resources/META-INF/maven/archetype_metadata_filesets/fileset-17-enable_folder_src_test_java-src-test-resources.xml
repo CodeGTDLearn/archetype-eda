@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-17-ENABLE_FOLDER_SRC_TEST_JAVA-SRC_TEST_RESOURCES.XML ___ -->
+<!-- SRC\TEST\RESOURCES -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>src/test/resources</directory>
+    <includes>
+        <include>application.yml</include>
+        <include>application.properties</include>
+        <include>logback-test.xml</include>
+        <include>banner.txt</include>
+    </includes>
+</fileSet>

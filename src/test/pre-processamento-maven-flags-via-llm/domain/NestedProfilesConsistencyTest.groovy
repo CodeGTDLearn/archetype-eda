@@ -76,8 +76,8 @@ check("1.1 the catalog was loaded", catalog != null && catalog.size() >= 35)
 // ---------------------------------------------------------------------------
 // 2) Every profile: contract -> merger -> flags == archetype.properties
 // ---------------------------------------------------------------------------
-def flags = ["entity_name", "custom_attributes_list", "custom_nested_type_definitions",
-             "custom_attribute_imports", "custom_enum_definitions"]
+def flags = ["entity_name", "custom_entity_attributes_list", "contract_nested_type_definitions",
+             "custom_entity_attribute_imports", "contract_enum_definitions"]
 
 profiles.eachWithIndex { String profile, int index ->
     def profileDir = new File("src/test/resources/projects/${profile}")
@@ -110,8 +110,8 @@ profiles.eachWithIndex { String profile, int index ->
 
     check("4.${index + 1} the entity name comes from the contract",
             "CONTRACT".equals(sources.get("entity_name")))
-    ["custom_attributes_list", "custom_nested_type_definitions",
-     "custom_attribute_imports", "custom_enum_definitions"].eachWithIndex { String flag, int flagIndex ->
+    ["custom_entity_attributes_list", "contract_nested_type_definitions",
+     "custom_entity_attribute_imports", "contract_enum_definitions"].eachWithIndex { String flag, int flagIndex ->
         check("4.${index + 1}.${flagIndex + 1} '${flag}' of '${profile}' is CONTRACT_DERIVED",
                 "CONTRACT_DERIVED".equals(sources.get(flag)))
     }

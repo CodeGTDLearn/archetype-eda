@@ -39,7 +39,7 @@ This research consolidates the technology decisions behind the implementation pl
 - **Rationale**:
   - The XInclude references are already resolved by `xml-maven-plugin` at materialization time, so the orchestrator reads a flat, fully-merged XML — no second XInclude pass needed at runtime.
   - `groovy-xml` is already on the classpath; no new dependency.
-  - The catalog extraction is deterministic and cheap: parse once, build a `Map<String, CatalogEntry>` keyed by flag name, with `defaultValue` and `validationRegex` captured. Memory footprint: 35 entries × a few dozen bytes each.
+  - The catalog extraction is deterministic and cheap: parse once, build a `Map<String, CatalogEntry>` keyed by flag name, with `defaultValue` and `validationRegex` captured. Memory footprint: 36 entries × a few dozen bytes each.
 - **Alternatives considered**:
   - **StAX / SAX streaming**: not needed — the merged XML is small (a few KB) and fits in memory.
   - **Hardcoded flag list**: explicitly rejected — FR-013 forbids it; the precedent of drift between bash prompt scripts and the catalog is the failure mode being eliminated.

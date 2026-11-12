@@ -4,6 +4,8 @@
 **Phase**: 1 (design)
 **Created**: 2026-09-28
 
+> **Nota de estado atual (2026-11-11):** os passos 2 e 3 abaixo são históricos. O `<exclude>` no `pom.xml` não é mais necessário (o monólito não existe e o `BuildArtifactsTest` 1.4 o impede) e o `script_core.sh` não existe mais. O arquivo final é gerado em `target/classes/META-INF/archetype-post-generate.groovy` — fora do git e do Project view do IDE; abra com `Ctrl+Shift+N` ou rode `mvn clean process-resources`.
+
 ## Cenário de Validação Completo (end-to-end)
 
 Este guia permite ao mantenedor validar que o compositor Groovy produz o arquivo `archetype-post-generate.groovy` esperado e que o ciclo IT continua passando.
@@ -80,19 +82,20 @@ grep -rE 'read -n 1 -s|read -p' pom.xml src/ bash_script/script_core.sh bash_scr
      <defaultValue>false</defaultValue>
    </requiredProperty>
    ```
-2. Criar `src/main/resources/META-INF/archetype_post_generate_variables/variables-test-flag.groovy`:
+2. Criar `src/main/resources/META-INF/archetype_post_generate_variables/variables-NN-test-flag.groovy`:
    ```groovy
+   // VARIABLES-NN-TEST-FLAG.GROOVY ---------------------------------------------
    def keep_test_flag = "${properties?.enable_test_flag}"
    ```
-3. Criar `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-test-flag.groovy`:
+3. Criar `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-NN-test-flag.groovy`:
    ```groovy
-   // FLAG: enable_test_flag
+   // SNIPPET-NN-TEST-FLAG.GROOVY -----------------------------------------------
    // Remove test folder if flag is off
    if (keep_test_flag == 'false') {
      // ... delete logic ...
    }
    ```
-4. Adicionar `"variables-test-flag.groovy"` e `"snippet-test-flag.groovy"` na `List<String> SECTIONS` do compositor (em ordem alfabética nas listas de variables/snippets).
+4. Nada a fazer no `SECTIONS`: as pastas dinâmicas (`variables/`, `generators/`, `snippets/`) entram automaticamente em ordem de `NN`.
 5. Rodar `mvn clean install -DskipTests`.
 6. Verificar que `target/classes/META-INF/archetype-post-generate.groovy` contém o novo snippet.
 

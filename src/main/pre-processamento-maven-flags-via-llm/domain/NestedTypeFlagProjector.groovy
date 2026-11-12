@@ -6,21 +6,21 @@ import eda.postgenerate.pre_processamento_maven_flags_via_llm.catalog.CatalogEnt
  * Projects the nested POJOs derived from the contract into the catalog flag
  * the archetype consumes:
  *
- *   custom_nested_type_definitions:
+ *   contract_nested_type_definitions:
  *       "Tipo|Campo:Tipo,Campo:Tipo;Tipo|Campo:Tipo"
  *
  * Suppression rules:
- *   - enable_custom_attributes=false                          -> none
- *   - custom_attributes_list=false/empty                      -> none
+ *   - enable_custom_entity_attributes=false                          -> none
+ *   - custom_entity_attributes_list=false/empty                      -> none
  *   - an explicit list that references no nested type         -> none
- *   - an explicit custom_nested_type_definitions always wins (CONTRACT)
+ *   - an explicit contract_nested_type_definitions always wins (CONTRACT)
  *
  * The flag is suppressed (never emitted) when the entity does not reference
  * a nested type. The entity template imports/marks only the intersection.
  */
 class NestedTypeFlagProjector {
 
-    static final String FLAG = "custom_nested_type_definitions"
+    static final String FLAG = "contract_nested_type_definitions"
 
     private final FlagValidationPolicy validationPolicy
 
@@ -44,8 +44,8 @@ class NestedTypeFlagProjector {
         if (nestedTypes == null || nestedTypes.isEmpty()) return
 
         String derivedValue = "none"
-        String list = values.get("custom_attributes_list")
-        boolean enabled = "true".equals(values.get("enable_custom_attributes"))
+        String list = values.get("custom_entity_attributes_list")
+        boolean enabled = "true".equals(values.get("enable_custom_entity_attributes"))
         if (enabled && list != null) {
             String trimmed = list.trim()
             if (!trimmed.isEmpty() && trimmed != "false" && trimmed != "none") {

@@ -37,7 +37,7 @@
 ## Decisão 4: Ordem de variables/snippets
 
 - **Decision**: declarar `List<String>` ordenada alfabeticamente; usar `new File(dir).listFiles().sort { it.name }` em Groovy, que retorna a mesma ordem que `ls -1` no bash.
-- **Rationale**: equivalência byte-a-byte é o critério. `File.listFiles().sort { it.name }` é equivalente a `ls -1 | sort` em bash (lexicográfica ASCII). Em ambos os casos, `snippet-authentication.groovy` vem antes de `snippet-binding-properties.groovy`.
+- **Rationale**: equivalência byte-a-byte é o critério. `File.listFiles().sort { it.name }` é equivalente a `ls -1 | sort` em bash (lexicográfica ASCII). Em ambos os casos, `snippet-authentication.groovy` vem antes de `snippet-binding-external-properties.groovy`.
 - **Alternatives considered**:
   - `List<String>` explícita por nome (sem `sort()`) — descartado porque tornaria o composer frágil a novos arquivos (qualquer snippet novo fora da ordem explícita quebraria).
   - `List<String>` por prioridade semântica — descartado porque adiciona decisões subjetivas sem ganho claro.

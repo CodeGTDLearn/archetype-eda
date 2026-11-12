@@ -17,6 +17,13 @@ def check = { String name, boolean cond ->
 check("1.1 archetype-metadata.xml exists", metadata.isFile())
 check("1.2 archetype-post-generate.groovy exists", composed.isFile())
 check("1.3 pom.xml exists", pom.isFile())
+// The post-processor source lives in archetype_post_generate_{body,variables,
+// generators,snippets}/ and is COMPOSED into target/classes. A legacy monolith
+// in src/main/resources/META-INF would be copied by the resources plugin to the
+// same target path and could shadow the composed script (order within
+// process-resources is not contractual), so its absence is part of the contract.
+check("1.4 the legacy monolithic post-generate script is absent from the source tree",
+        !new File("src/main/resources/META-INF/archetype-post-generate.groovy").exists())
 
 if (!metadata.isFile() || !composed.isFile() || !pom.isFile()) {
     println ""
@@ -34,10 +41,10 @@ def pomText = pom.getText("UTF-8")
 check("2.1 the descriptor root is archetype-descriptor",
         metadataText.contains("<archetype-descriptor"))
 check("2.2 the identity transform removed the DOCTYPE", !metadataText.contains("<!DOCTYPE"))
-check("2.3 the catalog has 36 required properties",
-        (metadataText =~ /<requiredProperty\s+key=/).count == 36)
-check("2.4 the catalog carries 36 default values",
-        (metadataText =~ /<defaultValue>/).count == 36)
+check("2.3 the catalog has 35 required properties",
+        (metadataText =~ /<requiredProperty\s+key=/).count == 35)
+check("2.4 the catalog carries 35 default values",
+        (metadataText =~ /<defaultValue>/).count == 35)
 
 // ---------------------------------------------------------------------------
 // 3) Composed post-processor artifact

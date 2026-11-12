@@ -1,5 +1,7 @@
 # Problem Definition: Compositor nativo Groovy para `archetype-post-generate.groovy`
 
+> **Nota (histórico)**: os nomes de arquivo abaixo refletem o momento desta decisão. O body foi depois renomeado para o padrão `body-NN-<papel>.groovy` (o prelúdio `archetype-imports.groovy` é hoje `body-01-imports.groovy`; `archetype-header.groovy` é hoje `body-02-header.groovy`; os demais seguem a mesma regra, na ordem canônica de `SECTIONS`).
+
 - **Slug**: groovy-snippet-injection
 - **Created**: 2026-09-28
 - **Inputs used**: intake.md ✅ | research.md ✅ | user input only
@@ -24,7 +26,7 @@ A montagem do arquivo `archetype-post-generate.groovy` no build-time do `archety
 - Preservar a composição de `archetype-post-generate.groovy` em build-time do archetype (antes da fase `package` empacotar o archetype jar) — não em run-time. *(cited: intake.md linha 36; research.md linha 55)* — **confidence: high**
 - Preservar a ordem obrigatória dos snippets (header → global-vars → path-vars → variables → snippets → footer → file-functions → folder-functions). *(cited: research.md linha 36, baseado em `bash_script/create_archetype_post_generate.sh` linhas 88–116)* — **confidence: high**
 - Preservar o comportamento de consolidação de imports (remover `^import …` dos snippets e prepor `archetype-imports.groovy` no topo). *(cited: research.md linha 39; `bash_script/create_archetype_post_generate.sh` linhas 159–225)* — **confidence: high**
-- Manter compatibilidade com o ciclo de testes IT atual: `mvn clean install` + `mvn integration-test` passando nos 9 perfis (`basic`, `full`, `minimal`, `binding-default-only`, `binding-list-only`, `binding-map-only`, `binding-mutable-only`, `binding-validated-only`, `json-contract`). *(cited: intake.md linha 40; verificado em 2026-09-28: 9/9 perfis PASSOU em clean install e integration-test após upgrade `archetype-packaging:3.3.0→3.4.1`)* — **confidence: high**
+- Manter compatibilidade com o ciclo de testes IT atual: `mvn clean install` + `mvn integration-test` passando nos 9 perfis (`basic`, `full`, `minimal`, `external-binding-default-only`, `external-binding-list-only`, `external-binding-map-only`, `external-binding-mutable-only`, `external-binding-validated-only`, `json-contract`). *(cited: intake.md linha 40; verificado em 2026-09-28: 9/9 perfis PASSOU em clean install e integration-test após upgrade `archetype-packaging:3.3.0→3.4.1`)* — **confidence: high**
 
 ## Non-Goals
 

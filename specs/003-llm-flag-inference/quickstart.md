@@ -33,7 +33,7 @@ This guide lists the runnable validation scenarios that prove the mechanism work
    ```
    in `C:\WORKBASE\DEV\SCRIPTS\archetype-v2-eda\`. Assert the output contains exactly the 4 lines enumerated in `spec.md` SC-002 baseline enumeration (lines 67, 77, 84, plus the post-generate ones). If the count differs, abort: SC-002 baseline has drifted; the spec MUST be updated and the assessment pipeline re-run before continuing.
 
-1. For each of the 10 profiles (`basic`, `binding-default-only`, `binding-list-only`, `binding-map-only`, `binding-mutable-only`, `binding-validated-only`, `defaults-only`, `full`, `custom-attributes`, `minimal`):
+1. For each of the 10 profiles (`basic`, `external-binding-default-only`, `external-binding-list-only`, `external-binding-map-only`, `external-binding-mutable-only`, `external-binding-validated-only`, `defaults-only`, `full`, `custom-attributes`, `minimal`):
    1. Read the profile's `archetype.properties` to derive the expected flag set.
    2. Construct a JSON contract that mirrors those flags.
    3. Provide a textual description that names the profile.

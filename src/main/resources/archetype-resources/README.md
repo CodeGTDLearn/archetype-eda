@@ -16,13 +16,7 @@
           <li>Code:
             <ul>
               <li>WebService structure.</li>
-              <li>Written in Java, Spring Boot and Vaadin.</li>
-            </ul>
-          </li>
-          <li>Performance:
-            <ul>
-              <li>EhCache</li>
-              <li>Virtual Threads</li>
+              <li>Written in Java and Spring Boot.</li>
             </ul>
           </li>
           <li>CI/CD:
@@ -86,20 +80,20 @@
 
 <h2 id="technical-specifications">3 Technical Specifications</h2>
 <ul>
-  #if(${enable_lombok} == "true")
+  #if(${enable_lombok_support} == "true")
     <li>Lombok</li>
   #end
-  #if(${enable_docker} == "true")
+  #if(${enable_docker_support} == "true")
     <li>Docker Support</li>
   #end
   #if(${enable_git_support} == "true")
-    <li>Git Repo: <a href="${git_url_repo}">${git_url_repo}</a></li>
+    <li>Git Repo: <a href="${git_repo_url}">${git_repo_url}</a></li>
   #end
   <li><a href="#credentials-protection-top">Credentials Protection</a></li>
-  #if(${enable_logback} == "true")
+  #if(${enable_logback_support} == "true")
     <li><a href="#advanced-logging-system-top">Advanced Logging System</a></li>
   #end
-  #if(${enable_binding_properties} == "true")
+  #if(${enable_binding_external_properties} == "true")
     <li><a href="#type-safe-binding-configuration-top">Type-Safe Binding Configuration</a></li>
   #end
 </ul>
@@ -152,7 +146,7 @@
 </details>
 <hr>
 
-#if(${enable_logback} == "true")
+#if(${enable_logback_support} == "true")
 <!-- ====================================================
      3. Seção: Advanced Logging System (Collapse Simples)
 ======================================================= -->
@@ -201,7 +195,7 @@
 <hr>
 #end
 
-#if(${enable_binding_properties} == "true")
+#if(${enable_binding_external_properties} == "true")
 <!-- ====================================================
      4. Seção: Type-Safe Binding Configuration (Collapse Simples)
 ======================================================= -->

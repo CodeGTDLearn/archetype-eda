@@ -39,7 +39,7 @@ As the **archetype maintainer**, I want the "all flags on" combination (`full`) 
 
 ### User Story 3 - Custom Attributes Entity Generation (Priority: P2)
 
-As the **archetype maintainer**, I want the custom-attributes generation path (`custom-attributes` — `enable_custom_attributes=true` with an explicit `custom_attributes_list`) to be exercised automatically, so that I have confidence the generated entity matches the declared attribute shape — not just that the build passes.
+As the **archetype maintainer**, I want the custom-attributes generation path (`custom-attributes` — `enable_custom_entity_attributes=true` with an explicit `custom_entity_attributes_list`) to be exercised automatically, so that I have confidence the generated entity matches the declared attribute shape — not just that the build passes.
 
 **Why this priority**: This is the only scenario where `mvn verify` is **not sufficient** as an acceptance signal (the generated entity's field list must match the declared attributes). It is the only scenario with structural assertions on the output.
 
@@ -47,7 +47,7 @@ As the **archetype maintainer**, I want the custom-attributes generation path (`
 
 **Acceptance Scenarios**:
 
-1. **Given** the `custom-attributes` fixture declares `custom_attributes_list`, **When** the local suite runs that fixture, **Then** the generated Spring Boot project passes `mvn verify` AND the generated entity class contains the declared attributes with the declared types.
+1. **Given** the `custom-attributes` fixture declares `custom_entity_attributes_list`, **When** the local suite runs that fixture, **Then** the generated Spring Boot project passes `mvn verify` AND the generated entity class contains the declared attributes with the declared types.
 2. **Given** the declared attribute list is malformed, **When** the local suite runs the `custom-attributes` fixture, **Then** the suite reports a clear failure naming the attribute list as the cause, and no generated artifact is silently accepted.
 
 ---
@@ -62,7 +62,7 @@ As the **archetype maintainer**, I want at least one fixture per binding-propert
 
 **Acceptance Scenarios**:
 
-1. **Given** the maintainer has a binding-properties sub-fixture (e.g., `binding-default-only`), **When** the local suite runs that fixture, **Then** the project compiles and the relevant binding-properties classes are present in the generated source.
+1. **Given** the maintainer has a binding-properties sub-fixture (e.g., `external-binding-default-only`), **When** the local suite runs that fixture, **Then** the project compiles and the relevant binding-properties classes are present in the generated source.
 2. **Given** a change to `property-binding-properties.xml` (e.g., default value or validation regex), **When** the maintainer re-runs all binding-properties sub-fixtures, **Then** each fixture either still passes or the failure pinpoints the changed flag.
 
 ---
@@ -81,7 +81,7 @@ As the **archetype maintainer**, I want at least one fixture per binding-propert
 
 - **FR-001** — The system MUST execute each fixture as a separate, isolated generation-and-verify run, so that a failure in one fixture does not affect the others.
 - **FR-002** — The system MUST validate, for each fixture, that the project generated from the archetype passes `mvn verify` (clean and verify goals), so that the "funcional" criterion is uniformly applied.
-- **FR-003** — For the `custom-attributes` fixture, the system MUST additionally validate structural properties of the generated entity class against the declared `custom_attributes_list`, so that build-passing alone is not accepted as sufficient evidence.
+- **FR-003** — For the `custom-attributes` fixture, the system MUST additionally validate structural properties of the generated entity class against the declared `custom_entity_attributes_list`, so that build-passing alone is not accepted as sufficient evidence.
 - **FR-004** — The system MUST respect the dependency rule that when a parent flag is `false`, the related child flags are not exercised in that fixture, so that the matrix is not polluted with semantically invalid combinations.
 - **FR-005** — The system MUST provide at least one fixture per scenario defined for this feature: `minimal`, `full`, `custom-attributes`, and one fixture per binding-properties sub-module (default, list, map, mutable, validated).
 - **FR-006** — The system MUST source each fixture's flag values from an explicit, human-readable `archetype.properties` per fixture, so that the matrix is self-documenting in the filesystem.

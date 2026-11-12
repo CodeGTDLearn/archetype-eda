@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-04-ENABLE_GIT_SUPPORT-GIT_TEMP_CONFIG.XML ______________ -->
+<fileSet filtered="true" encoding="UTF-8">
+    <directory>git_temp</directory>
+    <includes>
+        <include>config</include>
+    </includes>
+</fileSet>

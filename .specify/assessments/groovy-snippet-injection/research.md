@@ -1,5 +1,7 @@
 # Idea Research: Substituir bash pre-processor do `archetype-post-generate.groovy` por composição nativa Groovy
 
+> **Nota (histórico)**: os nomes de arquivo abaixo refletem o momento desta decisão. O body foi depois renomeado para o padrão `body-NN-<papel>.groovy` (o prelúdio `archetype-imports.groovy` é hoje `body-01-imports.groovy`; `archetype-header.groovy` é hoje `body-02-header.groovy`; os demais seguem a mesma regra, na ordem canônica de `SECTIONS`).
+
 - **Slug**: groovy-snippet-injection
 - **Created**: 2026-09-28
 - **Evidence confidence (overall)**: medium

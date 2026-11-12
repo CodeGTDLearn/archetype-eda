@@ -130,19 +130,25 @@ class InferenceApplication {
             return 4
         }
 
-        // Cache key (FR-011): catalog fingerprint + description + canonical contract.
+        // Cache key (FR-011): catalog fingerprint + description + canonical
+        // contract + materialized contract path. The path is part of the key
+        // because the emitted command line carries it: a different
+        // --contract-dir must not serve a cached line pointing at the old
+        // location.
         String canonicalContract = cacheKeyFactory.canonicalize(contract)
         String catalogFingerprint = cacheKeyFactory.fingerprint(catalog)
-        String cacheKey = cacheKeyFactory.makeKey(description, canonicalContract, catalogFingerprint)
 
         // FR-021 (contract persistence): the contract is materialized BEFORE the
-        // cache lookup, so the command line can carry its path on a cache HIT.
+        // cache key and the lookup, so the key carries the path the command
+        // line will emit on both MISS and HIT.
         MaterializationResult materialized = contractStore.materialize(
                 config.contractDir, canonicalContract, contractJson)
         if (materialized.warning != null) {
             output.warning(materialized.warning)
         }
         String contractFilePath = materialized.path
+        String cacheKey = cacheKeyFactory.makeKey(
+                description, canonicalContract, catalogFingerprint, contractFilePath)
 
         List<String> secretLikeKeys = secretScanner.scan(contract)
         if (!secretLikeKeys.isEmpty()) {
@@ -160,7 +166,7 @@ class InferenceApplication {
         // materialized contract file.
         Map<String, String> derivedOverrides = new LinkedHashMap<>()
         if (contractFilePath != null) {
-            derivedOverrides.put("entity_contract_path", contractFilePath)
+            derivedOverrides.put("entity_contract_file_path", contractFilePath)
         }
 
         Map<String, String> hit = cacheStore.lookup(config.cacheDir, cacheKey)

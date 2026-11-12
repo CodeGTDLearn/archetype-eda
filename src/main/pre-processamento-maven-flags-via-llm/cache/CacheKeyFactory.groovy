@@ -7,7 +7,7 @@ import eda.postgenerate.pre_processamento_maven_flags_via_llm.Sha256
  * Derives the canonical contract representation and the cache key.
  *
  * Responsibility: cache-key policy only (canonicalization delegation,
- * catalog fingerprint and deterministic digest).
+ * catalog fingerprint, materialized contract path and deterministic digest).
  */
 class CacheKeyFactory {
 
@@ -40,10 +40,12 @@ class CacheKeyFactory {
         return Sha256.hex(sb.toString())
     }
 
-    String makeKey(String description, String canonicalContract, String catalogFingerprint) {
+    String makeKey(String description, String canonicalContract, String catalogFingerprint,
+                   String contractFilePath) {
         String payload = (catalogFingerprint == null ? "" : catalogFingerprint) + "\u0000" +
                          (description == null ? "" : description) + "\u0000" +
-                         (canonicalContract == null ? "" : canonicalContract)
+                         (canonicalContract == null ? "" : canonicalContract) + "\u0000" +
+                         (contractFilePath == null ? "none" : contractFilePath)
         return Sha256.hex(payload)
     }
 }

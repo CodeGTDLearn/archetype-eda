@@ -9,8 +9,8 @@
 	symlinks = false
 	ignorecase = true
 [remote "origin"]
-	url = ${git_url_repo}
+	url = ${git_repo_url}
 	fetch = +refs/heads/*:refs/remotes/origin/*
-[branch "${git_branch_repo}"]
+[branch "${git_repo_branch}"]
 	remote = origin
-	merge = refs/heads/${git_branch_repo}
+	merge = refs/heads/${git_repo_branch}

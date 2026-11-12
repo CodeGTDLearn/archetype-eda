@@ -7,6 +7,10 @@
 - **Verdict**: valid
 - **Severity**: high (Metade B) / medium (Metade C isolada)
 
+> **Status**: documento histórico. As flags `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` foram removidas do catálogo (34 → 32) e não têm equivalente atual; o caminho do contrato passou a ser emitido pelo mecanismo de inferência em `entity_contract_file_path`.
+
+> **Nota (histórico)**: os nomes de arquivos `fileset-*.xml` citados abaixo refletem o momento desta decisão. O catálogo foi depois reorganizado em um `<fileSet>` por arquivo, numerado: `fileset-src-test-resources.xml` → `fileset-17-enable_folder_src_test_java-src-test-resources.xml` (e `fileset-18-...-src-test-resources-properties.xml` para o subdiretório `properties/`).
+
 ## Relação com bugs adjacentes
 
 Este assessment consolida **as duas metades ainda abertas** do mesmo relato:
@@ -36,8 +40,8 @@ Direcionamento do maintainer sobre o comportamento desejado (paraphrased da resp
 * Os **atributos** descritos no contrato passam a ser **os atributos da entidade**; o **valor** de cada
   atributo permite **estimar o tipo** do atributo na entidade.
 * O **nome da entidade** é **estimado** a partir do contexto do prompt e do próprio contrato.
-* Como os atributos vêm do contrato, `enable_custom_attributes` é **obrigatoriamente** habilitado.
-* O **formato** do valor de `custom_attributes_list` (`Tipo:nome,Tipo:nome,…`) é **obrigatoriamente** seguido.
+* Como os atributos vêm do contrato, `enable_custom_entity_attributes` é **obrigatoriamente** habilitado.
+* O **formato** do valor de `custom_entity_attributes_list` (`Tipo:nome,Tipo:nome,…`) é **obrigatoriamente** seguido.
 
 Direcionamento adicional (esta rodada, Metade C):
 
@@ -53,12 +57,12 @@ Direcionamento adicional (esta rodada, Metade C):
 O mecanismo de inferência **opera** (exit 0, 32 flags) mas o contrato JSON — declarado pelo operador como
 *fonte da verdade* — não influencia o artefato gerado: o portão FR-009 descarta **toda** proposta da LLM cuja chave
 literal não exista no contrato, e um contrato de domínio (`entityName`, `attributes[]`) nunca contém as chaves
-`entity_name` nem `custom_attributes_list`. Resultado: `entity_name=MyEntity`, `entity_name_package=myentity`,
-`enable_custom_attributes=false`, `custom_attributes_list=Long:id,MyId:id,My_Id:my_id` — todos **defaults do
+`entity_name` nem `custom_entity_attributes_list`. Resultado: `entity_name=MyEntity`, `entity_package_name=myentity`,
+`enable_custom_entity_attributes=false`, `custom_entity_attributes_list=Long:id,MyId:id,My_Id:my_id` — todos **defaults do
 catálogo**, com o contrato literalmente descartado.
 
 Esperado: a entidade gerada (nome, pacote, atributos e tipos) é **construída a partir do contrato** que já chega ao
-prompt da LLM; `enable_custom_attributes` é habilitado; e o valor de `custom_attributes_list` obedece rigorosamente ao
+prompt da LLM; `enable_custom_entity_attributes` é habilitado; e o valor de `custom_entity_attributes_list` obedece rigorosamente ao
 formato `Tipo:nome,…`.
 
 ### Metade C — o contrato não chega ao projeto gerado, e o destino pedido é destruído
@@ -103,8 +107,8 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
    `ProcessBuilder` no Windows não executa `.sh`):
 
    ```json
-   {"entity_name":"ContractEntity","entity_name_package":"it.pkg.contractentity",
-    "enable_custom_attributes":"true","custom_attributes_list":"Long:id,String:name,Instant:createdAt",
+   {"entity_name":"ContractEntity","entity_package_name":"it.pkg.contractentity",
+    "enable_custom_entity_attributes":"true","custom_entity_attributes_list":"Long:id,String:name,Instant:createdAt",
     "api_port":"8080"}
    ```
 
@@ -120,23 +124,23 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 4. Saída observada (**exit code 0**):
 
    ```
-   mvn archetype:generate --batch-mode … -Dentity_name=MyEntity -Dentity_name_package=myentity
-     -Denable_custom_attributes=false -Dcustom_attributes_list=Long:id,MyId:id,My_Id:my_id …
+   mvn archetype:generate --batch-mode … -Dentity_name=MyEntity -Dentity_package_name=myentity
+     -Denable_custom_entity_attributes=false -Dcustom_entity_attributes_list=Long:id,MyId:id,My_Id:my_id …
    ## Relatorio de Proveniencia - cache: MISS
    …
    | entity_name            | MyEntity                    | DEFAULT |  |
-   | entity_name_package    | myentity                    | DEFAULT |  |
-   | enable_custom_attributes | false                     | DEFAULT |  |
-   | custom_attributes_list | Long:id,MyId:id,My_Id:my_id | DEFAULT |  |
+   | entity_package_name    | myentity                    | DEFAULT |  |
+   | enable_custom_entity_attributes | false                     | DEFAULT |  |
+   | custom_entity_attributes_list | Long:id,MyId:id,My_Id:my_id | DEFAULT |  |
 
    ### Propostas do LLM descartadas (ausentes do contrato - FR-009)
 
    | flag | valor proposto |
    |---|---|
    | entity_name | ContractEntity |
-   | entity_name_package | it.pkg.contractentity |
-   | enable_custom_attributes | true |
-   | custom_attributes_list | Long:id,String:name,Instant:createdAt |
+   | entity_package_name | it.pkg.contractentity |
+   | enable_custom_entity_attributes | true |
+   | custom_entity_attributes_list | Long:id,String:name,Instant:createdAt |
    | api_port | 8080 |
 
    **Resumo**: 0 CONTRACT / 0 INFERENCE / 32 DEFAULT / 5 descartada(s)
@@ -163,8 +167,8 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
    * `snippet-src-test-java.groovy:16-17` — `deleteFolder(srcTestJava)` **e** `deleteFolder(srcTestResources)`
      quando `enable_folder_src_test_java == 'false'`.
    * `README.md:2095-2097` — *"quando `false`, deleta `src/test/java/` e `src/test/resources/` inteiros"*.
-   * Perfis de IT com `enable_folder_src_test_java=false`: `binding-default-only`, `binding-list-only`,
-     `binding-map-only`, `binding-mutable-only`, `binding-validated-only`, `custom-attributes`, `defaults-only`,
+   * Perfis de IT com `enable_folder_src_test_java=false`: `external-binding-default-only`, `external-binding-list-only`,
+     `external-binding-map-only`, `external-binding-mutable-only`, `external-binding-validated-only`, `custom-attributes`, `defaults-only`,
      `minimal` (8 de 10). Com `true`: apenas `basic` e `full`.
 
 ### [NEEDS CLARIFICATION: o nome exato do arquivo persistido e se o contrato deve ser o cru ou um snapshot derivado]
@@ -178,7 +182,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 - `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:254` — passo 2 do `merge()`:
   `if (value == null && contract != null && contract.containsKey(key))`. A chave precisa existir
   **literalmente** no contrato. Um contrato de domínio nunca contém `entity_name` nem
-  `custom_attributes_list` ⇒ a proposta da LLM é descartada.
+  `custom_entity_attributes_list` ⇒ a proposta da LLM é descartada.
 - `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy:281-289` — coleta de `discarded`: mesma
   condição, aplicada a **todas** as chaves propostas pela LLM que não constem do contrato. É o que popula
   a seção *"Propostas do LLM descartadas"* do relatório de proveniência.
@@ -199,22 +203,22 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 ### Metade B — derivação do pacote, ausente
 
 - `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:31-34` —
-  `entity_name_package` com default fixo `myentity`. **Nada** o deriva de `entity_name`.
+  `entity_package_name` com default fixo `myentity`. **Nada** o deriva de `entity_name`.
 - `src/main/resources/META-INF/archetype_post_generate_body/archetype-global-variables.groovy:12` —
   o pós-processador apenas copia `properties?.entity_name`; não há derivação de pacote.
-- `src/main/resources/archetype-resources/src/main/java/__entity_name_package__/__entity_name__.java:5` —
-  `package ${package}.${entity_name_package};` — o valor é usado **verbatim**, sem `${entity_name,,}`.
+- `src/main/resources/archetype-resources/src/main/java/__entity_package_name__/__entity_name__.java:5` —
+  `package ${package}.${entity_package_name};` — o valor é usado **verbatim**, sem `${entity_name,,}`.
 
 ### Metade B — formato da lista de atributos, rígido no template
 
-- `src/main/resources/archetype-resources/src/main/java/__entity_name_package__/__entity_name__.java:37-51` —
-  os campos extras são renderizados **somente** no ramo `#if(${enable_custom_attributes} == "true")`, e o
+- `src/main/resources/archetype-resources/src/main/java/__entity_package_name__/__entity_name__.java:37-51` —
+  os campos extras são renderizados **somente** no ramo `#if(${enable_custom_entity_attributes} == "true")`, e o
   tipo é usado **verbatim**: `private ${attrib.type} ${attrib.name};`.
 - `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:60-63` — a regex do
   catálogo `^(false|[A-Z][a-zA-Z0-9_]*:[a-z][a-zA-Z0-9_]*(,…)*)$` exige `Tipo:nome` em minúscula no nome e
   tipo sem ponto.
 - `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml:44-47` —
-  `enable_custom_attributes` default `false` — o ramo que renderiza os atributos.
+  `enable_custom_entity_attributes` default `false` — o ramo que renderiza os atributos.
 
 ### Metade B — bloqueante: o caminho de cache HIT está quebrado (pré-existente, agora alcançável)
 
@@ -261,7 +265,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
 ### Metade C — onde o teste futuro vive
 
-- `src/main/resources/archetype-resources/src/test/java/__entity_name_package__/config/properties/` — o projeto
+- `src/main/resources/archetype-resources/src/test/java/__entity_package_name__/config/properties/` — o projeto
   gerado já embarca **10 classes de teste Java** (binding properties). É a casa natural do teste do contrato.
 - `src/test/resources/projects/custom-attributes/verify.groovy` — o IT do archetype já valida os atributos da
   entidade gerada (`private <tipo> <nome>;`), mas com **valores fixados à mão** → cego para a Metade B.
@@ -269,8 +273,8 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 ### Metade B — cobertura de teste que não exercita o caminho do bug
 
 - `src/test/resources/projects/custom-attributes/archetype.properties:9-12` — o perfil de IT **fixa** os
-  valores esperados à mão (`entity_name=ContractEntity`, `entity_name_package=contractentity`,
-  `enable_custom_attributes=true`, `custom_attributes_list=Long:id,String:name,String:createdAt`). O IT
+  valores esperados à mão (`entity_name=ContractEntity`, `entity_package_name=contractentity`,
+  `enable_custom_entity_attributes=true`, `custom_entity_attributes_list=Long:id,String:name,String:createdAt`). O IT
   **jamais** pode detectar este bug.
 - `src/test/pre-processamento-maven-flags-via-llm/ProvenanceReportTest.groovy:50-53` — os checks A6/A7/A8
   **afirmam** o descarte FR-009 (`log_level`, `unknown_flag` fora do contrato ⇒ descartados). Qualquer
@@ -280,11 +284,11 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
 
 ### Documentação — divergente do código
 
-- `README.md:1930-1932` — afirma que `entity_name_package` é *"derivado automaticamente de `entity_name`"*,
+- `README.md:1930-1932` — afirma que `entity_package_name` é *"derivado automaticamente de `entity_name`"*,
   *"recalculado sempre que `entity_name` muda"*, e que *"o Velocity aplica `${entity_name,,}`"*. **Falso**:
   não há `${entity_name,,}` no template (`__entity_name__.java:5`) nem derivação em lugar nenhum. O default é
   o literal fixo `myentity`.
-- `README.md:2131-2132` — o grafo de dependências repete a mesma aresta `entity_name → entity_name_package
+- `README.md:2131-2132` — o grafo de dependências repete a mesma aresta `entity_name → entity_package_name
   (derivada automaticamente)`.
 - `README.md:1944-1950` — a nota de remoção das duas flags afirma que *"não existe mais caminho de arquivo a
   apontar"* — frase que fica obsoleta se a Metade C for implementada por reintrodução de flag.
@@ -295,7 +299,7 @@ construído em `target/classes/META-INF/maven/archetype-metadata.xml`).
   inference that is absent from the contract"*. Redigido para um contrato cujos campos **já seriam nomes
   de flags**; não cobre o contrato de domínio que o operador de fato entrega.
 - `specs/003-llm-flag-inference/spec.md:118-137` — FR-001..FR-020. **Nenhuma FR** cobre derivar a entidade
-  a partir do contrato, habilitar `enable_custom_attributes` por consequência, fazer o pacote acompanhar o
+  a partir do contrato, habilitar `enable_custom_entity_attributes` por consequência, fazer o pacote acompanhar o
   nome da entidade, ou **persistir** o contrato/snapshot no projeto gerado.
 - `specs/003-llm-flag-inference/spec.md:134` — **FR-017**: *"System MUST NOT persist the contract's content in
   version control; only the cache key (hash) may be persisted"*. **A Metade C colide frontalmente com esta FR**
@@ -333,16 +337,16 @@ Sobre isso incidem três defeitos independentes:
 
 1. **Ausência de derivação determinística dos atributos.** O mecanismo tem um caminho para ler o contrato
    (`pickFromContract`) que só enxerga o nível superior e por *chave de flag*. Não há caminho algum que
-   transforme `attributes[]` em `custom_attributes_list`. Como o relatório determina que "os atributos passam a
+   transforme `attributes[]` em `custom_entity_attributes_list`. Como o relatório determina que "os atributos passam a
    ser os atributos em si da entidade" e que o tipo é estimado **a partir do valor** do atributo, essa
    estimativa — que é **mecânica** (o tipo JSON do valor → tipo Java) — precisa existir em código, e não pode
    depender da boa vontade da LLM. Sem ela, o formato `Tipo:nome` exigido pela flag nunca é garantido: a LLM
    pode devolver `Long:id,String:name` (ok), `id:Long,name:String` (invertido) ou `Long:id, Instant:createdAt`
    (espaço), e a regex do catálogo rejeita os dois últimos, caindo silenciosamente no default
    `Long:id,MyId:id,My_Id:my_id`.
-2. **Ausência de derivação de `entity_name_package`.** O bug irmão trocou a derivação por um default fixo
+2. **Ausência de derivação de `entity_package_name`.** O bug irmão trocou a derivação por um default fixo
    `myentity` (para satisfazer o FR-018). O pacote deixou de acompanhar o nome da entidade: sem
-   `-Dentity_name_package` explícito, o operador obtém a classe `ContractEntity` no pacote `myentity`. O README
+   `-Dentity_package_name` explícito, o operador obtém a classe `ContractEntity` no pacote `myentity`. O README
    ainda promete a derivação (ver *Documentação* acima).
 3. **Cache HIT quebrado.** `cacheLookup` estoura a pilha com o relatório de proveniência real ⇒ a 2ª invocação
    sai com **exit 1** e não entrega linha de comando nenhuma. Isso **impede a validação de qualquer correção
@@ -387,7 +391,7 @@ maintainer.
 
 **Preferred**: seis partes coordenadas. A ideia central da Metade B é mover para o **mecanismo** tudo o que é
 determinístico (ler os atributos do contrato, estimar o tipo pelo valor, montar a lista no formato exigido,
-habilitar `enable_custom_attributes`) e deixar à LLM apenas o que é genuinamente semântico (estimar o **nome** da
+habilitar `enable_custom_entity_attributes`) e deixar à LLM apenas o que é genuinamente semântico (estimar o **nome** da
 entidade). Na Metade C, a recomendação é materializar no projeto gerado um **snapshot derivado da forma da
 entidade** — não o contrato cru — porque ele atende integralmente ao propósito declarado (baseline para o teste
 que garante a entidade inalterada) **sem** reabrir a flag removida, **sem** persistir dado de negócio no VCS e
@@ -425,7 +429,7 @@ que garante a entidade inalterada) **sem** reabrir a flag removida, **sem** pers
   **ruidosa** (nota no relatório de proveniência + `ERROR:` em stderr), porque o fallback silencioso do FR-006
   para `Long:id,MyId:id,My_Id:my_id` gera uma entidade plausível e **errada** — exatamente o tipo de falha
   silenciosa que este bug existe para eliminar.
-* `enable_custom_attributes` é **forçado** a `true` sempre que a lista derivada for não vazia (§
+* `enable_custom_entity_attributes` é **forçado** a `true` sempre que a lista derivada for não vazia (§
   *Direcionamento do maintainer*). Sem isso, o template nem renderiza os campos (§
   `__entity_name__.java:37-51`).
 * **Fonte de proveniência**: os valores derivados do contrato **não** são literais do contrato (FR-007) nem
@@ -437,17 +441,17 @@ que garante a entidade inalterada) **sem** reabrir a flag removida, **sem** pers
 
 * **Relaxamento limitado do FR-009.** O portão `contract.containsKey(flag)` passa a admitir uma
   **allowlist explícita e mínima** de flags cuja semântica é derivável do contrato:
-  `entity_name` (e, opcionalmente, `entity_name_package`). Para essas flags, uma proposta `INFERENCE`
+  `entity_name` (e, opcionalmente, `entity_package_name`). Para essas flags, uma proposta `INFERENCE`
   passa a ser aceita mesmo sem a chave literal no contrato — **desde que** o valor case com a
   `validationRegex` do catálogo. **Todas as demais flags mantêm o portão estrito**, e as chaves da allowlist
   **não** devem aparecer na seção *"Propostas do LLM descartadas"* quando forem aceitas.
 * **Precedência resultante** para `entity_name`: campo explícito do contrato (`entityName` /
   `entity_name` / `entity`) ⇒ proposta da LLM (`INFERENCE`) ⇒ default do catálogo (`MyEntity`).
-* **Derivação de `entity_name_package`**: a partir do `entity_name` **resolvido**, em minúsculas —
+* **Derivação de `entity_package_name`**: a partir do `entity_name` **resolvido**, em minúsculas —
   consistente com o que o README já promete (`README.md:1930-1932`) e com a fixture de IT
-  (`entity_name=ContractEntity` ⇒ `entity_name_package=contractentity`). Isso fecha a lacuna do pacote
+  (`entity_name=ContractEntity` ⇒ `entity_package_name=contractentity`). Isso fecha a lacuna do pacote
   desacoplado e evita a armadilha do campo `package` do contrato: ele é um pacote **completo**
-  (`it.pkg.contractentity`), enquanto `entity_name_package` é um **sub-pacote** relativo a `-Dpackage` —
+  (`it.pkg.contractentity`), enquanto `entity_package_name` é um **sub-pacote** relativo a `-Dpackage` —
   um mapeamento ingênuo produziria `it.pkg.it.pkg.contractentity`.
 * **Origem da derivação do pacote**: fonte nova (`SYNTHETIC`) ou reaproveitamento de `CONTRACT_DERIVED` —
   decisão do maintainer; em qualquer caso, precisa entrar na tabela do FR-020.
@@ -467,7 +471,7 @@ que garante a entidade inalterada) **sem** reabrir a flag removida, **sem** pers
 Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálogo de flags:
 
 * **O archetype já tem tudo o que precisa.** A forma da entidade é integralmente descrita por
-  `entity_name`, `entity_name_package`, `enable_custom_attributes` e `custom_attributes_list` — flags que o
+  `entity_name`, `entity_package_name`, `enable_custom_entity_attributes` e `custom_entity_attributes_list` — flags que o
   archetype **já recebe**. Logo, o próprio pós-processador pode materializar o baseline:
   `src/test/resources/contracts/<entity_name>.entity-contract.json`, com um conteúdo como:
 
@@ -497,7 +501,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 * **Nenhum dado de negócio é persistido**: o snapshot contém apenas **nomes de campos e tipos** ⇒ FR-017 e
   Princípio V **permanecem válidos**, sem emenda.
 * **Quem consome.** O projeto gerado já embarca testes Java em
-  `src/test/java/__entity_name_package__/config/properties/`. O teste do contrato pode ser uma classe nova
+  `src/test/java/__entity_package_name__/config/properties/`. O teste do contrato pode ser uma classe nova
   nesse pacote (ex.: `EntityContractTest.java`) que lê `src/test/resources/contracts/<Entity>.json` do
   classpath de teste e compara com os campos declarados na entidade — falhando se alguém editar a classe à mão.
   Isso materializa a "burocratização" pedida: **alterar a classe sem atualizar o snapshot quebra o build**.
@@ -511,8 +515,8 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 * `specs/003-llm-flag-inference/spec.md`:
   * **emendar a FR-009** (`:126`) com a exceção da allowlist — de forma **explícita**, como foi feito com a
     FR-011 no bug irmão (`:128`), não silenciosa;
-  * nova FR para a **derivação do contrato** (atributos → `custom_attributes_list`, tipo estimado pelo
-    valor, `enable_custom_attributes` forçado, formato estrito);
+  * nova FR para a **derivação do contrato** (atributos → `custom_entity_attributes_list`, tipo estimado pelo
+    valor, `enable_custom_entity_attributes` forçado, formato estrito);
   * nova FR para o **pacote acompanhar a entidade**;
   * nova FR para a **materialização do snapshot** em `src/test/resources/contracts/` (com aconstraint de
     ordem no pós-processador e a sobrevivência à limpeza de `src/test/resources`);
@@ -520,7 +524,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 * `specs/003-llm-flag-inference/contracts/cli-contract.md`:
   * §2 (`:174-192`): documentar que o script **pode/deve** devolver `entity_name` estimado a partir do
     contexto do prompt + contrato, e que esse valor é aceito mesmo sem a chave literal no contrato;
-  * §2: documentar o **formato rígido** de `custom_attributes_list` e a regra de tipo por valor;
+  * §2: documentar o **formato rígido** de `custom_entity_attributes_list` e a regra de tipo por valor;
   * §3: registrar a troca do parser do cache (o **formato em disco não muda** — v2 continua v2);
   * §5: registrar as **breaking changes** (semântica da FR-009, novo(s) fonte(s) de proveniência).
 * `scripts/inference-stub.sh`: derivar `entity_name` (e a lista) do contrato lido, para exercitar o caminho
@@ -528,7 +532,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 * **Cobertura de IT**: um perfil que **gere** o comando a partir de um contrato de domínio e afirme que a
   entidade gerada corresponde. O perfil `custom-attributes` atual fixa os valores à mão e, por isso, é cego
   para este bug; o `verify.groovy` do perfil deve ser estendido para checar também o snapshot materializado.
-* `README.md`: corrigir a afirmação falsa de derivação automática de `entity_name_package`
+* `README.md`: corrigir a afirmação falsa de derivação automática de `entity_package_name`
   (`:1930-1932`, `:2131-2132`); atualizar a nota de remoção das duas flags (`:1944-1950`) para refletir a nova
   materialização do snapshot; documentar o efeito de `enable_folder_src_test_java` sobre `contracts/`
   (`:2095-2097`).
@@ -544,7 +548,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 * **A — Persistir o contrato CRU (leitura literal do pedido).**
   *Prós*: atende o texto do pedido ao pé da letra; o arquivo persistido é exatamente o que o operador entregou
   ao mecanismo, incluindo campos que não são da entidade (`api_port`, `enable_jwt_authentication`).
-  *Contras*: exige **reabrir** a decisão do bug irmão — um **novo canal** (flag `entity_contract_path`
+  *Contras*: exige **reabrir** a decisão do bug irmão — um **novo canal** (flag `entity_contract_file_path`
   apontando para arquivo que o mecanismo grava no cache-dir, ou `entity_contract_inline` com o JSON na linha de
   comando), com risco de recriar a "flag zumbi" que acabou de ser removida; exige **emenda explícita da
   FR-017** e revisão do **Princípio V**; **materializa dado de negócio no VCS do projeto gerado**
@@ -574,12 +578,12 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 
 * `src/main/pre-processamento-maven-flags-via-llm/Orchestrator.groovy` — derivação dos atributos a partir do
   contrato, allowlist da FR-009 no `merge()` (`:254`), remoção da allowlist da lista `discarded`
-  (`:281-289`), derivação de `entity_name_package`, `enable_custom_attributes` forçado, nova fonte de
+  (`:281-289`), derivação de `entity_package_name`, `enable_custom_entity_attributes` forçado, nova fonte de
   proveniência no `renderProvenanceReport()` (`:312-355`), parser do cache (`:521-551`).
 * `src/main/pre-processamento-maven-flags-via-llm/FlagProposalMerger.groovy` — **mesma** allowlist e a mesma
   derivação no módulo unit-testável irmão (`:61`, `:92`), para o mecanismo e o módulo não divergirem.
 * `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` — só se a regex de
-  `custom_attributes_list` precisar ser alargada (`:60-63`); a regex atual já aceita `Tipo:nome` estrito.
+  `custom_entity_attributes_list` precisar ser alargada (`:60-63`); a regex atual já aceita `Tipo:nome` estrito.
 * `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-test-variables.groovy` —
   path do destino do snapshot (`:24-25`, ao lado de `srcTestResources`).
 * **Novo** `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-entity-contract.groovy` —
@@ -594,23 +598,23 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 * `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` — caso de regressão do parser do
   cache com relatório de tamanho realista.
 * Novo teste (sugestão: `src/test/pre-processamento-maven-flags-via-llm/ContractDerivationTest.groovy`) — regras de
-  estimativa de tipo por valor, montagem estrita da lista, `enable_custom_attributes` forçado, pacote
+  estimativa de tipo por valor, montagem estrita da lista, `enable_custom_entity_attributes` forçado, pacote
   acompanhando a entidade.
 * `src/test/resources/projects/custom-attributes/archetype.properties` (+ `verify.groovy`) — o perfil passa
   a ser **derivado** do contrato, ou ganha um perfil irmão que o seja; o `verify.groovy` deve checar também o
   snapshot materializado e sua sobrevivência a `enable_folder_src_test_java=false`.
-* **Novo** `src/main/resources/archetype-resources/src/test/java/__entity_name_package__/EntityContractTest.java`
+* **Novo** `src/main/resources/archetype-resources/src/test/java/__entity_package_name__/EntityContractTest.java`
   (ou equivalente em Groovy) — o teste do contrato que vive **no projeto gerado**.
 * `specs/003-llm-flag-inference/spec.md` — emendar a FR-009, emendar a FR-020, novas FRs de derivação e de
   persistência.
 * `specs/003-llm-flag-inference/contracts/cli-contract.md` — §2 (formato rígido e regras de derivação), §3
   (parser do cache), §5 (breaking changes).
-* `README.md` — `:1930-1932`, `:2131-2132` (derivação de `entity_name_package`), `:1944-1950` (nota de
+* `README.md` — `:1930-1932`, `:2131-2132` (derivação de `entity_package_name`), `:1944-1950` (nota de
   remoção), `:2095-2097` (efeito de `enable_folder_src_test_java` sobre `contracts/`).
 
 ## Tests to add or update
 
-* **Derivação dos atributos**: contrato com `attributes` no formato mapa ⇒ `custom_attributes_list` ==
+* **Derivação dos atributos**: contrato com `attributes` no formato mapa ⇒ `custom_entity_attributes_list` ==
   `Integer:id,Long:bigNumber,String:name,Boolean:active` (na ordem do contrato).
 * **Derivação dos atributos**: contrato com `attributes` no formato lista (`name`/`value`) ⇒ mesmo
   resultado.
@@ -621,23 +625,23 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
   template (o projeto gerado não compilaria) — o mecanismo deve normalizar ou rejeitar com nota explícita.
 * **Formato estrito**: a lista derivada passa pela `validationRegex` do catálogo; uma lista malformada
   produz **nota ruidosa** no relatório de proveniência, não um silêncio.
-* **`enable_custom_attributes` forçado**: com atributos derivados ⇒ `enable_custom_attributes=true` na
+* **`enable_custom_entity_attributes` forçado**: com atributos derivados ⇒ `enable_custom_entity_attributes=true` na
   linha de comando, mesmo que o contrato não mencione a flag.
 * **Nome da entidade pela LLM (allowlist)**: contrato de domínio + LLM propondo `entity_name` ⇒ aceito,
   fonte `INFERENCE`, **ausente** da seção "Propostas descartadas".
 * **Regressão do FR-009**: uma flag **fora** da allowlist e ausente do contrato **continua descartada**
   (o check A7 existente serve).
 * **Precedência**: `entityName` explícito no contrato **vence** a proposta da LLM (fonte `CONTRACT`).
-* **Pacote acompanha a entidade**: `entity_name=ContractEntity` ⇒ `entity_name_package=contractentity`,
+* **Pacote acompanha a entidade**: `entity_name=ContractEntity` ⇒ `entity_package_name=contractentity`,
   fonte derivada.
-* **Derivação x contrato**: se o contrato declarar `entity_name_package` explicitamente, ele **vence** a
+* **Derivação x contrato**: se o contrato declarar `entity_package_name` explicitamente, ele **vence** a
   derivação.
 * **Cache**: 1ª invocação (MISS) e 2ª invocação (HIT) produzem **linhas de comando byte-idênticas**
   (FR-012) e a 2ª **não** estoura a pilha — com um relatório de proveniência de tamanho realista (≥32
   flags).
 * **Cache legado**: uma entrada v1 (sem `r`) continua sendo lida e servida com a nota de "relatório
   indisponível".
-* **Snapshot materializado**: projeto gerado com `enable_custom_attributes=true` ⇒ existe
+* **Snapshot materializado**: projeto gerado com `enable_custom_entity_attributes=true` ⇒ existe
   `src/test/resources/contracts/<Entity>.json` com nome, pacote e atributos.
 * **Sobrevivência do snapshot**: com `enable_folder_src_test_java=false`, o snapshot **continua existindo**
   (regressão do bug de ordem do pós-processador).
@@ -647,8 +651,8 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
   snapshot ⇒ o teste do contrato **falha** (é a "burocratização" pedida).
 * **Ponta a ponta**: invocar o mecanismo com um contrato de domínio e um stub que deriva ⇒ a linha de
   comando contém `-Dentity_name=<estimado>`,
-  `-Dcustom_attributes_list=Tipo:nome,…`, `-Denable_custom_attributes=true`,
-  `-Dentity_name_package=<entity_name em minúsculas>`; em seguida, gerar o projeto e verificar que a
+  `-Dcustom_entity_attributes_list=Tipo:nome,…`, `-Denable_custom_entity_attributes=true`,
+  `-Dentity_package_name=<entity_name em minúsculas>`; em seguida, gerar o projeto e verificar que a
   entidade gerada tem os campos esperados e **compila**.
 * **Regressão do catálogo**: 32 flags, 0 defaults vazios, `absolute_path_jsonfile_contract` e
   `enable_json_entity_contracts` ausentes (checks existentes de `FlagCatalogExtractorTest`).
@@ -658,7 +662,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 - **A allowlist abre uma porta de alucinação.** A LLM passa a poder definir `entity_name` sem chave
   literal no contrato. Mitigação: allowlist **mínima** (`entity_name`), `validationRegex` estrita do
   catálogo (`^[A-Z][a-zA-Z0-9_]+$`) e o valor inválido cai no default por FR-006.
-- **O fallback silencioso do FR-006 é o pior modo de falha possível aqui.** Um `custom_attributes_list`
+- **O fallback silencioso do FR-006 é o pior modo de falha possível aqui.** Um `custom_entity_attributes_list`
   malformado cai no default `Long:id,MyId:id,My_Id:my_id` — uma entidade **plausível e errada**, sem
   sinal visível de que o contrato foi ignorado. A correção deve tornar essa falha **ruidosa** (nota no
   relatório de proveniência + `ERROR:` em stderr).
@@ -669,15 +673,15 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 - **A estimativa de data/hora é ambígua.** Um valor ISO-8601 em string (`"2026-10-23T10:15:30Z"`) é `String`
   por simplicidade, mas o operador pode esperar `LocalDateTime` — que **não** compila sem import. A regra
   precisa ser declarada explicitamente e testada.
-- **O ramo `enable_custom_attributes=true` gera uma entidade SEM `@Id`.** Com atributos customizados, o
+- **O ramo `enable_custom_entity_attributes=true` gera uma entidade SEM `@Id`.** Com atributos customizados, o
   template não renderiza o bloco `@Id`/`@GeneratedValue`/`id`/`username`/`password`
   (`__entity_name__.java:75-95`), e o `@Id` só aparece se `id` estiver entre os atributos — **sem a
   anotação** `@Id`. Defeito **pré-existente**, fora do escopo deste bug, mas a correção amplia a exposição
   dele a todo projeto gerado com contrato. Registrado aqui para não ser perdido.
-- **`entity_name_package` × `package`**: o campo `package` do contrato é um pacote **completo**
-  (`it.pkg.contractentity`); `entity_name_package` é um **sub-pacote** relativo a `-Dpackage`. Derivar do
+- **`entity_package_name` × `package`**: o campo `package` do contrato é um pacote **completo**
+  (`it.pkg.contractentity`); `entity_package_name` é um **sub-pacote** relativo a `-Dpackage`. Derivar do
   `entity_name` evita a dupla prefixação; usar o `package` do contrato exige extrair o último segmento.
-- **Mudança de semântica de `entity_name_package`**: hoje o valor efetivo é `myentity` quando a flag é
+- **Mudança de semântica de `entity_package_name`**: hoje o valor efetivo é `myentity` quando a flag é
   omitida. A derivação muda o resultado **efetivo** para projetos gerados sem a flag — comportamento
   melhor, mas uma mudança de saída observável.
 - **Nova(s) fonte(s) de proveniência**: muda o formato do relatório de FR-020 (aditivo, mas quebra
@@ -723,7 +727,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
   `enable_folder_src_test_java=false` (escrever depois do snippet), ou o archetype deve exigir
   `enable_folder_src_test_java=true` para materializá-lo?]
 - [NEEDS CLARIFICATION: o teste do contrato vive **no projeto gerado**
-  (`src/test/java/__entity_name_package__/…`) ou no **suite de IT do archetype**
+  (`src/test/java/__entity_package_name__/…`) ou no **suite de IT do archetype**
   (`src/test/resources/projects/*/verify.groovy`)?]
 - [NEEDS CLARIFICATION: qual é a **forma canônica** de `attributes` no contrato — mapa
   (`{"attributes": {"id": 1024}}`) ou lista (`{"attributes": [{"name":"id","value":1024}]}`)? As duas
@@ -735,7 +739,7 @@ Esta é a parte que **não** exige mexer no contrato do mecanismo nem no catálo
 - [NEEDS CLARIFICATION: quando a lista derivada **não** casa com a `validationRegex`, o mecanismo deve
   **falhar a invocação** (exit ≠ 0) ou manter o default com nota ruidosa? Falhar é mais seguro contra a
   entidade plausível-e-errada, mas tira a característica "always produce a command line" do FR-010.]
-- [NEEDS CLARIFICATION: `entity_name_package` deriva do `entity_name` em minúsculas (como o README já
+- [NEEDS CLARIFICATION: `entity_package_name` deriva do `entity_name` em minúsculas (como o README já
   promete e como a fixture de IT faz) ou do campo `package` do contrato (último segmento)?]
 - [NEEDS CLARIFICATION: a correção do `cacheLookup` (`StackOverflowError`) entra no escopo deste bug ou
   deve ser um bug próprio? Ela é **pré-requisito** para validar a correção, mas tem causa-raiz distinta.]

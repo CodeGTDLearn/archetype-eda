@@ -5,9 +5,13 @@
 - **Assessment**: ./assessment.md
 - **Status**: applied
 
+> **Status**: documento histórico. As flags `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` foram removidas do catálogo (34 → 32) e não têm equivalente atual; o caminho do contrato passou a ser emitido pelo mecanismo de inferência em `entity_contract_file_path`.
+
+> **Nota (histórico)**: os nomes de arquivos `fileset-*.xml` citados abaixo refletem o momento desta decisão. O catálogo foi depois reorganizado em um `<fileSet>` por arquivo, numerado: `fileset-src-main-resources.xml` → `fileset-11-base-src-main-resources-application.xml` (mais `fileset-12/13/14-...` para `properties/`, `protected_properties/` e `db_scripts/`). O `<fileSet>` `SRC\MAIN\RESOURCES\CONTRACTS` citado aqui foi removido e **não tem equivalente atual**.
+
 ## Summary
 
-As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `enable_json_entity_contracts`) foram removidas do catálogo do archetype, e o default vazio de `entity_name_package` foi preenchido com `myentity`. O mecanismo de inferência LLM, que abortava com **exit code 4** (FR-018) antes de qualquer inferência, voltou a operar: emite **32** flags e nenhuma linha de comando com as flags removidas. O cache legado foi invalidado explicitamente (impressão digital do catálogo na chave), e o perfil de IT `json-contract` foi reformulado e renomeado para `custom-attributes`.
+As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `enable_json_entity_contracts`) foram removidas do catálogo do archetype, e o default vazio de `entity_package_name` foi preenchido com `myentity`. O mecanismo de inferência LLM, que abortava com **exit code 4** (FR-018) antes de qualquer inferência, voltou a operar: emite **32** flags e nenhuma linha de comando com as flags removidas. O cache legado foi invalidado explicitamente (impressão digital do catálogo na chave), e o perfil de IT `json-contract` foi reformulado e renomeado para `custom-attributes`.
 
 ## Changes
 
@@ -15,7 +19,7 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 
 | File | Change | Notes |
 |------|--------|-------|
-| `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` | modified | Removidos os blocos `enable_json_entity_contracts` (linhas 64-75) e `absolute_path_jsonfile_contract` (linhas 77-88). `entity_name_package`: `<defaultValue/>` → `<defaultValue>myentity</defaultValue>` — elimina o gate FR-018. Catálogo 34 → 32 flags. |
+| `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-entity.xml` | modified | Removidos os blocos `enable_json_entity_contracts` (linhas 64-75) e `absolute_path_jsonfile_contract` (linhas 77-88). `entity_package_name`: `<defaultValue/>` → `<defaultValue>myentity</defaultValue>` — elimina o gate FR-018. Catálogo 34 → 32 flags. |
 | `src/main/resources/META-INF/archetype_post_generate_body/archetype-global-variables.groovy` | modified | Removidas as definições `keep_json_entity_contracts`, `absolute_path_jsonfile_contract` e `json_entity_contracts_folder` (linhas 14-16). |
 | `src/main/resources/META-INF/archetype_post_generate_body/archetype-path-src-main-variables.groovy` | modified | Removidos `srcMainResourcesContracts` e `jsonfileEntityContractSourcePath` (linhas 27-28). |
 | `src/main/resources/META-INF/archetype_post_generate_snippets/snippet-src-main-resources.groovy` | **removed** | O arquivo continha **apenas** os ramos `deleteFolder`/`copyFile` de `contracts/`. Removido por inteiro — a pasta `contracts/` deixa de ser criada, apagada ou populada. |
@@ -29,16 +33,16 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 | File | Change | Notes |
 |------|--------|-------|
 | `src/test/pre-processamento-maven-flags-via-llm/OrchestratorContractBridgeTest.groovy` | **removed** | Descartado por decisão do maintainer: especificava a arquitetura **oposta** (sintetizar a flag, fonte `SYNTHETIC`). |
-| `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | added | 16 checks: contagem de 32 flags, guard FR-018, ausência das duas flags, default `entity_name_package`, auto-coerência default×regex, extrator real sobre o catálogo construído, Orchestrator sem exit 4, caso negativo FR-018. |
+| `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy` | added | 16 checks: contagem de 32 flags, guard FR-018, ausência das duas flags, default `entity_package_name`, auto-coerência default×regex, extrator real sobre o catálogo construído, Orchestrator sem exit 4, caso negativo FR-018. |
 | `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy` | modified | 6 checks novos (4.1-4.6) sobre a impressão digital do catálogo e a invalidação do cache legado. |
-| `src/test/resources/projects/json-contract/` → `src/test/resources/projects/custom-attributes/` | **renamed** | Perfil reformulado (decisão do maintainer). `archetype.properties`: `artifactId=custom-attributes`, `project_description=Custom attributes scenario`, `enable_custom_attributes=true`, `custom_attributes_list=Long:id,String:name,String:createdAt`; as 2 flags de contrato JSON removidas. `verify.groovy`: `expectedArtifactId = 'custom-attributes'`. `goal.txt` inalterado. `sample-contract-for-archetype-test.json` mantido como **documento de referência** da forma da entidade (não é lido em tempo de execução). |
-| `src/test/resources/projects/{basic,binding-default-only,binding-list-only,binding-map-only,binding-mutable-only,binding-validated-only,defaults-only,full,minimal}/archetype.properties` | modified | 9 arquivos — removidas as linhas `enable_json_entity_contracts=` e `absolute_path_jsonfile_contract=`. |
+| `src/test/resources/projects/json-contract/` → `src/test/resources/projects/custom-attributes/` | **renamed** | Perfil reformulado (decisão do maintainer). `archetype.properties`: `artifactId=custom-attributes`, `project_description=Custom attributes scenario`, `enable_custom_entity_attributes=true`, `custom_entity_attributes_list=Long:id,String:name,String:createdAt`; as 2 flags de contrato JSON removidas. `verify.groovy`: `expectedArtifactId = 'custom-attributes'`. `goal.txt` inalterado. `sample-contract-for-archetype-test.json` mantido como **documento de referência** da forma da entidade (não é lido em tempo de execução). |
+| `src/test/resources/projects/{basic,external-binding-default-only,external-binding-list-only,external-binding-map-only,external-binding-mutable-only,external-binding-validated-only,defaults-only,full,minimal}/archetype.properties` | modified | 9 arquivos — removidas as linhas `enable_json_entity_contracts=` e `absolute_path_jsonfile_contract=`. |
 
 ### Documentação
 
 | File | Change | Notes |
 |------|--------|-------|
-| `README.md` | modified | 4.2: removido o dummy `/dev/null/null.json`; documentado que `entity_name_package` deve ser passado pelo operador. Seção de flags: entradas das 2 flags removidas substituídas por nota de remoção (34 → 32). Grafo de dependências: aresta `enable_json_entity_contracts → absolute_path_jsonfile_contract` removida. |
+| `README.md` | modified | 4.2: removido o dummy `/dev/null/null.json`; documentado que `entity_package_name` deve ser passado pelo operador. Seção de flags: entradas das 2 flags removidas substituídas por nota de remoção (34 → 32). Grafo de dependências: aresta `enable_json_entity_contracts → absolute_path_jsonfile_contract` removida. |
 | `specs/003-llm-flag-inference/spec.md` | modified | Perfil `json-contract` → `custom-attributes` (linhas 19, 24); **FR-011 emendada** (chave de cache inclui a impressão digital do catálogo) e FR-012 ajustada; SC-003: 34 → 32 flags. |
 | `specs/003-llm-flag-inference/contracts/cli-contract.md` | modified | Seção 3 ganhou "Key derivation" (fórmula da chave + justificativa da impressão digital); §5: breaking changes de 2026-10-23 (chave de cache + catálogo sem as 2 flags); "34 flag names" → 32. |
 | `specs/003-llm-flag-inference/{data-model,plan,research,tasks}.md` | modified | Contagem de flags 34 → 32 (7 pontos); perfil renomeado. `tasks.md`: `asserts exactly 34 entries` → `32` (3 pontos). |
@@ -54,7 +58,7 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 -    <validationRegex>^\/([^\/]+\/)*[^\/]+\.json$</validationRegex>
 -</requiredProperty>
 
- <requiredProperty key="entity_name_package">
+ <requiredProperty key="entity_package_name">
 -    <defaultValue/>
 +    <defaultValue>myentity</defaultValue>
      <validationRegex>^[a-z][a-z0-9_.]+$</validationRegex>
@@ -80,14 +84,14 @@ As duas flags do fluxo de contrato JSON (`absolute_path_jsonfile_contract` e `en
 - `src/test/pre-processamento-maven-flags-via-llm/FlagCatalogExtractorTest.groovy::1.1` — o catálogo tem exatamente **32** flags (trava a remoção).
 - `…::1.2` — nenhum `<requiredProperty>` com `defaultValue` vazio (guard FR-018; era o que abortava com exit 4).
 - `…::1.3` / `::1.4` — `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` **ausentes** do catálogo.
-- `…::1.6` / `::1.7` — `entity_name_package` com default `myentity`, casando com a própria `validationRegex`.
+- `…::1.6` / `::1.7` — `entity_package_name` com default `myentity`, casando com a própria `validationRegex`.
 - `…::1.8` — todo `defaultValue` do catálogo satisfaz a sua própria `validationRegex` (o valor emitido na linha de comando é aceito pelo archetype).
 - `…::2.1-2.3` — o `FlagCatalogExtractor` real lê o catálogo construído com 32 flags e sem as flags de contrato.
 - `…::3.1` / `::3.2` — o `Orchestrator` real carrega o catálogo **sem lançar** (o caminho de exit 4 está fechado).
 - `…::4.1` / `::4.2` — caso negativo FR-018: `defaultValue` vazio é rejeitado e o erro nomeia a flag.
 - `src/test/pre-processamento-maven-flags-via-llm/OrchestratorCacheTest.groovy::4.1-4.3` — a chave de cache é determinística, muda com a impressão digital e **não** é alcançável pela chave legada.
 - `…::4.4-4.6` — a impressão digital é estável para o mesmo catálogo, muda quando um default muda e é um sha256 hex.
-- `src/test/resources/projects/custom-attributes/verify.groovy` — asserções estruturais sobre a entidade gerada a partir de `custom_attributes_list` (`Long id`, `String name`, `String createdAt`).
+- `src/test/resources/projects/custom-attributes/verify.groovy` — asserções estruturais sobre a entidade gerada a partir de `custom_entity_attributes_list` (`Long id`, `String name`, `String createdAt`).
 
 ## Local Verification
 
@@ -126,7 +130,7 @@ Três expansões de escopo, todas **necessárias** para satisfazer os critérios
 - **Artefato composto defasado**: `src/main/resources/META-INF/archetype-post-generate.groovy` ainda contém o código antigo (excluído do build). Candidatos: removê-lo do repositório, ou regenerá-lo a partir dos fragmentos e passar a versioná-lo de formaderived. Decisão do maintainer.
 - **Helper `copyFile` órfão**: `archetype_post_generate_body/archetype-file-functions.groovy:49-71` não é mais chamado por nenhum snippet (o único chamador era o ramo de contrato JSON). Não foi removido por estar fora da lista de arquivos do assessment.
 - **`sample-contract-for-archetype-test.json`**: mantido no perfil `custom-attributes` como documento de referência da forma da entidade; não é lido em tempo de execução. Pode ser removido ou renomeado (ex.: `sample-entity-shape.json`) para não sugerir que existe um fluxo de contrato.
-- **`entity_name_package` desacoplado de `entity_name`**: o default fixo `myentity` satisfaz o FR-018, mas o pacote/diretório dos 37 templates deixa de acompanhar `entity_name` — o operador/meccanismo deve sempre passar `-Dentity_name_package=<entity_name em minúsculas>`. Decisão do maintainer registrada no assessment; a derivação automática fica no bug adjacente `contrato-json-inferido-inoperante`.
+- **`entity_package_name` desacoplado de `entity_name`**: o default fixo `myentity` satisfaz o FR-018, mas o pacote/diretório dos 37 templates deixa de acompanhar `entity_name` — o operador/meccanismo deve sempre passar `-Dentity_package_name=<entity_name em minúsculas>`. Decisão do maintainer registrada no assessment; a derivação automática fica no bug adjacente `contrato-json-inferido-inoperante`.
 - **Bug adjacente ainda aberto**: `contrato-json-inferido-inoperante` — o gate FR-009 (`Orchestrator.groovy:248`, `:279`) ainda exige chave **literal** no contrato, então um contrato de domínio (`entityName`, `attributes`) não alimenta flag nenhuma. A extração do nome da entidade e dos atributos a partir do contrato **no prompt** continua pendente e depende daquele bug.
 - **Observabilidade**: não há mais registro em disco de qual contrato originou o projeto (o `Relatorio de Proveniencia` não inclui o conteúdo do contrato, por FR-017).
 - **Cache**: a invalidação é uma janela única — o cache se repopula sozinho. Operadores podem apagar `cache.jsonl` à vontade.

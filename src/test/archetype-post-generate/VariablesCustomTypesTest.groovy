@@ -1,41 +1,46 @@
 /**
- * Unit test for the POST-PROCESSOR variables layer:
- * variables-custom-types.groovy.
+ * Unit test for the POST-PROCESSOR variables layer of the CONTRACT TYPES:
+ * variables-17-custom_entity_attribute_imports.groovy,
+ * variables-18-contract_enum_definitions.groovy,
+ * variables-19-contract_nested_type_definitions.groovy and
+ * variables-14-entity_package_name.groovy.
  *
- * Responsibility: verify that the three variables consumed by the enum
- * snippet are bound from the archetype properties, and that missing
- * properties become the "null" string (the convention used by the snippets).
+ * Responsibility: verify that the channels consumed by the contract generators
+ * are bound from the archetype properties, and that missing properties become
+ * the "null" string (the convention used by the generators).
  *
- * The enum generation itself is covered by SnippetCustomEnumsTest.
+ * The enum generation itself is covered by SnippetContractEnumsTest; the POJOs
+ * by SnippetContractNestedTypesTest.
  *
  * Run from repo root:
  *   groovy src/test/archetype-post-generate/VariablesCustomTypesTest.groovy
  * (also executed by the build - see src/test/groovy/run-archetype-post-generate-tests.groovy)
  */
 
-def variablesFile = new File("src/main/resources/META-INF/archetype_post_generate_variables/variables-custom-types.groovy")
+def dir = new File("src/main/resources/META-INF/archetype_post_generate_variables")
 
 int failures = 0
 def check = { String name, boolean cond ->
     if (cond) { println "PASS: ${name}" } else { println "FAIL: ${name}"; failures++ }
 }
 
-check("1.1 the variables source exists", variablesFile.isFile())
+def FILES = [
+        custom_entity_attribute_imports   : "variables-17-custom_entity_attribute_imports.groovy",
+        contract_enum_definitions         : "variables-18-contract_enum_definitions.groovy",
+        contract_nested_type_definitions  : "variables-19-contract_nested_type_definitions.groovy",
+        entity_package_name               : "variables-14-entity_package_name.groovy"
+]
+
+check("1.1 every contract-types variables fragment exists",
+        FILES.values().every { new File(dir, it).isFile() })
 
 // The variables file uses `def`, so the values are local to the evaluated
 // script. The capture snippet below runs in the same GroovyShell and exposes
 // them through the binding.
-def evaluateVariables = { Properties properties ->
+def evaluateVariables = { File variablesFile, Properties properties ->
     def binding = new Binding()
     binding.setVariable("properties", properties)
-    String capture = """
-captured = [
-    custom_attribute_imports_value: custom_attribute_imports_value,
-    custom_enum_definitions_value: custom_enum_definitions_value,
-    custom_nested_type_definitions_value: custom_nested_type_definitions_value,
-    entity_name_package_value: entity_name_package_value
-]
-"""
+    String capture = "captured = [value: ${variablesFile.name.replaceAll(/^variables-\d{2}-/, "").replace(".groovy", "")}]"
     new GroovyShell(binding).evaluate(variablesFile.getText("UTF-8") + "\n" + capture)
     return (Map) binding.getVariable("captured")
 }
@@ -44,28 +49,23 @@ captured = [
 // 2) Properties are mapped to the expected variables
 // ---------------------------------------------------------------------------
 def props = new Properties()
-props.put("custom_attribute_imports", "a.B,c.D")
-props.put("custom_enum_definitions", "Status:ATIVO|CANCELADO;Situacao:ABERTA")
-props.put("custom_nested_type_definitions", "Endereco|logradouro:String,numero:Integer")
-props.put("entity_name_package", "contractentity")
+props.put("custom_entity_attribute_imports", "a.B,c.D")
+props.put("contract_enum_definitions", "Status:ATIVO|CANCELADO;Situacao:ABERTA")
+props.put("contract_nested_type_definitions", "Endereco|logradouro:String,numero:Integer")
+props.put("entity_package_name", "contractentity")
 
-def captured = evaluateVariables(props)
-check("2.1 custom_attribute_imports is mapped",
-        captured.get("custom_attribute_imports_value") == "a.B,c.D")
-check("2.2 custom_enum_definitions is mapped",
-        captured.get("custom_enum_definitions_value") == "Status:ATIVO|CANCELADO;Situacao:ABERTA")
-check("2.3 custom_nested_type_definitions is mapped",
-        captured.get("custom_nested_type_definitions_value") ==
-                "Endereco|logradouro:String,numero:Integer")
-check("2.4 entity_name_package is mapped",
-        captured.get("entity_name_package_value") == "contractentity")
+FILES.each { String key, String fileName ->
+    def captured = evaluateVariables(new File(dir, fileName), props)
+    check("2.${FILES.keySet().toList().indexOf(key) + 1} ${key} is mapped", captured.value == props.getProperty(key))
+}
 
 // ---------------------------------------------------------------------------
 // 3) Missing properties follow the "null" string convention
 // ---------------------------------------------------------------------------
-def missing = evaluateVariables(new Properties())
-check("3.1 missing properties become the string 'null'",
-        missing.values().every { it == "null" })
+FILES.each { String key, String fileName ->
+    def captured = evaluateVariables(new File(dir, fileName), new Properties())
+    check("3.${FILES.keySet().toList().indexOf(key) + 1} missing ${key} becomes 'null'", captured.value == "null")
+}
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

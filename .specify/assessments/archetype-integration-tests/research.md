@@ -4,6 +4,8 @@
 - **Created**: 2026-09-25
 - **Evidence confidence (overall)**: medium
 
+> **Historical note**: this document predates the removal of `absolute_path_jsonfile_contract` and `enable_json_entity_contracts` from the catalog (34 → 32 flags). They have no current equivalent; the contract path is now emitted by the inference mechanism into `entity_contract_file_path`.
+
 ## Users & Demand
 
 - **Audience**: maintainers and contributors of `com.eda-archetype:eda-archetype` (single team, internal use). No end-user signal — this is internal engineering-quality tooling, not a shipped product feature. — [ASSUMPTION] (confidence: medium)
@@ -26,16 +28,16 @@
 
 - **Surface area** — 34 `requiredProperty` flags across 17 `property-*.xml` files in `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`. — [source: repo, count via `grep` of `requiredProperty key=`] (confidence: high)
 - **Dependency graph** — Extracted from `DEPENDS_ON` comments in the same XMLs:
-  - `enable_git_support` → `git_url_repo`, `git_branch_repo`
-  - `enable_custom_attributes` → `custom_attributes_list`
+  - `enable_git_support` → `git_repo_url`, `git_repo_branch`
+  - `enable_custom_entity_attributes` → `custom_entity_attributes_list`
   - `enable_json_entity_contracts` → `absolute_path_jsonfile_contract`
-  - `enable_binding_properties` → `default_binding_properties`, `list_binding_properties`, `map_binding_properties`, `mutable_binding_properties`
-  - `default_binding_properties` → `validated_binding_properties`
-  - `enable_logback` → `logback_console_type`, `enable_logback_appender_smtp`, `enable_logback_appender_file`
-  - `enable_api_cpanel` ∧ `enable_logback` → `enable_api_cpanel_elk_log_system`
-  - `enable_folder_src_test_java` ∧ (any `binding_*_properties=true`) → `enable_binding_properties_tests`
+  - `enable_binding_external_properties` → `enable_default_binding_external_properties`, `enable_list_binding_external_properties`, `enable_map_binding_external_properties`, `binding_external_properties_mutability`
+  - `enable_default_binding_external_properties` → `enable_binding_external_properties_validation`
+  - `enable_logback_support` → `logback_console_type`, `enable_logback_appender_smtp`, `enable_logback_appender_file`
+  - `enable_logback_support` → `enable_api_cpanel_elk_log_system`
+  - `enable_folder_src_test_java` ∧ (any `binding_*_properties=true`) → `enable_binding_external_properties_tests`
   — [source: repo, `property-*.xml`] (confidence: high)
-- **Pós-processador complexity** — `archetype-post-generate.groovy` (1062 lines) contains ~20 conditional `deleteFile`/`deleteFolder`/`renameFolder`/`renameFile` calls driven by flag values; some are guard-rails (e.g., remove `.git_temp/` if `enable_git_support=false`, remove `ELK/` if `enable_logback=false`, remove `elk-compose.yml`). This means "compile passes" ≠ "expected filesystem layout". — [source: repo, `archetype-post-generate.groovy`] (confidence: high)
+- **Pós-processador complexity** — `archetype-post-generate.groovy` (1062 lines) contains ~20 conditional `deleteFile`/`deleteFolder`/`renameFolder`/`renameFile` calls driven by flag values; some are guard-rails (e.g., remove `.git_temp/` if `enable_git_support=false`, remove `ELK/` if `enable_logback_support=false`, remove `elk-compose.yml`). This means "compile passes" ≠ "expected filesystem layout". — [source: repo, `archetype-post-generate.groovy`] (confidence: high)
 - **Network constraint** — `mvn verify` in the generated project will resolve Spring Boot, Lombok, Logback, MongoDB driver, etc., from Maven Central. The generated POM does not pin a local repository, so the test requires network or a populated local cache. This is a structural constraint of the mechanism, not a bug in the plan. — [ASSUMPTION] (confidence: medium)
 - **No CI in scope** — Per intake, CI is out of scope. — [source: intake.md] (confidence: high)
 

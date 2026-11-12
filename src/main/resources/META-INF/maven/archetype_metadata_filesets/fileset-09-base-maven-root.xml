@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FILESET-09-BASE-MAVEN-ROOT.XML ________________________________ -->
+<!-- MAVEN ROOT -->
+<fileSet encoding="UTF-8">
+    <directory></directory>
+    <includes>
+        <include>pom.xml</include>
+        <include>mvnw</include>
+        <include>mvnw.cmd</include>
+    </includes>
+</fileSet>

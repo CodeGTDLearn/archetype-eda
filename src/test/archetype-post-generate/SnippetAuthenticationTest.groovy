@@ -1,7 +1,7 @@
 import java.nio.file.Path
 
 /**
- * Unit test for snippet-authentication.groovy.
+ * Unit test for snippet-01-enable_jwt_authentication.groovy.
  * JWTs off -> authentication folder and the key pair are deleted.
  * JWTs on  -> nothing is touched.
  */
@@ -17,18 +17,20 @@ h.seed(root, "src/main/java/it/pkg/myentity/config/authentication/MyEntitySecuri
 def key = h.seed(root, "src/main/resources/security/appJwt.key", "PRIVATE")
 def pub = h.seed(root, "src/main/resources/security/appJwt.pub", "PUBLIC")
 
-h.run(root, [enable_jwt_authentication: "false"], "snippet-authentication.groovy")
+def logOff = h.run(root, [enable_jwt_authentication: "false"], "snippet-01-enable_jwt_authentication.groovy")
 check("1.1 jwt=false deletes the authentication folder",
         !new File(root, "src/main/java/it/pkg/myentity/config/authentication").exists())
 check("1.2 jwt=false deletes appJwt.key", !key.exists())
 check("1.3 jwt=false deletes appJwt.pub", !pub.exists())
+check("1.4 jwt=false reports the key path in the log", logOff.contains("src_main_resources_app_key"))
+check("1.5 jwt=false reports the pub path in the log", logOff.contains("src_main_resources_app_pub"))
 
 def root2 = File.createTempDir("snippet-auth-on-", "")
 root2.deleteOnExit()
 h.seed(root2, "src/main/java/it/pkg/myentity/config/authentication/MyEntitySecurityConfig.java", "class X {}")
 def key2 = h.seed(root2, "src/main/resources/security/appJwt.key", "PRIVATE")
 def pub2 = h.seed(root2, "src/main/resources/security/appJwt.pub", "PUBLIC")
-h.run(root2, [enable_jwt_authentication: "true"], "snippet-authentication.groovy")
+h.run(root2, [enable_jwt_authentication: "true"], "snippet-01-enable_jwt_authentication.groovy")
 check("2.1 jwt=true keeps the authentication folder",
         new File(root2, "src/main/java/it/pkg/myentity/config/authentication/MyEntitySecurityConfig.java").isFile())
 check("2.2 jwt=true keeps appJwt.key", key2.isFile())

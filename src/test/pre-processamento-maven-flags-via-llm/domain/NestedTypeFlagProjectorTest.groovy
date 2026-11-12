@@ -1,6 +1,6 @@
 /**
  * Unit test for NestedTypeFlagProjector - the projection of the nested POJOs
- * derived from the contract into the custom_nested_type_definitions flag.
+ * derived from the contract into the contract_nested_type_definitions flag.
  *
  * The component under test is the production module:
  *   src/main/pre-processamento-maven-flags-via-llm/domain/NestedTypeFlagProjector.groovy
@@ -27,11 +27,11 @@ def projector = projectorClass.newInstance(policy)
 int failures = 0
 def check = { String n, boolean c -> if (c) { println "PASS: ${n}" } else { println "FAIL: ${n}"; failures++ } }
 
-def FLAG = 'custom_nested_type_definitions'
+def FLAG = 'contract_nested_type_definitions'
 def catalog = [
         (FLAG)                 : entryClass.newInstance(FLAG, 'none', '^.*$', ''),
-        enable_custom_attributes: entryClass.newInstance('enable_custom_attributes', 'false', '^(true|false)$', ''),
-        custom_attributes_list : entryClass.newInstance('custom_attributes_list', 'none', '^.*$', '')
+        enable_custom_entity_attributes: entryClass.newInstance('enable_custom_entity_attributes', 'false', '^(true|false)$', ''),
+        custom_entity_attributes_list : entryClass.newInstance('custom_entity_attributes_list', 'none', '^.*$', '')
 ]
 def strictCatalog = [
         (FLAG): entryClass.newInstance(FLAG, 'none', '^none$', '')
@@ -51,8 +51,8 @@ def nested = [
 ]
 
 def fresh = { String attributeList, boolean enabled, List<Map<String, Object>> nestedTypes ->
-    [values: [enable_custom_attributes: enabled ? 'true' : 'false',
-              custom_attributes_list: attributeList,
+    [values: [enable_custom_entity_attributes: enabled ? 'true' : 'false',
+              custom_entity_attributes_list: attributeList,
               (FLAG): 'none'],
      sources: [:], notes: [:], diagnostics: [],
      derived: [nestedTypes: nestedTypes]]
@@ -85,7 +85,7 @@ check("3.1 a list without a nested type keeps the flag at 'none'",
 
 def s3b = fresh('Endereco:endereco', false, nested)
 projector.apply(s3b.values, s3b.sources, s3b.notes, catalog, s3b.derived, s3b.diagnostics)
-check("3.2 enable_custom_attributes=false suppresses the flag",
+check("3.2 enable_custom_entity_attributes=false suppresses the flag",
         s3b.values.get(FLAG) == "none")
 
 def s3c = fresh('false', true, nested)
@@ -147,7 +147,7 @@ check("8.1 a values map without the flag is left untouched", !s8.values.contains
 
 def s8b = fresh('Endereco:endereco', true, nested)
 projector.apply(s8b.values, s8b.sources, s8b.notes,
-        [enable_custom_attributes: catalog.get('enable_custom_attributes')],
+        [enable_custom_entity_attributes: catalog.get('enable_custom_entity_attributes')],
         s8b.derived, s8b.diagnostics)
 check("8.2 a catalog without the flag is a no-op",
         s8b.values.get(FLAG) == 'none' && !s8b.sources.containsKey(FLAG))

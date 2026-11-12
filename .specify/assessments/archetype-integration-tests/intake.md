@@ -5,6 +5,8 @@
 - **Source**: pasted text + codebase pointer (this repository, groupId=com.eda-archetype, artifactId=eda-archetype)
 - **Type**: improvement
 
+> **Nota histórica**: este documento antecede a remoção de `absolute_path_jsonfile_contract` e `enable_json_entity_contracts` do catálogo (34 → 32 flags). Elas não têm equivalente atual; o caminho do contrato passou a ser emitido pelo mecanismo de inferência em `entity_contract_file_path`.
+
 ## Idea (as captured)
 
 > "Criar uma suíte de testes de integração abrangente para o eda-archetype, validando que todas as combinações relevantes das flags de geração (Git, entidades, Lombok, Docker, properties, logging, segurança, observabilidade) produzem projetos funcionais."
@@ -22,7 +24,7 @@ Propor uma suíte de testes de integração, baseada no `maven-archetype-plugin`
   - `minimal` — todas as flags opcionais desligadas (baseline).
   - `full` — todas as flags opcionais ligadas (stress test de conflitos).
   - `json-contract` — foco em `enable_json_entity_contracts` + `absolute_path_jsonfile_contract` (usa `verify.groovy`).
-  - `binding-properties` — variações de `enable_binding_properties` (default/list/map/mutable/validated).
+  - `binding-properties` — variações de `enable_binding_external_properties` (default/list/map/mutable/validated).
 - **Regra de dependência** — Quando uma flag "pai" for false, suas flags filhas são ignoradas na combinação. A relação pai→filha é obtida dos comentários `DEPENDS_ON` em `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-*.xml`.
 - **Side-effects externos** — Mocks e stubs apenas; nenhuma chamada real a Git, Docker, rede.
 - **Defaults** — Flags não listadas no cenário usam o `defaultValue` declarado em cada `property-*.xml` em `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`.

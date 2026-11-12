@@ -9,9 +9,9 @@
  *   - every <requiredProperty> MUST have a non-empty <defaultValue> (FR-018).
  *     The two empty defaults used to abort the starter with exit code 4
  *     BEFORE any inference ran - the mechanism was 100% out of operation;
- *   - entity_name_package has a usable, format-valid default ("myentity");
- *   - the catalog exposes exactly 36 flags (34 + custom_attribute_imports and
- *     custom_enum_definitions, the FR-021 channels that carry the PROJECT
+ *   - entity_package_name has a usable, format-valid default ("myentity");
+ *   - the catalog exposes exactly 35 flags (33 + custom_entity_attribute_imports and
+ *     contract_enum_definitions, the FR-021 channels that carry the PROJECT
  *     types derived from the contract).
  *
  * The catalog is read from the REAL property-*.xml fragments, so this test
@@ -60,7 +60,7 @@ propsDir.listFiles().sort { it.name }.each { File f ->
     }
 }
 
-check("1.1 catalog has the 36 flags", realCatalog.size() == 36)
+check("1.1 catalog has the 35 flags", realCatalog.size() == 35)
 check("1.2 FR-018: no flag has an empty defaultValue", emptyDefaults.isEmpty())
 if (!emptyDefaults.isEmpty()) {
     println "       empty defaultValue: " + emptyDefaults.join(", ")
@@ -72,69 +72,69 @@ check("1.4 enable_json_entity_contracts is gone",
 
 // FR-021: the contract persistence channel. Its default MUST be non-empty
 // (FR-018) and MUST satisfy its own validationRegex.
-def contractPath = realCatalog.get("entity_contract_path")
-check("1.5 entity_contract_path is present", contractPath != null)
+def contractPath = realCatalog.get("entity_contract_file_path")
+check("1.5 entity_contract_file_path is present", contractPath != null)
 if (contractPath != null) {
-    check("1.6 entity_contract_path default is 'none'", contractPath.defaultValue == "none")
-    check("1.7 entity_contract_path default matches its own validationRegex",
+    check("1.6 entity_contract_file_path default is 'none'", contractPath.defaultValue == "none")
+    check("1.7 entity_contract_file_path default matches its own validationRegex",
         contractPath.defaultValue ==~ contractPath.validationRegex)
-    check("1.8 entity_contract_path accepts an absolute or relative .json path",
+    check("1.8 entity_contract_file_path accepts an absolute or relative .json path",
         "C:/tmp/contracts/abc.json" ==~ contractPath.validationRegex &&
         "src/test/resources/projects/x/contract.json" ==~ contractPath.validationRegex)
-    check("1.9 entity_contract_path rejects a value that is not a .json path",
+    check("1.9 entity_contract_file_path rejects a value that is not a .json path",
         !("C:/tmp/contracts/abc.txt" ==~ contractPath.validationRegex))
 }
 
-def pkg = realCatalog.get("entity_name_package")
-check("1.5 entity_name_package is present", pkg != null)
+def pkg = realCatalog.get("entity_package_name")
+check("1.5 entity_package_name is present", pkg != null)
 if (pkg != null) {
-    check("1.6 entity_name_package default is 'myentity'", pkg.defaultValue == "myentity")
-    check("1.7 entity_name_package default matches its own validationRegex",
+    check("1.6 entity_package_name default is 'myentity'", pkg.defaultValue == "myentity")
+    check("1.7 entity_package_name default matches its own validationRegex",
         pkg.defaultValue ==~ pkg.validationRegex)
 }
 
 // The FR-021 channels that carry the PROJECT types derived from the contract.
-def importsFlag = realCatalog.get("custom_attribute_imports")
-check("1.10 custom_attribute_imports is present", importsFlag != null)
+def importsFlag = realCatalog.get("custom_entity_attribute_imports")
+check("1.10 custom_entity_attribute_imports is present", importsFlag != null)
 if (importsFlag != null) {
-    check("1.11 custom_attribute_imports default is 'none'", importsFlag.defaultValue == "none")
-    check("1.12 custom_attribute_imports accepts a list of FQNs",
+    check("1.11 custom_entity_attribute_imports default is 'none'", importsFlag.defaultValue == "none")
+    check("1.12 custom_entity_attribute_imports accepts a list of FQNs",
         "br.com.projeto.EnderecoCliente,br.com.projeto.StatusPedido" ==~ importsFlag.validationRegex)
-    check("1.13 custom_attribute_imports rejects a value that is not a FQN list",
+    check("1.13 custom_entity_attribute_imports rejects a value that is not a FQN list",
         !("EnderecoCliente" ==~ importsFlag.validationRegex))
 }
 
-def enumsFlag = realCatalog.get("custom_enum_definitions")
-check("1.14 custom_enum_definitions is present", enumsFlag != null)
+def enumsFlag = realCatalog.get("contract_enum_definitions")
+check("1.14 contract_enum_definitions is present", enumsFlag != null)
 if (enumsFlag != null) {
-    check("1.15 custom_enum_definitions default is 'none'", enumsFlag.defaultValue == "none")
-    check("1.16 custom_enum_definitions accepts one definition",
+    check("1.15 contract_enum_definitions default is 'none'", enumsFlag.defaultValue == "none")
+    check("1.16 contract_enum_definitions accepts one definition",
         "br.com.projeto.StatusPedido:ATIVO|CANCELADO" ==~ enumsFlag.validationRegex)
-    check("1.17 custom_enum_definitions accepts several definitions",
+    check("1.17 contract_enum_definitions accepts several definitions",
         "br.com.projeto.StatusPedido:ATIVO;Situacao:ABERTA" ==~ enumsFlag.validationRegex)
-    check("1.17b custom_enum_definitions accepts the relative nested marker",
+    check("1.17b contract_enum_definitions accepts the relative nested marker",
         "Status:ATIVO|CANCELADO;nested.Uf:SP|RJ" ==~ enumsFlag.validationRegex)
-    check("1.18 custom_enum_definitions rejects a definition without constants",
+    check("1.18 contract_enum_definitions rejects a definition without constants",
         !("br.com.projeto.StatusPedido" ==~ enumsFlag.validationRegex))
 }
 
 // The NESTED POJOs derived from the contract.
-def nestedFlag = realCatalog.get("custom_nested_type_definitions")
-check("1.19 custom_nested_type_definitions is present", nestedFlag != null)
+def nestedFlag = realCatalog.get("contract_nested_type_definitions")
+check("1.19 contract_nested_type_definitions is present", nestedFlag != null)
 if (nestedFlag != null) {
-    check("1.20 custom_nested_type_definitions default is 'none'", nestedFlag.defaultValue == "none")
-    check("1.21 custom_nested_type_definitions accepts one definition",
+    check("1.20 contract_nested_type_definitions default is 'none'", nestedFlag.defaultValue == "none")
+    check("1.21 contract_nested_type_definitions accepts one definition",
         "Endereco|logradouro:String,numero:Integer" ==~ nestedFlag.validationRegex)
-    check("1.22 custom_nested_type_definitions accepts several/chained definitions",
+    check("1.22 contract_nested_type_definitions accepts several/chained definitions",
         "Endereco|logradouro:String,complemento:Complemento;Complemento|descricao:String" ==~
                 nestedFlag.validationRegex)
-    check("1.23 custom_nested_type_definitions accepts a generated enum field type",
+    check("1.23 contract_nested_type_definitions accepts a generated enum field type",
         "Endereco|uf:Uf" ==~ nestedFlag.validationRegex)
-    check("1.24 custom_nested_type_definitions rejects an entry without fields",
+    check("1.24 contract_nested_type_definitions rejects an entry without fields",
         !("Endereco|" ==~ nestedFlag.validationRegex))
-    check("1.25 custom_nested_type_definitions rejects an entry without '|'",
+    check("1.25 contract_nested_type_definitions rejects an entry without '|'",
         !("Endereco" ==~ nestedFlag.validationRegex))
-    check("1.26 custom_nested_type_definitions rejects an uppercase field name",
+    check("1.26 contract_nested_type_definitions rejects an uppercase field name",
         !("Endereco|Logradouro:String" ==~ nestedFlag.validationRegex))
 }
 
@@ -156,12 +156,12 @@ def extractor = extractorClass.newInstance()
 def builtMetadata = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 if (builtMetadata.exists()) {
     def extracted = extractor.extract(builtMetadata)
-    check("2.1 extractor reads the built catalog", extracted != null && extracted.size() == 36)
+    check("2.1 extractor reads the built catalog", extracted != null && extracted.size() == 35)
     check("2.2 extracted catalog has no contract flags",
         !extracted.containsKey("absolute_path_jsonfile_contract") &&
         !extracted.containsKey("enable_json_entity_contracts"))
-    check("2.3 extracted entity_name_package default is 'myentity'",
-        extracted.get("entity_name_package")?.defaultValue == "myentity")
+    check("2.3 extracted entity_package_name default is 'myentity'",
+        extracted.get("entity_package_name")?.defaultValue == "myentity")
 } else {
     skip("2.1-2.3 extractor against the built catalog",
         "target/classes not built - run 'mvn process-resources' first")

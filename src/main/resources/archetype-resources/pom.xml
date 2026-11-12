@@ -31,7 +31,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-#if(${enable_lombok} == "true")
+#if(${enable_lombok_support} == "true")
 <!-- LOMBOK ________________________________________________________________ -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -40,7 +40,7 @@
         </dependency>
 <!-- _______________________________________________________________________ -->
 #end
-#if(${enable_logback} == "true" and ${enable_api_cpanel_elk_log_system} == "true")
+#if(${enable_logback_support} == "true" and ${enable_api_cpanel_elk_log_system} == "true")
 <!-- LOGBACK _______________________________________________________________ -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
@@ -95,7 +95,7 @@
         </dependency>
 <!-- _______________________________________________________________________ -->
 #end
-#if(${enable_binding_properties} == "true" and ${validated_binding_properties} == "true")
+#if(${enable_binding_external_properties} == "true" and ${enable_binding_external_properties_validation} == "true")
 <!-- BINDING PROPERTIES ____________________________________________________ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -110,7 +110,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-#if(${enable_lombok} == "true")
+#if(${enable_lombok_support} == "true")
                 <configuration>
                     <excludes>
                         <exclude>

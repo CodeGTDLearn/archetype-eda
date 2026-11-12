@@ -13,7 +13,8 @@ def root = new File("src/main/resources/archetype-resources")
 def postGenDirs = [
         new File("src/main/resources/META-INF/archetype_post_generate_body"),
         new File("src/main/resources/META-INF/archetype_post_generate_snippets"),
-        new File("src/main/resources/META-INF/archetype_post_generate_variables")
+        new File("src/main/resources/META-INF/archetype_post_generate_variables"),
+        new File("src/main/resources/META-INF/archetype_post_generate_generators")
 ]
 
 int failures = 0
@@ -72,12 +73,12 @@ check("4.1 every Velocity alias reads a catalog flag: ${badAliases}", badAliases
 // ---------------------------------------------------------------------------
 // 4b) The nested-type flag is declared and actually used by the entity
 // ---------------------------------------------------------------------------
-def entityTemplate = new File(root, "src/main/java/__entity_name_package__/__entity_name__.java")
+def entityTemplate = new File(root, "src/main/java/__entity_package_name__/__entity_name__.java")
 check("4.2 the nested flag is declared in the catalog",
-        catalog.contains("custom_nested_type_definitions"))
+        catalog.contains("contract_nested_type_definitions"))
 check("4.3 the entity template uses the nested flag",
         entityTemplate.isFile() &&
-                entityTemplate.getText("UTF-8").contains("custom_nested_type_definitions"))
+                entityTemplate.getText("UTF-8").contains("contract_nested_type_definitions"))
 
 // ---------------------------------------------------------------------------
 // 5) JWT is gated by enable_jwt_authentication in all four config templates

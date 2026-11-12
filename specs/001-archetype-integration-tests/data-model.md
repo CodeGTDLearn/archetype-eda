@@ -13,10 +13,10 @@ A self-contained description of one scenario's flag values, plus a verification 
 
 | Attribute | Type | Required | Description |
 |---|---|---|---|
-| `name` | string (kebab-case) | yes | Unique identifier; matches the subdirectory name under `src/test/resources/projects/<name>/`. Examples: `minimal`, `full`, `custom-attributes`, `binding-default-only`. |
+| `name` | string (kebab-case) | yes | Unique identifier; matches the subdirectory name under `src/test/resources/projects/<name>/`. Examples: `minimal`, `full`, `custom-attributes`, `external-binding-default-only`. |
 | `archetype_properties` | map<string,string> | yes | The set of flag values. Sourced from `property-*.xml` defaults unless explicitly overridden. May only contain keys declared in `property-*.xml` (archetype rejects unknowns). |
 | `goal_txt` | string | yes | The Maven goal to run in the generated project. Always `clean verify` per intake. |
-| `verify_groovy` | string (file content) | conditional | Present only for the `custom-attributes` fixture. Asserts on the generated entity's structure against the declared `custom_attributes_list`. |
+| `verify_groovy` | string (file content) | conditional | Present only for the `custom-attributes` fixture. Asserts on the generated entity's structure against the declared `custom_entity_attributes_list`. |
 | `scenario` | enum | yes | Logical grouping. One of: `minimal`, `full`, `custom-attributes`, `binding-properties`. |
 | `parent_flags_off` | map<string,bool> | no | Documents which parent flags are off in this fixture, so child flags are not set. (Informational; the actual `archetype.properties` is the source of truth.) |
 
@@ -51,7 +51,7 @@ The temporary Spring Boot project produced by running the archetype generation w
 | `source_fixture` | Fixture (ref) | The fixture whose flags were used. |
 | `build_status` | enum | `pass` (build succeeded), `fail` (build failed), `error` (post-processor or generation error). |
 | `generated_layout` | map<path,exists> | Per-file existence map used by post-build assertions (only populated for `custom-attributes` via `verify.groovy`). |
-| `generated_entity_shape` | map<field,type> | Only populated for `custom-attributes`; asserts structural match with the declared `custom_attributes_list`. |
+| `generated_entity_shape` | map<field,type> | Only populated for `custom-attributes`; asserts structural match with the declared `custom_entity_attributes_list`. |
 
 **State transitions** (per fixture run):
 1. `pending` (before archetype generation)

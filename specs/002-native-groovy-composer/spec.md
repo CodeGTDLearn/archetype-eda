@@ -65,41 +65,41 @@ Antes de remover o script bash legado (`bash_script/create_archetype_post_genera
 - **Snippet vazio**: o que acontece se um arquivo `.groovy` em `archetype_post_generate_snippets/` for criado vazio? — O compositor deve tratá-lo como string vazia e prosseguir (não falhar).
 - **Encoding misto ou BOM**: o que acontece se um snippet contém BOM UTF-8 ou mistura CRLF/LF? — O compositor deve normalizar (ou rejeitar com mensagem clara) para evitar inconsistências byte-a-byte.
 - **Comentários com `//import`**: o regex de remoção de imports (`^[[:space:]]*(import|//[[:space:]]*import)`) deve tratar comentários que mencionam a palavra `import` como **não-imports** e mantê-los. Já validado no regex do bash legado.
-- **Arquivo `.groovy` faltando**: o que acontece se `archetype-header.groovy` ou outro arquivo obrigatório for removido? — O compositor deve falhar com mensagem clara listando o arquivo faltando, em vez de gerar um arquivo parcial silenciosamente.
+- **Arquivo `.groovy` faltando**: o que acontece se `body-02-header.groovy` ou outro arquivo obrigatório for removido? — O compositor deve falhar com mensagem clara listando o arquivo faltando, em vez de gerar um arquivo parcial silenciosamente.
 - **Re-ordenação da `SECTIONS`**: o mantenedor pode mudar a ordem dos itens livremente (a topologia interna de cada bloco é fixa, mas a ordem dos blocos é configurável). O arquivo gerado reflete a nova ordem.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: O archetype-v2-eda MUST compor `META-INF/archetype-post-generate.groovy` em build-time a partir dos snippets em `META-INF/archetype_post_generate_body/`, `META-INF/archetype_post_generate_snippets/` e `META-INF/archetype_post_generate_variables/`, **sem invocar nenhum script bash**.
-- **FR-002**: A composição MUST preservar a ordem atual: header → global-vars → 5 path-vars (root, src-main, src-test, logback, security) → variables (alfabético) → snippets (alfabético) → footer → file-functions → folder-functions.
-- **FR-003**: A composição MUST consolidar imports removendo `^import …` e `^//[[:space:]]*import` (com espaços opcionais) dos snippets, e prepondo o conteúdo de `archetype_post_generate_body/archetype-imports.groovy` no topo do arquivo final.
-- **FR-004**: O arquivo gerado MUST ser **byte-equivalente** à saída atual do `bash_script/create_archetype_post_generate.sh` (verificável por `diff` retornando vazio e por hash SHA-256).
+- **FR-001**: O archetype-v2-eda MUST compor `META-INF/archetype-post-generate.groovy` em build-time a partir dos snippets em `META-INF/archetype_post_generate_body/`, `META-INF/archetype_post_generate_variables/`, `META-INF/archetype_post_generate_generators/` e `META-INF/archetype_post_generate_snippets/`, **sem invocar nenhum script bash**.
+- **FR-002**: A composição MUST preservar a ordem canônica de 17 seções: header → logging-variables → global-vars → 5 path-vars (root, src-main, src-test, logback, security) → binding-artifact-registry → variables (ordem do NN) → generators (ordem do NN) → snippets (ordem do NN) → footer → file-functions → folder-functions → java-source-functions → elk-functions.
+- **FR-003**: A composição MUST consolidar imports removendo `^import …` e `^//[[:space:]]*import` (com espaços opcionais) dos snippets, e prepondo o conteúdo de `archetype_post_generate_body/body-01-imports.groovy` no topo do arquivo final.
+- **FR-004**: O arquivo gerado MUST ser **byte-equivalente** à saída histórica do `bash_script/create_archetype_post_generate.sh` (verificável por `diff` retornando vazio e por hash SHA-256). O script bash não existe mais no repositório; o critério atual de regressão é o `ComposerTest` + o parse do artefato (ver T014).
 - **FR-005**: O pipeline MUST ser executável em ambiente sem TTY (CI Linux headless) — zero `read`, `pause` ou equivalente que bloqueie esperando input humano.
 - **FR-006**: A configuração da ordem MUST estar em uma **única estrutura de dados literal legível** (uma `List<String>` no topo do script compositor), com um comentário curto explicando o papel de cada item.
-- **FR-007**: Cada snippet em `archetype_post_generate_snippets/` MUST começar com um bloco de comentário indicando qual flag (`enable_*` em `archetype_metadata_required_properties/`) o acopla, para suportar extensibilidade via flags/IA.
+- **FR-007**: Cada snippet em `archetype_post_generate_snippets/` MUST declarar o marcador `// SNIPPET-NN-<nome>.GROOVY` (o nome do arquivo em maiúsculas, validado pelo compositor); o vínculo com a flag é feito pela variável de mesmo nome avaliada no corpo do snippet (ex.: `if (enable_x == 'false')`).
 - **FR-008**: O compositor MUST estar isolado em um único arquivo `.groovy` dedicado (ex.: `src/main/groovy/ArchetypePostGenerateComposer.groovy`) com cabeçalho explicativo da estratégia e Javadoc nas funções públicas.
 - **FR-009**: A invocação do compositor MUST ocorrer na fase `process-resources` (imediatamente após `xml-maven-plugin:transform` em `generate-resources`, antes de `package`), através de um plugin Groovy build-time.
-- **FR-010**: O `archetype-post-generate.groovy` atualmente commitado em `src/main/resources/META-INF/` MUST ser removido do controle de versão (`.gitignore` ou equivalente) — passa a ser artefato gerado, não editado.
-- **FR-011**: O `bash_script/create_archetype_post_generate.sh` MUST deixar de ser invocado pelo `script_core.sh` no fluxo `mvn clean install` do archetype. O arquivo pode permanecer em disco como referência histórica, mas não pode estar no caminho de invocação.
+- **FR-010**: O `archetype-post-generate.groovy` que era commitado em `src/main/resources/META-INF/` MUST ser removido do controle de versão — o arquivo não existe mais em `src/main/resources/META-INF/`; a remoção do índice do git (`git rm --cached`) foi executada e a deleção está staged para o commit (T025). `target/` já é ignorado, então não é necessária entrada adicional no `.gitignore`.
+- **FR-011**: O `bash_script/create_archetype_post_generate.sh` e o `script_core.sh` não existem mais no repositório; nenhuma invocação bash permanece no fluxo `mvn clean install` do archetype.
 
 ### Key Entities
 
-- **Snippet**: arquivo `.groovy` individual em uma das 3 pastas de entrada (`body/`, `snippets/`, `variables/`). Atributo: nome do arquivo (deve seguir convenção de prefixo `snippet-*` ou `variables-*`, ou estar em `body/` para arquivos fixos). Identifica uma unidade lógica de código Groovy que será concatenada no arquivo final.
-- **Section**: bloco nomeado no arquivo final (header, global-vars, path-vars-root, variables-list, snippets-list, footer, file-functions, folder-functions). Atributo: nome, posição na `SECTIONS`. Define a ordem em que cada grupo de snippets aparece.
+- **Snippet**: arquivo `.groovy` individual em uma das 4 pastas de entrada (`body/`, `generators/`, `snippets/`, `variables/`). Atributo: nome do arquivo (deve seguir a convenção `body-NN-*`, `generator-NN-*`, `snippet-NN-*` ou `variables-NN-*`). Identifica uma unidade lógica de código Groovy que será concatenada no arquivo final.
+- **Section**: bloco nomeado no arquivo final (header, logging-variables, global-vars, path-vars-root, path-vars-src-main, path-vars-src-test, path-vars-logback, path-vars-security, binding-artifact-registry, variables, generators, snippets, footer, file-functions, folder-functions, java-source-functions, elk-functions). Atributo: nome, posição na `SECTIONS`. Define a ordem em que cada grupo de snippets aparece.
 - **Composer Manifest**: `List<String>` ordenada com os nomes das seções, definida no topo do `ArchetypePostGenerateComposer.groovy`. Atributo: lista de strings, comentário explicativo por entrada. É a "fonte da verdade" da ordem de montagem.
-- **Imported-Block**: conteúdo de `archetype_post_generate_body/archetype-imports.groovy`, prependido no topo do arquivo final. Atributo: conteúdo textual (linhas de `import …`).
+- **Imported-Block**: conteúdo de `archetype_post_generate_body/body-01-imports.groovy`, prependido no topo do arquivo final. Atributo: conteúdo textual (linhas de `import …`).
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: `mvn clean install` retorna BUILD SUCCESS nos 9 perfis IT: `basic`, `full`, `minimal`, `binding-default-only`, `binding-list-only`, `binding-map-only`, `binding-mutable-only`, `binding-validated-only`, `json-contract`. (Baseline: 9/9 PASSOU em 2026-09-28 com a stack atual.)
-- **SC-002**: `mvn integration-test` retorna BUILD SUCCESS nos 9 perfis IT. (Baseline: 9/9 PASSOU em 2026-09-28.)
-- **SC-003**: `diff <(composer_output) <(current_bash_output)` retorna vazio (exit code 0, sem saída) — equivalência byte-a-byte entre o arquivo gerado pelo compositor nativo e a saída do bash legado. Capturável mecanicamente.
+- **SC-001**: `mvn clean install` retorna BUILD SUCCESS nos 15 perfis IT de `src/test/resources/projects/`: `basic`, `custom-attributes`, `custom-enums-from-payload`, `custom-nested-edge-cases`, `custom-nested-objects`, `defaults-only`, `entity-contract`, `external-binding-default-only`, `external-binding-list-only`, `external-binding-map-only`, `external-binding-mutable-only`, `external-binding-validated-only`, `full`, `id-normalization` e `minimal`. (Baseline histórico: 9/9 PASSOU em 2026-09-28; a matriz cresceu para 15.)
+- **SC-002**: `mvn integration-test` retorna BUILD SUCCESS nos 15 perfis IT. (Baseline histórico: 9/9 PASSOU em 2026-09-28.)
+- **SC-003**: `diff <(composer_output) <(current_bash_output)` retorna vazio (exit code 0, sem saída) — equivalência byte-a-byte entre o arquivo gerado pelo compositor nativo e a saída do bash legado. Critério histórico da migração: o bash não existe mais; o gate atual é o `ComposerTest` + o parse do artefato.
 - **SC-004**: `grep -rE 'read -n 1 -s|read -p' pom.xml src/` retorna zero matches após a migração — nenhum ponto de bloqueio por TTY permanece no pipeline.
-- **SC-005**: Adicionar uma nova flag + snippet leva **menos de 5 minutos** entre editar `SECTIONS` no compositor e ver o snippet no arquivo gerado (ciclo: editar `SECTIONS` → `mvn clean install` → inspecionar `target/classes/META-INF/archetype-post-generate.groovy`).
+- **SC-005**: Adicionar uma nova flag + snippet leva **menos de 5 minutos** entre criar os fragmentos (`property-NN-*.xml`, `variables-NN-*.groovy`, `snippet-NN-*.groovy`) e ver o snippet no arquivo gerado (ciclo: criar fragmentos → `mvn clean install` → inspecionar `target/classes/META-INF/archetype-post-generate.groovy`).
 - **SC-006**: O build prossegue sem TTY em Linux headless (CI agent) sem erro de I/O — `mvn clean install < /dev/null` retorna BUILD SUCCESS.
 - **SC-007**: O tempo de execução do passo de composição é ≤ tempo atual do bash (~0.3s × 9 perfis ≈ 2.7s no ciclo IT). Mensurável via `mvn clean install` antes e depois.
 

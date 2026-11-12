@@ -5,8 +5,8 @@ import eda.postgenerate.pre_processamento_maven_flags_via_llm.catalog.CatalogEnt
 /**
  * Projects the PROJECT-type metadata derived from the contract into the two
  * catalog flags the archetype consumes:
- *   - custom_attribute_imports: the FQNs of the referenced types;
- *   - custom_enum_definitions: "Type:CONSTANT|CONSTANT", separated by ';'.
+ *   - custom_entity_attribute_imports: the FQNs of the referenced types;
+ *   - contract_enum_definitions: "Type:CONSTANT|CONSTANT", separated by ';'.
  *
  * Responsibility: derived-flag projection and serialization only. It does
  * not print; FR-006 diagnostics are collected for the presentation layer.
@@ -91,9 +91,9 @@ class DerivedFlagProjector {
         for (Map.Entry<String, List<String>> entry : enums.entrySet()) {
             enumDefinitions.add(entry.getKey() + ":" + entry.getValue().join("|"))
         }
-        applyDerivedFlag(values, sources, notes, catalog, "custom_attribute_imports",
+        applyDerivedFlag(values, sources, notes, catalog, "custom_entity_attribute_imports",
                 imports.isEmpty() ? "none" : imports.join(","), diagnostics)
-        applyDerivedFlag(values, sources, notes, catalog, "custom_enum_definitions",
+        applyDerivedFlag(values, sources, notes, catalog, "contract_enum_definitions",
                 enumDefinitions.isEmpty() ? "none" : enumDefinitions.join(";"), diagnostics)
     }
 

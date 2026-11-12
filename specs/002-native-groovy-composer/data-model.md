@@ -24,7 +24,8 @@
 
 - Se `category == SNIPPET`, `name` MUST começar com `snippet-`.
 - Se `category == VARIABLE`, `name` MUST começar com `variables-`.
-- Se `category == BODY`, `name` MUST ser um dos 11 nomes canônicos: `archetype-imports.groovy`, `archetype-header.groovy`, `archetype-global-variables.groovy`, `archetype-path-root-variables.groovy`, `archetype-path-src-main-variables.groovy`, `archetype-path-src-test-variables.groovy`, `archetype-path-logback-variables.groovy`, `archetype-path-security-variables.groovy`, `archetype-footer.groovy`, `archetype-file-functions.groovy`, `archetype-folder-functions.groovy`.
+- Se `category == BODY`, `name` MUST ser um dos 15 nomes canônicos, no padrão `body-NN-<papel>.groovy`: `body-01-imports.groovy`, `body-02-header.groovy`, `body-03-logging-variables.groovy`, `body-04-global-variables.groovy`, `body-05-path-root-variables.groovy`, `body-06-path-src-main-variables.groovy`, `body-07-path-src-test-variables.groovy`, `body-08-path-logback-variables.groovy`, `body-09-path-security-variables.groovy`, `body-10-binding-artifact-registry.groovy`, `body-11-footer.groovy`, `body-12-file-functions.groovy`, `body-13-folder-functions.groovy`, `body-14-java-source-functions.groovy`, `body-15-elk-functions.groovy`.
+  O `NN` é documental (a ordem é definida por `SECTIONS`), exceto `body-01-imports.groovy`, que é o prelúdio prependido e não tem marcador.
 
 **Transições de Estado**: nenhuma (arquivo imutável uma vez presente).
 
@@ -36,25 +37,30 @@
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| `name` | `String` | Nome lógico da seção (ex.: `header`, `global-vars`, `path-vars-root`, `path-vars-src-main`, `path-vars-src-test`, `path-vars-logback`, `path-vars-security`, `variables`, `snippets`, `footer`, `file-functions`, `folder-functions`). |
-| `category` | `enum { BODY, PATH_VAR, VARIABLES, SNIPPETS, BODY_END }` | Sub-categoria interna. |
+| `name` | `String` | Nome lógico da seção (ex.: `header`, `logging-variables`, `global-vars`, `path-vars-root`, `path-vars-src-main`, `path-vars-src-test`, `path-vars-logback`, `path-vars-security`, `binding-artifact-registry`, `variables`, `generators`, `snippets`, `footer`, `file-functions`, `folder-functions`, `java-source-functions`, `elk-functions`). |
+| `category` | `enum { BODY, PATH_VAR, BODY_DATA, VARIABLES, GENERATORS, SNIPPETS, BODY_END }` | Sub-categoria interna. |
 | `order` | `int` | Posição na `SECTIONS` (0-indexed). Determinada pelo mantenedor. |
 
-**Ordem Canônica**:
+**Ordem Canônica** (17 seções; `body-01-imports.groovy` é o prelúdio prependido, fora desta lista):
 
 ```
-0: header (BODY)
-1: global-vars (BODY)
-2: path-vars-root (PATH_VAR)
-3: path-vars-src-main (PATH_VAR)
-4: path-vars-src-test (PATH_VAR)
-5: path-vars-logback (PATH_VAR)
-6: path-vars-security (PATH_VAR)
-7: variables (VARIABLES, sorted alphabetically)
-8: snippets (SNIPPETS, sorted alphabetically)
-9: footer (BODY_END)
-10: file-functions (BODY_END)
-11: folder-functions (BODY_END)
+ 0: header                      (BODY)       body-02-header.groovy
+ 1: logging-variables           (BODY)       body-03-logging-variables.groovy
+ 2: global-vars                 (BODY)       body-04-global-variables.groovy
+ 3: path-vars-root              (PATH_VAR)   body-05-path-root-variables.groovy
+ 4: path-vars-src-main          (PATH_VAR)   body-06-path-src-main-variables.groovy
+ 5: path-vars-src-test          (PATH_VAR)   body-07-path-src-test-variables.groovy
+ 6: path-vars-logback           (PATH_VAR)   body-08-path-logback-variables.groovy
+ 7: path-vars-security          (PATH_VAR)   body-09-path-security-variables.groovy
+ 8: binding-artifact-registry   (BODY_DATA)  body-10-binding-artifact-registry.groovy
+ 9: variables                   (VARIABLES, sorted by NN)
+10: generators                  (GENERATORS, sorted by NN)
+11: snippets                    (SNIPPETS, sorted by NN)
+12: footer                      (BODY_END)   body-11-footer.groovy
+13: file-functions              (BODY_END)   body-12-file-functions.groovy
+14: folder-functions            (BODY_END)   body-13-folder-functions.groovy
+15: java-source-functions       (BODY_END)   body-14-java-source-functions.groovy
+16: elk-functions               (BODY_END)   body-15-elk-functions.groovy
 ```
 
 ### Composer Manifest
@@ -70,12 +76,12 @@
 
 **Validação**:
 
-- A lista MUST conter exatamente as 12 seções canônicas na ordem canônica.
+- A lista MUST conter exatamente as 17 seções canônicas na ordem canônica.
 - Qualquer desvio MUST ser explicitamente justificado em comentário.
 
 ### Imported-Block
 
-**Descrição**: Conteúdo do arquivo `archetype_post_generate_body/archetype-imports.groovy`, prependido no topo do arquivo final.
+**Descrição**: Conteúdo do arquivo `archetype_post_generate_body/body-01-imports.groovy`, prependido no topo do arquivo final.
 
 **Atributos**:
 
