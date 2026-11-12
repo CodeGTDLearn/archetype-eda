@@ -50,7 +50,7 @@
 | Tecnologia | Versão | Por quê |
 |---|---|---|
 | **JUnit 4** | 4.13.2 | Única dependência declarada; cobre os testes convencionais do surefire (`**/*Test.java`). |
-| **Groovy (suítes próprias)** | 4.0.28 | As **56 suítes / 944 checks** são scripts Groovy com checks próprios (sem infra JUnit), executados pelo `groovy-maven-plugin` — o build falha se qualquer check falhar. |
+| **Groovy (suítes próprias)** | 4.0.28 | As **56 suítes / 949 checks** são scripts Groovy com checks próprios (sem infra JUnit), executados pelo `groovy-maven-plugin` — o build falha se qualquer check falhar. |
 
 </details>
 
@@ -429,7 +429,7 @@ install           → install + archetype:update-local-catalog
 | Suíte | Checks | O que garante |
 |---|---|---|
 | `archetype-post-generate/ComposerTest` | 17 | composição canônica, idempotência, imports e helpers |
-| `archetype-post-generate/BuildArtifactsTest` | 16 | artefatos do build, descriptor e wiring dos plugins |
+| `archetype-post-generate/BuildArtifactsTest` | 22 | artefatos do build, descriptor, wiring dos plugins e empacotamento de `utils/` |
 | `archetype-post-generate/MetadataContractTest` | 11 | catálogo (35 flags), defaults × regex, fragmentos e flags mortas |
 | `archetype-post-generate/FilesetConsistencyTest` | 9 | cobertura dos filesets × árvore de templates |
 | `archetype-post-generate/TemplateFlagConsistencyTest` | 13 | flags em templates/Velocity e guards JWT |
@@ -451,9 +451,9 @@ install           → install + archetype:update-local-catalog
 | `archetype-post-generate/SnippetPropertiesFiletypeTest` | 8 | filetype properties/yml |
 | `archetype-post-generate/SnippetSrcTestJavaTest` | 4 | remoção de `src/test/java` |
 | `archetype-post-generate/CoverageRegistryTest` | 10 | gate de cobertura (arquivos, runners, espelho de pastas e assets) |
-| **Total** | **273** | **23 suítes** |
+| **Total** | **278** | **23 suítes** |
 
-> Contagens verificadas em 2026-11-11; total geral: **56 suítes / 944 checks** (33 suítes / 671 checks de pré-processamento + 23 suítes / 273 checks de pós-processador). As fontes de verdade são `run-maven-flags-via-llm-tests.groovy` e `run-archetype-post-generate-tests.groovy`.
+> Contagens verificadas em 2026-11-12; total geral: **56 suítes / 949 checks** (33 suítes / 671 checks de pré-processamento + 23 suítes / 278 checks de pós-processador). As fontes de verdade são `run-maven-flags-via-llm-tests.groovy` e `run-archetype-post-generate-tests.groovy`.
 
 #### 2) Processamento (empacotado) 🏗️
 
@@ -472,6 +472,7 @@ install           → install + archetype:update-local-catalog
 | Artefato | Local | Papel |
 |----------|-------|-------|
 | Templates | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
+| Procedimento da Opção A | `src/main/resources/utils/` | 19 arquivos em 4 categorias (`inicializacao/`, `procedimento-do-agente/`, `regras-de-formacao-do-contrato/`, `templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
 | Fixtures de integração | `src/test/resources/projects/*` | 15 projetos gerados pelo `integration-test`, cada um validado com `mvn clean verify` |
 
 * **Montagem do catálogo:** fragmentos (A1 + A2) + DOCTYPE (A3) →
@@ -510,7 +511,7 @@ install           → install + archetype:update-local-catalog
 |------|--------|---------|-------|
 | `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
 | `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 62 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
-| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-maven-flags-via-llm-tests.groovy` + `run-archetype-post-generate-tests.groovy` | 56 suítes unitárias (944 checks; o build falha se alguma falhar) |
+| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-maven-flags-via-llm-tests.groovy` + `run-archetype-post-generate-tests.groovy` | 56 suítes unitárias (949 checks; o build falha se alguma falhar) |
 | `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | 15 projetos gerados, cada um com `mvn clean verify` |
 | `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
 
@@ -535,7 +536,7 @@ TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
 [2] PÓS-PROCESSADOR  62 fragmentos .groovy
                      └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
                         (local: src/main/groovy/ArchetypePostGenerateComposer.groovy)
-[3] TESTES           unitários: 56 suítes / 944 checks (fase test)
+[3] TESTES           unitários: 56 suítes / 949 checks (fase test)
                      integração: 15 fixtures + verify.groovy (7) (fase integration-test)
 [4] INSTALAÇÃO       ~/.m2/repository + archetype-catalog.xml (fase install)
 
@@ -1790,6 +1791,12 @@ if (keep_binding_properties == 'false') {
 
 <details><summary><strong> Usando a 'Inferência via LLM' </strong></summary>
 
+> **LEGADO — Opção B (adiada).** Esta seção descreve o motor
+> `MavenFlagsViaLlmStarter`, que **não** é executado pela Opção A.
+> O procedimento ativo está empacotado no JAR, em
+> `utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
+> Mantenha este trecho apenas como documentação histórica do motor.
+
 * Esta seção mostra, na prática, como gerar um projeto a partir do archetype
 usando o mecanismo de inferência LLM. 
 * O fluxo é simples: 
@@ -1801,29 +1808,30 @@ usando o mecanismo de inferência LLM.
 * Imagine uma tela de cadastro de clientes. 
 * Os dados coletados são: nome do cliente, data de nascimento, endereço, telefone e se o cliente está ativo. 
 * O sistema expõe uma API REST com autenticação JWT na porta 8080.
+</details>
+
+<details><summary><strong> Procedimento da Opção A (empacotado no JAR) </strong></summary>
 
 #### Como usar no 'OpenCode' OU na Spec do 'GitHub Spec Kit'
-* Você digita o bloco abaixo no chat do OpenCode. 
-* O agente converte para a chamada técnica e devolve a linha de comando.
+* O procedimento completo **está empacotado no JAR** do archetype.
+* O operador entrega apenas o **spec mínimo** abaixo; o agente lê o procedimento de dentro do JAR.
+* O README não é fonte de runtime.
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
 
-1. Papel e restrições
-- Seu papel é **operar** o archetype: rodar `mvn archetype:generate` com os parâmetros corretos.
-- O módulo deve ser criado **pelo archetype**, nunca escrito por você.
-- Se precisar ajustar algo, **reexecute o archetype** com outros parâmetros. Nunca edite o código à mão (inclusive o `package`).
-
-2. PREENCHA AQUI - USE-CASE + CONTRATO:
-2.1 TIPO DE MODULO:
+1. TIPO DE MÓDULO:
 [X] RAIZ
 [ ] SECUNDARIO
 
-2.2 USE-CASE:
+2. PACKAGE BASE:
+org.clinica
+
+3. USE-CASE:
 - Cadastro de clientes de uma clínica
 - O cadastro coleta: nome, data de nascimento, endereço, telefone e se o cliente está ativo.
 - O sistema expõe uma API REST com autenticação JWT na porta 8080.
 
-2.3 CONTRATO JSON do módulo:
+4. CONTRATO JSON do módulo:
 {
   "id": 1024,
   "nome_cliente": "Maria Silva",
@@ -1834,131 +1842,47 @@ usando o mecanismo de inferência LLM.
   "enable_jwt_authentication": true,
   "api_port": 8080
 }
-
-3. Preparação — fonte de verdade
-3.1. Localize o artefato EDA (`com.eda-archetype:eda-archetype`) no repositório local do Maven.
-3.2. Leia o CONTEÚDO EMPACOTADO no JAR (fonte de verdade para flags e geração):
-     - `META-INF/maven/archetype-metadata.xml` — catálogo consolidado de propriedades.
-     - `META-INF/maven/archetype_metadata_required_properties/*.xml` — por flag: DESCRIPTION, PROMPT, TYPE,
-       DEFAULT, DOMAIN, DEPENDS_ON, VALIDATION.
-     - `META-INF/archetype-post-generate.groovy` — comportamento do pós-processador.
-     - `archetype-resources/**` — templates (ex.: `package ${package}.${entity_package_name}`).
-     Se estiver operando no repositório-fonte, os mesmos arquivos estão em `src/main/resources/`.
-3.3. Use a seção **"Usando a 'Inferência via LLM'"** DESTE README — documentação do mecanismo,
-não do JAR — apenas para o que o conteúdo empacotado NÃO cobre com 100% de precisão:
-     - contrato JSON → atributos da entidade (`custom_entity_attributes_list`);
-     - resolução de tipos (`java.lang` × tipos do projeto × enums);
-     - precedência de `attributes` sobre campos avulsos;
-     - materialização/emissão de `entity_contract_file_path`;
-     - cache, proveniência e relatório de tokens.
-3.4. Não use o código interno do mecanismo de inferência para redescobrir semântica de flags:
-ela já está no catálogo empacotado.
-
-4. Regras obrigatórias do archetype (EDA)
-4.1 Package (REGRA CRÍTICA)
-O archetype declara `package ${package}.${entity_package_name}`. Portanto:
-- `-Dpackage` é o **pacote-base (parent)**; o archetype concatena `entity_package_name` automaticamente.
-- **Nunca** inclua o nome da entidade em `-Dpackage`.
-- ✅ Correto (entidade `Cliente`): `-Dpackage=org.clinica` → `package org.clinica.cliente;`
-- ❌ Errado: `-Dpackage=org.clinica.cliente` → gera `package org.clinica.cliente.cliente;`
-
-4.2 Propriedades obrigatórias
-Passe sempre (validação regex do catálogo empacotado):
-- `-Dentity_package_name=<entity_name em minúsculas>`
-  - Fonte empacotada: `archetype_metadata_required_properties/property-14-entity_package_name.xml`
-    (`DEFAULT=myentity`, `VALIDATION=^[a-z][a-z0-9_.]+$`, `DEPENDS_ON=entity_name`).
-  - O archetype usa o valor **verbatim** como pacote (`src/main/java/<entity_package_name>/`);
-    o default `myentity` existe apenas para satisfazer a exigência de `defaultValue` não vazio.
-  - O valor correto é sempre `entity_name` em minúsculas — passe explicitamente, inclusive ao
-    operar o archetype direto.
-  - Quando o orquestrador de inferência é usado, ele deriva e emite esse valor
-    automaticamente (comportamento do mecanismo, não do artefato).
-- `-Dentity_contract_file_path=<caminho do contrato .json>`
-  - Fonte empacotada: descrição de `entity_contract_file_path` em `property-20-entity_contract_file_path.xml` e a lógica
-    de cópia em `archetype-post-generate.groovy`.
-  - Efeito: quando o arquivo existe E `enable_folder_src_test_java=true`, o contrato é copiado
-    para `src/test/resources/contracts/contract.json` no projeto gerado.
-  - Quando o orquestrador de inferência é usado, ele materializa o contrato e emite o caminho
-    automaticamente (comportamento do mecanismo, não do artefato).
-
-4.3 Archetype dentro de outro projeto Maven
-- Execute `mvn archetype:generate` **fora** do diretório do projeto pai (ex.: `cd C:\Users\edufi\Downloads`).
-- Depois mova a pasta gerada (`cliente-module/`) para dentro do projeto com `robocopy ... /E /MOVE`, evitando aninhamento.
-- Isso contorna o erro *"Unable to add module to the current project as it is not of packaging type 'pom'"*.
-
-4.4 Execução no PowerShell
-- Coloque **todos** os `-D...` entre aspas simples (evita truncar versões com ponto, ex.: `0.0.1-SNAPSHOT`).
-- Não use parênteses em valores de propriedades; troque por espaços ou aspas.
-
-5. Fluxo de execução
-5.1. **Antes de executar**, mostre as flags e valores com a origem de cada um
-(`CONTRACT`, `CONTRACT_DERIVED`, `INFERENCE`, `DEFAULT` — mesmos rótulos do relatório de proveniência)
-e uma justificativa curta.
-5.2. Confirme o checklist (em voz alta, na resposta):
-  - [ ] `package` = base (sem o nome da entidade)
-  - [ ] `entity_name` = PascalCase
-  - [ ] `entity_package_name` = minúsculas derivado de `entity_name`
-5.3. Execute `mvn archetype:generate`.
-5.4. **Validação pós-geração (obrigatória):** abra `Cliente.java` (ou `<Entity>.java`) e leia a primeira linha 
-`package ...;`.
-  - Se o nome da entidade estiver duplicado (ex.: `org.clinica.cliente.cliente`), **reexecute o archetype do zero** com `-Dpackage` corrigido (`org.clinica`).
-5.5. Rode `mvn clean compile` no módulo gerado.
-  - `BUILD SUCCESS` = OK.
-  - Warning de `parent.relativePath` apontando para o projeto pai é benigno: reporte e siga.
-
-6. Entregáveis finais
-6.1 Classificação do módulo
-Informe se o módulo gerado é **central** ou **secundário**.
-- O conteúdo empacotado NÃO define esses termos (nem o metadata nem os templates); não procure
-  essa definição no JAR.
-- Classifique pelo use-case com estes critérios e diga que a classificação é inferida:
-  - **Central**: concentra a entidade principal do domínio, outros módulos dependem dele, ou ele expõe/publica eventos que outros consomem.
-  - **Secundário**: apoia o domínio, depende de outros módulos e não é referência para eles.
-- Justifique a classificação em 2 ou 3 linhas, com base no use-case (cadastro de clientes de uma clínica).
-
-6.2 Relatório de Tokens (somente desta execução)
-Tabela com as colunas: **Etapa | Tokens de entrada | Tokens de saída | Total**, com linha de **total geral**. Se não for possível medir com precisão, marque como *estimativa*.
-
-6.3 Economia por usar o archetype
-- Liste os arquivos gerados.
-- Estime os tokens que o modelo gastaria escrevendo esse boilerplate à mão.
-- Mostre a economia em **valor absoluto** e em **%**.
-
-7. Lembrete final
-Antes de executar, confira que o valor de `-Dpackage` **NÃO** contém o nome da entidade. Se contiver, remova.
 ```
 
-#### Detalhe importante: campos de negócio vs. chaves de flag
+* O agente começa por `utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, dentro do JAR
+  instalado (`com.eda-archetype:eda-archetype`).
+* O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.
+  - ✅ `-Dpackage=org.clinica` → `package org.clinica.cliente;`
+  - ❌ `-Dpackage=org.clinica.cliente` → `package org.clinica.cliente.cliente;`
 
-* **Campos de negócio** (`id`, `nome_cliente`, `data_nascimento`,
-  `endereco`, `telefone`, `ativo`): não existem no catálogo de flags do
-  archetype.
-  Eles passam como contexto para o LLM inferir e **viram os atributos da
-  entidade** — o mecanismo monta a `custom_entity_attributes_list` a partir deles,
-  com o tipo estimado pelo valor (`id: 1024` → `Integer:id`,
-  `ativo: true` → `Boolean:ativo`). Não viram `-D` "soltos" na linha de
-  comando: viram `-Dcustom_entity_attributes_list=...`.
-* **Chaves de flag** (`enable_jwt_authentication`, `api_port`): existem no
-  catálogo. São elas que efetivamente viram
-  `-Denable_jwt_authentication=true -Dapi_port=8080` na saída.
-* Ou seja: o contrato mistura os dois mundos — os dados da sua tela + as
-  flags do archetype. Cada chave de flag vira uma flag; cada campo de
-  negócio vira um atributo da entidade.
-* O contrato também pode trazer a coleção `attributes` explícita
-  (`{"attributes": [{"name": "id", "value": 1024}]}`), que tem precedência
-  sobre os campos de negócio avulsos.
-* Cada atributo pode declarar o seu `type`
-  (`{"name": "convenio_medico", "type": "br.com.clinica.convenio.Convenio"}`). Um tipo de
-  `java.lang` é usado como está; um **tipo do projeto** (fora de `java.lang`)
-  é preservado: a entidade o referencia pelo nome simples, **o atributo passa
-  a se chamar pelo tipo** (`Convenio` → `convenio`) e o tipo viaja em
-  `custom_entity_attribute_imports` (import) e/ou `contract_enum_definitions` (enum
-  gerado pelo pós-processador).
-* O contrato **é a base do módulo**: o mecanismo o grava em disco e o
-  archetype o copia para `src/test/resources/contracts/contract.json` no
-  projeto gerado (quando `enable_folder_src_test_java = true`). Os testes de
-  esquema do módulo usarão esse arquivo para garantir que a entidade gerada
-  continue correspondendo ao contrato.
+#### Onde estão as regras de formação do contrato
+
+O detalhamento da Opção A não vive mais no README. Ele está empacotado no JAR, em
+`utils/`, e é lido pelo agente antes de qualquer derivação.
+
+**Regras de formação do contrato** (`utils/regras-de-formacao-do-contrato/`):
+
+| Arquivo | Papel |
+|---|---|
+| `regras-01-como-derivar-a-entidade-do-contrato.md` | nome da entidade, pacote da entidade, extração e sanitização dos atributos |
+| `regras-02-como-resolver-tipos-e-enums.md` | tipos `java.lang` × tipos do projeto × enums |
+| `regras-03-como-derivar-flags-de-tipos-aninhados.md` | POJOs aninhados, imports, enums e tipos aninhados |
+| `regras-04-como-aplicar-precedencia-e-validacao.md` | precedência das fontes e validação contra o catálogo |
+| `regras-05-como-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
+| `regras-06-como-relatar-proveniencia.md` | tabela de proveniência e resumo |
+
+**Templates de contrato** (`utils/templates-de-contrato/`):
+
+| Arquivo | Papel |
+|---|---|
+| `template-01-schema-do-contrato.json` | schema permissivo do contrato |
+| `template-02-exemplo-contrato-plano.json` | exemplo com campos de negócio no topo |
+| `template-03-exemplo-contrato-com-objetos-aninhados.json` | exemplo com objetos aninhados |
+| `template-04-exemplo-contrato-com-enums.json` | exemplo com enums |
+| `template-05-exemplo-contrato-com-tipos-do-projeto.json` | exemplo com tipos do projeto |
+| `template-06-exemplo-contrato-com-attributes-explicito.json` | exemplo com `attributes` explícito |
+
+* Campos de negócio viram atributos da entidade; chaves do catálogo viram flags `-D`.
+* O contrato pode trazer a coleção `attributes` explícita, que tem precedência sobre os campos avulsos.
+* Cada atributo pode declarar o seu `type`; um tipo do projeto é preservado, nomeia o atributo
+  e viaja em `custom_entity_attribute_imports` e/ou `contract_enum_definitions`.
+* O contrato materializado é copiado para `src/test/resources/contracts/contract.json` no projeto
+  gerado (quando `enable_folder_src_test_java = true`) — é a base dos testes de esquema do módulo.
 
 #### Onde usar cada abordagem
 
@@ -1969,7 +1893,9 @@ Antes de executar, confira que o valor de `-Dpackage` **NÃO** contém o nome da
 
 **Em ambos os casos**, o seu modelo mental é o mesmo: descrição em cima,
 JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
-fica a cargo do mecanismo `MavenFlagsViaLlmStarter.groovy`.
+fica a cargo do procedimento empacotado no JAR —
+`utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e as regras em
+`utils/regras-de-formacao-do-contrato/`.
 
 </details>
 

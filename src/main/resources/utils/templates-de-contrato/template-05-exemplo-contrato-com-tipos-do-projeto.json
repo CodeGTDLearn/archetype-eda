@@ -1,0 +1,18 @@
+{
+  "description": "Contrato com tipos do projeto: o tipo declarado fora de java.lang e preservado pelo nome simples, nomeia o atributo e viaja em custom_entity_attribute_imports.",
+  "entity_name": "Cliente",
+  "attributes": [
+    {
+      "name": "convenio",
+      "type": "br.com.clinica.convenio.Convenio"
+    },
+    {
+      "name": "plano",
+      "type": "br.com.clinica.plano.PlanoSaude"
+    },
+    {
+      "name": "nome",
+      "value": "Maria Silva"
+    }
+  ]
+}

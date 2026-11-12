@@ -1,0 +1,16 @@
+{
+  "description": "Contrato com enums: um array nao vazio de strings MAIUSCULAS e o sinal de enum. O tipo vem do nome do campo em PascalCase e as constantes viram contract_enum_definitions.",
+  "entity_name": "Pedido",
+  "status": [
+    "ABERTO",
+    "PAGO",
+    "CANCELADO"
+  ],
+  "canal": [
+    "WEB",
+    "APP",
+    "BALCAO"
+  ],
+  "valor_total": 149.9,
+  "pago": false
+}

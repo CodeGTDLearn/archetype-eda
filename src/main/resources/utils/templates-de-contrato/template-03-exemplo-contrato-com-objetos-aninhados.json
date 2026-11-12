@@ -1,0 +1,17 @@
+{
+  "description": "Contrato com objetos aninhados: cada objeto sem type declarado vira um POJO em <entity_package>.nested e a entidade o referencia pelo nome simples.",
+  "entity_name": "Cliente",
+  "nome": "Maria Silva",
+  "endereco": {
+    "logradouro": "Rua das Faias",
+    "numero": 221,
+    "bairro": "Centro",
+    "cidade": "Sao Paulo",
+    "uf": "SP"
+  },
+  "contato": {
+    "telefone": "11987654321",
+    "email": "maria@example.com"
+  },
+  "ativo": true
+}

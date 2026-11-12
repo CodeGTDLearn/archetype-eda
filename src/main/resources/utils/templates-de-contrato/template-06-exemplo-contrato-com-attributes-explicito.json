@@ -1,0 +1,22 @@
+{
+  "description": "Contrato com attributes explicito: a colecao tem precedencia sobre os campos de negocio avulsos. O nome vem de name/attribute/field e o valor de value/default.",
+  "entity_name": "Cliente",
+  "attributes": [
+    {
+      "name": "id",
+      "value": 1024
+    },
+    {
+      "name": "nome",
+      "value": "Maria Silva"
+    },
+    {
+      "name": "ativo",
+      "default": true
+    },
+    {
+      "name": "observacao",
+      "value": null
+    }
+  ]
+}

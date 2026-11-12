@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Contrato de modulo EDA",
+  "description": "Schema permissivo do contrato. Valida a raiz objeto e a forma de attributes/fields; campos de negocio adicionais sao permitidos. O catalogo de flags continua sendo a autoridade sobre as flags.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "entity_name": {
+      "type": "string",
+      "pattern": "^[A-Z][a-zA-Z0-9_]+$"
+    },
+    "entityName": {
+      "type": "string"
+    },
+    "entity": {
+      "type": "string"
+    },
+    "entity_package_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.]+$"
+    },
+    "package": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "attributes": {
+      "$ref": "#/definitions/attributeCollection"
+    },
+    "fields": {
+      "$ref": "#/definitions/attributeCollection"
+    }
+  },
+  "definitions": {
+    "attributeCollection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/attributeObject"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "attributeObject": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "attribute": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {},
+        "default": {},
+        "enumValues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
