@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 
 // GENERATOR-01-CONTRACT_ENUM_DEFINITIONS.GROOVY -------------------------------
-// FR-021 (contract types): the ENUMS derived from the contract are generated
+// FR-024 (contract types): the ENUMS derived from the contract are generated
 // as Java sources in the generated project.
 //
 // The flag contract_enum_definitions carries one definition per enum:

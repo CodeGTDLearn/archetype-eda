@@ -330,9 +330,9 @@
     "semantic_hash": "e85bd795c8a1bad1168a223eec732604"
   },
   "README.md": {
-    "mtime": 1794440245.942279,
-    "seen": 1794440747.6214182,
-    "ast_hash": "6475b5a9a7c7305d1d153378ddc7319d",
+    "mtime": 1794508606.1736403,
+    "seen": 1794509050.3308117,
+    "ast_hash": "df732cdc4f8b4461cd9229ee4c4ceee5",
     "semantic_hash": ""
   },
   "src/main/resources/archetype-resources/ELK/logstash_config/logstash.yml": {
@@ -402,8 +402,8 @@
     "semantic_hash": "d11ce60213913ca9de72cb675a783cb2"
   },
   "src/main/resources/archetype-resources/src/main/resources/protected_properties/application_keys.yml": {
-    "mtime": 1790175132.6685467,
-    "seen": 1790368598.430539,
+    "mtime": 1794498596.1306534,
+    "seen": 1794509050.333692,
     "ast_hash": "95b6c7e1b27e3a59b593f7b2a4eb2e85",
     "semantic_hash": "95b6c7e1b27e3a59b593f7b2a4eb2e85"
   },
@@ -648,9 +648,9 @@
     "semantic_hash": "5ee559751423b9ad4e59852bf19c5351"
   },
   "specs/002-native-groovy-composer/contracts/composer-contract.md": {
-    "mtime": 1794439905.3385103,
-    "seen": 1794440747.621624,
-    "ast_hash": "cc39af04b431d9161ff6eb1eac0883cc",
+    "mtime": 1794445020.2837744,
+    "seen": 1794509050.331578,
+    "ast_hash": "a8bade94b11cb3bf08a26df83988edf1",
     "semantic_hash": ""
   },
   "specs/002-native-groovy-composer/data-model.md": {
@@ -660,15 +660,15 @@
     "semantic_hash": ""
   },
   "specs/002-native-groovy-composer/plan.md": {
-    "mtime": 1794439914.1972547,
-    "seen": 1794440747.6216261,
-    "ast_hash": "48bccb115a16dfb4f33b19186a639356",
+    "mtime": 1794443362.9489148,
+    "seen": 1794509050.331678,
+    "ast_hash": "7e46439f863d4610892e8dc21577a9f4",
     "semantic_hash": ""
   },
   "specs/002-native-groovy-composer/quickstart.md": {
-    "mtime": 1794020881.6281314,
-    "seen": 1794440747.6216269,
-    "ast_hash": "ceeeb3c0c7cb323d1617dca1ed159f2c",
+    "mtime": 1794443362.9489148,
+    "seen": 1794509050.3316793,
+    "ast_hash": "b232081ee2b81b4f4d22941f4917e60e",
     "semantic_hash": ""
   },
   "specs/002-native-groovy-composer/research.md": {
@@ -678,15 +678,15 @@
     "semantic_hash": ""
   },
   "specs/002-native-groovy-composer/spec.md": {
-    "mtime": 1794439914.1972547,
-    "seen": 1794440747.6216288,
-    "ast_hash": "faee4ad1bec5b53ef9eb3b3e861825b1",
+    "mtime": 1794445011.1239796,
+    "seen": 1794509050.3317726,
+    "ast_hash": "f7c26675b45577648e84b376649d954f",
     "semantic_hash": ""
   },
   "specs/002-native-groovy-composer/tasks.md": {
-    "mtime": 1794439919.267581,
-    "seen": 1794440747.6216295,
-    "ast_hash": "04e9e46eb250001994baa295cd6299bc",
+    "mtime": 1794445020.2837744,
+    "seen": 1794509050.331774,
+    "ast_hash": "268f40de85f78c93f213092a99f9e667",
     "semantic_hash": ""
   },
   "specs/003-llm-flag-inference/checklists/requirements.md": {
@@ -972,9 +972,9 @@
     "semantic_hash": ""
   },
   "src/main/groovy/ArchetypePostGenerateComposer.groovy": {
-    "mtime": 1794439504.2239451,
-    "seen": 1794440747.6117823,
-    "ast_hash": "3ed31f6d570f0faa844582be87e621c6",
+    "mtime": 1794444700.5484645,
+    "seen": 1794509050.304277,
+    "ast_hash": "4e83e8c0fb0106e4ce2d56c0d1d704b7",
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy": {
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/cache/CacheStore.groovy": {
-    "mtime": 1793815234.1216547,
-    "seen": 1793896626.464326,
-    "ast_hash": "71c78d9d573d9dd8820d3f3649e27067",
+    "mtime": 1794498596.1261985,
+    "seen": 1794509050.3045616,
+    "ast_hash": "b9612dd680e44135113421c7314a9aaa",
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/cache/JsonCanonicalizer.groovy": {
@@ -1074,9 +1074,9 @@
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/domain/ContractTypeResolver.groovy": {
-    "mtime": 1794427479.8103387,
-    "seen": 1794440747.6131856,
-    "ast_hash": "60a8451e1efba1a4c23f09032d5761c8",
+    "mtime": 1794498596.1281974,
+    "seen": 1794509050.3060071,
+    "ast_hash": "12a6bf080d1bdc3a9f7b513673b3076a",
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/domain/ContractValueReader.groovy": {
@@ -1128,21 +1128,21 @@
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/inference/InferenceApplication.groovy": {
-    "mtime": 1794435042.402509,
-    "seen": 1794440747.6137352,
-    "ast_hash": "fa6677b1510c44042154120b584fa463",
+    "mtime": 1794498596.129196,
+    "seen": 1794509050.306824,
+    "ast_hash": "0569c3d34d8f4a9f5eba2f827e5987d0",
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/inference/InferenceClient.groovy": {
-    "mtime": 1793819398.2709157,
-    "seen": 1793896626.4643466,
-    "ast_hash": "6321824b6667d48f71ad0a2a97b608bf",
+    "mtime": 1794498596.1296484,
+    "seen": 1794509050.3068254,
+    "ast_hash": "46772e6e3531c7c770a040f0fbe1eeda",
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/inference/InferenceConfig.groovy": {
-    "mtime": 1793819398.2709157,
-    "seen": 1793896626.4643474,
-    "ast_hash": "f81eb3cd25ab99d22df61dda37d30e5f",
+    "mtime": 1794498596.1296484,
+    "seen": 1794509050.306827,
+    "ast_hash": "07b7a1add4e87f208e8cd293e9e8b0ee",
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/presentation/CliOutput.groovy": {
@@ -1164,9 +1164,9 @@
     "semantic_hash": ""
   },
   "src/test/groovy/run-archetype-post-generate-tests.groovy": {
-    "mtime": 1794429328.4189384,
-    "seen": 1794440747.614312,
-    "ast_hash": "a125788285715044f18fd38dea21f10c",
+    "mtime": 1794498596.133659,
+    "seen": 1794509050.3189497,
+    "ast_hash": "9d933dcb59aa872f2f84e41ece946618",
     "semantic_hash": ""
   },
   "src/test/groovy/run-maven-flags-via-llm-tests.groovy": {
@@ -1188,9 +1188,9 @@
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/cache/CacheStoreTest.groovy": {
-    "mtime": 1794422639.7978053,
-    "seen": 1794440747.6143157,
-    "ast_hash": "dc06eceb81309520d3dca1ea8315d3d0",
+    "mtime": 1794498596.134662,
+    "seen": 1794509050.3192363,
+    "ast_hash": "0644d438c08a9c645071083c97914831",
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/catalog/FlagCatalogExtractorDriftTest.groovy": {
@@ -1218,14 +1218,14 @@
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/domain/ContractDerivationTest.groovy": {
-    "mtime": 1794427479.8203444,
-    "seen": 1794440747.6148767,
+    "mtime": 1794498596.1366584,
+    "seen": 1794509050.319903,
     "ast_hash": "ccf87770f32b7279c5a691493c2f2a84",
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/domain/ContractTypeResolverTest.groovy": {
-    "mtime": 1793984728.979203,
-    "seen": 1794440747.6149702,
+    "mtime": 1794498596.1366584,
+    "seen": 1794509050.320388,
     "ast_hash": "9af63c6d8b755e7a06503e728fe42ae0",
     "semantic_hash": ""
   },
@@ -1242,15 +1242,15 @@
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/inference/InferenceClientTest.groovy": {
-    "mtime": 1793836140.8477883,
-    "seen": 1793896626.471328,
-    "ast_hash": "da034062fc30109cdc6ef44c678760eb",
+    "mtime": 1794498596.137658,
+    "seen": 1794509050.3213959,
+    "ast_hash": "eb134036e79505d8f98593f2288db999",
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/inference/InferenceConfigTest.groovy": {
-    "mtime": 1793836140.8477883,
-    "seen": 1793896626.4713292,
-    "ast_hash": "d010466cd105167100a635f52d7d4d83",
+    "mtime": 1794498596.137658,
+    "seen": 1794509050.3213975,
+    "ast_hash": "087cf66fe96c9e6458aa47adf8436047",
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/presentation/CliOutputTest.groovy": {
@@ -1278,9 +1278,9 @@
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/BuildArtifactsTest.groovy": {
-    "mtime": 1794437365.3582053,
-    "seen": 1794440747.6142943,
-    "ast_hash": "4bf3adea6461eecc9cf66b5bacf60763",
+    "mtime": 1794508172.839281,
+    "seen": 1794509050.317002,
+    "ast_hash": "378d1ee5d9ac90cd08781eff7d811fdd",
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/ComposerTest.groovy": {
@@ -1296,9 +1296,9 @@
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/FilesetConsistencyTest.groovy": {
-    "mtime": 1794439178.2176208,
-    "seen": 1794440747.6142967,
-    "ast_hash": "33b21ae5791c55db9033c257d517a267",
+    "mtime": 1794498596.1316597,
+    "seen": 1794509050.317203,
+    "ast_hash": "2dd5ab4e8cfb18c3420c29ced270e446",
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/MetadataContractTest.groovy": {
@@ -1452,26 +1452,26 @@
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/commandLine/CommandLineArguments.groovy": {
-    "mtime": 1793921449.2766237,
-    "seen": 1793922223.7540276,
-    "ast_hash": "944e9896001c9736c1df3f67b373ccf7",
+    "mtime": 1794498596.1261985,
+    "seen": 1794509050.304836,
+    "ast_hash": "e806dc5bc96f8d180f099e98e45aea9d",
     "semantic_hash": ""
   },
   "src/main/pre-processamento-maven-flags-via-llm/commandLine/CommandLineAssembler.groovy": {
-    "mtime": 1793921449.2766237,
-    "seen": 1793922223.754029,
-    "ast_hash": "8f896db0e4b400a1e7e2b5fdfcf2a654",
+    "mtime": 1794498596.1272008,
+    "seen": 1794509050.3048377,
+    "ast_hash": "4b5b095601abc487e1f6cf24fda7a20a",
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/commandLine/CommandLineArgumentsTest.groovy": {
-    "mtime": 1793921449.278131,
-    "seen": 1793922223.765304,
-    "ast_hash": "9a89f74dfd59f35f9382a0849fc3b82b",
+    "mtime": 1794498596.134662,
+    "seen": 1794509050.3194265,
+    "ast_hash": "baca09923cc79f6e243b36d3a19c007e",
     "semantic_hash": ""
   },
   "src/test/pre-processamento-maven-flags-via-llm/commandLine/CommandLineAssemblerTest.groovy": {
-    "mtime": 1794427479.8193417,
-    "seen": 1794440747.6145074,
+    "mtime": 1794498596.1356595,
+    "seen": 1794509050.3194282,
     "ast_hash": "113a5b7c9f9d5efa6b50063008dc139a",
     "semantic_hash": ""
   },
@@ -2235,6 +2235,126 @@
     "mtime": 1793808627.1831622,
     "seen": 1794440747.6232836,
     "ast_hash": "632f222ad5325de464b4b038073c11d6",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/templates-de-contrato/template-01-schema-do-contrato.json": {
+    "mtime": 1794507966.4723125,
+    "seen": 1794509050.3167872,
+    "ast_hash": "f70f2529631964ddc05dc558403fe88e",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/templates-de-contrato/template-02-exemplo-contrato-plano.json": {
+    "mtime": 1794507966.4733152,
+    "seen": 1794509050.3167892,
+    "ast_hash": "b3c7a77ef3b47dec601ed938ec8a35ef",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json": {
+    "mtime": 1794507966.4743156,
+    "seen": 1794509050.3167908,
+    "ast_hash": "b03e067676d172139af6cc27a5f18f76",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/templates-de-contrato/template-04-exemplo-contrato-com-enums.json": {
+    "mtime": 1794507966.4743156,
+    "seen": 1794509050.3167918,
+    "ast_hash": "9ec7dc419aa4ddc46a0ae56597596af8",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/templates-de-contrato/template-05-exemplo-contrato-com-tipos-do-projeto.json": {
+    "mtime": 1794507966.4743156,
+    "seen": 1794509050.3167932,
+    "ast_hash": "925a495060668caf6d88d78273558d33",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json": {
+    "mtime": 1794507966.4743156,
+    "seen": 1794509050.3167946,
+    "ast_hash": "1c1385eb792952a26d26b6506c4af5d4",
+    "semantic_hash": ""
+  },
+  "src/test/archetype-post-generate/ConfigImportConsistencyTest.groovy": {
+    "mtime": 1794498097.2566116,
+    "seen": 1794509050.3171022,
+    "ast_hash": "d3270ceadec05c83e5478cc8c594926f",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md": {
+    "mtime": 1794507823.7418108,
+    "seen": 1794509050.3341222,
+    "ast_hash": "00a31f43a96be98e71ddb6eab17874d4",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md": {
+    "mtime": 1794507823.7392986,
+    "seen": 1794509050.3341238,
+    "ast_hash": "0936e6eea41e4a7bc29a6536e8d4b6f0",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md": {
+    "mtime": 1794507823.7418108,
+    "seen": 1794509050.3341248,
+    "ast_hash": "d3294ca2034b9914505b1bac8c0b2c4c",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md": {
+    "mtime": 1794507823.7428188,
+    "seen": 1794509050.334127,
+    "ast_hash": "b0ae854970caaa816ccfd699cba9a677",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md": {
+    "mtime": 1794507823.7418108,
+    "seen": 1794509050.3341284,
+    "ast_hash": "7743cda90e1e65bc36820ea4a4345507",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md": {
+    "mtime": 1794507823.7428188,
+    "seen": 1794509050.3341308,
+    "ast_hash": "af801ff8ac94186c440f8c9be5745ebd",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md": {
+    "mtime": 1794507823.7487965,
+    "seen": 1794509050.3341324,
+    "ast_hash": "a9e32c0b7ac343edccd300040c0a8705",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md": {
+    "mtime": 1794507953.5255044,
+    "seen": 1794509050.3341348,
+    "ast_hash": "9d8a465fac347dd8a6d5c2438b7f9cdc",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md": {
+    "mtime": 1794507953.5265095,
+    "seen": 1794509050.3341365,
+    "ast_hash": "467e17e006c7c50559edf0b4e106c0f3",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md": {
+    "mtime": 1794507953.5285578,
+    "seen": 1794509050.3341382,
+    "ast_hash": "148552d6b02708c907cc3ae3a1f6dc8e",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md": {
+    "mtime": 1794507953.5295715,
+    "seen": 1794509050.3341393,
+    "ast_hash": "fd02210bb55f5c0f33a2f2c08549c3d1",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/regras-de-formacao-do-contrato/regras-05-como-materializar-e-emitir-o-contrato.md": {
+    "mtime": 1794507953.5285578,
+    "seen": 1794509050.3341413,
+    "ast_hash": "0e77f70987aeb1cc67f5de19bff2015a",
+    "semantic_hash": ""
+  },
+  "src/main/resources/utils/regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md": {
+    "mtime": 1794507953.5285578,
+    "seen": 1794509050.3341436,
+    "ast_hash": "9fc2df8b8991851a3f6fbe96442d30a7",
     "semantic_hash": ""
   }
 }

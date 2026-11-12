@@ -7,8 +7,7 @@ Esta regra cobre os objetos aninhados e os metadados dos tipos do projeto.
 Um objeto JSON sem tipo declarado vira um POJO.
 
 - O POJO vive em `<package>.<entity_package_name>.nested`.
-- A entidade referencia o POJO pelo nome simples.
-- O template renderiza o tipo totalmente qualificado e marca o campo com `@Transient`.
+- A entidade referencia o POJO pelo tipo totalmente qualificado (`<package>.<entity_package_name>.nested.<Tipo>`) e marca o campo com `@Transient`.
 - O POJO é gerado apenas quando o tipo aparece em `custom_entity_attributes_list`.
 
 ### 1.1 Nome do POJO

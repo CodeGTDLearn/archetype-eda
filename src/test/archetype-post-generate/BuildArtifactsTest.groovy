@@ -65,11 +65,9 @@ check("4.2 the xml-maven-plugin transform is wired", pomText.contains("xml-maven
         pomText.contains("<goal>transform</goal>"))
 check("4.3 the composer execution is wired (process-resources)",
         pomText.contains("archetype-post-generate-composer-execute"))
-check("4.4 the pre-processing test runner is wired (test)",
-        pomText.contains("maven-flags-via-llm-test-runner"))
-check("4.5 the post-generate test runner is wired (test)",
+check("4.4 the post-generate test runner is wired (test)",
         pomText.contains("archetype-post-generate-test-runner"))
-check("4.6 surefire is restricted to **/*Test.java", pomText.contains("**/*Test.java"))
+check("4.5 surefire is restricted to **/*Test.java", pomText.contains("**/*Test.java"))
 
 // ---------------------------------------------------------------------------
 // 5) Packaged procedure (utils/) - the Option A artifacts travel in the JAR

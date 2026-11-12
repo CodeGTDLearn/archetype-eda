@@ -1,5 +1,5 @@
 {
-  "description": "Contrato com objetos aninhados: cada objeto sem type declarado vira um POJO em <entity_package>.nested e a entidade o referencia pelo nome simples.",
+  "description": "Contrato com objetos aninhados: cada objeto sem type declarado vira um POJO em <entity_package>.nested e a entidade o referencia pelo tipo totalmente qualificado.",
   "entity_name": "Cliente",
   "nome": "Maria Silva",
   "endereco": {

@@ -1,0 +1,61 @@
+/**
+ * verify.groovy - the basic profile.
+ *
+ * The only profile that carries a REAL extra pom dependency and the src/test
+ * tree. It proves that the post-processor injected the dependency in the
+ * generated pom and that the optional modules were pruned.
+ */
+def _basedir = null
+try { _basedir = basedir } catch (Throwable t) { _basedir = null }
+if (_basedir == null) _basedir = System.getProperty('basedir')
+if (_basedir == null) throw new IllegalStateException("verify.groovy: basedir not bound")
+
+def expectedArtifactId = 'basic'
+def basedirFile = new File(_basedir as String)
+def projectRoot = new File(basedirFile, "project/${expectedArtifactId}")
+if (!projectRoot.exists()) projectRoot = basedirFile
+
+// the extra dependency was injected in the generated pom
+File pom = new File(projectRoot, 'pom.xml')
+if (!pom.isFile()) {
+    throw new IllegalStateException("verify.groovy: the pom was not generated: ${pom.path}")
+}
+String pomSource = pom.getText("UTF-8")
+if (!pomSource.contains("<artifactId>slf4j-api</artifactId>")) {
+    throw new IllegalStateException(
+            "verify.groovy: the extra dependency was not injected in the pom. Pom: ${pom.path}")
+}
+if (!pomSource.contains("<scope>runtime</scope>")) {
+    throw new IllegalStateException(
+            "verify.groovy: the scope of the extra dependency was not kept. Pom: ${pom.path}")
+}
+
+// enable_folder_src_test_java=true: the test tree exists
+File testJava = new File(projectRoot, 'src/test/java')
+if (!testJava.isDirectory()) {
+    throw new IllegalStateException(
+            "verify.groovy: the test tree must exist: ${testJava.path}")
+}
+
+// the optional modules are OFF
+[
+        'docker',
+        'src/main/resources/logback-spring-config',
+        'src/main/java/it/pkg/myentity/config/authentication',
+        'src/main/resources/properties'
+].each { String rel ->
+    File f = new File(projectRoot, rel)
+    if (f.exists()) {
+        throw new IllegalStateException(
+                "verify.groovy: the optional module must be pruned: '${rel}'. Project: ${projectRoot.path}")
+    }
+}
+
+// the entity was generated (entity_package_name=entitynamepackage)
+File entity = new File(projectRoot, 'src/main/java/it/pkg/entitynamepackage/MyEntityName.java')
+if (!entity.isFile()) {
+    throw new IllegalStateException(
+            "verify.groovy: the entity was not generated: ${entity.path}")
+}
+
+return null

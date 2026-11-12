@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build + unit suites + integration fixtures
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: 'maven'
+
+      # The unit suites of the post-processor and the install of the artifact
+      # happen in the SAME command: the integration fixtures run in the
+      # `integration-test` phase, which is BEFORE the `install` phase.
+      - name: Install the archetype (runs the unit suites)
+        run: mvn -B clean install "-Darchetype.test.skip=true"
+
+      # The archetype:integration-test goal resolves the archetype from the
+      # LOCAL REPOSITORY - so the artifact must be installed first (the step
+      # above), otherwise the fixtures would validate a stale (or absent)
+      # archetype.
+      - name: Integration fixtures
+        run: mvn -B clean integration-test

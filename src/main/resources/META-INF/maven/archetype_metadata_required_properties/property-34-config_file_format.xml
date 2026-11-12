@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- PROPERTY-34-CONFIG_FILE_FORMAT.XML ________________________ -->
 <!-- FLAG: config_file_format -->
-<!--   DESCRIPTION : Formato do arquivo de properties: 1=properties, 2=yaml. -->
-<!--   PROMPT      : Enter 'Properties Filetype' -->
+<!--   DESCRIPTION : Formato do arquivo de config: 1=yml (deleta os .yml e -->
+<!--                  mantem os .properties), 2=properties (deleta os .properties -->
+<!--                  e mantem os .yml). Apenas um formato sobrevive. -->
+<!--   PROMPT      : Enter 'Config File Format' (1=yml, 2=properties) -->
 <!--   TYPE        : enum (number) -->
 <!--   DEFAULT     : 1 -->
 <!--   DOMAIN      : 1 | 2 -->

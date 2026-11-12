@@ -72,9 +72,9 @@
     "semantic_hash": "7240479b2e76e0c2700f73777b9a9b0e"
   },
   "pom.xml": {
-    "mtime": 1794437323.9250631,
-    "seen": 1794440747.6117778,
-    "ast_hash": "d713b7e52d2fca519c68deeed8de36e2",
+    "mtime": 1794510398.5225759,
+    "seen": 1794511450.0901394,
+    "ast_hash": "d3645a2502b155cffd0deb70c900d308",
     "semantic_hash": ""
   },
   "src/main/resources/archetype-resources/mvnw": {
@@ -330,9 +330,9 @@
     "semantic_hash": "e85bd795c8a1bad1168a223eec732604"
   },
   "README.md": {
-    "mtime": 1794508606.1736403,
-    "seen": 1794509050.3308117,
-    "ast_hash": "df732cdc4f8b4461cd9229ee4c4ceee5",
+    "mtime": 1794511050.942708,
+    "seen": 1794511450.1125476,
+    "ast_hash": "a6e5468266110fadbe9988dc942a3ea2",
     "semantic_hash": ""
   },
   "src/main/resources/archetype-resources/ELK/logstash_config/logstash.yml": {
@@ -402,10 +402,10 @@
     "semantic_hash": "d11ce60213913ca9de72cb675a783cb2"
   },
   "src/main/resources/archetype-resources/src/main/resources/protected_properties/application_keys.yml": {
-    "mtime": 1794498596.1306534,
-    "seen": 1794509050.333692,
-    "ast_hash": "95b6c7e1b27e3a59b593f7b2a4eb2e85",
-    "semantic_hash": "95b6c7e1b27e3a59b593f7b2a4eb2e85"
+    "mtime": 1794511254.856156,
+    "seen": 1794511450.1149826,
+    "ast_hash": "8259d34bd1ad6d02c813e9740669a62b",
+    "semantic_hash": ""
   },
   "src/main/resources/archetype-resources/src/test/resources/application.yml": {
     "mtime": 1794424133.4854171,
@@ -532,12 +532,6 @@
     "seen": 1790619182.7552993,
     "ast_hash": "5a03947dc05a90fdc91048bfeeae4dce",
     "semantic_hash": "5a03947dc05a90fdc91048bfeeae4dce"
-  },
-  "scripts/inference-stub.sh": {
-    "mtime": 1794425909.538436,
-    "seen": 1794440747.6117806,
-    "ast_hash": "f31bb86eac26458d8590f1e2c47874f4",
-    "semantic_hash": ""
   },
   ".specify/assessments/groovy-snippet-injection/concept.md": {
     "mtime": 1794439758.8269534,
@@ -687,54 +681,6 @@
     "mtime": 1794445020.2837744,
     "seen": 1794509050.331774,
     "ast_hash": "268f40de85f78c93f213092a99f9e667",
-    "semantic_hash": ""
-  },
-  "specs/003-llm-flag-inference/checklists/requirements.md": {
-    "mtime": 1791828526.794668,
-    "seen": 1791931641.0061932,
-    "ast_hash": "bd0dff2205252efb5557f6d6ec9fcfaa",
-    "semantic_hash": "bd0dff2205252efb5557f6d6ec9fcfaa"
-  },
-  "specs/003-llm-flag-inference/contracts/cli-contract.md": {
-    "mtime": 1794435248.7017114,
-    "seen": 1794440747.6217198,
-    "ast_hash": "21261dc2984dd0cc961160248d913ed1",
-    "semantic_hash": ""
-  },
-  "specs/003-llm-flag-inference/data-model.md": {
-    "mtime": 1794435266.7329092,
-    "seen": 1794440747.6217208,
-    "ast_hash": "5e213defcb0d0fe47bfd0f7846c5fb53",
-    "semantic_hash": ""
-  },
-  "specs/003-llm-flag-inference/plan.md": {
-    "mtime": 1794427510.3551292,
-    "seen": 1794440747.6217217,
-    "ast_hash": "ea134cef90389dd889676d72792c6561",
-    "semantic_hash": ""
-  },
-  "specs/003-llm-flag-inference/quickstart.md": {
-    "mtime": 1794424254.856288,
-    "seen": 1794440747.621723,
-    "ast_hash": "eb2f6fe36b9fdeab9b5a107581ec8bc5",
-    "semantic_hash": ""
-  },
-  "specs/003-llm-flag-inference/research.md": {
-    "mtime": 1794435266.7329092,
-    "seen": 1794440747.6217241,
-    "ast_hash": "ae44c5460b3a67aed1df9f52fb893cb4",
-    "semantic_hash": ""
-  },
-  "specs/003-llm-flag-inference/spec.md": {
-    "mtime": 1794435203.3481843,
-    "seen": 1794440747.621725,
-    "ast_hash": "98e71c0aac269247cd992bb5b0e71a6b",
-    "semantic_hash": ""
-  },
-  "specs/003-llm-flag-inference/tasks.md": {
-    "mtime": 1794429749.9515612,
-    "seen": 1794440747.6217265,
-    "ast_hash": "dcbccae698238475c8607b747a1a043e",
     "semantic_hash": ""
   },
   "src/test/resources/projects/defaults-only/goal.txt": {
@@ -977,186 +923,6 @@
     "ast_hash": "4e83e8c0fb0106e4ce2d56c0d1d704b7",
     "semantic_hash": ""
   },
-  "src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy": {
-    "mtime": 1793819796.6797614,
-    "seen": 1793896626.4643235,
-    "ast_hash": "6da7f88f10b1e89295ec1aa7099f9bab",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/Sha256.groovy": {
-    "mtime": 1793816282.58175,
-    "seen": 1793896626.4643242,
-    "ast_hash": "972206ece04493e582750961ebd7c5dc",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/cache/CacheKeyFactory.groovy": {
-    "mtime": 1794435030.2442417,
-    "seen": 1794440747.6119733,
-    "ast_hash": "49ca6faecd7ae9fc46aa88fdc4df334e",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/cache/CacheStore.groovy": {
-    "mtime": 1794498596.1261985,
-    "seen": 1794509050.3045616,
-    "ast_hash": "b9612dd680e44135113421c7314a9aaa",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/cache/JsonCanonicalizer.groovy": {
-    "mtime": 1793819839.8497608,
-    "seen": 1793896626.4643283,
-    "ast_hash": "27aebd98626cf861fefba2ad2c6484a7",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/catalog/CatalogEntry.groovy": {
-    "mtime": 1793815206.86755,
-    "seen": 1793896626.4643292,
-    "ast_hash": "eadac5abe0b04794ccffdcc62c4a5c18",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/catalog/FlagCatalogExtractor.groovy": {
-    "mtime": 1793818846.2265809,
-    "seen": 1793896626.46433,
-    "ast_hash": "cff3d6fb9c3bfac05afa38d1b8694ff6",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/contract/ContractFormatException.groovy": {
-    "mtime": 1793815358.7574954,
-    "seen": 1793896626.4643328,
-    "ast_hash": "762131526c68547ba8a2817544feccd4",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/contract/ContractReader.groovy": {
-    "mtime": 1793815363.8851023,
-    "seen": 1793896626.4643335,
-    "ast_hash": "3bc676867ab34da2de4c218b0609c0cb",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/contract/ContractSecretScanner.groovy": {
-    "mtime": 1793815234.1246617,
-    "seen": 1793896626.4643342,
-    "ast_hash": "e5391286569feb8ce887969310420193",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/contract/ContractStore.groovy": {
-    "mtime": 1793816282.5827487,
-    "seen": 1793896626.464335,
-    "ast_hash": "e603cc04951339f5d99e2a3de983166a",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/contract/MaterializationResult.groovy": {
-    "mtime": 1793815358.7574954,
-    "seen": 1793896626.4643357,
-    "ast_hash": "9d1bb0fd1f34eb98190e05f1acf27448",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractAttributeAssembler.groovy": {
-    "mtime": 1793986508.9359913,
-    "seen": 1794440747.6129951,
-    "ast_hash": "e4bc0a6d1be064a93d6238979ebe1f7f",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractAttributeExtractor.groovy": {
-    "mtime": 1793815260.4574714,
-    "seen": 1793896626.4643369,
-    "ast_hash": "d2ebdc8e5ad273e61314639e64c05cfa",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractEntityDeriver.groovy": {
-    "mtime": 1793985832.8802798,
-    "seen": 1794440747.6130903,
-    "ast_hash": "0faf5e5ec4918fdae5234375471effdb",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractEntityNameResolver.groovy": {
-    "mtime": 1793815260.4574714,
-    "seen": 1793896626.4643388,
-    "ast_hash": "8c0a9a670e9d7b6deff54db4564455b3",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractTypeResolver.groovy": {
-    "mtime": 1794498596.1281974,
-    "seen": 1794509050.3060071,
-    "ast_hash": "12a6bf080d1bdc3a9f7b513673b3076a",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractValueReader.groovy": {
-    "mtime": 1793815538.6287906,
-    "seen": 1793896626.4643402,
-    "ast_hash": "013a89c4524bbbdb3fb2f422b29575f6",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/DerivedFlagProjector.groovy": {
-    "mtime": 1794427479.8103387,
-    "seen": 1794440747.6132772,
-    "ast_hash": "0010d53673bc922f6bcc4bbe1b7e460f",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/FlagProposalMerger.groovy": {
-    "mtime": 1794425909.527436,
-    "seen": 1794440747.6132786,
-    "ast_hash": "1e2c978c41ef1952218064b5a705e79f",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/FlagValidationPolicy.groovy": {
-    "mtime": 1793815363.8851023,
-    "seen": 1793896626.4643424,
-    "ast_hash": "1cfbb8e0a6e64db8e9b18b58413d9e7d",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/InferenceEligibilityPolicy.groovy": {
-    "mtime": 1793815297.3940895,
-    "seen": 1793896626.4643428,
-    "ast_hash": "5ecc1db4fb607538f4ae24cc3b426d12",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/TypeNameListFormatter.groovy": {
-    "mtime": 1793815260.4574714,
-    "seen": 1793896626.4643438,
-    "ast_hash": "c97e17b920c74c789740f82c43ee3bd3",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/TypeResolution.groovy": {
-    "mtime": 1793815358.7554955,
-    "seen": 1793896626.4643445,
-    "ast_hash": "b338a3a424692abae698dd50c931ccd2",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ValidationResult.groovy": {
-    "mtime": 1793815358.7554955,
-    "seen": 1793896626.4643455,
-    "ast_hash": "6cd0ab071f3a983404e2c6cb6e847b96",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/inference/InferenceApplication.groovy": {
-    "mtime": 1794498596.129196,
-    "seen": 1794509050.306824,
-    "ast_hash": "0569c3d34d8f4a9f5eba2f827e5987d0",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/inference/InferenceClient.groovy": {
-    "mtime": 1794498596.1296484,
-    "seen": 1794509050.3068254,
-    "ast_hash": "46772e6e3531c7c770a040f0fbe1eeda",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/inference/InferenceConfig.groovy": {
-    "mtime": 1794498596.1296484,
-    "seen": 1794509050.306827,
-    "ast_hash": "07b7a1add4e87f208e8cd293e9e8b0ee",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/presentation/CliOutput.groovy": {
-    "mtime": 1793815240.8329089,
-    "seen": 1793896626.4643478,
-    "ast_hash": "99a27ac13ac566242562bc8e1ecd0411",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/presentation/ProvenanceReportRenderer.groovy": {
-    "mtime": 1793815240.8321638,
-    "seen": 1793896626.4643486,
-    "ast_hash": "f71c704038b94df84f1314015c371f80",
-    "semantic_hash": ""
-  },
   "src/test/archetype-post-generate/VariablesCustomTypesTest.groovy": {
     "mtime": 1794436859.3628004,
     "seen": 1794440747.6143105,
@@ -1164,105 +930,9 @@
     "semantic_hash": ""
   },
   "src/test/groovy/run-archetype-post-generate-tests.groovy": {
-    "mtime": 1794498596.133659,
-    "seen": 1794509050.3189497,
-    "ast_hash": "9d933dcb59aa872f2f84e41ece946618",
-    "semantic_hash": ""
-  },
-  "src/test/groovy/run-maven-flags-via-llm-tests.groovy": {
-    "mtime": 1793986023.0597222,
-    "seen": 1794440747.614313,
-    "ast_hash": "8b1d3860271fb8a31b1d92040c61853d",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarterTest.groovy": {
-    "mtime": 1794435128.1115482,
-    "seen": 1794440747.614314,
-    "ast_hash": "4e1c14c2ceafda6cb1ddc1929701b6d1",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/cache/CacheKeyFactoryTest.groovy": {
-    "mtime": 1794435078.642761,
-    "seen": 1794440747.614315,
-    "ast_hash": "eb41f5101bcfa85e8bfce578a79af78c",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/cache/CacheStoreTest.groovy": {
-    "mtime": 1794498596.134662,
-    "seen": 1794509050.3192363,
-    "ast_hash": "0644d438c08a9c645071083c97914831",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/catalog/FlagCatalogExtractorDriftTest.groovy": {
-    "mtime": 1793836140.8437886,
-    "seen": 1793896626.4713213,
-    "ast_hash": "21ab92bfd8558d814c2c871d3eee7f7b",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/catalog/FlagCatalogExtractorTest.groovy": {
-    "mtime": 1794431290.7395303,
-    "seen": 1794440747.614415,
-    "ast_hash": "85a342bc4448956f6e5c1e00ffe8ed36",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/contract/ContractReaderTest.groovy": {
-    "mtime": 1793836140.845787,
-    "seen": 1793896626.4713235,
-    "ast_hash": "98c5eb7bd79b8113a57d74d6a7b34757",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/contract/ContractStoreTest.groovy": {
-    "mtime": 1793836140.845787,
-    "seen": 1793896626.4713244,
-    "ast_hash": "42b2bfdce57251bb49a80116cde1a604",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractDerivationTest.groovy": {
-    "mtime": 1794498596.1366584,
-    "seen": 1794509050.319903,
-    "ast_hash": "ccf87770f32b7279c5a691493c2f2a84",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractTypeResolverTest.groovy": {
-    "mtime": 1794498596.1366584,
-    "seen": 1794509050.320388,
-    "ast_hash": "9af63c6d8b755e7a06503e728fe42ae0",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/CustomAttributesProfileConsistencyTest.groovy": {
-    "mtime": 1794427479.821342,
-    "seen": 1794440747.6150618,
-    "ast_hash": "02091b76c942a8759a21a63c2e96ee82",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ProvenanceReportTest.groovy": {
-    "mtime": 1793816496.2472053,
-    "seen": 1793896626.4713275,
-    "ast_hash": "7e13279849dd46d17181f0bdd07afe87",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/inference/InferenceClientTest.groovy": {
-    "mtime": 1794498596.137658,
-    "seen": 1794509050.3213959,
-    "ast_hash": "eb134036e79505d8f98593f2288db999",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/inference/InferenceConfigTest.groovy": {
-    "mtime": 1794498596.137658,
-    "seen": 1794509050.3213975,
-    "ast_hash": "087cf66fe96c9e6458aa47adf8436047",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/presentation/CliOutputTest.groovy": {
-    "mtime": 1793836140.848786,
-    "seen": 1793896626.4713302,
-    "ast_hash": "292d182c79885123badc834b7ca1e60a",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/presentation/ProvenanceReportRendererTest.groovy": {
-    "mtime": 1793836140.8492918,
-    "seen": 1793896626.471331,
-    "ast_hash": "674b27be6802693f073f1ed832272b1d",
+    "mtime": 1794510647.2076507,
+    "seen": 1794511450.104473,
+    "ast_hash": "85696b14a0647f3dbecc78d4ee4108a2",
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/BodyFunctionsTest.groovy": {
@@ -1278,9 +948,9 @@
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/BuildArtifactsTest.groovy": {
-    "mtime": 1794508172.839281,
-    "seen": 1794509050.317002,
-    "ast_hash": "378d1ee5d9ac90cd08781eff7d811fdd",
+    "mtime": 1794510432.334416,
+    "seen": 1794511450.1026115,
+    "ast_hash": "a6a2ac991aafcc4e700dd4e5a90c3aa4",
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/ComposerTest.groovy": {
@@ -1290,15 +960,15 @@
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/CoverageRegistryTest.groovy": {
-    "mtime": 1794439482.5236516,
-    "seen": 1794440747.6142957,
-    "ast_hash": "dd1937fb1a3003be8fc2ed86d3aa2f57",
+    "mtime": 1794510407.9534194,
+    "seen": 1794511450.1027277,
+    "ast_hash": "242cd253f32cce2085d7612165c5bbf5",
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/FilesetConsistencyTest.groovy": {
-    "mtime": 1794498596.1316597,
-    "seen": 1794509050.317203,
-    "ast_hash": "2dd5ab4e8cfb18c3420c29ced270e446",
+    "mtime": 1794510323.0825737,
+    "seen": 1794511450.1027296,
+    "ast_hash": "f28f58154b8924b7e309d712a2a97dc8",
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/MetadataContractTest.groovy": {
@@ -1379,60 +1049,6 @@
     "ast_hash": "d6eb515db4ab166dc6eda8728233f62c",
     "semantic_hash": ""
   },
-  "src/test/pre-processamento-maven-flags-via-llm/contract/ContractSecretScannerTest.groovy": {
-    "mtime": 1793908185.0634687,
-    "seen": 1793910981.9711378,
-    "ast_hash": "47954552ce98354d565c4f87c87e88eb",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractAttributeAssemblerTest.groovy": {
-    "mtime": 1793986581.7951047,
-    "seen": 1794440747.614783,
-    "ast_hash": "d0bc7f495857909b39c77b17bb6799f4",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractAttributeExtractorTest.groovy": {
-    "mtime": 1793908214.2599263,
-    "seen": 1793910981.971231,
-    "ast_hash": "816d9ac73498678034ceb6d04b9b15a5",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractEntityNameResolverTest.groovy": {
-    "mtime": 1793908214.262939,
-    "seen": 1793910981.9712338,
-    "ast_hash": "266e53b9861956aae8d93acd38e5a5d6",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractValueReaderTest.groovy": {
-    "mtime": 1793908185.0564485,
-    "seen": 1793910981.971236,
-    "ast_hash": "e9e656b3dc6a7ccf5e270091ba2d9c97",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/DerivedFlagProjectorTest.groovy": {
-    "mtime": 1794427479.8223398,
-    "seen": 1794440747.6150627,
-    "ast_hash": "9523a986ac7f0b504e0c7d43297d3596",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/FlagValidationPolicyTest.groovy": {
-    "mtime": 1793908214.262939,
-    "seen": 1793910981.9713328,
-    "ast_hash": "51a1eaae6f87f88dbac0846dda41575a",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/InferenceEligibilityPolicyTest.groovy": {
-    "mtime": 1794424599.110617,
-    "seen": 1794440747.6151524,
-    "ast_hash": "dc50c64f82c794a771b1ebd966270c7c",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/TypeNameListFormatterTest.groovy": {
-    "mtime": 1793908185.0564485,
-    "seen": 1793910981.9714246,
-    "ast_hash": "b0048b0f9143de473d93c31e13ad1d08",
-    "semantic_hash": ""
-  },
   "src/test/resources/projects/full/verify.groovy": {
     "mtime": 1793904546.434837,
     "seen": 1793910981.9719894,
@@ -1449,54 +1065,6 @@
     "mtime": 1793904528.9344976,
     "seen": 1793910981.9825585,
     "ast_hash": "f3f436803b7b3265980fcd55950eaba6",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/commandLine/CommandLineArguments.groovy": {
-    "mtime": 1794498596.1261985,
-    "seen": 1794509050.304836,
-    "ast_hash": "e806dc5bc96f8d180f099e98e45aea9d",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/commandLine/CommandLineAssembler.groovy": {
-    "mtime": 1794498596.1272008,
-    "seen": 1794509050.3048377,
-    "ast_hash": "4b5b095601abc487e1f6cf24fda7a20a",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/commandLine/CommandLineArgumentsTest.groovy": {
-    "mtime": 1794498596.134662,
-    "seen": 1794509050.3194265,
-    "ast_hash": "baca09923cc79f6e243b36d3a19c007e",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/commandLine/CommandLineAssemblerTest.groovy": {
-    "mtime": 1794498596.1356595,
-    "seen": 1794509050.3194282,
-    "ast_hash": "113a5b7c9f9d5efa6b50063008dc139a",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractEnumDeriver.groovy": {
-    "mtime": 1793985766.3955169,
-    "seen": 1794440747.613182,
-    "ast_hash": "b013031b2d798b17a7a12a7c24a349bd",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractNestedTypeDeriver.groovy": {
-    "mtime": 1793985802.702331,
-    "seen": 1794440747.6131833,
-    "ast_hash": "8a43055c79d708681a91a3274fee536d",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/ContractTypeNameRegistry.groovy": {
-    "mtime": 1793985759.781141,
-    "seen": 1794440747.6131842,
-    "ast_hash": "c3aa84ea2a7dd08088ba225c42436528",
-    "semantic_hash": ""
-  },
-  "src/main/pre-processamento-maven-flags-via-llm/domain/NestedTypeFlagProjector.groovy": {
-    "mtime": 1794427479.8113391,
-    "seen": 1794440747.6134627,
-    "ast_hash": "8c7b0ecb25b74805ac3a6124ba548549",
     "semantic_hash": ""
   },
   "src/main/resources/META-INF/archetype_post_generate_body/body-01-imports.groovy": {
@@ -2111,48 +1679,6 @@
     "ast_hash": "c949cba1ea66868bcc72ca6cd750fbe1",
     "semantic_hash": ""
   },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractEnumDeriverTest.groovy": {
-    "mtime": 1793985930.582952,
-    "seen": 1794440747.6149673,
-    "ast_hash": "bd5af6bbfa2907b0845deb7f446ae56a",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractNestedTypeDeriverTest.groovy": {
-    "mtime": 1793985967.9797614,
-    "seen": 1794440747.6149683,
-    "ast_hash": "04f8df97a725f222a1263860754a8c9a",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/ContractTypeNameRegistryTest.groovy": {
-    "mtime": 1793985920.491827,
-    "seen": 1794440747.6149688,
-    "ast_hash": "eae63f4bb92c26f4db4838b5ccb742cb",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/NestedContractIntegrationTest.groovy": {
-    "mtime": 1794427479.8223398,
-    "seen": 1794440747.615153,
-    "ast_hash": "b4405acfd09b8a23e34cbe0d51de0dff",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/NestedProfilesConsistencyTest.groovy": {
-    "mtime": 1794427479.8233414,
-    "seen": 1794440747.6151543,
-    "ast_hash": "21343b3186ccee696a19af3bc332d767",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/NestedTypeFlagProjectorTest.groovy": {
-    "mtime": 1794427479.8243432,
-    "seen": 1794440747.6151547,
-    "ast_hash": "eacfb28ef2fc09c7b3fb18b67923c051",
-    "semantic_hash": ""
-  },
-  "src/test/pre-processamento-maven-flags-via-llm/domain/PayloadEnumIntegrationTest.groovy": {
-    "mtime": 1794427479.8253415,
-    "seen": 1794440747.6151557,
-    "ast_hash": "a7e53b9e279612bb00bfc485b44894b4",
-    "semantic_hash": ""
-  },
   "src/test/resources/projects/custom-enums-from-payload/sample-contract.json": {
     "mtime": 1793985991.5270352,
     "seen": 1794440747.6158075,
@@ -2274,9 +1800,9 @@
     "semantic_hash": ""
   },
   "src/test/archetype-post-generate/ConfigImportConsistencyTest.groovy": {
-    "mtime": 1794498097.2566116,
-    "seen": 1794509050.3171022,
-    "ast_hash": "d3270ceadec05c83e5478cc8c594926f",
+    "mtime": 1794511384.2032206,
+    "seen": 1794511450.1027262,
+    "ast_hash": "292c6f40af487fc2e3627bc619791966",
     "semantic_hash": ""
   },
   "src/main/resources/utils/inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md": {
@@ -2286,21 +1812,21 @@
     "semantic_hash": ""
   },
   "src/main/resources/utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md": {
-    "mtime": 1794507823.7392986,
-    "seen": 1794509050.3341238,
-    "ast_hash": "0936e6eea41e4a7bc29a6536e8d4b6f0",
+    "mtime": 1794510457.7824051,
+    "seen": 1794511450.1154742,
+    "ast_hash": "21afcc55341ded2b67a1cdebbc4235a2",
     "semantic_hash": ""
   },
   "src/main/resources/utils/procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md": {
-    "mtime": 1794507823.7418108,
-    "seen": 1794509050.3341248,
-    "ast_hash": "d3294ca2034b9914505b1bac8c0b2c4c",
+    "mtime": 1794510457.7714858,
+    "seen": 1794511450.1154761,
+    "ast_hash": "3e1358b06d653402d57cb8cf546093b3",
     "semantic_hash": ""
   },
   "src/main/resources/utils/procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md": {
-    "mtime": 1794507823.7428188,
-    "seen": 1794509050.334127,
-    "ast_hash": "b0ae854970caaa816ccfd699cba9a677",
+    "mtime": 1794510457.7909436,
+    "seen": 1794511450.1154783,
+    "ast_hash": "bccc882206f8a42d7af1398a69b265b7",
     "semantic_hash": ""
   },
   "src/main/resources/utils/procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md": {
@@ -2346,15 +1872,69 @@
     "semantic_hash": ""
   },
   "src/main/resources/utils/regras-de-formacao-do-contrato/regras-05-como-materializar-e-emitir-o-contrato.md": {
-    "mtime": 1794507953.5285578,
-    "seen": 1794509050.3341413,
-    "ast_hash": "0e77f70987aeb1cc67f5de19bff2015a",
+    "mtime": 1794510457.7714858,
+    "seen": 1794511450.11625,
+    "ast_hash": "781a1205b26a634a5cb60e462780f125",
     "semantic_hash": ""
   },
   "src/main/resources/utils/regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md": {
     "mtime": 1794507953.5285578,
     "seen": 1794509050.3341436,
     "ast_hash": "9fc2df8b8991851a3f6fbe96442d30a7",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/STATUS.md": {
+    "mtime": 1794510609.0012865,
+    "seen": 1794511450.1139019,
+    "ast_hash": "15311f9fb6f8105b91f7310b9afa7ac1",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/checklists/requirements.md": {
+    "mtime": 1791828526.794668,
+    "seen": 1794511450.1139033,
+    "ast_hash": "bd0dff2205252efb5557f6d6ec9fcfaa",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/contracts/cli-contract.md": {
+    "mtime": 1794435248.7017114,
+    "seen": 1794511450.1139047,
+    "ast_hash": "21261dc2984dd0cc961160248d913ed1",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/data-model.md": {
+    "mtime": 1794435266.7329092,
+    "seen": 1794511450.113906,
+    "ast_hash": "5e213defcb0d0fe47bfd0f7846c5fb53",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/plan.md": {
+    "mtime": 1794427510.3551292,
+    "seen": 1794511450.1139069,
+    "ast_hash": "ea134cef90389dd889676d72792c6561",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/quickstart.md": {
+    "mtime": 1794424254.856288,
+    "seen": 1794511450.1139085,
+    "ast_hash": "eb2f6fe36b9fdeab9b5a107581ec8bc5",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/research.md": {
+    "mtime": 1794435266.7329092,
+    "seen": 1794511450.1139102,
+    "ast_hash": "ae44c5460b3a67aed1df9f52fb893cb4",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/spec.md": {
+    "mtime": 1794435203.3481843,
+    "seen": 1794511450.1139116,
+    "ast_hash": "98e71c0aac269247cd992bb5b0e71a6b",
+    "semantic_hash": ""
+  },
+  "specs/_archive/003-llm-flag-inference/tasks.md": {
+    "mtime": 1794429749.9515612,
+    "seen": 1794511450.113913,
+    "ast_hash": "dcbccae698238475c8607b747a1a043e",
     "semantic_hash": ""
   }
 }

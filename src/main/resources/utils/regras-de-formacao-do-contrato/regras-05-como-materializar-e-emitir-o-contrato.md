@@ -36,10 +36,10 @@ O nome é determinístico: o mesmo contrato produz o mesmo arquivo.
 Use, nesta ordem:
 
 1. o diretório indicado pelo usuário;
-2. o diretório de cache do mecanismo antigo:
-   - Windows: `%LOCALAPPDATA%\eda-archetype\llm-flag-inference\contracts`;
-   - POSIX com `XDG_CACHE_HOME`: `$XDG_CACHE_HOME/eda-archetype/llm-flag-inference/contracts`;
-   - POSIX sem `XDG_CACHE_HOME`: `~/.cache/eda-archetype/llm-flag-inference/contracts`.
+2. o diretório de contratos do archetype:
+   - Windows: `%LOCALAPPDATA%\eda-archetype\contracts`;
+   - POSIX com `XDG_CACHE_HOME`: `$XDG_CACHE_HOME/eda-archetype/contracts`;
+   - POSIX sem `XDG_CACHE_HOME`: `~/.cache/eda-archetype/contracts`.
 
 Crie o diretório se ele não existir.
 

@@ -92,13 +92,13 @@ Leia os templates relevantes:
 | `defaultValue` | fallback; não pode ser vazio |
 | `validationRegex` | gate final do valor |
 | `DESCRIPTION` | descrição humana |
-| `PROMPT` | valor esperado; pode mencionar o motor antigo |
+| `PROMPT` | valor esperado |
 | `TYPE` | tipo do valor |
 | `DOMAIN` | formato ou domínio |
 | `DEPENDS_ON` | dependência ou guarda |
 | `VALIDATION` | forma legível da regex |
 
-Algumas descrições ainda dizem “mecanismo de inferência LLM”. Na Opção A, o agente faz esse papel. Não execute o motor por causa disso.
+Algumas descrições ainda dizem “mecanismo de inferência LLM”, por herança histórica. Neste procedimento, quem deriva é o agente: não procure nem execute motor, CLI ou script externo por causa disso.
 
 ## 5. Separação do contrato
 
@@ -127,7 +127,7 @@ Use o repositório-fonte apenas quando o usuário pedir explicitamente. O caminh
 
 ## 8. Proibição
 
-Não use o código do motor para redescobrir semântica de flags. As regras estão em:
+Não use código de motor, CLI ou script externo para redescobrir semântica de flags. As regras estão em:
 
 ```text
 utils/regras-de-formacao-do-contrato/

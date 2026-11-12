@@ -19,23 +19,12 @@ This guide walks a maintainer through running the new test matrix locally and ve
 
 ## What ships in this feature
 
-Under `src/test/resources/projects/`, one new subdirectory per scenario (plus the existing `basic/` if retained):
-
-| Directory | Scenario | Has `verify.groovy`? |
-|---|---|---|
-| `minimal/` | All optional flags off. Baseline. | No |
-| `full/` | All optional flags on. Stress. | No |
-| `custom-attributes/` | `enable_custom_entity_attributes=true` + `custom_entity_attributes_list`. | **Yes** |
-| `external-binding-default-only/` | Parent on + only `default_*` on. | No |
-| `external-binding-list-only/` | Parent on + only `list_*` on. | No |
-| `external-binding-map-only/` | Parent on + only `map_*` on. | No |
-| `external-binding-mutable-only/` | Parent on + `binding_external_properties_mutability` set to `mutable`. | No |
-| `external-binding-validated-only/` | Parent on + `default_*` on + `validated_*` on. | No |
+Under `src/test/resources/projects/`, one subdirectory per scenario. The living matrix (cluster, flags under test and what each `verify.groovy` asserts) lives in [`src/test/resources/projects/README.md`](../../src/test/resources/projects/README.md) and is verified by `FixturesMatrixTest.groovy` — do not duplicate it here.
 
 Each fixture directory contains:
-* `archetype.properties` — flag values for that scenario.
+* `archetype.properties` — flag values for that scenario, plus the `# FIXTURE SIGNATURE` header (the flags whose value differs from the catalog default).
 * `goal.txt` — Maven goal to run in the generated project (always `clean verify`).
-* (`custom-attributes` only) `verify.groovy` — structural assertion script.
+* `verify.groovy` — structural assertion script (pos-build hook do `maven-archetype-plugin`).
 
 ## Running the full matrix
 
@@ -49,18 +38,20 @@ mvn integration-test
 
 Or as a single line: `mvn clean install integration-test`. Do NOT use `mvn archetype:integration-test` — that goal fails with "Unable to get the archetypes' artifact which should have just been built" because it looks for the .jar in `~/.m2/repository/` instead of `target/`.
 
-Expected outcome: a passing run for each fixture, in sequence. The output should report one passing test per fixture. The `custom-attributes` fixture takes longer (extra `verify.groovy` step).
+Expected outcome: a passing run for each fixture, in sequence. The output should report one passing test per fixture.
 
 ## Running a single fixture (faster local loop)
 
-To iterate on a single scenario without running the whole matrix:
+To iterate on a single scenario without running the whole matrix, point the plugin at a directory that holds **only** that fixture:
 
 ```bash
 cd archetype-v2-eda
-mvn clean install integration-test -Darchetype.test.projects=minimal
+mkdir -p target/it-single
+cp -r src/test/resources/projects/minimal target/it-single/
+mvn clean integration-test -Darchetype.test.projectsDirectory=target/it-single
 ```
 
-(The `archetype.test.projects` property filters which fixtures under `src/test/resources/projects/` are run. Confirm the exact property name in `pom.xml` / plugin docs if the default differs.)
+(The `maven-archetype-plugin:3.4.1` has **no** per-name filter — `archetype.test.projects` does not exist. `archetype.test.projectsDirectory` is the only way to isolate a fixture.)
 
 ## Verifying the matrix catches a real regression
 
@@ -87,9 +78,9 @@ After the first online run, disconnect from the network and re-run the matrix. A
 
 ## Out of scope (per spec / intake / constitution)
 
-* CI integration — the matrix is local-only by design (spec FR-010, intake `Out of Scope`).
-* Modifying `bash_script/` — forbidden by spec FR-011.
-* Security + observability combinations (JWT + Logback + cPanel/ELK) — out of scope per spec FR-012, deferred to a future assessment.
+* **O matrix e local-first** (spec FR-010). O workflow `.github/workflows/ci.yml` apenas espelha os mesmos dois comandos — ele nao substitui a execucao local nem muda o desenho.
+* **Reintroduzir o tooling legado `bash_script/`** — proibido pela spec FR-011. Os scripts foram removidos da arvore; a proibicao continua valendo.
+* **Combinacoes de seguranca + observabilidade** (JWT + Logback + cPanel/ELK) estavam fora de escopo pela spec FR-012. **Historico:** a fixture `full/` passou a exercitar exatamente essa combinacao (todos os flags ligados), entao a exclusao nao vale mais para a matriz atual.
 
 ## Troubleshooting
 
@@ -99,5 +90,5 @@ After the first online run, disconnect from the network and re-run the matrix. A
 | One fixture fails, others pass | The failing fixture's flags exercise a code path with a regression. | Inspect the build log; cross-reference with `archetype-post-generate.groovy` for the relevant `if` block. |
 | `custom-attributes` reports a missing attribute | The declared `custom_entity_attributes_list` no longer matches what the `verify.groovy` asserts (or violates the catalog's `validationRegex`). | Re-check the attribute list against the fixture's `verify.groovy` expectations and the `custom_entity_attributes_list` validation rule. |
 | Build hangs on dependency download | First run only — Maven is downloading Spring Boot 4.0.0, Lombok, etc. | Wait. Subsequent runs use the local cache. |
-| `mvn integration-test` reports "no projects found" | The `src/test/resources/projects/` directory is empty or the filter is wrong. | Verify the directory layout; re-check `-Darchetype.test.projects` value. |
+| `mvn integration-test` reports "no projects found" | The `src/test/resources/projects/` directory is empty or the filter is wrong. | Verify the directory layout; re-check the `-Darchetype.test.projectsDirectory` value. |
 | `mvn archetype:integration-test` reports "Unable to get the archetypes' artifact which should have just been built" | You ran the goal directly without installing the archetype first. | Use `mvn clean install integration-test` instead, or run `mvn clean install` followed by `mvn integration-test`. |

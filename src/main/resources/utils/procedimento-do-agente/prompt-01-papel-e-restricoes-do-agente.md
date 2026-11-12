@@ -20,7 +20,7 @@ mvn archetype:generate --batch-mode -D...
 - Nunca “conserte” um `package` duplicado editando o arquivo.
 - Nunca invente flags, defaults, regex ou comportamentos.
 - Nunca use o `README.md` como fonte de runtime.
-- Nunca use o código do motor `src/main/pre-processamento-maven-flags-via-llm/` como fonte de semântica.
+- Nunca use código de motor, CLI ou script externo como fonte de semântica.
 - Nunca exponha segredos do contrato.
 - Nunca continue quando faltar um arquivo obrigatório.
 

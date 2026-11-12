@@ -120,9 +120,16 @@ check("1.2 every classpath: reference resolves to a real file (and never uses \\
 // ---------------------------------------------------------------------------
 // Direction C - the .yml mirrors the keys of its .properties twin
 // ---------------------------------------------------------------------------
-// Minimal flattening: nested "key:" maps become dotted keys; list items
-// "- key:" are indexed as parent[0], parent[1] (the .properties twin uses
-// objects[0].name style keys). No YAML dependency is added to the build.
+// Minimal flattening: nested "key:" maps become dotted keys; list items are
+// indexed as parent[0], parent[1] (the .properties twin uses objects[0].name
+// style keys). Two list shapes exist:
+//   - mapping item ("- name: Brazil"): the key is a LEAF, so the sibling keys
+//     that follow attach to parent[n] (objects[0].currency, NOT
+//     objects[0].name.currency);
+//   - scalar item ("- Brazil"): the value IS the entry (parent[0]).
+// A colon only opens a mapping when a space follows it, so "- http://host" is
+// a scalar item, not a "http" key.
+// No YAML dependency is added to the build.
 // NOTE: Groovy's List.pop() removes the FIRST element, so the stack uses
 // explicit remove(size-1).
 def flattenYaml = { File f ->
@@ -134,12 +141,19 @@ def flattenYaml = { File f ->
         if (trimmed.isEmpty() || trimmed.startsWith("#")) return
         def item = t =~ /^(\s*)-\s+(.*)$/
         boolean isListItem = item.matches()
+        String itemIndent = isListItem ? item[0][1].length() : -1
         if (isListItem) t = item[0][1] + item[0][2]
         def m = t =~ /^(\s*)([^:#]+):\s*(.*)$/
-        if (!m.matches()) return
-        int indent = m[0][1].length()
-        String key = m[0][2].trim()
-        String val = m[0][3].trim()
+        boolean isMapping = m.matches()
+        if (isListItem && isMapping) {
+            // YAML only sees a mapping when the colon is followed by a space:
+            // "- http://host" is a SCALAR item, not a "http" key.
+            isMapping = (t =~ /^(\s*)([^:#]+):(\s.*)?$/).matches()
+        }
+        if (!isMapping && !isListItem) return
+        int indent = isMapping ? m[0][1].length() : itemIndent
+        String key = isMapping ? m[0][2].trim() : ""
+        String val = isMapping ? m[0][3].trim() : t.trim()
         while (!stack.isEmpty() && ((int) stack.last()[0]) >= indent) {
             stack.remove(stack.size() - 1)
         }
@@ -155,8 +169,18 @@ def flattenYaml = { File f ->
                     : 0
             stack << [parent[0], base + "[" + nextIndex + "]"]
         }
-        stack << [indent, key]
-        if (!val.isEmpty()) out << stack.collect { it[1] }.join(".")
+        if (isMapping) {
+            stack << [indent, key]
+            if (!val.isEmpty()) out << stack.collect { it[1] }.join(".")
+            // A list item with a SCALAR value ("- name: Brazil") is a LEAF: it must
+            // not become the parent of the sibling keys that follow it. Spring
+            // flattens the list as objects[0].name + objects[0].currency, not
+            // objects[0].name.currency.
+            if (isListItem && !val.isEmpty()) stack.remove(stack.size() - 1)
+        } else {
+            // A SCALAR list item ("- Brazil"): the indexed parent IS the key.
+            if (!val.isEmpty()) out << stack.collect { it[1] }.join(".")
+        }
     }
     return out.sort()
 }

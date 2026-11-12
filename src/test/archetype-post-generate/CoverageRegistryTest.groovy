@@ -3,13 +3,12 @@
  *
  * Tier 1 (files): every production .groovy file is referenced by at least one
  * test suite (or explicitly allowlisted as composition-only).
- * Tier 2 (runner): every test suite is wired into one of the two runners.
+ * Tier 2 (runner): every test suite is wired into the runner.
  * Tier 3 (assets): every snippet/variable/body file is referenced by a suite.
  */
 def main = new File("src/main")
 def tests = new File("src/test")
-def runners = [new File("src/test/groovy/run-maven-flags-via-llm-tests.groovy"),
-               new File("src/test/groovy/run-archetype-post-generate-tests.groovy")]
+def runners = [new File("src/test/groovy/run-archetype-post-generate-tests.groovy")]
 def runnerText = runners.collect { it.getText("UTF-8") }.join("\n")
 
 int failures = 0
@@ -27,26 +26,22 @@ check("1.1 the production tree exposes the four post-processor asset folders", [
         new File("src/main/resources/META-INF/archetype_post_generate_generators"),
         new File("src/main/resources/META-INF/archetype_post_generate_snippets")
 ].every { dir -> dir.isDirectory() && dir.listFiles().any { it.name.endsWith(".groovy") } } && !prodFiles.isEmpty())
-check("1.2 the legacy InvocationCache is gone",
-        !new File("src/main/pre-processamento-maven-flags-via-llm/cache/InvocationCache.groovy").exists())
+
+// Test helpers: shared infrastructure, not suites (they carry no check).
+def helpers = ["PostProcessorHarness.groovy", "TemplateRenderer.groovy"]
 
 def suiteFiles = []
-[new File("src/test/archetype-post-generate"),
- new File("src/test/pre-processamento-maven-flags-via-llm")].each { root ->
-    root.eachFileRecurse { File f ->
-        if (f.isFile() && f.name.endsWith(".groovy") &&
-                !f.name.startsWith("run-") && f.name != "PostProcessorHarness.groovy") {
-            suiteFiles << f
-        }
+new File("src/test/archetype-post-generate").eachFileRecurse { File f ->
+    if (f.isFile() && f.name.endsWith(".groovy") &&
+            !f.name.startsWith("run-") && !helpers.contains(f.name)) {
+        suiteFiles << f
     }
 }
 def suiteText = suiteFiles.collect { it.getText("UTF-8").toLowerCase() }.join("\n")
 
 // Composition-only body files: asserted structurally by ComposerTest, not by
 // their own name. Explicit allowlist with a reason.
-def allowlist = ["body-01-imports.groovy", "body-02-header.groovy",
-                 // data holders exercised through their owning component
-                 "MaterializationResult.groovy", "TypeResolution.groovy", "ValidationResult.groovy"]
+def allowlist = ["body-01-imports.groovy", "body-02-header.groovy"]
 
 def isPostProcessorAsset = { File f ->
     f.absolutePath.replace('\\', '/').contains('/archetype_post_generate_')
@@ -55,7 +50,7 @@ def unreferenced = prodFiles.findAll { File f ->
     !allowlist.contains(f.name) && !isPostProcessorAsset(f) &&
             !suiteText.contains(f.name.replace(".groovy", "").toLowerCase())
 }
-check("1.3 every production file is covered by a suite: ${unreferenced*.name}", unreferenced.isEmpty())
+check("1.2 every production file is covered by a suite: ${unreferenced*.name}", unreferenced.isEmpty())
 
 // ---------------------------------------------------------------------------
 // 2) Every suite is wired into a runner
@@ -69,19 +64,6 @@ check("2.1 the runners wire ${runnerEntries.size()} suites (${suiteFiles.size()}
                 runnerEntries.toSet().size() == runnerEntries.size())
 def notWired = suiteFiles.findAll { File f -> !runnerText.contains(f.name) }
 check("2.2 every suite file is listed in a runner: ${notWired*.name}", notWired.isEmpty())
-
-// ---------------------------------------------------------------------------
-// 2b) The test tree mirrors the production package tree
-// ---------------------------------------------------------------------------
-def productionRoot = new File("src/main/pre-processamento-maven-flags-via-llm")
-def testRoot = new File("src/test/pre-processamento-maven-flags-via-llm")
-def productionPackages = productionRoot.listFiles().findAll { it.isDirectory() }*.name.sort()
-def testPackages = testRoot.listFiles().findAll { it.isDirectory() }*.name.sort()
-def emptyTestPackages = testPackages.findAll { String name ->
-    !new File(testRoot, name).listFiles().any { it.isFile() && it.name.endsWith(".groovy") }
-}
-check("2.3 the test tree mirrors the production packages: ${productionPackages} / ${emptyTestPackages}",
-        productionPackages == testPackages && emptyTestPackages.isEmpty())
 
 // ---------------------------------------------------------------------------
 // 3) Runner entries point to real files
@@ -162,6 +144,36 @@ def readerText = readers.collect { it.getText("UTF-8") }.join("\n")
 def isUsedByReader = { String flag -> (readerText =~ (/\b/ + flag + /\b/)).find() }
 def orphanBindings = boundFlags.findAll { !isUsedByReader(it) && !bindingOnlyAllowlist.contains(it) }
 check("4.6 every variables fragment is consumed by a reader: ${orphanBindings}", orphanBindings.isEmpty())
+
+// ---------------------------------------------------------------------------
+// 5) EXECUTION coverage: the asset is not only CITED, it is INVOKED by a
+//    suite that the runner really wires.
+//
+//    Check 1.2 only proves that the name of a production file appears
+//    somewhere in the text of the suites - a mention in a comment of a suite
+//    that is not wired in the runner is enough to pass it. Here the name
+//    must appear in a suite that the RUNNER executes.
+// ---------------------------------------------------------------------------
+def wiredSuites = suiteFiles.findAll { File f -> runnerText.contains(f.name) }
+def wiredSuiteText = wiredSuites.collect { it.getText("UTF-8").toLowerCase() }.join("\n")
+
+// The snippets and the generators are invoked BY NAME by the suites that
+// exercise them. The variables fragments are derived from the directory by
+// the VariablesTest (every fragment is evaluated); the body fragments are
+// evaluated by the harness on every run.
+def invokedAssets = (snippetAssets + generatorAssets)
+        .collect { it.name.replace(".groovy", "").toLowerCase() }
+def notInvoked = invokedAssets.findAll { !wiredSuiteText.contains(it) }
+check("5.1 every snippet and generator is invoked by a suite the runner wires: ${notInvoked}",
+        notInvoked.isEmpty())
+
+// The body fragments the harness evaluates on every run are covered by
+// definition; the composition-only ones are allowlisted with a reason.
+def harnessText = new File("src/test/archetype-post-generate/PostProcessorHarness.groovy").getText("UTF-8").toLowerCase()
+def bodyAssets = listOf(bodyDir).collect { it.name.replace(".groovy", "").toLowerCase() }
+def bodyNotEvaluated = bodyAssets.findAll { !harnessText.contains(it) && !allowlist.contains(it + ".groovy") }
+check("5.2 every body fragment is evaluated by the harness or is composition-only: ${bodyNotEvaluated}",
+        bodyNotEvaluated.isEmpty())
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

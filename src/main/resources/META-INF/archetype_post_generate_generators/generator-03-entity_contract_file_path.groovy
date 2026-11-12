@@ -3,7 +3,7 @@
 
 
 // GENERATOR-03-ENTITY_CONTRACT_FILE_PATH.GROOVY -------------------------------
-// FR-021 (contract persistence): the contract that was extracted from the
+// FR-023 (contract persistence): the contract that was extracted from the
 // prompt - the base of the module - is copied into the generated project:
 //
 //     src/test/resources/contracts/contract.json

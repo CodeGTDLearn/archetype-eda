@@ -106,6 +106,58 @@ class PostProcessorHarness {
         return binding.getVariables()
     }
 
+    /**
+     * Runs the COMPOSED post-processor (the real artifact produced by the
+     * build) against `root`, with the binding the maven-archetype-plugin
+     * builds: the `request` plus EVERY property key as a direct binding
+     * variable.
+     *
+     * This is the only path that reproduces the production semantics: the
+     * per-asset `run` above binds `properties` only, so the helpers that read
+     * the flag from the BINDING (body-03) can never see it there.
+     *
+     * Returns what the post-processor printed to stdout: the report is
+     * printed by body-11-footer, not returned through the binding.
+     */
+    static String runFull(File root, Map<String, String> props) {
+        File composed = new File("target/classes/META-INF/archetype-post-generate.groovy")
+        if (!composed.isFile()) {
+            throw new IllegalStateException("Composed post-processor not found: ${composed.path}")
+        }
+
+        def effective = new LinkedHashMap<String, String>()
+        effective.put("package", "it.pkg")
+        effective.put("groupId", "archetype.it")
+        effective.put("version", "0.1-SNAPSHOT")
+        effective.put("entity_name", "MyEntity")
+        effective.put("entity_package_name", "myentity")
+        effective.putAll(props)
+
+        def properties = new Properties()
+        effective.each { k, v -> properties.put(k, v) }
+
+        def binding = new Binding()
+        binding.setVariable("request", [outputDirectory: root.parentFile.absolutePath,
+                                       artifactId: root.name,
+                                       properties: properties])
+        binding.setVariable("properties", properties)
+        binding.setVariable("log_text", "")
+        // The archetype plugin exposes EVERY requiredProperty as a direct
+        // binding variable - body-03 reads the log flag from there.
+        effective.each { k, v -> binding.setVariable(k, v) }
+
+        def buffer = new ByteArrayOutputStream()
+        def originalOut = System.out
+        try {
+            System.setOut(new PrintStream(buffer, true, "UTF-8"))
+            new GroovyShell(PostProcessorHarness.class.classLoader, binding)
+                    .evaluate(composed.getText("UTF-8"))
+        } finally {
+            System.setOut(originalOut)
+        }
+        return buffer.toString("UTF-8")
+    }
+
     /** Seeds a file under root. */
     static File seed(File root, String relative, String content) {
         File f = new File(root, relative)

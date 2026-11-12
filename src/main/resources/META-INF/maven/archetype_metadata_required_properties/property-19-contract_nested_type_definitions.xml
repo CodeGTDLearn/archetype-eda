@@ -7,7 +7,7 @@
 <!--                 <package>.<entity_package_name>.nested. Os campos mantem as -->
 <!--                 chaves do contrato; a colisao muda apenas o nome da classe. -->
 <!--                 'none' quando nao ha objetos aninhados. -->
-<!--   PROMPT      : (interno - preenchido pelo mecanismo de inferencia LLM) -->
+<!--   PROMPT      : (interno - preenchido pelo agente, via procedimento para especificação) -->
 <!--   TYPE        : list (nested types) -->
 <!--   DEFAULT     : none -->
 <!--   DOMAIN      : none OU lista de Tipo|Campo:Tipo (ponto e virgula) -->

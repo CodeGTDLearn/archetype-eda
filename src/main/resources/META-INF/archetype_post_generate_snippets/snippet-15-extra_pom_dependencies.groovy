@@ -5,7 +5,12 @@
 
 // SNIPPET-15-EXTRA_POM_DEPENDENCIES.GROOVY ------------------------------------
 // OWNER: the extra dependencies injected into the generated pom.xml.
-if (extra_pom_dependencies.length() > 0 && extra_pom_dependencies.toString() != 'false') {
+// An absent flag becomes the string 'null' and the catalog also accepts
+// 'false' as "no dependency": neither reaches the injection below.
+if (extra_pom_dependencies != null &&
+        extra_pom_dependencies.toString().trim().length() > 0 &&
+        extra_pom_dependencies.toString() != 'false' &&
+        extra_pom_dependencies.toString() != 'null') {
 
     def additional_dependencies_splitter = ','
     def dependency_internal_coordinates_splitter = ':'
@@ -33,7 +38,7 @@ if (extra_pom_dependencies.length() > 0 && extra_pom_dependencies.toString() != 
         Scanner sc
 
         try {
-            sc = new Scanner(pomFilePath)
+            sc = new Scanner(pomFilePath.toFile(), "UTF-8")
             String currentLine = ''
             String lastLine = ''
 
@@ -62,6 +67,15 @@ if (extra_pom_dependencies.length() > 0 && extra_pom_dependencies.toString() != 
                         def splitter = dependency_internal_coordinates_splitter
 
                         String[] depInfo = dependency.split(splitter)
+
+                        // a coordinate without group, artifact and version is
+                        // reported and skipped - it must not break the
+                        // post-processor
+                        if (depInfo.length < 3) {
+                            log_text += "\n - Ignored malformed dependency: ${dependency}\n"
+                            continue
+                        }
+
                         String scopeVal = 'compile'
 
                         if (depInfo.length > 3) scopeVal = depInfo[3]
@@ -81,7 +95,7 @@ if (extra_pom_dependencies.length() > 0 && extra_pom_dependencies.toString() != 
         }
 
         // Write the modified parent pom
-        PrintWriter writer = new PrintWriter(pomFilePath.toFile())
+        PrintWriter writer = new PrintWriter(pomFilePath.toFile(), "UTF-8")
         writer.write(sb.toString())
         writer.close()
     }

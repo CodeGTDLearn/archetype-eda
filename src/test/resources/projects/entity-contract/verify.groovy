@@ -1,5 +1,5 @@
 /**
- * verify.groovy - FR-021 (contract persistence) for the `entity-contract` profile.
+ * verify.groovy - FR-023 (contract persistence) for the `entity-contract` profile.
  *
  * Asserts that the generated project carries the contract it was built from:
  *   1. src/test/resources/contracts/contract.json EXISTS;

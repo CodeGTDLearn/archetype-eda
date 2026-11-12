@@ -10,7 +10,7 @@
 <!--                 aninhado). O prefixo 'nested.' e RESERVADO: um pacote real -->
 <!--                 chamado 'nested' nao pode ser expresso nesta flag. -->
 <!--                 'none' quando nao ha enums. -->
-<!--   PROMPT      : (interno - preenchido pelo mecanismo de inferencia LLM) -->
+<!--   PROMPT      : (interno - preenchido pelo agente, via procedimento para especificação) -->
 <!--   TYPE        : list (enums) -->
 <!--   DEFAULT     : none -->
 <!--   DOMAIN      : none OU lista de Tipo:CONSTANTE|CONSTANTE (ponto e virgula) -->

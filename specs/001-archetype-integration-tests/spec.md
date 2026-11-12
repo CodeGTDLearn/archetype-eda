@@ -119,10 +119,12 @@ As the **archetype maintainer**, I want at least one fixture per binding-propert
 
 ## Scope Boundary: Automated Suite vs. Manual Validation Checklist
 
-The **automated suite** (executed by `mvn clean install`) covers: FR-001, FR-002, FR-003, FR-005, FR-006, FR-008, FR-009, FR-010, FR-011, FR-012, and SC-001, SC-003, SC-004. The 9 fixtures under `src/test/resources/projects/` execute end-to-end (generation + sub-build + verify.groovy for `custom-attributes`).
+The **automated suite** (executed by `mvn clean install`) covers: FR-001, FR-002, FR-003, FR-005, FR-006, FR-008, FR-009, FR-010, FR-011, and SC-001, SC-003, SC-004. Every fixture under `src/test/resources/projects/` executes end-to-end (generation + sub-build + its own `verify.groovy`); the living matrix is `src/test/resources/projects/README.md` and `FixturesMatrixTest.groovy` keeps it honest.
+
+> **FR-012 is historical.** The spec excluded the security + observability family (JWT + Logback + cPanel/ELK). The `full/` fixture now exercises exactly that combination, so the exclusion no longer describes the matrix. See `quickstart.md` §Out of scope.
 
 A **maintainer validation checklist** (NOT part of the automated suite, run manually on demand) covers three additional items: regression-bait (correlates to SC-002), offline-runnable (correlates to FR-007), and dependency-rule (correlates to FR-004). These are listed in `quickstart.md` §Verifying the matrix catches a real regression, §Verifying the offline-runnable constraint, and §Verifying the dependency rule. Rationale for keeping these manual rather than automated:
 
-1. **Regression-bait** would require mutating production source code (`archetype-post-generate.groovy`); a failed restore would leave the archetype broken. Equivalent implicit coverage is provided by T029 (full matrix): any regression in the post-processor breaks all 9 fixtures, so the automated suite already detects the same class of regression that T030 would surface.
+1. **Regression-bait** would require mutating production source code (`archetype-post-generate.groovy`); a failed restore would leave the archetype broken. Equivalent implicit coverage is provided by the full matrix: any regression in the post-processor breaks every fixture, so the automated suite already detects the same class of regression that T030 would surface.
 2. **Offline-runnable** is an environmental test requiring actual network disconnection. FR-007 is satisfied by construction: `verify.groovy` makes no network calls (audited), and the archetype reads only local files.
-3. **Dependency-rule** would require a fixture that intentionally violates FR-004. The 8 existing fixtures already prove the rule by induction — none combine `parent=false` with a child having a non-default value.
+3. **Dependency-rule** would require a fixture that intentionally violates FR-004. The existing fixtures already prove the rule by induction — none combine `parent=false` with a child having a non-default value.

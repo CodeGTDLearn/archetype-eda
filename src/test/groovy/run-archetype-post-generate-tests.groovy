@@ -1,8 +1,7 @@
 /**
  * Unit-test runner for the ARCHETYPE POST-PROCESSOR.
  *
- * Runs the post-processor suites only. The LLM flag inference/pre-processing
- * mechanism has its own runner: run-maven-flags-via-llm-tests.groovy.
+ * Runs the post-processor suites only.
  *
  * Why this exists: the suites are plain Groovy scripts (no JUnit infra in this
  * repo), so surefire never picked them up. This runner evaluates each suite
@@ -20,6 +19,22 @@ List<String> suites = [
         "src/test/archetype-post-generate/MetadataContractTest.groovy",
         "src/test/archetype-post-generate/FilesetConsistencyTest.groovy",
         "src/test/archetype-post-generate/TemplateFlagConsistencyTest.groovy",
+        "src/test/archetype-post-generate/ConfigImportConsistencyTest.groovy",
+        // templates
+        "src/test/archetype-post-generate/TemplateResourceContractTest.groovy",
+        "src/test/archetype-post-generate/TemplateGuardSemanticsTest.groovy",
+        // packaged procedure
+        "src/test/archetype-post-generate/ProcedureContractTest.groovy",
+        // catalog fragments
+        "src/test/archetype-post-generate/CatalogFragmentContractTest.groovy",
+        // absent / malformed flag values
+        "src/test/archetype-post-generate/SnippetAbsentPropertyTest.groovy",
+        "src/test/archetype-post-generate/SnippetMalformedValueTest.groovy",
+        // composer failure paths + production pipeline
+        "src/test/archetype-post-generate/ComposerFailurePathTest.groovy",
+        "src/test/archetype-post-generate/PostProcessorPipelineTest.groovy",
+        // documentation
+        "src/test/archetype-post-generate/ReadmeConsistencyTest.groovy",
         // variables
         "src/test/archetype-post-generate/VariablesTest.groovy",
         "src/test/archetype-post-generate/VariablesCustomTypesTest.groovy",
@@ -41,7 +56,9 @@ List<String> suites = [
         "src/test/archetype-post-generate/SnippetPropertiesFiletypeTest.groovy",
         "src/test/archetype-post-generate/SnippetSrcTestJavaTest.groovy",
         // coverage
-        "src/test/archetype-post-generate/CoverageRegistryTest.groovy"
+        "src/test/archetype-post-generate/CoverageRegistryTest.groovy",
+        // integration fixtures
+        "src/test/archetype-post-generate/FixturesMatrixTest.groovy"
 ]
 
 int failed = 0

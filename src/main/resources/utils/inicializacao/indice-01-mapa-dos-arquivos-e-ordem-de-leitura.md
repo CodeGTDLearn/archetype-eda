@@ -1,6 +1,6 @@
 # Índice — mapa dos arquivos e ordem de leitura
 
-Este índice é o mapa do procedimento fixo da Opção A.
+Este índice é o mapa do **Procedimento para Especificação**.
 
 Todos os caminhos abaixo são caminhos **dentro do JAR** do archetype, não caminhos do projeto gerado.
 

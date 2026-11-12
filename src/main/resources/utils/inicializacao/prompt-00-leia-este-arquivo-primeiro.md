@@ -1,6 +1,6 @@
 # Leia este arquivo primeiro
 
-Este é o ponto de entrada do procedimento fixo da **Opção A** do archetype EDA.
+Este é o ponto de entrada do **Procedimento para Especificação** do archetype EDA.
 
 Você está lendo um arquivo que viaja dentro do JAR do archetype:
 
@@ -41,7 +41,7 @@ Use, nesta ordem:
 
 Não use o `README.md` como fonte de runtime.
 
-Não use o código do motor `src/main/pre-processamento-maven-flags-via-llm/` para redescobrir semântica.
+Não use código de motor, CLI ou script externo para redescobrir semântica.
 
 ## 4. Saídas obrigatórias
 
@@ -60,7 +60,7 @@ Não use o código do motor `src/main/pre-processamento-maven-flags-via-llm/` pa
 - Não inventar flags, defaults ou regex.
 - Não gerar se faltar um arquivo obrigatório.
 - Não expor segredos do contrato.
-- Não usar o README ou o motor como substitutos deste procedimento.
+- Não usar o README, nem qualquer motor, CLI ou script externo, como substitutos deste procedimento.
 
 ## 6. Condições de parada
 

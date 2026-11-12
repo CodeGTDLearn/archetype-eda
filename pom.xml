@@ -21,6 +21,29 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+    <!--
+      Velocity (test scope): renders the archetype-resources templates in the
+      unit suites, so the #if guards of the templates are asserted on the REAL
+      rendered output instead of on the mere presence of a flag token.
+      2.4.1 is the version the archetype plugin resolves at runtime.
+    -->
+    <dependency>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity-engine-core</artifactId>
+      <version>2.4.1</version>
+      <scope>test</scope>
+    </dependency>
+    <!--
+      groovy-json (test scope): parses the JSON contract schema and the JSON
+      examples of the PACKAGED PROCEDURE (utils/templates-de-contrato/).
+      Same version as the Groovy the build already uses.
+    -->
+    <dependency>
+      <groupId>org.apache.groovy</groupId>
+      <artifactId>groovy-json</artifactId>
+      <version>4.0.28</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -88,8 +111,8 @@
                 plugin's staleness check only looks at the aggregator file
                 (archetype-metadata.xml). Without forceCreation, editing a
                 property-*.xml fragment silently leaves a STALE catalog in
-                target/classes - the flag set actually used by the mechanism
-                and by the archetype would not match the source of truth.
+                target/classes - the flag set actually used by the archetype
+                would not match the source of truth.
               -->
               <forceCreation>true</forceCreation>
             </configuration>
@@ -121,12 +144,6 @@
           </dependency>
           <dependency>
             <groupId>org.apache.groovy</groupId>
-            <artifactId>groovy-json</artifactId>
-            <version>4.0.28</version>
-            <scope>runtime</scope>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-xml</artifactId>
             <version>4.0.28</version>
             <scope>runtime</scope>
@@ -144,30 +161,17 @@
             </configuration>
           </execution>
           <!--
-            The MavenFlagsViaLlmStarter (src/main/pre-processamento-maven-flags-via-llm/MavenFlagsViaLlmStarter.groovy)
-            is a CLI tool, not a build step. Per cli-contract.md, the operator invokes it
-            directly (e.g., `groovy MavenFlagsViaLlmStarter.groovy ...args...`) to obtain the
-            mvn archetype:generate command line. It is NOT wired into the archetype's
-            own build lifecycle, because the archetype build has no description/contract.
-          -->
-          <!--
-            Unit-test runners (added 2026-10-23, bug
-            contrato-json-inferido-inoperante; split 2026-11-04 into
-            pre-processing/inference and post-processor): the Groovy unit
+            Unit-test runner (added 2026-10-23, bug
+            contrato-json-inferido-inoperante): the Groovy unit
             suites are plain scripts (no JUnit infra), so surefire never picked
-            them up and `mvn test` ran ZERO tests. Each execution runs its own
+            them up and `mvn test` ran ZERO tests. This execution runs the
             runner in the `test` phase and fails the build when any suite fails.
+
+            classpathScope=test: the default is `none`, so the project's test
+            dependencies were NOT visible to the suites. The template suites
+            need Velocity (test scope) to render the archetype-resources
+            templates.
           -->
-          <execution>
-            <id>maven-flags-via-llm-test-runner</id>
-            <phase>test</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <source>${project.basedir}/src/test/groovy/run-maven-flags-via-llm-tests.groovy</source>
-            </configuration>
-          </execution>
           <execution>
             <id>archetype-post-generate-test-runner</id>
             <phase>test</phase>
@@ -176,6 +180,7 @@
             </goals>
             <configuration>
               <source>${project.basedir}/src/test/groovy/run-archetype-post-generate-tests.groovy</source>
+              <classpathScope>test</classpathScope>
             </configuration>
           </execution>
         </executions>
