@@ -12,7 +12,7 @@
 
 * Escopo: as tecnologias **deste projeto** (o gerador). A stack dos projetos **gerados** não faz parte desta seção.
 
-#### Núcleo do Archetype (build e empacotamento)
+<details><summary><strong> >Núcleo do Archetype (build e empacotamento)</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
@@ -21,7 +21,9 @@
 | **Maven Archetype Plugin** | 3.4.1 | Mecanismo central: `archetype:generate` materializa a árvore do projeto, `archetype:jar` empacota o JAR, `integration-test` valida as fixtures e `update-local-catalog` registra o archetype no catálogo local. |
 | **Archetype Packaging** | 3.4.1 | Extension do Maven que habilita o `packaging=maven-archetype` e os **3 slots** do JAR (metadata + resources + post-generate). |
 
-#### Templates e Metadata
+</details>
+
+<details><summary><strong> >Templates e Metadata</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
@@ -29,7 +31,9 @@
 | **XML + XML Entities + XSLT** | — | O catálogo de flags é fragmentado (35 `property-*.xml` + 18 `fileset-*.xml` + DOCTYPE com 53 entities) e materializado por um XSLT identidade — evita um XML monolítico e mantém cada flag revisável isoladamente. |
 | **XML Maven Plugin** | 1.2.1 | Executa a transformação XSLT na fase `generate-resources`, gerando o `archetype-metadata.xml` final em `target/classes`. |
 
-#### Scripts e Automação
+</details>
+
+<details><summary><strong> >Scripts e Automação</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
@@ -37,7 +41,9 @@
 | **Groovy Maven Plugin** | 2.1.1 | Executa os scripts Groovy dentro do lifecycle (`process-resources` para compor o pós-processador, `test` para as suítes). |
 | **Bash** | — | Legado: eras anteriores do pré-processamento (Q&A e manipulação de JSON); o repositório não mantém scripts bash. |
 
-#### Procedimento do agente (empacotado no JAR)
+</details>
+
+<details><summary><strong> >Procedimento do agente (empacotado no JAR)</strong></summary>
 
 | Tecnologia | Por quê |
 |---|---|
@@ -45,12 +51,16 @@
 | **JSON** | Formato do contrato de use-case e dos templates de contrato. |
 | **SHA-256** | Nome determinístico do arquivo de contrato materializado (hash da forma canônica). |
 
-#### Testabilidade
+</details>
+
+<details><summary><strong> >Testabilidade</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
 | **JUnit 4** | 4.13.2 | Única dependência declarada (herdada) — mas o `surefire` do archetype não roda nada: não existe `*Test.java` no `src/test/java`. As classes JUnit reais viajam no **projeto gerado**. |
 | **Groovy (suítes próprias)** | 4.0.28 | As suítes do archetype são scripts Groovy com checks próprios (sem infra JUnit), executados pelo `groovy-maven-plugin` na fase `test` — o build falha se qualquer check falhar. A lista e a contagem ficam em `run-archetype-post-generate-tests.groovy` (fonte da verdade). |
+
+</details>
 
 </details>
 
@@ -535,14 +545,16 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
     * aplica as regras de formação e 
     * valida tudo contra o catálogo antes de emitir a linha de comando.
 
-#### 1) O que entra na Spec ou Prompt
+<details><summary><strong> >1) O que entra na Spec ou Prompt</strong></summary>
 
 | Entrada | Exemplo |
 |---|---|
 | **Use case** | *"Cadastro de clientes de uma clínica. API REST com autenticação JWT na porta 8080."* |
 | **Contrato JSON** | `{"entityName":"Cliente","attributes":{"nome":"Maria","ativo":true,"nascimento":"1990-05-14"},"api_port":8080}` |
 
-#### 2) Onde cada informação vai parar
+</details>
+
+<details><summary><strong> >2) Onde cada informação vai parar</strong></summary>
 
 O agente lê o contrato e separa as chaves em **três destinos** (exemplo com 3 flags do `mvn archetype:generate`):
 
@@ -552,7 +564,9 @@ O agente lê o contrato e separa as chaves em **três destinos** (exemplo com 3 
 | `entityName` | **flag derivada** (`CONTRACT_DERIVED`) | meta-chave → nomeia a entidade |
 | `nome`, `ativo`, `nascimento` | **atributos da entidade** | não existem no catálogo → viram campos Java |
 
-#### 3) O exemplo, ponta a ponta
+</details>
+
+<details><summary><strong> >3) O exemplo, ponta a ponta</strong></summary>
 
 ```text
 SPEC: USE CASE + CONTRATO
@@ -573,7 +587,9 @@ SPEC: USE CASE + CONTRATO
         └─ contrato materializado em disco ──▶ -Dentity_contract_file_path=…/<sha256>.json
 ```
 
-#### 4) As três regras que mais surpreendem
+</details>
+
+<details><summary><strong> >4) As três regras que mais surpreendem</strong></summary>
 
 | Regra | Efeito |
 |---|---|
@@ -591,7 +607,9 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 * Um valor **inferido do use case** só entra quando o contrato silencia.
 * O **default** é o último recurso — e nunca é vazio (`FR-018`).
 
-#### 5) O portão final e o resultado 🚪
+</details>
+
+<details><summary><strong> >5) O portão final e o resultado 🚪</strong></summary>
 
 *   **Regra Geral:**
     * Antes de montar a linha, **cada valor** passa pela `validationRegex` localizada em sua flag 
@@ -639,6 +657,8 @@ mvn archetype:generate --batch-mode \
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados.
 
 > **Onde está o detalhe de cada coluna?** Em [`src/main/resources/utils/regras-de-formacao-do-contrato/`](src/main/resources/utils/regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
+
+</details>
 
 </details>
 
