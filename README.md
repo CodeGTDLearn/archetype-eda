@@ -460,23 +460,29 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 
 ```text
 TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
-─────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────------------
 [1] CATÁLOGO         35 property-*.xml + 18 fileset-*.xml + DOCTYPE (53 entities)
                      └─ xml-maven-plugin:transform + archetype-metadata-identity.xsl (generate-resources)
+                     
 [2] PÓS-PROCESSADOR  62 fragmentos .groovy
                      └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
                         (local: src/main/groovy/ArchetypePostGenerateComposer.groovy)
+                        
 [3] TESTES           unitários: as suítes do pós-processador (fase test)
                      integração: uma fixture por combinação de flags (fase integration-test)
+                     
 [4] INSTALAÇÃO       ~/.m2/repository + archetype-catalog.xml (fase install)
 
+
 TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
-─────────────────────────────────────────────────────────────────────
-[5] PRÉ (DENTRO DO JAR) use-case + contrato JSON → o agente lê o procedimento em utils/
-                        e o catálogo no JAR → mvn archetype:generate --batch-mode -D...
+──────────────────────────────────────────────────────────-----------───────────
+[5] PRÉ PROCESSAMENTO   use-case + contrato JSON → o agente lê o procedimento em utils/
+    (DENTRO DO JAR)     e o catálogo no JAR → mvn archetype:generate --batch-mode -D...
+                        
 [6] PROCESSAMENTO       archetype-metadata.xml + archetype-resources/ (Velocity)
                         → árvore do projeto gerado
-[7] PÓS                 archetype-post-generate.groovy mantém / exclui
+                        
+[7] PÓS PROCESSAMENTO   archetype-post-generate.groovy mantém / exclui
                         + FR-023: contrato → src/test/resources/contracts/contract.json
                               ▼
                         projeto final
@@ -529,7 +535,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
     * aplica as regras de formação e 
     * valida tudo contra o catálogo antes de emitir a linha de comando.
 
-#### 1) O que entra na SPec ou Prompt
+#### 1) O que entra na Spec ou Prompt
 
 | Entrada | Exemplo |
 |---|---|
@@ -585,15 +591,22 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 * Um valor **inferido do use case** só entra quando o contrato silencia.
 * O **default** é o último recurso — e nunca é vazio (`FR-018`).
 
-#### 5) O portão final e o resultado
+#### 5) O portão final e o resultado 🚪
 
-Antes de montar a linha, **cada valor** passa pela `validationRegex` localizado em sua flag(`requiredProperties`):
+*   **Regra Geral:**
+    * Antes de montar a linha, **cada valor** passa pela `validationRegex` localizada em sua flag 
+     (`requiredProperties`). 
+    * É importante notar que **todo este fluxo ocorre dentro da LLM**: 
+      * o agente não apenas propõe, 
+      * mas **constrói e executa** a linha de comando, 
+        * apontando para as coordenadas do archetype que deve estar **previamente instalado no repositório local (~/.m2)**.
 
-* valor válido → mantém valor e fonte;
-* valor inválido → cai no `defaultValue` **com aviso barulhento** (nunca em silêncio).
-  * ex.: derivar `api_port=abc` → a regex `^([1-9][0-9]{3,4})$` rejeita → o valor final vira `8080`.
-
-* exemplo de `validationRegex'`:
+*   **Validação Estrita:**
+    *   valor válido → mantém valor e fonte;
+    *   valor inválido → cai no `defaultValue` **com aviso barulhento** (nunca em silêncio).
+        *   **Objetivo:** Garantir que o operador esteja ciente de que o valor inferido ou fornecido foi rejeitado por não cumprir o contrato técnico da flag, forçando o uso do padrão seguro.
+        *   *ex.:* derivar `api_port=abc` → a regex `^([1-9][0-9]{3,4})$` rejeita → o valor final vira `8080`.
+        * exemplo de codigo `validationRegex'`:
 ```xml
 <requiredProperty key="enable_s3_storage">
     <defaultValue>false</defaultValue>
@@ -601,14 +614,12 @@ Antes de montar a linha, **cada valor** passa pela `validationRegex` localizado 
 </requiredProperty>
 ```
 
-
+*   **Execução pelo Agente:**
+    *   O agente materializa o contrato em disco, gera o hash SHA-256 e monta o comando `mvn archetype:generate`.
+    *   A execução consome o artefato localmente (`com.eda-archetype:eda-archetype`), garantindo que o comportamento seja o do JAR empacotado e não de arquivos soltos na árvore de desenvolvimento.
+    *   O agente valida a árvore gerada e verifica a integridade (compilação via `mvn clean compile`) sem intervenção manual no código.
 
 Uma linha única, sem prompt interativo.
-
-> ⚠️ **Duas armadilhas de ambiente** (validadas em Maven 3.9.16 + Windows):
-> 1. O goal `generate` declara `executePhase` → o Maven exige um **`pom.xml` no diretório de execução**. Rodar numa pasta vazia falha com *"requires a project to execute but there is no POM"*. Use o diretório do archetype (com `-DoutputDirectory`) ou uma pasta de trabalho com um `pom.xml` mínimo.
-> 2. No **PowerShell**, coloque **cada `-D` entre aspas**. Sem isso, a vírgula de `custom_entity_attributes_list` é tratada como separador de array e o valor chega truncado (`com.eda-archetype` vira `com`, por exemplo).
-
 ```bash
 mvn archetype:generate --batch-mode \
   -DarchetypeGroupId=com.eda-archetype -DarchetypeArtifactId=eda-archetype -DarchetypeVersion=0.0.1-SNAPSHOT \
@@ -619,6 +630,11 @@ mvn archetype:generate --batch-mode \
   -Dapi_port=8080 -Djava_version=21 \
   "-DoutputDirectory=C:\Temp\eda-sandbox"
 ```
+
+> ⚠️ **Duas armadilhas de ambiente** (validadas em Maven 3.9.16 + Windows):
+> 1. O goal `generate` declara `executePhase` → o Maven exige um **`pom.xml` no diretório de execução**. Rodar numa pasta vazia falha com *"requires a project to execute but there is no POM"*. Use o diretório do archetype (com `-DoutputDirectory`) ou uma pasta de trabalho com um `pom.xml` mínimo.
+> 2. No **PowerShell**, coloque **cada `-D` entre aspas**. Sem isso, a vírgula de `custom_entity_attributes_list` é tratada como separador de array e o valor chega truncado (`com.eda-archetype` vira `com`, por exemplo).
+
 
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados.
 
