@@ -12,7 +12,7 @@
 
 * Escopo: as tecnologias **deste projeto** (o gerador). A stack dos projetos **gerados** não faz parte desta seção.
 
-<details><summary><strong> >Núcleo do Archetype (build e empacotamento)</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 1) Núcleo do Archetype (build e empacotamento)</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
@@ -23,7 +23,7 @@
 
 </details>
 
-<details><summary><strong> >Templates e Metadata</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 2) Templates e Metadata</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
@@ -33,7 +33,7 @@
 
 </details>
 
-<details><summary><strong> >Scripts e Automação</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 3) Scripts e Automação</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
@@ -43,7 +43,7 @@
 
 </details>
 
-<details><summary><strong> >Procedimento do agente (empacotado no JAR)</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 4) Procedimento do agente (empacotado no JAR)</strong></summary>
 
 | Tecnologia | Por quê |
 |---|---|
@@ -53,7 +53,7 @@
 
 </details>
 
-<details><summary><strong> >Testabilidade</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 5) Testabilidade</strong></summary>
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
@@ -66,7 +66,7 @@
 
 <details><summary><strong> Maven Archetype System 🏗️ </strong></summary>
 
-<details><summary><strong> >Cores ⚛️</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 1) Cores ⚛️</strong></summary>
 
 **1) Flags p/ 'maven:Archetype:Generate':**
   * Arquivo: [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml):
@@ -230,7 +230,7 @@
 
 </details>
 
-<details><summary><strong> >Fluxo 🔄 </strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 2) Fluxo 🔄 </strong></summary>
 
 * **Objetivo:** explicar a **essência** do `archetype:generate` do Maven — como os slots
   do JAR empacotado se relacionam entre si, e **por que** o Maven os separa.
@@ -323,7 +323,7 @@ install           → install + archetype:update-local-catalog
 
 </details>
 
-<details><summary><strong> >Velocity📍</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 3) Velocity📍</strong></summary>
 
 * [User Guide](https://velocity.apache.org/engine/2.4.1/user-guide.html)
 * [VTL Reference](https://velocity.apache.org/engine/2.4.1/vtl-reference.html)
@@ -369,7 +369,7 @@ install           → install + archetype:update-local-catalog
 > *pipeline do artefato* (montagem, testes e instalação em `~/.m2`), detalhado no
 > §4 abaixo.
 
-#### 1) Pré-processamento (empacotado) 🧠
+<details style="margin-left: 2em;"><summary><strong> 1) Pré-processamento (empacotado) 🧠</strong></summary>
 
 * **Objetivo:** transformar **use-case + contrato JSON** na command line pronta
   do `mvn archetype:generate` (todas as flags `-D` resolvidas).
@@ -395,7 +395,9 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 
 > Detalhamento por camada, tecnologia, pasta e comando → seção **"Testabilidade 🧪"**
 
-#### 2) Processamento (empacotado) 🏗️
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 2) Processamento (empacotado) 🏗️</strong></summary>
 
 * **Objetivo:** o `maven-archetype-plugin` materializa a árvore do projeto
   gerado a partir do catálogo de flags + templates — durante o
@@ -423,7 +425,9 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
   (default × `validationRegex`) e renderiza os templates — etapa
   **autossuficiente**: depende apenas do `.m2`, nunca da pasta-fonte.
 
-#### 3) Pós-processamento (empacotado) 🧬
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 3) Pós-processamento (empacotado) 🧬</strong></summary>
 
 * **Objetivo:** modularizar o projeto recém-gerado (mantém / exclui pastas e
   arquivos conforme as flags escolhidas) — ao fim do `mvn archetype:generate`.
@@ -445,7 +449,9 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
   (`bash_script/create_archetype_post_generate.sh`) → compositor nativo Groovy
   (commit `63.0`).
 
-#### 4) Montagem e instalação do artefato 📦 (fora das três etapas)
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 4) Montagem e instalação do artefato 📦 (fora das três etapas)</strong></summary>
 
 | Fase | Plugin | Entrada | Saída |
 |------|--------|---------|-------|
@@ -531,6 +537,8 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 </details>
 
+</details>
+
 <details><summary><strong> Inferência de Contrato e Use-Case: do Prompt ao Maven CLI 
 🧠</strong></summary>
 
@@ -545,7 +553,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
     * aplica as regras de formação e 
     * valida tudo contra o catálogo antes de emitir a linha de comando.
 
-<details><summary><strong> >1) O que entra na Spec ou Prompt</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 1) O que entra na Spec ou Prompt</strong></summary>
 
 | Entrada | Exemplo |
 |---|---|
@@ -554,7 +562,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 </details>
 
-<details><summary><strong> >2) Onde cada informação vai parar</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 2) Onde cada informação vai parar</strong></summary>
 
 O agente lê o contrato e separa as chaves em **três destinos** (exemplo com 3 flags do `mvn archetype:generate`):
 
@@ -566,7 +574,7 @@ O agente lê o contrato e separa as chaves em **três destinos** (exemplo com 3 
 
 </details>
 
-<details><summary><strong> >3) O exemplo, ponta a ponta</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 3) O exemplo, ponta a ponta</strong></summary>
 
 ```text
 SPEC: USE CASE + CONTRATO
@@ -589,7 +597,7 @@ SPEC: USE CASE + CONTRATO
 
 </details>
 
-<details><summary><strong> >4) As três regras que mais surpreendem</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 4) As três regras que mais surpreendem</strong></summary>
 
 | Regra | Efeito |
 |---|---|
@@ -609,7 +617,7 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 
 </details>
 
-<details><summary><strong> >5) O portão final e o resultado 🚪</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 5) O portão final e o resultado 🚪</strong></summary>
 
 *   **Regra Geral:**
     * Antes de montar a linha, **cada valor** passa pela `validationRegex` localizada em sua flag 
@@ -734,7 +742,7 @@ mvn clean install
 
 <details><summary><strong>Fases de Construcao 🏗️</strong></summary>
 
-<details><summary><strong> >Milestones 📅</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 1) Milestones 📅</strong></summary>
 
 * CRUD
   - Basic
@@ -885,7 +893,7 @@ mvn clean install
   - Log Kibana (logstash + Elasticsearch)
 </details>
 
-<details><summary><strong> >Task Planning 📝️</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 2) Task Planning 📝️</strong></summary>
 
 1. DTO
   - Libraries
@@ -1005,7 +1013,7 @@ mvn clean install
   - Credentials(secrets) Vault 'Unpushaveis'
 </details>
 
-<details><summary><strong> >Concluded Tasks ✅</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 3) Concluded Tasks ✅</strong></summary>
 
 - [x] Credentials protection
   - [x] Gitleaks / GitGuardian (Alternative Approaches)
@@ -1126,7 +1134,7 @@ mvn clean install
   - [ ] Spring actuator (Graphana)
 </details>
 
-<details><summary><strong> >Next Version 🔮️</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 4) Next Version 🔮️</strong></summary>
 
   - JpaSpecificationExecutor
   - Upload
@@ -1149,7 +1157,7 @@ mvn clean install
 
 <details><summary><strong>Acrescentando Novas Flags ➕️</strong></summary>
 
-#### 1) Areas alteradas pela adição:
+<details style="margin-left: 2em;"><summary><strong> 1) Areas alteradas pela adição:</strong></summary>
 
    + **Processador:** [_"ARCHETYPE-METADATA"_.XML](src/main/resources/META-INF/maven/archetype-metadata.xml)
      - Local: _"maven"_
@@ -1180,7 +1188,9 @@ mvn clean install
       **"Procedimento para Especificação"**.
 
 
-#### 2) EXEMPLO PRATICO (na mao) - Flag c/ MANIPULACAO de Pasta e Arquivo:
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 2) EXEMPLO PRATICO (na mao) - Flag c/ MANIPULACAO de Pasta e Arquivo:</strong></summary>
 
   * **Cenario:**
     * Flag: `enable_s3_storage`
@@ -1514,7 +1524,9 @@ mvn archetype:generate \
 
 ---
 
-#### 3) Padronização:
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 3) Padronização:</strong></summary>
   * **FORMATO OBRIGATORIO** _(o mesmo dos 35 arquivos existentes)_:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1733,6 +1745,8 @@ if (keep_binding_properties == 'false') {
 
 </details>
 
+</details>
+
 <details><summary><strong> Procedimento para Especificação </strong></summary>
 
 #### Como usar no 'OpenCode' OU na Spec do 'GitHub Spec Kit'
@@ -1824,7 +1838,7 @@ fica a cargo do procedimento empacotado no JAR —
 
 <details><summary><strong> Montagem dos Arquivos de Archetype 🏗️ </strong></summary>
 
-<details><summary><strong> >Archetype-Metadata.xml 🏗️</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 1) Archetype-Metadata.xml 🏗️</strong></summary>
 
 * **OBJETIVO**
   * Manter 1 arquivo final [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml) consumido pelo (`maven-archetype-plugin`),
@@ -1867,7 +1881,7 @@ fica a cargo do procedimento empacotado no JAR —
     * => lido pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`).
 
 </details>
-<details><summary><strong> >Archetype-Post-Generate.groovy 🧬</strong></summary>
+<details style="margin-left: 2em;"><summary><strong> 2) Archetype-Post-Generate.groovy 🧬</strong></summary>
 
 * **OBJETIVO**
   * Manter 1 arquivo final gerado em (`target/classes/META-INF/archetype-post-generate.groovy`) e consumido pelo (`maven-archetype-plugin`)
@@ -1926,7 +1940,7 @@ fica a cargo do procedimento empacotado no JAR —
 
 <details><summary><strong> Testabilidade 🧪 </strong></summary>
 
-* **ONDE OS TESTES VIVEM**
+<details style="margin-left: 2em;"><summary><strong> 1) ONDE OS TESTES VIVEM</strong></summary>
 
   | Pasta | O que é | Executado por | Testa | Fase | Como rodar |
   |---|---|---|---|---|---|
@@ -1938,7 +1952,9 @@ fica a cargo do procedimento empacotado no JAR —
   > `mvn clean integration-test` já executa **as quatro linhas**: a fase `test` vem antes de `integration-test`, e o `verify` de cada fixture roda as classes JUnit do projeto gerado.
   > `mvn clean install` faz o mesmo e ainda instala o artefato em `~/.m2`.
 
-* **O QUE CADA PASTA COBRE**
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 2) O QUE CADA PASTA COBRE</strong></summary>
 
   * **`src/test/archetype-post-generate/`** — é plana, sem subpastas; agrupada por assunto:
     * **Pós-processador** — helpers de arquivo/pasta, variáveis, geradores (enums, POJOs aninhados) e todos os snippets (JWT, binding, logback, docker, git, contrato, filetype).
@@ -1967,7 +1983,9 @@ fica a cargo do procedimento empacotado no JAR —
   > **Uma subpasta = um cenário = um vetor de flags.** A *assinatura* de cada fixture (as flags cujo valor **difere do default do catálogo**) fica declarada no cabeçalho `# FIXTURE SIGNATURE` do `archetype.properties` e é verificada por `FixturesMatrixTest.groovy`.
   > Matriz completa (cluster × flags sob teste × o que assere) → [src/test/resources/projects/README.md](src/test/resources/projects/README.md).
 
-* **COMO RODAR (Maven)**
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 3) COMO RODAR (Maven)</strong></summary>
   * **Todos os cenarios** (na raiz do projeto; **nao instala** o artefato em `~/.m2`):
     ```bash
     mvn clean integration-test
@@ -2008,7 +2026,9 @@ fica a cargo do procedimento empacotado no JAR —
       * **Sanity Check Completo:**
         O prompt canonico (passo a passo, formato das tabelas e criterios de falha) esta no fim desta secao.
 
-* **verify.groovy — o hook pós-build 🔬**
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 4) verify.groovy — o hook pós-build 🔬</strong></summary>
 
   * Script Groovy executado **depois** do `mvn clean verify` da fixture. Atua como **assercao estrutural pos-build** sobre o projeto Spring Boot gerado (NAO e teste unitario) e e **auto-contido** — hardcoda a expectativa e nao depende do JSON copiado.
   * O `maven-archetype-plugin:3.4.1` dispara o hook pelo parametro `postBuildHookScript` (default **`verify`**, user property `archetype.test.verifyScript`): procura `verify.bsh` ou `verify.groovy` na raiz da fixture.
@@ -2017,7 +2037,9 @@ fica a cargo do procedimento empacotado no JAR —
 
   > Detalhe do que cada `verify.groovy` assere → [specs/001-archetype-integration-tests/quickstart.md](specs/001-archetype-integration-tests/quickstart.md).
 
-* **TRABALHAR COM UM `verify.groovy`**
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 5) TRABALHAR COM UM `verify.groovy`</strong></summary>
   * **Rodar uma fixture isolada (com verify automatico):**
     ```txt
     Isole a fixture `entity-contract` num diretorio temporario (copie `src/test/resources/projects/entity-contract` para `target/it-single/entity-contract`), rode `mvn clean integration-test -Darchetype.test.projectsDirectory=target/it-single` e me mostre a saida do `verify.groovy`.
@@ -2034,7 +2056,11 @@ fica a cargo do procedimento empacotado no JAR —
     Crie um `verify.groovy` para a fixture `minimal` que valide a entidade padrao: PK `private Long myEntityId;` (com `@Id`/`@GeneratedValue`), mais `private String username;` e `private String password;`, e nenhum import de Lombok.
     ```
 
-* **SANITY CHECK COMPLETO (1 comando)** — o prompt canonico (passo a passo, formato das tabelas e criterios de falha):
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 6) SANITY CHECK COMPLETO (1 comando)</strong></summary>
+
+  * o prompt canonico (passo a passo, formato das tabelas e criterios de falha):
     ```txt
     Faca um sanity check completo do projeto archetype-v2-eda, na ordem:
     (1) Confirme os pre-requisitos: Java 17+ e Maven 3.9.x instalados. As fixtures pinam `java_version=17`; o default `java_version=21` do catalogo so vale para geracoes avulsas.
@@ -2055,7 +2081,9 @@ fica a cargo do procedimento empacotado no JAR —
     (5.5) Para testes que passaram use o emoji de 'checado' (verde); para testes que falharam use o emoji 'X' (vermelho).
     ```
 
-* **PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 02 Cenários) 🧪**
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 7) PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 02 Cenários) 🧪</strong></summary>
 
   * Estes prompts **simulam o spec** que o operador entrega: 
     * use case + contrato JSON. 
@@ -2064,7 +2092,7 @@ fica a cargo do procedimento empacotado no JAR —
     * se o agente derivar as flags erradas, 
     * o projeto gerado sai torto e você percebe antes de rodar `mvn archetype:generate`.
 
-<details><summary><strong>Cenário A — contrato plano (3 atributos)</strong></summary>
+<details style="margin-left: 4em;"><summary><strong> 7.1) Cenário A — contrato plano (3 atributos)</strong></summary>
 
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
@@ -2108,7 +2136,7 @@ br.com.loja
 
 </details>
 
-<details><summary><strong>Cenário B — contrato aninhado (filho + neto)</strong></summary>
+<details style="margin-left: 4em;"><summary><strong> 7.2) Cenário B — contrato aninhado (filho + neto)</strong></summary>
 
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
@@ -2167,6 +2195,8 @@ br.com.loja
 
 </details>
 
+</details>
+
 <details><summary><strong>Flags do mvn archetype:generate 🤖</strong></summary>
 
 * **NOTA**: as flags se dividem em *de pergunta* (aparecem no prompt interativo do archetype:generate) e *de
@@ -2175,7 +2205,7 @@ br.com.loja
   `archetype:generate` **interativo** ainda a pergunta (com o default `myentity` pré-preenchido); só
   `--batch-mode` ou `-D` explícito a dispensam.
 
-#### Onde cada efeito acontece
+<details style="margin-left: 2em;"><summary><strong> Onde cada efeito acontece</strong></summary>
 
 | Camada | Onde age | Flags com efeito nesta camada |
 |---|---|---|
@@ -2190,9 +2220,9 @@ br.com.loja
 > O motor que a implementava foi removido; as regras de formação do contrato
 > que ele aplicava estão em [`src/main/resources/utils/regras-de-formacao-do-contrato/`](src/main/resources/utils/regras-de-formacao-do-contrato/).
 
----
+</details>
 
-### 0. Property built-in (fora do catálogo)
+<details style="margin-left: 2em;"><summary><strong> 0. Property built-in (fora do catálogo)</strong></summary>
 
 * **`package`**
   * Padrão: — (o `archetype:generate` exige o valor; não há `<requiredProperty>` correspondente)
@@ -2201,9 +2231,11 @@ br.com.loja
     * ❌ `-Dpackage=org.clinica.cliente` → `package org.clinica.cliente.cliente;`
   * Sem dependência.
 
-### 1. Projeto
+</details>
 
-#### 1.1 Metadados do projeto
+<details style="margin-left: 2em;"><summary><strong> 1. Projeto</strong></summary>
+
+<details style="margin-left: 4em;"><summary><strong> 1.1 Metadados do projeto</strong></summary>
 
 * **`project_description`**
   * Padrão: `This is my Archetype`
@@ -2215,14 +2247,18 @@ br.com.loja
   * Efeito: quando `true`, imprime no console todo o relatório de deleção/renomeação acumulado no pós-processador.
   * Sem dependência.
 
-#### 1.2 Ambiente de build
+</details>
+
+<details style="margin-left: 4em;"><summary><strong> 1.2 Ambiente de build</strong></summary>
 
 * **`java_version`**
   * Padrão: `21` (aceita `17` ou `21`)
   * Efeito: define `<java.version>` no `pom.xml`; o `maven.compiler.release` é derivado pelo parent do Spring Boot.
   * Sem dependência.
 
-#### 1.3 Idioma — flags reservadas
+</details>
+
+<details style="margin-left: 4em;"><summary><strong> 1.3 Idioma — flags reservadas</strong></summary>
 
 * **`llm_prompt_language`**
   * Padrão: `pt`
@@ -2234,16 +2270,20 @@ br.com.loja
   * Efeito: **reservada para i18n futura** — hoje não há resources de i18n no template e a flag não altera o projeto gerado. O `MetadataContractTest` a mantém explicitamente como declarada e não consumida.
   * Sem dependência.
 
-#### 1.4 Dependências externas
+</details>
+
+<details style="margin-left: 4em;"><summary><strong> 1.4 Dependências externas</strong></summary>
 
 * **`extra_pom_dependencies`**
   * Padrão: `false`
   * Efeito: quando não é `false`, o pós-processador lê o `pom.xml` gerado linha a linha e insere cada `groupId:artifactId:version[:scope]` dentro da primeira tag `<dependencies>` encontrada. Sem `scope` → assume `compile`.
   * Sem dependência.
 
----
+</details>
 
-### 2. Domínio
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 2. Domínio</strong></summary>
 
 * **`entity_name`**
   * Padrão: `MyEntity`
@@ -2352,19 +2392,18 @@ br.com.loja
 > do contrato no prompt está em
 > `.specify/bugs/contrato-json-inferido-inoperante/assessment.md`.
 
+</details>
 
----
-
-### 3. Servidor HTTP
+<details style="margin-left: 2em;"><summary><strong> 3. Servidor HTTP</strong></summary>
 
 * **`api_port`**
   * Padrão: `8080`
   * Efeito: define `server.port` no `application.properties`/`.yml`. Validação `^([1-9][0-9]{3,4})$`.
   * Sem dependência.
 
----
+</details>
 
-### 4. Segurança
+<details style="margin-left: 2em;"><summary><strong> 4. Segurança</strong></summary>
 
 * **`enable_jwt_authentication`**
   * Padrão: `false`
@@ -2372,18 +2411,18 @@ br.com.loja
   * Efeito no `pom.xml`: quando `true`, o template **injeta** `spring-boot-starter-security`, `spring-security-test` (scope `test`) e `spring-boot-starter-oauth2-resource-server`.
   * Sem dependência.
 
----
+</details>
 
-### 5. Containers
+<details style="margin-left: 2em;"><summary><strong> 5. Containers</strong></summary>
 
 * **`enable_docker_support`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta a pasta `docker/` inteira — `docker-compose.yml`, `api_Dockerfile`, `api-compose.yml`, `db-mongo-compose.yml`, `nginx-compose.yml` e `elk-compose.yml`. Quando `true`, a pasta é mantida inteira.
   * Sem dependência.
 
----
+</details>
 
-### 6. Repositório Git
+<details style="margin-left: 2em;"><summary><strong> 6. Repositório Git</strong></summary>
 
 * **`enable_git_support`**
   * Padrão: `false`
@@ -2400,9 +2439,9 @@ br.com.loja
   * Efeito: **renderizado pelo Velocity** no `.git/config` gerado — `[branch "<branch>"]` e `merge = refs/heads/<branch>`. **Nenhum comando `git` é executado** pelo archetype.
   * **Depende de:** `enable_git_support = true`
 
----
+</details>
 
-### 7. Produtividade
+<details style="margin-left: 2em;"><summary><strong> 7. Produtividade</strong></summary>
 
 * **`enable_lombok_support`**
   * Padrão: `false`
@@ -2411,9 +2450,9 @@ br.com.loja
   * Sem dependência.
   * **Nome anterior:** `enable_lombok` — renomeada; quem usa `-Denable_lombok` precisa migrar para `-Denable_lombok_support`.
 
----
+</details>
 
-### 8. Observabilidade
+<details style="margin-left: 2em;"><summary><strong> 8. Observabilidade</strong></summary>
 
 * **`enable_logback_support`**
   * Padrão: `false`
@@ -2443,18 +2482,20 @@ br.com.loja
   * Efeito no `pom.xml`: quando `true` (e `enable_logback_support=true`), o template **injeta** `logstash-logback-encoder:8.0` e `janino:3.1.12`.
   * **Depende de:** `enable_logback_support = true`
 
----
+</details>
 
-### 9. Externalização de Propriedades
+<details style="margin-left: 2em;"><summary><strong> 9. Externalização de Propriedades</strong></summary>
 
-#### 9.1 Formato do arquivo
+<details style="margin-left: 4em;"><summary><strong> 9.1 Formato do arquivo</strong></summary>
 
 * **`config_file_format`**
   * Padrão: `1`
   * Efeito: `1` = deleta todos os `.yml` de `src/main/resources/` e `src/test/resources/` recursivamente; `2` = deleta todos os `.properties`. Apenas um formato sobrevive.
   * Sem dependência.
 
-#### 9.2 Sistema de binding
+</details>
+
+<details style="margin-left: 4em;"><summary><strong> 9.2 Sistema de binding</strong></summary>
 
 * **`enable_binding_external_properties`**
   * Padrão: `false`
@@ -2487,16 +2528,20 @@ br.com.loja
   * Efeito no `pom.xml`: quando `true` (com `enable_binding_external_properties=true`), o template **injeta** `spring-boot-starter-validation`.
   * **Depende de:** `enable_default_binding_external_properties = true`
 
-#### 9.3 Testes do binding
+</details>
+
+<details style="margin-left: 4em;"><summary><strong> 9.3 Testes do binding</strong></summary>
 
 * **`enable_binding_external_properties_tests`**
   * Padrão: `false`
   * Efeito: quando `false`, deleta `src/test/java/<Entity>/config/properties/` e `src/test/resources/properties/` inteiros.
   * **Depende de:** `enable_folder_src_test_java = true` **E** pelo menos um sub-módulo de binding ligado
 
----
+</details>
 
-### 10. Estrutura de testes
+</details>
+
+<details style="margin-left: 2em;"><summary><strong> 10. Estrutura de testes</strong></summary>
 
 * **`enable_folder_src_test_java`**
   * Padrão: `false`
@@ -2508,9 +2553,9 @@ br.com.loja
     módulo é persistido — **só existe quando esta flag é `true`**. Com a flag `false` não há
     pasta de contratos e o contrato não é persistido.
 
----
+</details>
 
-### Grafo de dependências
+<details style="margin-left: 2em;"><summary><strong> Grafo de dependências</strong></summary>
 
 ```text
 enable_folder_src_test_java = true
@@ -2545,4 +2590,6 @@ entity_name
 enable_folder_src_test_java = true
   └─→ entity_contract_file_path (contrato copiado para src/test/resources/contracts/)
 ```
+</details>
+
 </details>
