@@ -135,6 +135,7 @@
 - **US3 (Phase 5)**: depende da Foundational; a verificação "contrato presente mantém" usa os templates de US1, então executar após US1
 - **US4 (Phase 6)**: depende de US1 (modelo) e de US2 (mesmo `verify.groovy`; ordem evita conflito de edição)
 - **Polish (Phase 7)**: depende de todas as stories desejadas
+- **Documentação (Phase 12)**: depende de US1–US4 entregues (documenta o comportamento real); arquivo único `README.md`, então T049→T050→T051→T052 em sequência
 
 ### User Story Dependencies
 
@@ -151,6 +152,7 @@
 - T017/T018/T019 (US3) em fixtures distintas
 - T021/T022 (US4) em arquivos distintos
 - T027/T028 (Polish) em documentos distintos
+- Phase 12: **sem** paralelismo — T049–T052 editam o mesmo bloco do `README.md`
 
 ---
 
@@ -208,6 +210,7 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 - T029 altera a spec (contagem 15→22) — requer aprovação do mantenedor
 - T030 recompõe o pós-processador; sem `mvn clean install` completo, o resultado é inválido (Constituição VI)
 - **T001/T002 não executados**: o baseline "antes das mudanças" foi dispensado para evitar duas execuções completas da matriz. O estado final foi validado por T030 (`mvn -o clean install` = 22/22 fixtures + 35/35 suites). O diff de dependências (T031) foi feito pela inspeção do `pom.xml` gerado: `spring-boot-starter-data-jpa`, `spring-boot-starter-web`, `h2`, `spring-boot-starter-test`, `spring-boot-maven-plugin` — nenhuma dependência nova; o template `archetype-resources/pom.xml` não foi alterado.
+- T049–T052 (Phase 12) não têm rótulo de user story: são documentação transversal, como as tarefas da Phase 7.
 
 ## Phase 8: Convergence
 
@@ -238,3 +241,17 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 ## Phase 11: Convergence
 
 - [X] T048 Emitir avisos não fatais ao descartar chaves do contrato (nome ausente, inválido ou duplicado) e ao cair nos fallbacks de objeto vazio e de profundidade acima do limite, espelhando o mecanismo e sem alterar o veredito, per FR-009, regras-01 §5, regras-03 §1.3–§1.4 (partial)
+
+## Phase 12: Documentação da Feature no README (FR-019..FR-023)
+
+**Purpose**: entregar a documentação da feature no README, conforme clarify de 2026-11-17 e `plan.md` § Documentação
+
+**Arquivo único**: `README.md` — tarefas sequenciais (mesmo bloco de texto)
+
+- [ ] T049 Criar o subtópico **Contratos** dentro do tópico **Funcionalidades** em `README.md` (tópico na linha 2642), usando `<details><summary><strong> Contratos 🛠️ </strong></summary>` … `</details>`, per FR-020
+- [ ] T050 Escrever, dentro do subtópico, o título **Teste de Conformidade Entidade–Contrato** e o texto de "o que faz" e "como funciona", em linguagem simples, clara e objetiva, sem jargão, compreensível por estagiário, per FR-019, FR-021
+- [ ] T051 Adicionar o link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* (linha 2020) e remover qualquer reexplicação do mecanismo de contrato, sem alterar a seção 2.1, per FR-022, FR-023
+- [ ] T052 Validar a documentação conforme `quickstart.md` §6 (4 itens) e confirmar por `git diff` que apenas o subtópico foi adicionado ao `README.md`, per quickstart §6, FR-019..FR-023
+
+**Checkpoint**: documentação publicada e verificada; nenhuma outra seção do README alterada
+
