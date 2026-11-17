@@ -2638,3 +2638,7 @@ enable_folder_src_test_java = true
 </details>
 
 </details>
+
+<details><summary><strong> Funcionalidades 🛠️ </strong></summary>
+
+</details>
