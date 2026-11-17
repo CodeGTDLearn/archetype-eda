@@ -22,6 +22,14 @@
 - Q: Como o schema test deve comparar um enum derivado do contrato — pelo nome do tipo, pelo conjunto de constantes, ou por ambos? → A: Por ambos: nome do tipo derivado da chave e conjunto de constantes.
 - Q: O que o teste deve fazer quando uma chave do contrato, após a normalização prevista no mecanismo, continua sem formar um identificador Java válido? → A: Espelhar o mecanismo: normalizar como ele normaliza, e ignorar com aviso não fatal as chaves que ele descartaria (não fazem parte do conjunto efetivo de atributos).
 
+### Session 2026-11-17
+
+- Q: Para qual público a documentação da feature no README deve ser escrita? → A: Ambos (desenvolvedor que usa o módulo gerado e mantenedor do archetype), sempre em linguagem simples, clara e objetiva, sem jargão técnico — o texto deve ser compreensível por um desenvolvedor estagiário sem experiência prévia.
+- Q: O subtópico **Contratos** deve documentar apenas a feature do schema test ou também o mecanismo de contrato de forma mais ampla? → A: Apenas esta feature (schema test), apontando para as seções existentes do README, sem repetir o conteúdo do mecanismo de contrato.
+- Q: Qual nome deve ser usado na documentação para identificar a feature? → A: **Teste de Conformidade Entidade–Contrato** (nome canônico na documentação; "schema test" permanece como nome de trabalho interno).
+- Q: Como o subtópico **Contratos** deve se relacionar com a seção existente *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO*? → A: Manter a seção 2.1 como está e linkar a partir do subtópico; o subtópico documenta a funcionalidade e a seção 2.1 continua sendo a referência de testabilidade.
+- Q: O que a seção "como usar" deve ensinar? → A: Apenas o que a feature faz e como funciona, sem passo a passo de uso (sem tutorial).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Desenvolvedor do módulo gerado detecta drift entidade–contrato na sua própria suíte (Priority: P1)
@@ -141,6 +149,14 @@ Além dos atributos de primeiro nível, o desenvolvedor do módulo quer que estr
 - **FR-016**: O archetype deve possuir verificação negativa de que aplicações geradas sem contrato persistido (flag ausente, `none`, caminho inválido) ou com a árvore de testes desativada NÃO contêm a classe do schema test e continuam compilando e testando verde.
 - **FR-017**: Os 22 perfis de integração existentes do archetype (lista nominal completa na US2, cenário 3) devem continuar verdes após a feature — os 15 originalmente citados mais `binding-tests-*` (3), `config-yml`, `java21` e `logback-*` (2).
 - **FR-018**: Nenhuma dependência nova pode ser adicionada ao `pom.xml` da aplicação gerada.
+
+**Documentação (README.md do archetype)**
+
+- **FR-019**: O README.md deve documentar esta feature para dois públicos — o desenvolvedor que usa o módulo gerado e o mantenedor do archetype — em linguagem simples, clara e objetiva, sem jargão técnico, compreensível por um desenvolvedor estagiário sem experiência prévia.
+- **FR-020**: O README.md deve conter um subtópico chamado **Contratos**, dentro do tópico **Funcionalidades**, no mesmo padrão `<details><summary>` de collapse/uncollapse já usado no restante da documentação, documentando a feature sob o nome **Teste de Conformidade Entidade–Contrato**.
+- **FR-021**: A documentação da feature deve cobrir o que ela faz e como funciona; não deve incluir passo a passo (tutorial) de uso.
+- **FR-022**: O escopo do subtópico é exclusivamente esta feature (schema test); o mecanismo de contrato em si não é reexplicado, apenas referenciado por link para as seções existentes do README.
+- **FR-023**: A seção existente *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* permanece como está e continua sendo a referência de testabilidade; o subtópico **Contratos** aponta para ela por link.
 
 ### Key Entities *(include if feature involves data)*
 
