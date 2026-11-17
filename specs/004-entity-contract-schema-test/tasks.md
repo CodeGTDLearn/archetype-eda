@@ -248,10 +248,10 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 **Arquivo único**: `README.md` — tarefas sequenciais (mesmo bloco de texto)
 
-- [ ] T049 Criar o subtópico **Contratos** dentro do tópico **Funcionalidades** em `README.md` (tópico na linha 2642), usando `<details><summary><strong> Contratos 🛠️ </strong></summary>` … `</details>`, per FR-020
-- [ ] T050 Escrever, dentro do subtópico, o título **Teste de Conformidade Entidade–Contrato** e o texto de "o que faz" e "como funciona", em linguagem simples, clara e objetiva, sem jargão, compreensível por estagiário, per FR-019, FR-021
-- [ ] T051 Adicionar o link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* (linha 2020) e remover qualquer reexplicação do mecanismo de contrato, sem alterar a seção 2.1, per FR-022, FR-023
-- [ ] T052 Validar a documentação conforme `quickstart.md` §6 (4 itens) e confirmar por `git diff` que apenas o subtópico foi adicionado ao `README.md`, per quickstart §6, FR-019..FR-023
+- [X] T049 Criar o subtópico **Contratos** dentro do tópico **Funcionalidades** em `README.md` (tópico na linha 2642), usando `<details><summary><strong> Contratos 🛠️ </strong></summary>` … `</details>`, per FR-020
+- [X] T050 Escrever, dentro do subtópico, o título **Teste de Conformidade Entidade–Contrato** e o texto de "o que faz" e "como funciona", em linguagem simples, clara e objetiva, sem jargão, compreensível por estagiário, per FR-019, FR-021
+- [X] T051 Adicionar o link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* (linha 2020) e remover qualquer reexplicação do mecanismo de contrato, sem alterar a seção 2.1, per FR-022, FR-023
+- [X] T052 Validar a documentação conforme `quickstart.md` §6 (4 itens) e confirmar por `git diff` que apenas o subtópico foi adicionado ao `README.md`, per quickstart §6, FR-019..FR-023
 
 **Checkpoint**: documentação publicada e verificada; nenhuma outra seção do README alterada
 

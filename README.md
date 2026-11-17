@@ -2641,4 +2641,16 @@ enable_folder_src_test_java = true
 
 <details><summary><strong> Funcionalidades 🛠️ </strong></summary>
 
+  <details style="margin-left: 2em;"><summary><strong> Contratos 🛠️ </strong></summary>
+
+    <strong>Teste de Conformidade Entidade–Contrato</strong>
+
+    * **O que faz**: toda aplicação gerada que recebe um contrato salvo já nasce com um teste automático que confere, a cada execução dos testes do projeto, se a entidade continua fiel ao contrato. Se alguém alterar a entidade ou o contrato e os dois deixarem de combinar, o teste falha e aponta qual campo divergiu, o motivo e o sentido da diferença.
+    * **Como funciona**: o teste lê o próprio contrato que foi salvo no projeto e compara com a entidade campo por campo. A conferência vale nos dois sentidos: nenhum item do contrato pode faltar na entidade e nenhum item da entidade pode sobrar em relação ao contrato. Objetos que contêm outros objetos e listas de valores fixos também são conferidos. Quando há mais de um problema, todos aparecem juntos em uma única mensagem, em ordem previsível.
+    * **Para quem serve**: para quem usa o módulo gerado, é a garantia de que a entidade e o contrato não se desencontram com o tempo; para quem mantém o archetype, é a garantia de que todo módulo novo sai com essa conferência já funcionando.
+    * **Quando ele existe**: apenas quando o projeto é gerado com a pasta de testes habilitada e com o contrato salvo. Sem contrato, o teste não é criado e o projeto segue compilando e passando normalmente.
+    * **Detalhes técnicos** (onde o teste vive, o que ele cobre e como a entrega é provada): [Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO](#21-schema-test-entidade-contrato-gerado-na-aplicacao).
+
+  </details>
+
 </details>
