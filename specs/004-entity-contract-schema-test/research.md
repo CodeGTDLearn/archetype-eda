@@ -87,6 +87,12 @@ Tabela consolidada (regras-02 §1–2, §5): `type` declarado `java.lang` (FQN r
 - **Rationale**: FR-016 exige prova de ausência; os perfis já rodam `clean,verify`.
 - **Alternatives**: asserção só em `basic`/`defaults-only`/`minimal` (cobertura incompleta).
 
+## R14 — Documentação da feature no README
+
+- **Decision**: novo subtópico **Contratos** dentro do tópico existente **Funcionalidades** (`README.md`, `<details><summary><strong> Funcionalidades 🛠️ </strong></summary>` na linha 2642, hoje vazio), no mesmo padrão `<details>`/`<summary>` do restante do README. Título interno canônico: **Teste de Conformidade Entidade–Contrato**. Conteúdo: o que a feature faz e como funciona, em linguagem simples e sem jargão (compreensível por estagiário); **sem** tutorial passo a passo; **sem** reexplicar o mecanismo de contrato; link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO*, que permanece intacta.
+- **Rationale**: FR-019..FR-023 do clarify (2026-11-17). O README já usa `<details>` como padrão de leitura e ter um subtópico vazio "Funcionalidades" é o encaixe natural; evitar duplicação mantém uma única fonte por assunto.
+- **Alternatives**: mover o conteúdo de 2.1 para o subtópico (descartado — FR-023 manda manter); duplicar (duas versões divergentes); documentar o mecanismo de contrato inteiro (descartado — FR-022).
+
 ## Decisões reaproveitadas da rodada anterior (ainda válidas)
 
 - Reflexão de campos declarados (imune a Lombok); Jackson já presente; teste lê o contrato do classpath; falha agregada e determinística; sabotagem não cria fixture.

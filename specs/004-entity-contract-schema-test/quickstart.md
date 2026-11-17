@@ -56,6 +56,17 @@ Gerar sem `entity_contract_file_path`/`none`, ou com `enable_folder_src_test_jav
 
 Repetir o cenário 3 com `enable_lombok_support=true|false`: veredito idêntico.
 
+## 6. Documentação da feature no README
+
+Revisão manual do README (não há comando de build envolvido):
+
+1. Abrir `README.md` e expandir **Funcionalidades** → deve existir o subtópico **Contratos**, em `<details>`/`<summary>`.
+2. Dentro dele, o título **Teste de Conformidade Entidade–Contrato** e o texto de "o que faz" e "como funciona", sem jargão e sem passo a passo.
+3. O link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* deve abrir a seção existente, que permanece inalterada.
+4. Nenhuma menção duplicada do mecanismo de contrato (inferência/formato/flags) dentro do subtópico.
+
+**Esperado**: os quatro itens conferem; nenhuma outra seção do README alterada.
+
 ## Referências
 
 - Regras espelhadas: `src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/regras-01..03`

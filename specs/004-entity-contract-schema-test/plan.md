@@ -8,6 +8,8 @@
 
 O schema test é um artefato **da aplicação gerada**: um conjunto de classes de teste em `<pkg>.<entity_package>.contract` materializado por template Velocity, que lê `src/test/resources/contracts/contract.json` do classpath de teste, compara a entidade por **reflexão de campos declarados** (bidirecional, recursivo em aninhados, com enums e `id` técnico) e faz um **round-trip estrito** com Jackson (`FAIL_ON_UNKNOWN_PROPERTIES=true`). O archetype **não interpreta contrato nem entidade**: ele apenas (a) materializa/remove o artefato por condição derivada e (b) verifica, nos ITs, presença, ausência, execução verde e falha sob sabotagem — sempre executando o teste **dentro** da aplicação gerada.
 
+A entrega inclui ainda a **documentação da feature no README**: subtópico **Contratos** dentro de **Funcionalidades**, em padrão `<details>` e linguagem simples para dois públicos (quem usa o módulo gerado e quem mantém o archetype).
+
 ## Technical Context
 
 **Language/Version**: Java 17 (aplicação gerada); Groovy 4.0.28 (pós-processador); Velocity 2.4.1 (templates)
@@ -42,6 +44,8 @@ O schema test é um artefato **da aplicação gerada**: um conjunto de classes d
 | VI. Validar antes de culpar o código | ✅ PASS (processo) | Todo ciclo começa com `mvn clean install` completo (recompõe `archetype-post-generate.groovy` no `process-resources`) |
 
 **Compliance review obrigatório**: toca `META-INF/archetype-post-generate.groovy` (via compositor) e `archetype-resources/` — revisar contra I–VI (Governança).
+
+**Documentação (README)**: fora da lista de artefatos sujeitos a compliance review (Governança); não cria flag, não altera nomenclatura de extensão, não toca código gerado. Nenhum princípio afetado.
 
 **Re-check pós-Phase 1**: nenhuma violação introduzida; `Complexity Tracking` vazio.
 
@@ -88,10 +92,26 @@ src/test/resources/projects/
 ├── <21 fixtures sem contrato>/verify.groovy     # MOD: asserção de AUSÊNCIA da classe
 └── README.md                                   # MOD: linha da fixture entity-contract
 
-README.md                                       # MOD: seção do gate
+README.md                                       # MOD: subtópico "Contratos" em "Funcionalidades" (linha 2642)
 ```
 
 **Structure Decision**: o artefato é um **pacote de teste** dentro do pacote da entidade; a guarda remove o diretório inteiro, mantendo a remoção atômica com múltiplas classes. O IT reutiliza `entity-contract` (goal `clean,verify`); nenhuma fixture nova.
+
+## Documentação (README.md)
+
+Origem: FR-019..FR-023 (clarify 2026-11-17) · Decisão de pesquisa: R14.
+
+| Item | Definição |
+|------|-----------|
+| Local | Subtópico **Contratos**, dentro de **Funcionalidades** (README.md, tópico hoje vazio na linha 2642) |
+| Formato | `<details><summary><strong> Contratos 🛠️ </strong></summary>` … `</details>`, mesmo padrão de collapse do README |
+| Nome da feature | **Teste de Conformidade Entidade–Contrato** ("schema test" fica como nome de trabalho interno) |
+| Públicos | Quem usa o módulo gerado e quem mantém o archetype |
+| Linguagem | Simples, clara e objetiva; sem jargão; compreensível por estagiário sem experiência |
+| Conteúdo | O que a feature faz e como funciona — **sem** tutorial passo a passo |
+| Fronteira | Não reexplica o mecanismo de contrato; apenas linka as seções existentes |
+| Seção 2.1 | *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* permanece intacta e é referenciada por link |
+| Não faz | Não duplica conteúdo, não move seções, não renomeia a 2.1 |
 
 ## Desvios deliberados das instruções
 
