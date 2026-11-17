@@ -55,7 +55,7 @@ Crie o diretório se ele não existir.
 - `entity_contract_file_path` recebe o caminho absoluto do arquivo.
 - Emita com barras normais (`/`), nunca com barras invertidas.
 - A fonte é `CONTRACT_DERIVED`.
-- Se a materialização falhar, use `none` e avise.
+- Se a materialização falhar, pare e reporte: não use `none`.
 - O caminho é parte da identidade da geração: mudar o diretório muda o caminho emitido.
 
 ## 6. Cópia no projeto gerado
@@ -81,7 +81,7 @@ Se o arquivo de origem não existir:
 
 ## 7. Validação
 
-- `entity_contract_file_path` deve satisfazer `^(none|[^\r\n]*\.json)$`.
+- `entity_contract_file_path` deve satisfazer `^[^\r\n]*\.json$`: `none` é valor do catálogo, fora deste procedimento.
 - O caminho não pode conter quebra de linha.
 - O caminho não pode apontar para diretório.
 - O arquivo precisa ser JSON válido com raiz objeto.

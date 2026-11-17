@@ -17,11 +17,11 @@ A **Opção A** — procedimento fixo empacotado no JAR do archetype:
 src/main/resources/utils/
 ```
 
-- `inicializacao/` — porta de entrada e mapa de leitura;
-- `procedimento-do-agente/` — papel, leitura do JAR, regras, execução, entregáveis;
-- `regras-de-formacao-do-contrato/` — derivação, tipos, aninhados, precedência,
+- `01-entrada-inicializacao/` — porta de entrada e mapa de leitura;
+- `02-operacao-procedimento-do-agente/` — papel, leitura do JAR, regras, execução, entregáveis;
+- `03-derivacao-regras-de-formacao-do-contrato/` — derivação, tipos, aninhados, precedência,
   materialização e proveniência;
-- `templates-de-contrato/` — schema e exemplos.
+- `04-referencia-templates-de-contrato/` — schema e exemplos.
 
 O agente lê o procedimento de dentro do JAR instalado
 (`com.eda-archetype:eda-archetype`); o README deixou de ser fonte de runtime.
@@ -30,4 +30,4 @@ O agente lê o procedimento de dentro do JAR instalado
 
 O conteúdo abaixo é o registro histórico do desenho da Opção B. Ele **não
 descreve** o estado atual do projeto. As regras de formação do contrato que
-foram implementadas aqui vivem hoje em `utils/regras-de-formacao-do-contrato/`.
+foram implementadas aqui vivem hoje em `utils/03-derivacao-regras-de-formacao-do-contrato/`.

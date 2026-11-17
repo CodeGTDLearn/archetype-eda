@@ -52,7 +52,7 @@ Ficam fora da assinatura (identidade/metadados): `project_description`, `entity_
 |---|---|---|
 | `custom-attributes/` | `contract_enum_definitions`, `custom_entity_attribute_imports`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `entity_contract_file_path` | imports FQN, enums nos pacotes declarados, classe referenciada intacta, contracts/ ausente |
 | `custom-enums-from-payload/` | `contract_enum_definitions`, `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java` | enums gerados a partir de array UPPERCASE |
-| `entity-contract/` | `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java`, `entity_contract_file_path` | contract.json byte-a-byte + entidade coerente com o contrato |
+| `entity-contract/` | `contract_enum_definitions`, `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java`, `entity_contract_file_path` | contract.json byte-a-byte + entidade coerente + pacote `contract/` presente + surefire verde da aplicacao + sabotagem falha com diagnostico (cadeia de 7 niveis + enums) |
 | `id-normalization/` | `custom_entity_attributes_list`, `enable_custom_entity_attributes` | uma unica PK; as grafias id/iD sao descartadas |
 
 ### `nested`

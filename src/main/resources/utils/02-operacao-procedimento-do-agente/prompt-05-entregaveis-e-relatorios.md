@@ -45,6 +45,7 @@ Se não for possível medir com precisão, marque como **estimativa**.
 
 Inclua:
 
+- status dos Gates A, B e C da premissa de entrada;
 - command line executada;
 - resultado da validação do `package`;
 - resultado da cópia do contrato;

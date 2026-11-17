@@ -58,4 +58,35 @@ if (!entity.isFile()) {
             "verify.groovy: the entity was not generated: ${entity.path}")
 }
 
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Contract schema test: this profile does not persist a contract, so the
+// generated application must NOT carry the orphan test package.
+// ---------------------------------------------------------------------------
+def _contractGateBase = null
+try { _contractGateBase = basedir } catch (Throwable ignored) { _contractGateBase = System.getProperty('basedir') }
+def _contractGateRoot = new File(_contractGateBase as String)
+def _contractGateProjects = []
+if (new File(_contractGateRoot, 'project').isDirectory()) {
+    new File(_contractGateRoot, 'project').eachDir { _cgProject -> _contractGateProjects << _cgProject }
+} else {
+    _contractGateProjects << _contractGateRoot
+}
+_contractGateProjects.each { _cgProject ->
+    def _cgTestJava = new File(_cgProject, 'src/test/java')
+    if (!_cgTestJava.isDirectory()) return
+    def _cgOrphans = []
+    _cgTestJava.eachFileRecurse { _cgFile ->
+        if (_cgFile.isFile() && _cgFile.name.endsWith('ContractTest.java')
+                && _cgFile.path.replace('\\', '/').contains('/contract/')) {
+            _cgOrphans << _cgFile
+        }
+    }
+    if (!_cgOrphans.isEmpty()) {
+        throw new IllegalStateException(
+            "verify.groovy: orphan contract schema test in ${_cgProject.path}: ${_cgOrphans*.name}")
+    }
+}
+
 return null

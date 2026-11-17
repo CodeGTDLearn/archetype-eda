@@ -75,35 +75,35 @@ check("4.5 surefire is restricted to **/*Test.java", pomText.contains("**/*Test.
 def utilsSource = new File("src/main/resources/utils")
 def utilsClasses = new File("target/classes/utils")
 def utilsIndex = new File(utilsSource,
-        "inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md")
+        "01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md")
 
 def utilsCategories = [
-        "inicializacao",
-        "procedimento-do-agente",
-        "regras-de-formacao-do-contrato",
-        "templates-de-contrato"
+        "01-entrada-inicializacao",
+        "02-operacao-procedimento-do-agente",
+        "03-derivacao-regras-de-formacao-do-contrato",
+        "04-referencia-templates-de-contrato"
 ]
 
 def utilsFiles = [
-        "inicializacao/prompt-00-leia-este-arquivo-primeiro.md",
-        "inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md",
-        "procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md",
-        "procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md",
-        "procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md",
-        "procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md",
-        "procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md",
-        "regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md",
-        "regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md",
-        "regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md",
-        "regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md",
-        "regras-de-formacao-do-contrato/regras-05-como-materializar-e-emitir-o-contrato.md",
-        "regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md",
-        "templates-de-contrato/template-01-schema-do-contrato.json",
-        "templates-de-contrato/template-02-exemplo-contrato-plano.json",
-        "templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json",
-        "templates-de-contrato/template-04-exemplo-contrato-com-enums.json",
-        "templates-de-contrato/template-05-exemplo-contrato-com-tipos-do-projeto.json",
-        "templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json"
+        "01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md",
+        "01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md",
+        "02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md",
+        "02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md",
+        "02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md",
+        "02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md",
+        "02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md",
+        "03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md",
+        "03-derivacao-regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md",
+        "03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md",
+        "03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md",
+        "03-derivacao-regras-de-formacao-do-contrato/regras-05-como-materializar-e-emitir-o-contrato.md",
+        "03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md",
+        "04-referencia-templates-de-contrato/template-01-schema-do-contrato.json",
+        "04-referencia-templates-de-contrato/template-02-exemplo-contrato-plano.json",
+        "04-referencia-templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json",
+        "04-referencia-templates-de-contrato/template-04-exemplo-contrato-com-enums.json",
+        "04-referencia-templates-de-contrato/template-05-exemplo-contrato-com-tipos-do-projeto.json",
+        "04-referencia-templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json"
 ]
 
 def utilsIndexText = utilsIndex.isFile() ? utilsIndex.getText("UTF-8") : ""

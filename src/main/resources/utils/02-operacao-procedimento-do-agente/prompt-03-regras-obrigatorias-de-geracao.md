@@ -63,7 +63,7 @@ Passe sempre:
 
 - Caminho do arquivo `.json`.
 - Use barras normais (`/`), nunca barras invertidas.
-- `none` somente quando não houver contrato.
+- Nunca use `none`: sem contrato, pare pelo Gate B de `prompt-00` §0.
 - O pós-processador copia o arquivo apenas quando `enable_folder_src_test_java=true`.
 
 ### `enable_custom_entity_attributes`
