@@ -307,12 +307,12 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 ### C5 — Documentação
 
-- [ ] T074 Atualizar `README.md` apenas nos 4 bullets da seção 2.1 (linhas 2026, 2027, 2030 e 2031) com o texto de `plan.md` § 2.1; preservar título, âncora, premissa, ativação, regras espelhadas e nota de JSON
-- [ ] T075 Atualizar `src/test/resources/projects/README.md` com a linha das 3 fixtures que persistem contrato (`entity-contract`, `custom-nested-objects`, `custom-enums-from-payload`)
+- [X] T074 Atualizar `README.md` apenas nos 4 bullets da seção 2.1 (linhas 2026, 2027, 2030 e 2031) com o texto de `plan.md` § 2.1; preservar título, âncora, premissa, ativação, regras espelhadas e nota de JSON
+- [X] T075 Atualizar `src/test/resources/projects/README.md` com a linha das 3 fixtures que persistem contrato (`entity-contract`, `custom-nested-objects`, `custom-enums-from-payload`)
 
 ### C6 — Portão final
 
-- [ ] T076 Rodar `mvn -o clean install` e confirmar 22/22 fixtures, 38 suites, 9 sabotagens e o golden; conferir `git diff --name-only` contra a allowlist (nenhum arquivo fora dela)
+- [X] T076 Rodar `mvn -o clean install` e confirmar 22/22 fixtures, 38 suites, 9 sabotagens e o golden; conferir `git diff --name-only` contra a allowlist (nenhum arquivo fora dela)
 
 **Checkpoint**: 19 arquivos de teste + 3 de apoio no pacote `contract/`, 41 testes verdes no perfil `entity-contract`, 22/22 perfis e 38 suites verdes, golden preservado.
 
