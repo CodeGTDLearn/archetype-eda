@@ -6,7 +6,7 @@
 
 ## Content Quality
 
-- [x] No implementation details (languages, frameworks, APIs) — a spec referencia apenas flags e artefatos que JÁ existem como superfície de requisito (padrão das specs 001/002 deste repo); nenhuma decisão de design nova é pré-assumida
+- [ ] No implementation details (languages, frameworks, APIs) — a spec referencia apenas flags e artefatos que JÁ existem como superfície de requisito (padrão das specs 001/002 deste repo); nenhuma decisão de design nova é pré-assumida
 - [x] Focused on user value and business needs — duas personas (desenvolvedor do módulo, mantenedor do archetype), drift silencioso como dor
 - [x] Written for non-technical stakeholders — linguagem de jornada/valor; termos técnicos limitados aos identificadores do próprio domínio
 - [x] All mandatory sections completed
@@ -27,7 +27,7 @@
 - [x] All functional requirements have clear acceptance criteria
 - [x] User scenarios cover primary flows — 4 jornadas priorizadas (3×P1, 1×P2), independentes
 - [x] Feature meets measurable outcomes defined in Success Criteria
-- [x] No implementation details leak into specification
+- [ ] No implementation details leak into specification
 
 ## Notes
 

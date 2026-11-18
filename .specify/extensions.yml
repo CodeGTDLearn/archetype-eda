@@ -26,7 +26,7 @@ hooks:
   before_clarify:
   - extension: git
     command: speckit.git.commit
-    enabled: true
+    enabled: false
     optional: false
     priority: 10
     prompt: Commit outstanding changes before clarification?
@@ -35,7 +35,7 @@ hooks:
   before_plan:
   - extension: git
     command: speckit.git.commit
-    enabled: true
+    enabled: false
     optional: false
     priority: 10
     prompt: Commit outstanding changes before planning?
@@ -44,7 +44,7 @@ hooks:
   before_tasks:
   - extension: git
     command: speckit.git.commit
-    enabled: true
+    enabled: false
     optional: false
     priority: 10
     prompt: Commit outstanding changes before task generation?
@@ -53,7 +53,7 @@ hooks:
   before_implement:
   - extension: git
     command: speckit.git.commit
-    enabled: true
+    enabled: false
     optional: false
     priority: 10
     prompt: Commit outstanding changes before implementation?
@@ -62,7 +62,7 @@ hooks:
   before_checklist:
   - extension: git
     command: speckit.git.commit
-    enabled: true
+    enabled: false
     optional: false
     priority: 10
     prompt: Commit outstanding changes before checklist?
@@ -71,7 +71,7 @@ hooks:
   before_analyze:
   - extension: git
     command: speckit.git.commit
-    enabled: true
+    enabled: false
     optional: false
     priority: 10
     prompt: Commit outstanding changes before analysis?
@@ -80,7 +80,7 @@ hooks:
   before_taskstoissues:
   - extension: git
     command: speckit.git.commit
-    enabled: true
+    enabled: false
     optional: false
     priority: 10
     prompt: Commit outstanding changes before issue sync?
