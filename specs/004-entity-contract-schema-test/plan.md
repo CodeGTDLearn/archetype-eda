@@ -169,7 +169,7 @@ Origem: FR-019..FR-023 (clarify 2026-11-17, revisado no clarify 2026-11-18) · D
 
 **Total no perfil**: 19 arquivos de teste, 41 testes, 3 de apoio.
 
-**Achado A1 (reconciliar antes de `/speckit.tasks`)**: a árvore aprovada no clarify não tinha arquivo para a FR-007 (tipo declarado). `ContractTypeMappingTest` cobre o `type` declarado **aceito** (`java.lang`/tipo do projeto) contra o tipo efetivo das flags. A inferência por valor para atributos **sem** `type` aceito continua sendo do mecanismo de geração (D17); uma edição pós-geração apenas no valor não é re-inferida. Se a paridade total com a FR-007 for exigida, é preciso decidir entre elevar o limite de apoio (60) ou aceitar mais um arquivo de teste.
+**Achado A1 (resolvido — opção A, 2026-11-18)**: a árvore aprovada no clarify não tinha arquivo para a FR-007 (tipo declarado). `ContractTypeMappingTest` cobre o `type` declarado **aceito** (`java.lang`/tipo do projeto) contra o tipo efetivo das flags. A inferência por valor para atributos **sem** `type` aceito continua sendo do mecanismo de geração (D17); uma edição pós-geração apenas no valor não é re-inferida. A paridade total com a FR-007(b)/(c) fica registrada como redução deliberada: se for exigida, o caminho é elevar o limite de apoio (60) ou aceitar mais um arquivo de teste.
 
 **Por que `ContractRoundTripTest` é gerado (D13)**: o payload de teste depende dos tipos das flags. Mantê-lo fixo exigiria reintroduzir a inferência de tipo que o refactor remove. O payload é sintético (não lê valores do contrato): o archetype continua sem interpretar contrato/entidade.
 
@@ -252,11 +252,11 @@ Origem: FR-019..FR-023 (clarify 2026-11-17, revisado no clarify 2026-11-18) · D
 - **D14 — `ContractJson` em ≤60 linhas de código.** O uso de Java 17 (streams e text blocks) mantém o apoio em 3 classes, como FR-027. A contagem do `ContractTestLayoutTest` exclui `package`, `import`, linhas em branco e comentários.
 - **D15 — `@TestInstance(PER_CLASS)` + `@BeforeAll` não estático.** Evita campo estático mutável (FR-026) e mantém a falha estrutural uma vez por arquivo (FR-013).
 - **D16 — normalização de caixa no topo.** `ContractKeys` mapeia `Name` → `name`, corrigindo o comportamento estrito do `ContractModel` atual para cumprir FR-009; coberto por `ContractKeyNormalizationTest`. Não é requisito novo, é conformidade com o requisito existente.
-- **D17 — reconciliação de tipo declarado (A1).** `ContractTypeMappingTest` compara o `type` declarado **aceito** (`java.lang`/tipo do projeto) com o tipo efetivo das flags. A inferência por valor para atributos sem `type` aceito permanece no mecanismo de geração: reimplementá-la exigiria ~150 linhas de apoio, acima do limite de 60 (FR-026). Uma edição pós-geração apenas no valor não é re-inferida. Pendente de aceite antes de `/speckit.tasks`.
+- **D17 — reconciliação de tipo declarado (A1, aceito em 2026-11-18).** `ContractTypeMappingTest` compara o `type` declarado **aceito** (`java.lang`/tipo do projeto) com o tipo efetivo das flags. A inferência por valor para atributos sem `type` aceito permanece no mecanismo de geração: reimplementá-la exigiria ~150 linhas de apoio, acima do limite de 60 (FR-026). Uma edição pós-geração apenas no valor não é re-inferida.
 
 ## Achados a reconciliar com a spec
 
-- **A1 — reconciliação de tipo declarado (aberto, bloqueia `/speckit.tasks`).** A árvore aprovada no clarify não tinha arquivo para a FR-007. Proposta: `ContractTypeMappingTest` (19º arquivo, 41º teste), cobrindo o `type` declarado aceito; a inferência por valor fica no mecanismo de geração (D17). Alternativas: (a) aceitar a redução e ajustar a FR-007; (b) elevar o limite de apoio para reimplementar a inferência; (c) aceitar mais um arquivo de teste para a inferência por valor.
+- **A1 — reconciliação de tipo declarado (resolvido — opção A).** Proposta aceita: `ContractTypeMappingTest` (19º arquivo, 41º teste), cobrindo o `type` declarado aceito; a inferência por valor fica no mecanismo de geração (D17). Alternativas descartadas: (a) aceitar a redução e ajustar a FR-007; (b) elevar o limite de apoio; (c) aceitar mais um arquivo de teste para a inferência por valor.
 - **A13 - baseline de fixtures (resolvido).** A spec agora declara **22 perfis** (FR-017, SC-004 e US2, cenário 3), alinhada à matriz real de 22 fixtures em `src/test/resources/projects/`.
 
 ## Complexity Tracking

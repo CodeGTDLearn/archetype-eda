@@ -260,3 +260,63 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 - [X] T054 Adicionar âncora HTML não visual (`<a name="21-schema-test-entidade-contrato-gerado-na-aplicacao"></a>`) imediatamente antes do `<details>` da seção 2.1 em `README.md`, para que o link de **Detalhes técnicos** do subtópico **Contratos** passe a resolver de fato, sem alterar texto ou conteúdo visível da 2.1 — a emenda de FR-023 ("permanece como está" → "permanece visual e textualmente; recebe âncora não visual") requer aprovação do mantenedor, per FR-023, quickstart §6.5, T053 (partial)
 
+---
+
+## Phase 14: Refactor de Estrutura e Legibilidade (FR-024..FR-029, SC-010..SC-012)
+
+**Purpose**: fatiar o pacote `contract/` por sujeito — 19 arquivos de teste + 3 de apoio, 41 testes no perfil de referência — substituindo as 8 classes/1023 linhas, sem alterar a semântica de FR-004..FR-011 nem a ativação derivada de FR-001/FR-002.
+
+**Escopo**: apenas o delta de 2026-11-18. `spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/schema-test-contract.md` e `quickstart.md` já refletem o delta — não há tarefa para eles.
+
+**Preservar**: T001, T002 e T044 (dispensadas / não aplicável); T003..T054 concluídas.
+
+**Denylist**: `pom.xml` (raiz e gerado), `archetype-metadata.xml`, `property-*.xml`, `fileset-*.xml`, `generator-01/02/03`, `snippet-20`, `ArchetypePostGenerateComposer.groovy`, `SECTIONS`, `custom-attributes`, as demais asserções das 19 fixtures e qualquer seção do `README.md` fora dos 4 bullets de 2.1.
+
+**Diretório-base**: `src/main/resources/archetype-resources/src/test/java/__entity_package_name__/contract/`, referido abaixo como `contract/`.
+
+### C1 — Golden (antes de qualquer template)
+
+- [ ] T055 [P] Capturar o golden antes de tocar em templates: rodar a matriz de 9 sabotagens atual do `entity-contract` e gravar as linhas de divergência em `src/test/resources/projects/entity-contract/expected/divergences.txt`, agrupadas por cenário (`# 7.1` … `# 7.9`), no formato `[DIRECTION] path | expected: X | found: Y | kind: K`; o cenário 7.3 (JSON corrompido) fica fora do golden e mantém a asserção de prefixo `CONTRACT STRUCTURAL FAILURE`; verificação: arquivo presente e build atual 22/22
+
+### C2 — Apoio e delegação (portão: 22/22, veredito idêntico)
+
+- [ ] T056 [P] Criar `contract/EntityFields.java` com `fieldNamed`, `assertFieldType`, `assertFieldTypeName` e `fieldNames`, usando `getDeclaredFields()`; máximo 60 linhas de código (sem `package`, `import`, linha em branco ou comentário)
+- [ ] T057 [P] Criar `contract/ContractKeys.java` extraindo a normalização do `ContractModel`: `topLevelName` (`id` em qualquer caixa → `<entidade>Id`; stripAccents + lowerFirst; inválido → `null`), `nestedName` (camelCase + `_` para palavra reservada), `typeName` (PascalCase; palavra reservada → `Type`) e `discarded`; máximo 60 linhas; D16
+- [ ] T058 [P] Criar `contract/ContractJson.java` com `load`, `parse`, `entityName` e `attributes`: aceitar `attributes` objeto, lista de objetos, lista de strings, `fields` e topo, com precedência `attributes` > `fields` > topo; excluir as meta-chaves; imutável; máximo 60 linhas
+- [ ] T059 Refatorar `contract/ContractModel.java` para delegar a `ContractJson`, `ContractKeys` e `EntityFields`, sem mudar o veredito; os 6 testes antigos continuam verdes; portão: `mvn -o clean install` com 22/22 e a sabotagem do `entity-contract` com o mesmo diagnóstico
+- [ ] T060 [P] Criar `contract/TechnicalIdMappingTest.java` com 3 testes: o campo técnico existe, é `Long` e não existe campo comum `id`
+- [ ] T061 [P] Criar `contract/MalformedContractTest.java` com 2 testes via `ContractJson.parse`: JSON inválido e raiz não-objeto, ambos com `CONTRACT STRUCTURAL FAILURE`; não carregar o contrato em `@BeforeAll`
+- [ ] T062 [P] Criar `contract/ContractKeyNormalizationTest.java` com 4 testes: acento (`endereço` → `endereco`), camelCase aninhado, caixa (`Name` → `name`) e grafias de `id` (`ID` → `<entidade>Id`)
+- [ ] T063 [P] Criar `contract/ContractKeyDiscardTest.java` com 1 teste: chave que permanece inválida após a normalização é descartada
+
+### C3 — Gerador e suites (portão: 38 suites, 22/22)
+
+- [ ] T064 Criar `src/main/resources/META-INF/archetype_post_generate_generators/generator-04-contract_schema_tests.groovy`: guarda derivada por `src/test/resources/contracts/contract.json`; parse de `custom_entity_attributes_list`, `contract_nested_type_definitions`, `contract_enum_definitions`, `entity_name`, `entity_package_name`, `package` e `enable_custom_entity_attributes`; emitir 15 arquivos no perfil de referência; colisão → `throw` com os dois nomes; reutilizar `resolveEntityPackage` e `writeJavaSourceIfAbsent`; não emitir arquivo com zero testes; deduplicar por tipo; ordem das flags
+- [ ] T065 Criar `src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy`: variante completa (15 arquivos), simples (5), scaffold (5) e colisão (exceção com os dois nomes)
+- [ ] T066 Criar `src/test/archetype-post-generate/ContractTestLayoutTest.groovy`: varrer os 7 templates fixos e a saída das 3 variantes; máximo 120 linhas por arquivo de teste, 20 por método e 60 por apoio (linhas de código); sem laço dentro de `@Test`, sem estático não-final, sem "And" no nome e sem chamada entre testes
+- [ ] T067 Registrar `ContractSchemaTestGeneratorTest.groovy` e `ContractTestLayoutTest.groovy` em `src/test/groovy/run-archetype-post-generate-tests.groovy` (36 → 38 suites)
+- [ ] T068 [P] Atualizar `src/test/archetype-post-generate/EntityContractLombokParityTest.groovy`: `gateFiles.size() == 7`; trocar `ContractModel`/`Conformance`/`Coverage` por `ContractJson`/`ContractKeys`/`EntityFields`; manter `getDeclaredFields()` e a paridade Lombok on/off
+- [ ] T069 [P] Atualizar `src/test/archetype-post-generate/SnippetContractSchemaTestTest.groovy`: semear `EnderecoFieldsTest.java` em vez de `MyEntityContractTest.java`; a asserção continua por diretório
+
+### C4 — Flip (portão: 19 arquivos/41 testes, sabotagens = golden)
+
+- [ ] T070 Remover os 8 templates antigos de `contract/`: `__entity_name__ContractTest.java`, `__entity_name__ContractConformanceTest.java`, `__entity_name__ContractCoverageTest.java`, `ContractNestedTypesTest.java`, `ContractEnumsTest.java`, `ContractRoundTripTest.java` (o fixo), `ContractModel.java` e `ContractDiagnostics.java`; não tocar em `snippet-20`
+- [ ] T071 Atualizar `src/test/resources/projects/entity-contract/verify.groovy`: derivar a lista das flags (19 testes + 3 apoio); exigir 19 relatórios/41 testes com 0 falhas/erros; preservar as 9 sabotagens; substituir `aggregateBlock` pela leitura do surefire e preservar a ordem `alfa` < `zeta`; comparar as linhas de divergência com o golden; remover a expectativa `total   : 4 divergence(s)` do cenário 7.9
+- [ ] T072 Adicionar `entity_contract_file_path` em `src/test/resources/projects/custom-nested-objects/archetype.properties` e `src/test/resources/projects/custom-enums-from-payload/archetype.properties`; trocar a asserção de ausência por presença + surefire verde nos respectivos `verify.groovy`; atualizar o cabeçalho `# FIXTURE SIGNATURE` das duas fixtures
+- [ ] T073 Nos 19 `src/test/resources/projects/*/verify.groovy` restantes, trocar o glob `*ContractTest.java` por asserção do diretório `contract/` sob `src/test/java`; não alterar as demais asserções
+
+### C5 — Documentação
+
+- [ ] T074 Atualizar `README.md` apenas nos 4 bullets da seção 2.1 (linhas 2026, 2027, 2030 e 2031) com o texto de `plan.md` § 2.1; preservar título, âncora, premissa, ativação, regras espelhadas e nota de JSON
+- [ ] T075 Atualizar `src/test/resources/projects/README.md` com a linha das 3 fixtures que persistem contrato (`entity-contract`, `custom-nested-objects`, `custom-enums-from-payload`)
+
+### C6 — Portão final
+
+- [ ] T076 Rodar `mvn -o clean install` e confirmar 22/22 fixtures, 38 suites, 9 sabotagens e o golden; conferir `git diff --name-only` contra a allowlist (nenhum arquivo fora dela)
+
+**Checkpoint**: 19 arquivos de teste + 3 de apoio no pacote `contract/`, 41 testes verdes no perfil `entity-contract`, 22/22 perfis e 38 suites verdes, golden preservado.
+
+**Dependências da Phase 14**: T055 → T056..T058 → T059 → T060..T063; T064 → T065..T067; T068/T069 em paralelo; T070 → T071 → T072/T073; T074/T075 em paralelo; T076 por último.
+
+**Paralelo**: T056, T057, T058, T060, T061, T062 e T063 são arquivos distintos; T068 e T069 são arquivos distintos; T074 e T075 são arquivos distintos.
+
