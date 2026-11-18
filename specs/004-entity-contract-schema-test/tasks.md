@@ -258,5 +258,5 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 ## Phase 13: Convergence
 
-- [ ] T054 Adicionar âncora HTML não visual (`<a name="21-schema-test-entidade-contrato-gerado-na-aplicacao"></a>`) imediatamente antes do `<details>` da seção 2.1 em `README.md`, para que o link de **Detalhes técnicos** do subtópico **Contratos** passe a resolver de fato, sem alterar texto ou conteúdo visível da 2.1 — a emenda de FR-023 ("permanece como está" → "permanece visual e textualmente; recebe âncora não visual") requer aprovação do mantenedor, per FR-023, quickstart §6.5, T053 (partial)
+- [X] T054 Adicionar âncora HTML não visual (`<a name="21-schema-test-entidade-contrato-gerado-na-aplicacao"></a>`) imediatamente antes do `<details>` da seção 2.1 em `README.md`, para que o link de **Detalhes técnicos** do subtópico **Contratos** passe a resolver de fato, sem alterar texto ou conteúdo visível da 2.1 — a emenda de FR-023 ("permanece como está" → "permanece visual e textualmente; recebe âncora não visual") requer aprovação do mantenedor, per FR-023, quickstart §6.5, T053 (partial)
 
