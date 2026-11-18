@@ -69,7 +69,7 @@ def files = []
 resourcesRoot.eachFileRecurse { File f ->
     if (f.isFile()) files << f.absolutePath.substring(resourcesRoot.absolutePath.length() + 1).replace('\\', '/')
 }
-check("1.3 the template tree has 127 files", files.size() == 127)
+check("1.3 the template tree has 128 files", files.size() == 128)
 check("1.4 the 18 fileset fragments exist (one per <fileSet>)",
         filesetFragmentsDir.isDirectory() &&
                 filesetFragmentsDir.listFiles().findAll { it.name.endsWith(".xml") }.size() == 18)

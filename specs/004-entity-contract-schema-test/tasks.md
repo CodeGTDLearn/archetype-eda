@@ -291,12 +291,12 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 ### C3 — Gerador e suites (portão: 38 suites, 22/22)
 
-- [ ] T064 Criar `src/main/resources/META-INF/archetype_post_generate_generators/generator-04-contract_schema_tests.groovy`: guarda derivada por `src/test/resources/contracts/contract.json`; parse de `custom_entity_attributes_list`, `contract_nested_type_definitions`, `contract_enum_definitions`, `entity_name`, `entity_package_name`, `package` e `enable_custom_entity_attributes`; emitir 15 arquivos no perfil de referência; colisão → `throw` com os dois nomes; reutilizar `resolveEntityPackage` e `writeJavaSourceIfAbsent`; não emitir arquivo com zero testes; deduplicar por tipo; ordem das flags
-- [ ] T065 Criar `src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy`: variante completa (15 arquivos), simples (5), scaffold (5) e colisão (exceção com os dois nomes)
-- [ ] T066 Criar `src/test/archetype-post-generate/ContractTestLayoutTest.groovy`: varrer os 7 templates fixos e a saída das 3 variantes; máximo 120 linhas por arquivo de teste, 20 por método e 60 por apoio (linhas de código); sem laço dentro de `@Test`, sem estático não-final, sem "And" no nome e sem chamada entre testes
-- [ ] T067 Registrar `ContractSchemaTestGeneratorTest.groovy` e `ContractTestLayoutTest.groovy` em `src/test/groovy/run-archetype-post-generate-tests.groovy` (36 → 38 suites)
-- [ ] T068 [P] Atualizar `src/test/archetype-post-generate/EntityContractLombokParityTest.groovy`: `gateFiles.size() == 7`; trocar `ContractModel`/`Conformance`/`Coverage` por `ContractJson`/`ContractKeys`/`EntityFields`; manter `getDeclaredFields()` e a paridade Lombok on/off
-- [ ] T069 [P] Atualizar `src/test/archetype-post-generate/SnippetContractSchemaTestTest.groovy`: semear `EnderecoFieldsTest.java` em vez de `MyEntityContractTest.java`; a asserção continua por diretório
+- [X] T064 Criar `src/main/resources/META-INF/archetype_post_generate_generators/generator-04-contract_schema_tests.groovy`: guarda derivada por `src/test/resources/contracts/contract.json`; parse de `custom_entity_attributes_list`, `contract_nested_type_definitions`, `contract_enum_definitions`, `entity_name`, `entity_package_name`, `package` e `enable_custom_entity_attributes`; emitir 15 arquivos no perfil de referência; colisão → `throw` com os dois nomes; reutilizar `resolveEntityPackage` e `writeJavaSourceIfAbsent`; não emitir arquivo com zero testes; deduplicar por tipo; ordem das flags
+- [X] T065 Criar `src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy`: variante completa (15 arquivos), simples (5), scaffold (5) e colisão (exceção com os dois nomes)
+- [X] T066 Criar `src/test/archetype-post-generate/ContractTestLayoutTest.groovy`: varrer os 7 templates fixos e a saída das 3 variantes; máximo 120 linhas por arquivo de teste, 20 por método e 60 por apoio (linhas de código); sem laço dentro de `@Test`, sem estático não-final, sem "And" no nome e sem chamada entre testes
+- [X] T067 Registrar `ContractSchemaTestGeneratorTest.groovy` e `ContractTestLayoutTest.groovy` em `src/test/groovy/run-archetype-post-generate-tests.groovy` (36 → 38 suites)
+- [X] T068 [P] Atualizar `src/test/archetype-post-generate/EntityContractLombokParityTest.groovy`: `gateFiles.size() == 7`; trocar `ContractModel`/`Conformance`/`Coverage` por `ContractJson`/`ContractKeys`/`EntityFields`; manter `getDeclaredFields()` e a paridade Lombok on/off
+- [X] T069 [P] Atualizar `src/test/archetype-post-generate/SnippetContractSchemaTestTest.groovy`: semear `EnderecoFieldsTest.java` em vez de `MyEntityContractTest.java`; a asserção continua por diretório
 
 ### C4 — Flip (portão: 19 arquivos/41 testes, sabotagens = golden)
 

@@ -114,6 +114,8 @@ def allAssets = [[variableAssets, "variables"], [snippetAssets, "snippet"], [gen
 // persisted contract (Constituição, Princípio I), not from a user-facing flag.
 def NON_FLAG_ASSETS = [
         "snippet-20-contract_schema_test.groovy":
+                "derived from the persisted contract, never from a flag",
+        "generator-04-contract_schema_tests.groovy":
                 "derived from the persisted contract, never from a flag"
 ]
 def unresolved = []

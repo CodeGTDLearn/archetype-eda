@@ -15,7 +15,7 @@ def contractDirRelative = "src/test/java/myentity/contract"
 
 def prepare = { File root, boolean withContract, boolean withTestTree ->
     if (withTestTree) {
-        h.seed(root, "${contractDirRelative}/MyEntityContractTest.java", "class Placeholder {}\n")
+        h.seed(root, "${contractDirRelative}/EnderecoFieldsTest.java", "class Placeholder {}\n")
     }
     if (withContract) {
         h.seed(root, "src/test/resources/contracts/contract.json", '{"entityName":"MyEntity"}\n')

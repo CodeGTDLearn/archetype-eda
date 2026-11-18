@@ -24,6 +24,8 @@ List<String> suites = [
         "src/test/archetype-post-generate/TemplateResourceContractTest.groovy",
         "src/test/archetype-post-generate/TemplateGuardSemanticsTest.groovy",
         "src/test/archetype-post-generate/EntityContractLombokParityTest.groovy",
+        "src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy",
+        "src/test/archetype-post-generate/ContractTestLayoutTest.groovy",
         // packaged procedure
         "src/test/archetype-post-generate/ProcedureContractTest.groovy",
         // catalog fragments

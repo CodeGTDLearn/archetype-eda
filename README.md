@@ -435,7 +435,7 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
-| A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 63 fragmentos Groovy (15 `body/` + 25 `variables/` + 3 `generators/` + 20 `snippets/`) |
+| A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 64 fragmentos Groovy (15 `body/` + 25 `variables/` + 4 `generators/` + 20 `snippets/`) |
 | A6 | Compositor do pós-processador | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
 
 * **Montagem:** `ArchetypePostGenerateComposer` (A6) via `groovy-maven-plugin:execute` na fase
@@ -456,7 +456,7 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 | Fase | Plugin | Entrada | Saída |
 |------|--------|---------|-------|
 | `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
-| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 63 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
+| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 64 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
 | `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-archetype-post-generate-tests.groovy` | as suítes unitárias do pós-processador (o build falha se alguma falhar) |
 | `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um com `mvn clean verify` |
 | `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
@@ -480,7 +480,7 @@ TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
 [1] CATÁLOGO         35 property-*.xml + 18 fileset-*.xml + DOCTYPE (53 entities)
                      └─ xml-maven-plugin:transform + archetype-metadata-identity.xsl (generate-resources)
                      
-[2] PÓS-PROCESSADOR  63 fragmentos .groovy
+[2] PÓS-PROCESSADOR  64 fragmentos .groovy
                      └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
                         (local: src/main/groovy/ArchetypePostGenerateComposer.groovy)
                         
@@ -1918,7 +1918,7 @@ fica a cargo do procedimento empacotado no JAR —
 * **OBJETIVO**
   * Manter 1 arquivo final gerado em (`target/classes/META-INF/archetype-post-generate.groovy`) e consumido pelo (`maven-archetype-plugin`)
     durante o pos-processamento do projeto gerado,
-    mas organizado no source em modulos menores (15 arquivos de (`body/`) + 25 de (`variables/`) + 3 de (`generators/`) + 20 de (`snippets/`)).
+    mas organizado no source em modulos menores (15 arquivos de (`body/`) + 25 de (`variables/`) + 4 de (`generators/`) + 20 de (`snippets/`)).
 
 * **MECANISMO**
   * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 4 diretorios.

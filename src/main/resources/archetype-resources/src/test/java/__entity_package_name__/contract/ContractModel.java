@@ -348,7 +348,7 @@ public final class ContractModel {
     private static List<String> normalizeConstants(List<String> values) {
         Set<String> constants = new LinkedHashSet<String>();
         for (String value : values) {
-            String normalized = ContractKeys.stripAccents(value)
+            String normalized = ContractNames.stripAccents(value)
                     .toUpperCase(java.util.Locale.ROOT)
                     .replaceAll("[^A-Z0-9]", "_");
             if (!normalized.isEmpty()) {

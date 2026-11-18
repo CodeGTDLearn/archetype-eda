@@ -17,7 +17,6 @@ public class ${entity_name}ContractTest {
         ${entity_name}ContractCoverageTest.collect(diagnostics);
         ContractNestedTypesTest.collect(diagnostics);
         ContractEnumsTest.collect(diagnostics);
-        ContractRoundTripTest.collect(diagnostics);
         diagnostics.failIfAny(
                 "${entity_name}ContractTest.entityAndContractAreFullyAligned",
                 "src/test/resources/contracts/contract.json");

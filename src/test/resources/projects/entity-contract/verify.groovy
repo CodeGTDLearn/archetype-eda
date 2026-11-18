@@ -180,7 +180,6 @@ if (!schemaTestPackage.isDirectory()) {
         "${expectedEntityName}ContractCoverageTest.java",
         'ContractNestedTypesTest.java',
         'ContractEnumsTest.java',
-        'ContractRoundTripTest.java',
         'ContractModel.java',
         'ContractDiagnostics.java'
 ].each { name ->
@@ -402,13 +401,13 @@ def multipleOutput = assertSabotageFails(
         { sabotageContract.setText(multipleContract, 'UTF-8') },
         ['[ENTITY_TO_CONTRACT] name',
          'endereco.complemento.pontoReferencia.referencia.origem.detalhe.observacaoRenomeada',
-         'total   : 4 divergence(s)']
+         'total   : 3 divergence(s)']
 )
 def multipleAggregate = aggregateBlock(
         multipleOutput, "${expectedEntityName}ContractTest.entityAndContractAreFullyAligned")
 if (!multipleAggregate.contains('[ENTITY_TO_CONTRACT] name |') ||
         !multipleAggregate.contains('endereco.complemento.pontoReferencia.referencia.origem.detalhe.observacaoRenomeada') ||
-        !multipleAggregate.contains('total   : 4 divergence(s)')) {
+        !multipleAggregate.contains('total   : 3 divergence(s)')) {
     throw new IllegalStateException(
         "verify.groovy: two simultaneous divergences were not aggregated into a single failure:\n" +
         multipleAggregate.take(4000))
