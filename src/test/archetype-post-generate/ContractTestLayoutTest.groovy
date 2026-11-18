@@ -72,7 +72,7 @@ def checkSource = { String label, String source, int fileLimit, int supportLimit
 // ---------------------------------------------------------------------------
 def fixedDir = new File("src/main/resources/archetype-resources/src/test/java/__entity_package_name__/contract")
 def fixed = [
-        "EntityFields.java", "ContractNames.java", "ContractKeys.java",
+        "EntityFields.java", "ContractNames.java", "ContractKeys.java", "ContractNavigation.java",
         "ContractJson.java", "ContractAttributes.java",
         "TechnicalIdMappingTest.java", "MalformedContractTest.java",
         "ContractKeyNormalizationTest.java", "ContractKeyDiscardTest.java"
@@ -105,7 +105,7 @@ def props = [
 harness.runGenerator(root, props, "generator-04-contract_schema_tests.groovy")
 File generatedDir = new File(root, "src/test/java/it/pkg/contractentity/contract")
 def generated = generatedDir.listFiles().findAll { it.isFile() && it.name.endsWith(".java") }
-check("2.1 the generator emitted 15 files", generated.size() == 15)
+check("2.1 the generator emitted 17 files", generated.size() == 17)
 generated.each { File file -> checkSource(file.name, file.getText("UTF-8"), 120, 60) }
 
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

@@ -70,9 +70,10 @@ def expectedFull = [
         "ContractTypeMappingTest.java", "EnderecoFieldsTest.java",
         "ComplementoFieldsTest.java", "PontoReferenciaFieldsTest.java",
         "ReferenciaFieldsTest.java", "OrigemFieldsTest.java", "DetalheFieldsTest.java",
-        "StatusEnumTest.java", "UfEnumTest.java"
+        "StatusEnumTest.java", "UfEnumTest.java",
+        "SavedContractNestedKeysTest.java", "SavedContractEnumsMatchTest.java"
 ] as Set
-check("2.1 the full shape emits exactly 15 files", fullFiles.size() == 15)
+check("2.1 the full shape emits exactly 17 files", fullFiles.size() == 17)
 check("2.2 the full shape emits the expected set: ${fullFiles - expectedFull} / ${expectedFull - fullFiles}",
         fullFiles == expectedFull)
 

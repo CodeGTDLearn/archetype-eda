@@ -196,10 +196,21 @@ if (!_contractFile.isFile()) {
         }
         StringBuilder noExtra = _testHeader("NoExtraEntityFieldTest", [_entityFqn])
         noExtra.append("    @Test\n    void entityFieldsAreExactlyTheExpectedSet() {\n")
-        noExtra.append("        assertThat(EntityFields.fieldNames(").append(_entity).append(".class))\n")
-        noExtra.append("                .as(\"declared entity fields\")\n")
-        noExtra.append("                .containsExactlyInAnyOrder(")
-                .append(_expectedEntityFields.collect { '"' + it + '"' }.join(', ')).append(");\n")
+        noExtra.append("        assertNoExtraEntityFields(java.util.Set.of(")
+                .append(_expectedEntityFields.collect { '"' + it + '"' }.join(', ')).append("));\n")
+        noExtra.append("    }\n\n")
+        noExtra.append("    private static void assertNoExtraEntityFields(java.util.Set<String> expected) {\n")
+        noExtra.append("        java.util.List<String> extras = EntityFields.fieldNames(").append(_entity).append(".class).stream()\n")
+        noExtra.append("                .filter(name -> !expected.contains(name)).sorted().toList();\n")
+        noExtra.append("        if (extras.isEmpty()) return;\n")
+        noExtra.append("        StringBuilder message = new StringBuilder();\n")
+        noExtra.append("        for (String name : extras) {\n")
+        noExtra.append("            message.append(\"[ENTITY_TO_CONTRACT] \").append(name)\n")
+        noExtra.append("                    .append(\" | expected: absent | found: \")\n")
+        noExtra.append("                    .append(EntityFields.fieldNamed(").append(_entity).append(".class, name).getType().getSimpleName())\n")
+        noExtra.append("                    .append(\" | kind: EXTRA_FIELD\\n\");\n")
+        noExtra.append("        }\n")
+        noExtra.append("        throw new AssertionError(message.toString());\n")
         noExtra.append("    }\n\n")
         if (_custom) {
             noExtra.append("    @Test\n    void entityHasNoScaffoldFields() {\n")
@@ -268,18 +279,147 @@ if (!_contractFile.isFile()) {
         _emit("ContractRoundTripTest", roundTrip)
 
         // ---- SavedContractMatchesGeneratedModelTest --------------------------
-        def _contractKeys = _attributes.collect { it.name.equalsIgnoreCase('id') ? _techId : it.name }
-        StringBuilder saved = _testHeader("SavedContractMatchesGeneratedModelTest", [])
+        def _savedContractKeys = _attributes.collect { it.name.equalsIgnoreCase('id') ? _techId : it.name }
+        StringBuilder saved = _testHeader("SavedContractMatchesGeneratedModelTest", [_entityFqn])
         saved.append("    @Test\n    void savedContractMatchesTheGeneratedModel() {\n")
-        saved.append("        assertThat(contract.attributes().stream()\n")
+        saved.append("        java.util.Set<String> expected = java.util.Set.of(")
+                .append(_savedContractKeys.collect { '"' + it + '"' }.join(', ')).append(");\n")
+        saved.append("        java.util.Set<String> actual = contract.attributes().stream()\n")
         saved.append("                .map(attribute -> ContractKeys.topLevelName(attribute.key()))\n")
         saved.append("                .filter(java.util.Objects::nonNull)\n")
-        saved.append("                .toList())\n")
-        saved.append("                .as(\"contract keys\")\n")
-        saved.append("                .containsExactlyInAnyOrder(")
-                .append(_contractKeys.collect { '"' + it + '"' }.join(', ')).append(");\n")
+        saved.append("                .collect(java.util.stream.Collectors.toSet());\n")
+        saved.append("        java.util.List<String> lines = new java.util.ArrayList<>();\n")
+        saved.append("        actual.stream().filter(name -> !expected.contains(name)).sorted()\n")
+        saved.append("                .forEach(name -> lines.add(\"[CONTRACT_TO_ENTITY] \" + name\n")
+        saved.append("                        + \" | expected: present | found: absent | kind: MISSING_FIELD\"));\n")
+        saved.append("        expected.stream().filter(name -> !actual.contains(name)).sorted()\n")
+        saved.append("                .forEach(name -> lines.add(\"[ENTITY_TO_CONTRACT] \" + name\n")
+        saved.append("                        + \" | expected: absent | found: \"\n")
+        saved.append("                        + EntityFields.fieldNamed(").append(_entity).append(".class, name).getType().getSimpleName()\n")
+        saved.append("                        + \" | kind: EXTRA_FIELD\"));\n")
+        saved.append("        if (!lines.isEmpty()) {\n")
+        saved.append("            throw new AssertionError(String.join(\"\\n\", lines) + \"\\n\");\n")
+        saved.append("        }\n")
         saved.append("    }\n\n")
         _emit("SavedContractMatchesGeneratedModelTest", saved)
+
+        // ---- paths shared by the nested and enum reconciliation --------------
+        def _paths = [:]
+        def _queue = []
+        _attributes.each { attribute ->
+            if (_nestedNames.contains(attribute.type) && !_paths.containsKey(attribute.type)) {
+                _paths[attribute.type] = attribute.name
+                _queue << attribute.type
+            }
+        }
+        while (!_queue.isEmpty()) {
+            def current = _queue.remove(0)
+            _nestedTypes[current].each { field ->
+                if (_nestedNames.contains(field.type) && !_paths.containsKey(field.type)) {
+                    _paths[field.type] = _paths[current] + "." + field.name
+                    _queue << field.type
+                }
+            }
+        }
+
+        // ---- SavedContractNestedKeysTest -------------------------------------
+        if (!_paths.isEmpty()) {
+            StringBuilder nested = _testHeader("SavedContractNestedKeysTest", [
+                    'tools.jackson.databind.JsonNode'])
+            nested.append("    private static final java.util.Map<String, String> PATHS = new java.util.LinkedHashMap<>();\n")
+            nested.append("    private static final java.util.Map<String, String[]> EXPECTED = new java.util.LinkedHashMap<>();\n\n")
+            nested.append("    static {\n")
+            _paths.each { type, path ->
+                nested.append("        PATHS.put(\"").append(type).append("\", \"").append(path).append("\");\n")
+                def fields = _nestedTypes[type].collect { it.name + ":" + it.type }
+                nested.append("        EXPECTED.put(\"").append(type).append("\", new String[]{")
+                        .append(fields.collect { '"' + it + '"' }.join(', ')).append("});\n")
+            }
+            nested.append("    }\n\n")
+            nested.append("    @Test\n    void nestedKeysMatchTheContract() {\n")
+            nested.append("        checkNestedKeys();\n")
+            nested.append("    }\n\n")
+            nested.append("    private void checkNestedKeys() {\n")
+            nested.append("        java.util.List<String> lines = new java.util.ArrayList<>();\n")
+            nested.append("        for (String type : PATHS.keySet()) {\n")
+            nested.append("            JsonNode object = ContractNavigation.at(contract, PATHS.get(type));\n")
+            nested.append("            if (object == null || !object.isObject()) {\n")
+            nested.append("                lines.add(\"[CONTRACT_TO_ENTITY] \" + PATHS.get(type) + \" | expected: object | found: absent | kind: STRUCTURAL\");\n")
+            nested.append("                continue;\n")
+            nested.append("            }\n")
+            nested.append("            java.util.Set<String> actual = new java.util.LinkedHashSet<>();\n")
+            nested.append("            object.properties().forEach(entry -> {\n")
+            nested.append("                String name = ContractKeys.nestedName(entry.getKey());\n")
+            nested.append("                if (name != null) actual.add(name);\n")
+            nested.append("            });\n")
+            nested.append("            java.util.Map<String, String> expected = new java.util.LinkedHashMap<>();\n")
+            nested.append("            for (String field : EXPECTED.get(type)) {\n")
+            nested.append("                String[] parts = field.split(\":\");\n")
+            nested.append("                expected.put(parts[0], parts[1]);\n")
+            nested.append("            }\n")
+            nested.append("            for (String key : actual) {\n")
+            nested.append("                if (!expected.containsKey(key)) lines.add(\"[CONTRACT_TO_ENTITY] \" + PATHS.get(type) + \".\" + key\n")
+            nested.append("                        + \" | expected: \" + valueType(object.get(key)) + \" | found: absent | kind: MISSING_FIELD\");\n")
+            nested.append("            }\n")
+            nested.append("            for (String field : expected.keySet()) {\n")
+            nested.append("                if (!actual.contains(field)) lines.add(\"[ENTITY_TO_CONTRACT] \" + PATHS.get(type) + \".\" + field\n")
+            nested.append("                        + \" | expected: absent | found: \" + expected.get(field) + \" | kind: EXTRA_FIELD\");\n")
+            nested.append("            }\n")
+            nested.append("        }\n")
+            nested.append("        if (!lines.isEmpty()) throw new AssertionError(String.join(\"\\n\", lines) + \"\\n\");\n")
+            nested.append("    }\n\n")
+            nested.append("    private static String valueType(JsonNode value) {\n")
+            nested.append("        if (value == null || value.isNull()) return \"NULL\";\n")
+            nested.append("        if (value.isBoolean()) return \"Boolean\";\n")
+            nested.append("        if (value.isIntegralNumber()) return value.canConvertToInt() ? \"Integer\" : \"Long\";\n")
+            nested.append("        if (value.isFloatingPointNumber()) return \"Double\";\n")
+            nested.append("        if (value.isObject()) return \"Object\";\n")
+            nested.append("        if (value.isArray()) return \"Array\";\n")
+            nested.append("        return \"String\";\n")
+            nested.append("    }\n\n")
+            _emit("SavedContractNestedKeysTest", nested)
+        }
+
+        // ---- SavedContractEnumsMatchTest -------------------------------------
+        if (!_enumOrder.isEmpty()) {
+            def enumImports = _enumOrder.collect { _enums[it].nested ? _entityPackage + ".nested." + it : _entityPackage + "." + it }
+            StringBuilder enums = _testHeader("SavedContractEnumsMatchTest",
+                    ['tools.jackson.databind.JsonNode'] + enumImports)
+            enums.append("    @Test\n    void contractEnumConstantsMatchTheEntity() {\n")
+            enums.append("        java.util.List<String> lines = new java.util.ArrayList<>();\n")
+            _enumOrder.each { type ->
+                def enumPaths = _attributes.findAll { it.type == type }.collect { it.name }
+                _nestedOrder.each { nestedType ->
+                    if (_paths.containsKey(nestedType)) {
+                        _nestedTypes[nestedType].each { field ->
+                            if (field.type == type) enumPaths << (_paths[nestedType] + "." + field.name)
+                        }
+                    }
+                }
+                if (!enumPaths.isEmpty()) {
+                    enums.append("        check(lines, ").append(type).append(".class, ")
+                            .append(enumPaths.collect { '"' + it + '"' }.join(', ')).append(");\n")
+                }
+            }
+            enums.append("        if (!lines.isEmpty()) throw new AssertionError(String.join(\"\\n\", lines) + \"\\n\");\n")
+            enums.append("    }\n\n")
+            enums.append("    private void check(java.util.List<String> lines, Class<? extends Enum<?>> type, String... paths) {\n")
+            enums.append("        java.util.List<String> entity = java.util.Arrays.stream(type.getEnumConstants()).map(Enum::name).toList();\n")
+            enums.append("        java.util.Set<String> contractConstants = new java.util.LinkedHashSet<>();\n")
+            enums.append("        for (String path : paths) {\n")
+            enums.append("            JsonNode value = ContractNavigation.at(contract, path);\n")
+            enums.append("            if (value == null) continue;\n")
+            enums.append("            if (value.isArray()) value.forEach(element -> { if (element.isTextual()) contractConstants.add(element.asText()); });\n")
+            enums.append("            else if (value.isTextual()) contractConstants.add(value.asText());\n")
+            enums.append("        }\n")
+            enums.append("        java.util.List<String> contractList = new java.util.ArrayList<>(contractConstants);\n")
+            enums.append("        if (!new java.util.HashSet<>(contractList).equals(new java.util.HashSet<>(entity))) {\n")
+            enums.append("            for (String path : paths) lines.add(\"[CONTRACT_TO_ENTITY] \" + path\n")
+            enums.append("                    + \" | expected: \" + contractList + \" | found: \" + entity + \" | kind: ENUM_CONSTANT_MISMATCH\");\n")
+            enums.append("        }\n")
+            enums.append("    }\n\n")
+            _emit("SavedContractEnumsMatchTest", enums)
+        }
 
         // ---- ContractTypeMappingTest -----------------------------------------
         StringBuilder types = _testHeader("ContractTypeMappingTest", [
@@ -313,6 +453,11 @@ if (!_contractFile.isFile()) {
         types.append("            if (attribute.value() != null && attribute.value().isArray()\n")
         types.append("                    && !isEnumArray(attribute.value())) return \"String\";\n")
         types.append("            return simple;\n")
+        types.append("        }\n")
+        types.append("        if (attribute.value() != null && attribute.value().isArray()) {\n")
+        types.append("            return isEnumArray(attribute.value())\n")
+        types.append("                    ? EXPECTED.getOrDefault(ContractKeys.topLevelName(attribute.key()), \"String\")\n")
+        types.append("                    : \"String\";\n")
         types.append("        }\n")
         types.append("        if (attribute.value() != null && attribute.value().isObject()) {\n")
         types.append("            return ContractKeys.typeName(attribute.key());\n")

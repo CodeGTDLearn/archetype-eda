@@ -77,16 +77,16 @@ if (new File(_contractGateRoot, 'project').isDirectory()) {
 _contractGateProjects.each { _cgProject ->
     def _cgTestJava = new File(_cgProject, 'src/test/java')
     if (!_cgTestJava.isDirectory()) return
-    def _cgOrphans = []
+    def _cgOrphanDirs = []
     _cgTestJava.eachFileRecurse { _cgFile ->
-        if (_cgFile.isFile() && _cgFile.name.endsWith('ContractTest.java')
-                && _cgFile.path.replace('\\', '/').contains('/contract/')) {
-            _cgOrphans << _cgFile
+        if (_cgFile.isDirectory() && _cgFile.name == 'contract'
+                && _cgFile.path.replace('\\', '/').contains('/src/test/java/')) {
+            _cgOrphanDirs << _cgFile
         }
     }
-    if (!_cgOrphans.isEmpty()) {
+    if (!_cgOrphanDirs.isEmpty()) {
         throw new IllegalStateException(
-            "verify.groovy: orphan contract schema test in ${_cgProject.path}: ${_cgOrphans*.name}")
+            "verify.groovy: orphan contract schema test package in ${_cgProject.path}: ${_cgOrphanDirs*.path}")
     }
 }
 

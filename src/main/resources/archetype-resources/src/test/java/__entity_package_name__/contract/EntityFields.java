@@ -23,18 +23,28 @@ public final class EntityFields {
     }
 
     public static void assertFieldType(Class<?> owner, String name, Class<?> expected) {
-        Field field = required(owner, name);
+        Field field = fieldNamed(owner, name);
+        if (field == null) {
+            throw new AssertionError("[CONTRACT_TO_ENTITY] " + name + " | expected: "
+                    + expected.getSimpleName() + " | found: absent | kind: MISSING_FIELD");
+        }
         if (!field.getType().equals(expected)) {
-            throw new AssertionError("field '" + name + "' has type "
-                    + field.getType().getSimpleName() + ", expected " + expected.getSimpleName());
+            throw new AssertionError("[CONTRACT_TO_ENTITY] " + name + " | expected: "
+                    + expected.getSimpleName() + " | found: " + field.getType().getSimpleName()
+                    + " | kind: TYPE_MISMATCH");
         }
     }
 
     public static void assertFieldTypeName(Class<?> owner, String name, String expected) {
-        Field field = required(owner, name);
+        Field field = fieldNamed(owner, name);
+        if (field == null) {
+            throw new AssertionError("[CONTRACT_TO_ENTITY] " + name + " | expected: "
+                    + expected + " | found: absent | kind: MISSING_FIELD");
+        }
         if (!field.getType().getSimpleName().equals(expected)) {
-            throw new AssertionError("field '" + name + "' has type "
-                    + field.getType().getSimpleName() + ", expected " + expected);
+            throw new AssertionError("[CONTRACT_TO_ENTITY] " + name + " | expected: "
+                    + expected + " | found: " + field.getType().getSimpleName()
+                    + " | kind: TYPE_MISMATCH");
         }
     }
 
@@ -44,13 +54,5 @@ public final class EntityFields {
             names.add(field.getName());
         }
         return names;
-    }
-
-    private static Field required(Class<?> owner, String name) {
-        Field field = fieldNamed(owner, name);
-        if (field == null) {
-            throw new AssertionError("field '" + name + "' is absent from " + owner.getSimpleName());
-        }
-        return field;
     }
 }

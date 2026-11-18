@@ -300,10 +300,10 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 ### C4 — Flip (portão: 19 arquivos/41 testes, sabotagens = golden)
 
-- [ ] T070 Remover os 8 templates antigos de `contract/`: `__entity_name__ContractTest.java`, `__entity_name__ContractConformanceTest.java`, `__entity_name__ContractCoverageTest.java`, `ContractNestedTypesTest.java`, `ContractEnumsTest.java`, `ContractRoundTripTest.java` (o fixo), `ContractModel.java` e `ContractDiagnostics.java`; não tocar em `snippet-20`
-- [ ] T071 Atualizar `src/test/resources/projects/entity-contract/verify.groovy`: derivar a lista das flags (19 testes + 3 apoio); exigir 19 relatórios/41 testes com 0 falhas/erros; preservar as 9 sabotagens; substituir `aggregateBlock` pela leitura do surefire e preservar a ordem `alfa` < `zeta`; comparar as linhas de divergência com o golden; remover a expectativa `total   : 4 divergence(s)` do cenário 7.9
-- [ ] T072 Adicionar `entity_contract_file_path` em `src/test/resources/projects/custom-nested-objects/archetype.properties` e `src/test/resources/projects/custom-enums-from-payload/archetype.properties`; trocar a asserção de ausência por presença + surefire verde nos respectivos `verify.groovy`; atualizar o cabeçalho `# FIXTURE SIGNATURE` das duas fixtures
-- [ ] T073 Nos 19 `src/test/resources/projects/*/verify.groovy` restantes, trocar o glob `*ContractTest.java` por asserção do diretório `contract/` sob `src/test/java`; não alterar as demais asserções
+- [X] T070 Remover os 8 templates antigos de `contract/`: `__entity_name__ContractTest.java`, `__entity_name__ContractConformanceTest.java`, `__entity_name__ContractCoverageTest.java`, `ContractNestedTypesTest.java`, `ContractEnumsTest.java`, `ContractRoundTripTest.java` (o fixo), `ContractModel.java` e `ContractDiagnostics.java`; não tocar em `snippet-20`
+- [X] T071 Atualizar `src/test/resources/projects/entity-contract/verify.groovy`: derivar a lista das flags (19 testes + 3 apoio); exigir 19 relatórios/41 testes com 0 falhas/erros; preservar as 9 sabotagens; substituir `aggregateBlock` pela leitura do surefire e preservar a ordem `alfa` < `zeta`; comparar as linhas de divergência com o golden; remover a expectativa `total   : 4 divergence(s)` do cenário 7.9
+- [X] T072 Adicionar `entity_contract_file_path` em `src/test/resources/projects/custom-nested-objects/archetype.properties` e `src/test/resources/projects/custom-enums-from-payload/archetype.properties`; trocar a asserção de ausência por presença + surefire verde nos respectivos `verify.groovy`; atualizar o cabeçalho `# FIXTURE SIGNATURE` das duas fixtures
+- [X] T073 Nos 19 `src/test/resources/projects/*/verify.groovy` restantes, trocar o glob `*ContractTest.java` por asserção do diretório `contract/` sob `src/test/java`; não alterar as demais asserções
 
 ### C5 — Documentação
 

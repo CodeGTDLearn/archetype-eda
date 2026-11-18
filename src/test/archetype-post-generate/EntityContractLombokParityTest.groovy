@@ -153,7 +153,7 @@ check("4.3 Lombok OFF keeps the explicit accessors and constructors",
 def gateDir = new File(resources,
         "src/test/java/__entity_package_name__/contract")
 def gateFiles = gateDir.listFiles().findAll { File entry -> entry.isFile() }
-check("5.0 the contract gate templates exist", gateFiles.size() == 16)
+check("5.0 the contract gate templates exist", gateFiles.size() == 10)
 
 def gateSources = gateFiles.collectEntries { File entry -> [entry.name, entry.getText("UTF-8")] }
 def lombokUses = gateSources.findAll { String name, String text ->
@@ -174,9 +174,8 @@ check("5.3 the contract model reads attributes/fields with the documented preced
 check("5.4 the entity coverage test reflects on declared fields",
         gateSources["EntityFields.java"] != null &&
                 gateSources["EntityFields.java"].contains("getDeclaredFields()"))
-check("5.5 the conformance test reflects on declared fields",
-        gateSources["__entity_name__ContractConformanceTest.java"] != null &&
-                gateSources["__entity_name__ContractConformanceTest.java"].contains("getDeclaredFields()"))
+check("5.5 the navigation support exists for nested reconciliation",
+        gateSources["ContractNavigation.java"] != null)
 check("5.6 the round-trip test is strict Jackson",
         new File("src/main/resources/META-INF/archetype_post_generate_generators/generator-04-contract_schema_tests.groovy").isFile() &&
                 new File("src/main/resources/META-INF/archetype_post_generate_generators/generator-04-contract_schema_tests.groovy").getText("UTF-8").contains("FAIL_ON_UNKNOWN_PROPERTIES"))
