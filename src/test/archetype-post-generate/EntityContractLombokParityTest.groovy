@@ -153,7 +153,7 @@ check("4.3 Lombok OFF keeps the explicit accessors and constructors",
 def gateDir = new File(resources,
         "src/test/java/__entity_package_name__/contract")
 def gateFiles = gateDir.listFiles().findAll { File entry -> entry.isFile() }
-check("5.0 the contract gate templates exist", gateFiles.size() == 8)
+check("5.0 the contract gate templates exist", gateFiles.size() == 15)
 
 def gateSources = gateFiles.collectEntries { File entry -> [entry.name, entry.getText("UTF-8")] }
 def lombokUses = gateSources.findAll { String name, String text ->
@@ -168,12 +168,12 @@ def accessorUses = gateSources.findAll { String name, String text ->
 check("5.2 no contract gate template calls entity accessors: ${accessorUses}", accessorUses.isEmpty())
 
 check("5.3 the contract model reads attributes/fields with the documented precedence",
-        gateSources["ContractModel.java"] != null &&
-                gateSources["ContractModel.java"].contains('"attributes"') &&
-                gateSources["ContractModel.java"].contains('"fields"'))
+        gateSources["ContractJson.java"] != null &&
+                gateSources["ContractJson.java"].contains('"attributes"') &&
+                gateSources["ContractJson.java"].contains('"fields"'))
 check("5.4 the entity coverage test reflects on declared fields",
-        gateSources["__entity_name__ContractCoverageTest.java"] != null &&
-                gateSources["__entity_name__ContractCoverageTest.java"].contains("getDeclaredFields()"))
+        gateSources["EntityFields.java"] != null &&
+                gateSources["EntityFields.java"].contains("getDeclaredFields()"))
 check("5.5 the conformance test reflects on declared fields",
         gateSources["__entity_name__ContractConformanceTest.java"] != null &&
                 gateSources["__entity_name__ContractConformanceTest.java"].contains("getDeclaredFields()"))

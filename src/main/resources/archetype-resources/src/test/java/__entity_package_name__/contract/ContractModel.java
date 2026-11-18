@@ -1,15 +1,11 @@
 package ${package}.${entity_package_name}.contract;
 
 import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.json.JsonMapper;
-import java.io.InputStream;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,12 +19,7 @@ import java.util.Set;
  */
 public final class ContractModel {
 
-    public static final String CONTRACT_RESOURCE = "/contracts/contract.json";
     public static final int MAX_DEPTH = 25;
-
-    private static final Set<String> META_KEYS = new HashSet<String>(Arrays.asList(
-            "entity_name", "entityName", "entity", "package", "entity_package_name",
-            "description", "attributes", "fields"));
 
     private static final Set<String> JAVA_LANG_TYPES = new HashSet<String>(Arrays.asList(
             "String", "Integer", "Long", "Double", "Float", "Short", "Byte", "Boolean",
@@ -38,15 +29,6 @@ public final class ContractModel {
             "List", "Map", "Set", "Date", "BigDecimal", "BigInteger", "UUID", "Optional",
             "Collection", "Iterable", "Queue", "Deque", "LocalDate", "LocalDateTime",
             "LocalTime", "Instant", "Duration", "Period", "ZonedDateTime", "OffsetDateTime"));
-
-    private static final Set<String> JAVA_KEYWORDS = new HashSet<String>(Arrays.asList(
-            "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char",
-            "class", "const", "continue", "default", "do", "double", "else", "enum",
-            "extends", "final", "finally", "float", "for", "goto", "if", "implements",
-            "import", "instanceof", "int", "interface", "long", "native", "new",
-            "package", "private", "protected", "public", "return", "short", "static",
-            "strictfp", "super", "switch", "synchronized", "this", "throw", "throws",
-            "transient", "try", "void", "volatile", "while", "true", "false", "null"));
 
     /** Non-fatal warnings already emitted (the model is loaded once per test class). */
     private static final Set<String> EMITTED_WARNINGS = new HashSet<String>();
@@ -119,78 +101,20 @@ public final class ContractModel {
 
     /** The technical identity field name, derived exactly like the entity template. */
     public static String idFieldName() {
-        String name = "${entity_name}";
-        String base = name.substring(0, 1).toLowerCase(Locale.ROOT) + name.substring(1);
-        if (name.equals(name.toUpperCase(Locale.ROOT))) {
-            base = name.toLowerCase(Locale.ROOT);
-        }
-        return base + "Id";
+        return ContractKeys.idFieldName();
     }
 
     public static ContractModel load() {
-        try (InputStream in = ContractModel.class.getResourceAsStream(CONTRACT_RESOURCE)) {
-            if (in == null) {
-                throw new IllegalStateException(
-                        "CONTRACT STRUCTURAL FAILURE: test resource " + CONTRACT_RESOURCE + " not found");
-            }
-            JsonNode root = JsonMapper.builder().build().readTree(in);
-            if (root == null || !root.isObject()) {
-                throw new IllegalStateException(
-                        "CONTRACT STRUCTURAL FAILURE: the contract root must be a JSON object");
-            }
-            return new ContractModel(readEntityName(root), readAttributes(root));
-        } catch (IllegalStateException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new IllegalStateException(
-                    "CONTRACT STRUCTURAL FAILURE: cannot read " + CONTRACT_RESOURCE
-                            + " - " + e.getMessage(), e);
-        }
-    }
-
-    private static String readEntityName(JsonNode root) {
-        for (String key : Arrays.asList("entity_name", "entityName", "entity")) {
-            JsonNode node = root.get(key);
-            if (node != null && node.isTextual()) {
-                return node.asText();
-            }
-        }
-        return "";
-    }
-
-    private static List<Attribute> readAttributes(JsonNode root) {
-        JsonNode collection = root.has("attributes") ? root.get("attributes")
-                : (root.has("fields") ? root.get("fields") : null);
+        ContractJson json = ContractJson.load();
         List<Raw> raws = new ArrayList<Raw>();
-
-        if (collection != null) {
-            if (collection.isObject()) {
-                for (Map.Entry<String, JsonNode> entry : collection.properties()) {
-                    raws.add(new Raw(entry.getKey(), entry.getValue(), null, null));
-                }
-            } else if (collection.isArray()) {
-                for (JsonNode item : collection) {
-                    if (item.isTextual()) {
-                        raws.add(new Raw(item.asText(), null, null, null));
-                    } else if (item.isObject()) {
-                        String key = firstText(item, "name", "attribute", "field");
-                        JsonNode value = item.has("value") ? item.get("value")
-                                : (item.has("default") ? item.get("default") : null);
-                        String declaredType = item.has("type") ? item.get("type").asText() : null;
-                        List<String> constants = arrayOf(item.has("enumValues")
-                                ? item.get("enumValues") : item.get("values"));
-                        raws.add(new Raw(key, value, declaredType, constants));
-                    }
-                }
-            }
-        } else {
-            for (Map.Entry<String, JsonNode> entry : root.properties()) {
-                if (!META_KEYS.contains(entry.getKey())) {
-                    raws.add(new Raw(entry.getKey(), entry.getValue(), null, null));
-                }
-            }
+        for (ContractJson.Attribute attribute : json.attributes()) {
+            raws.add(new Raw(attribute.key(), attribute.value(),
+                    attribute.declaredType(), attribute.explicitConstants()));
         }
+        return new ContractModel(json.entityName(), buildAll(raws));
+    }
 
+    private static List<Attribute> buildAll(List<Raw> raws) {
         List<Attribute> result = new ArrayList<Attribute>();
         Set<String> used = new LinkedHashSet<String>();
         for (Raw raw : raws) {
@@ -249,9 +173,9 @@ public final class ContractModel {
                     return new Attribute(path, javaName, Kind.ENUM, declared, constants, null);
                 }
             }
-            // regras-02 §5: a project type over an array that is not an enum
+            // regras-02 Â§5: a project type over an array that is not an enum
             // falls back to String, exactly like the inference that produced
-            // the entity. regras-03 §1: only an object WITHOUT a declared type
+            // the entity. regras-03 Â§1: only an object WITHOUT a declared type
             // becomes a POJO, so a declared project type over an object is a
             // reference to an existing class and is validated by name only.
             if (raw.value != null && raw.value.isArray()) {
@@ -264,7 +188,7 @@ public final class ContractModel {
 
         if (raw.explicitConstants != null && !raw.explicitConstants.isEmpty()) {
             List<String> constants = normalizeConstants(raw.explicitConstants);
-            return new Attribute(path, javaName, Kind.ENUM, pascalCase(contractKey), constants, null);
+            return new Attribute(path, javaName, Kind.ENUM, nestedTypeName(contractKey), constants, null);
         }
 
         JsonNode value = raw.value;
@@ -290,7 +214,7 @@ public final class ContractModel {
                 for (JsonNode element : value) {
                     values.add(element.asText());
                 }
-                return new Attribute(path, javaName, Kind.ENUM, pascalCase(contractKey),
+                return new Attribute(path, javaName, Kind.ENUM, nestedTypeName(contractKey),
                         normalizeConstants(values), null);
             }
             warn("attribute '" + path + "' is an array that is not an enum; falling back to String");
@@ -329,87 +253,15 @@ public final class ContractModel {
     }
 
     private static String topLevelFieldName(String key) {
-        String normalized = stripAccents(key);
-        if (normalized.matches("^[a-z][a-zA-Z0-9_]*$")) {
-            return normalized;
-        }
-        return null;
+        return ContractKeys.topLevelName(key);
     }
 
     private static String nestedFieldName(String key) {
-        String camel = camelCase(key);
-        if (camel == null || camel.isEmpty()) {
-            return null;
-        }
-        if (JAVA_KEYWORDS.contains(camel)) {
-            return camel + "_";
-        }
-        return camel;
-    }
-
-    static String camelCase(String key) {
-        String normalized = stripAccents(key);
-        StringBuilder out = new StringBuilder();
-        boolean upperNext = false;
-        for (int i = 0; i < normalized.length(); i++) {
-            char c = normalized.charAt(i);
-            if (Character.isLetterOrDigit(c)) {
-                if (out.length() == 0) {
-                    out.append(Character.toLowerCase(c));
-                } else if (upperNext) {
-                    out.append(Character.toUpperCase(c));
-                } else {
-                    out.append(c);
-                }
-                upperNext = false;
-            } else {
-                upperNext = out.length() > 0;
-            }
-        }
-        if (out.length() == 0 || !Character.isJavaIdentifierStart(out.charAt(0))) {
-            return null;
-        }
-        for (int i = 1; i < out.length(); i++) {
-            if (!Character.isJavaIdentifierPart(out.charAt(i))) {
-                return null;
-            }
-        }
-        return out.toString();
-    }
-
-    static String pascalCase(String key) {
-        String normalized = stripAccents(key);
-        StringBuilder out = new StringBuilder();
-        boolean upperNext = true;
-        for (int i = 0; i < normalized.length(); i++) {
-            char c = normalized.charAt(i);
-            if (Character.isLetterOrDigit(c)) {
-                out.append(upperNext ? Character.toUpperCase(c) : c);
-                upperNext = false;
-            } else {
-                upperNext = out.length() > 0;
-            }
-        }
-        if (out.length() == 0) {
-            return "Type";
-        }
-        String name = out.toString();
-        if (JAVA_KEYWORDS.contains(lowerFirst(name))) {
-            name = name + "Type";
-        }
-        if (Character.isDigit(name.charAt(0))) {
-            name = "Type" + name;
-        }
-        return name;
+        return ContractKeys.nestedName(key);
     }
 
     private static String nestedTypeName(String key) {
-        return pascalCase(key);
-    }
-
-    private static String stripAccents(String value) {
-        String decomposed = Normalizer.normalize(value, Normalizer.Form.NFD);
-        return decomposed.replaceAll("\\p{M}", "");
+        return ContractKeys.typeName(key);
     }
 
     private static String simpleName(String declared) {
@@ -496,8 +348,8 @@ public final class ContractModel {
     private static List<String> normalizeConstants(List<String> values) {
         Set<String> constants = new LinkedHashSet<String>();
         for (String value : values) {
-            String normalized = stripAccents(value)
-                    .toUpperCase(Locale.ROOT)
+            String normalized = ContractKeys.stripAccents(value)
+                    .toUpperCase(java.util.Locale.ROOT)
                     .replaceAll("[^A-Z0-9]", "_");
             if (!normalized.isEmpty()) {
                 constants.add(normalized);
@@ -506,31 +358,10 @@ public final class ContractModel {
         return new ArrayList<String>(constants);
     }
 
-    private static List<String> arrayOf(JsonNode node) {
-        if (node == null || !node.isArray()) {
-            return null;
-        }
-        List<String> values = new ArrayList<String>();
-        for (JsonNode item : node) {
-            values.add(item.asText());
-        }
-        return values;
-    }
-
-    private static String firstText(JsonNode node, String... keys) {
-        for (String key : keys) {
-            JsonNode value = node.get(key);
-            if (value != null && value.isTextual()) {
-                return value.asText();
-            }
-        }
-        return null;
-    }
-
     static String lowerFirst(String value) {
         if (value == null || value.isEmpty()) {
             return value;
         }
-        return value.substring(0, 1).toLowerCase(Locale.ROOT) + value.substring(1);
+        return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 }

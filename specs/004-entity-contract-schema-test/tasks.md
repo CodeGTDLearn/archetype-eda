@@ -276,18 +276,18 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 ### C1 — Golden (antes de qualquer template)
 
-- [ ] T055 [P] Capturar o golden antes de tocar em templates: rodar a matriz de 9 sabotagens atual do `entity-contract` e gravar as linhas de divergência em `src/test/resources/projects/entity-contract/expected/divergences.txt`, agrupadas por cenário (`# 7.1` … `# 7.9`), no formato `[DIRECTION] path | expected: X | found: Y | kind: K`; o cenário 7.3 (JSON corrompido) fica fora do golden e mantém a asserção de prefixo `CONTRACT STRUCTURAL FAILURE`; verificação: arquivo presente e build atual 22/22
+- [X] T055 [P] Capturar o golden antes de tocar em templates: rodar a matriz de 9 sabotagens atual do `entity-contract` e gravar as linhas de divergência em `src/test/resources/projects/entity-contract/expected/divergences.txt`, agrupadas por cenário (`# 7.1` … `# 7.9`), no formato `[DIRECTION] path | expected: X | found: Y | kind: K`; o cenário 7.3 (JSON corrompido) fica fora do golden e mantém a asserção de prefixo `CONTRACT STRUCTURAL FAILURE`; verificação: arquivo presente e build atual 22/22
 
 ### C2 — Apoio e delegação (portão: 22/22, veredito idêntico)
 
-- [ ] T056 [P] Criar `contract/EntityFields.java` com `fieldNamed`, `assertFieldType`, `assertFieldTypeName` e `fieldNames`, usando `getDeclaredFields()`; máximo 60 linhas de código (sem `package`, `import`, linha em branco ou comentário)
-- [ ] T057 [P] Criar `contract/ContractKeys.java` extraindo a normalização do `ContractModel`: `topLevelName` (`id` em qualquer caixa → `<entidade>Id`; stripAccents + lowerFirst; inválido → `null`), `nestedName` (camelCase + `_` para palavra reservada), `typeName` (PascalCase; palavra reservada → `Type`) e `discarded`; máximo 60 linhas; D16
-- [ ] T058 [P] Criar `contract/ContractJson.java` com `load`, `parse`, `entityName` e `attributes`: aceitar `attributes` objeto, lista de objetos, lista de strings, `fields` e topo, com precedência `attributes` > `fields` > topo; excluir as meta-chaves; imutável; máximo 60 linhas
-- [ ] T059 Refatorar `contract/ContractModel.java` para delegar a `ContractJson`, `ContractKeys` e `EntityFields`, sem mudar o veredito; os 6 testes antigos continuam verdes; portão: `mvn -o clean install` com 22/22 e a sabotagem do `entity-contract` com o mesmo diagnóstico
-- [ ] T060 [P] Criar `contract/TechnicalIdMappingTest.java` com 3 testes: o campo técnico existe, é `Long` e não existe campo comum `id`
-- [ ] T061 [P] Criar `contract/MalformedContractTest.java` com 2 testes via `ContractJson.parse`: JSON inválido e raiz não-objeto, ambos com `CONTRACT STRUCTURAL FAILURE`; não carregar o contrato em `@BeforeAll`
-- [ ] T062 [P] Criar `contract/ContractKeyNormalizationTest.java` com 4 testes: acento (`endereço` → `endereco`), camelCase aninhado, caixa (`Name` → `name`) e grafias de `id` (`ID` → `<entidade>Id`)
-- [ ] T063 [P] Criar `contract/ContractKeyDiscardTest.java` com 1 teste: chave que permanece inválida após a normalização é descartada
+- [X] T056 [P] Criar `contract/EntityFields.java` com `fieldNamed`, `assertFieldType`, `assertFieldTypeName` e `fieldNames`, usando `getDeclaredFields()`; máximo 60 linhas de código (sem `package`, `import`, linha em branco ou comentário)
+- [X] T057 [P] Criar `contract/ContractKeys.java` extraindo a normalização do `ContractModel`: `topLevelName` (`id` em qualquer caixa → `<entidade>Id`; stripAccents + lowerFirst; inválido → `null`), `nestedName` (camelCase + `_` para palavra reservada), `typeName` (PascalCase; palavra reservada → `Type`) e `discarded`; máximo 60 linhas; D16
+- [X] T058 [P] Criar `contract/ContractJson.java` com `load`, `parse`, `entityName` e `attributes`: aceitar `attributes` objeto, lista de objetos, lista de strings, `fields` e topo, com precedência `attributes` > `fields` > topo; excluir as meta-chaves; imutável; máximo 60 linhas
+- [X] T059 Refatorar `contract/ContractModel.java` para delegar a `ContractJson`, `ContractKeys` e `EntityFields`, sem mudar o veredito; os 6 testes antigos continuam verdes; portão: `mvn -o clean install` com 22/22 e a sabotagem do `entity-contract` com o mesmo diagnóstico
+- [X] T060 [P] Criar `contract/TechnicalIdMappingTest.java` com 3 testes: o campo técnico existe, é `Long` e não existe campo comum `id`
+- [X] T061 [P] Criar `contract/MalformedContractTest.java` com 2 testes via `ContractJson.parse`: JSON inválido e raiz não-objeto, ambos com `CONTRACT STRUCTURAL FAILURE`; não carregar o contrato em `@BeforeAll`
+- [X] T062 [P] Criar `contract/ContractKeyNormalizationTest.java` com 4 testes: acento (`endereço` → `endereco`), camelCase aninhado, caixa (`Name` → `name`) e grafias de `id` (`ID` → `<entidade>Id`)
+- [X] T063 [P] Criar `contract/ContractKeyDiscardTest.java` com 1 teste: chave que permanece inválida após a normalização é descartada
 
 ### C3 — Gerador e suites (portão: 38 suites, 22/22)
 
