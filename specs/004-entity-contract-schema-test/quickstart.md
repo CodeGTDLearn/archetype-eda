@@ -21,8 +21,8 @@ mvn clean integration-test -Darchetype.test.projectsDirectory=target/it-single
 
 **Esperado** no `verify.groovy`:
 1. pacote `contract/` presente na aplicação gerada;
-2. `target/surefire-reports` da aplicação contém `<Entidade>ContractTest` com 0 falhas/erros;
-3. cópia sabotada falha `mvnw test` com mensagem nomeando atributo e sentido.
+2. `target/surefire-reports` da aplicação contém 19 relatórios e 41 testes, com 0 falhas/erros;
+3. cópia sabotada falha `mvnw test` com uma falha por divergência, nomeando atributo e sentido.
 
 ## 3. Frente 01 manual
 
@@ -31,7 +31,7 @@ mvn archetype:generate -DarchetypeGroupId=com.eda-archetype -DarchetypeArtifactI
   -DgroupId=archetype.it -DartifactId=demo-contract -Dversion=0.1-SNAPSHOT -Dpackage=it.pkg `
   -Dentity_contract_file_path=src/test/resources/projects/entity-contract/sample-contract.json `
   -Denable_folder_src_test_java=true -Denable_custom_entity_attributes=true `
-  -Dcustom_entity_attributes_list=Long:id,String:name,Boolean:active,Endereco:endereco,Status:status `
+  -Dcustom_entity_attributes_list=Long:id,String:name,Boolean:active,Endereco:endereco,Status:status,String:tags,Status:previousStatus `
   -Dcontract_nested_type_definitions="Endereco|logradouro:String,numero:Integer,uf:Uf,complemento:Complemento;Complemento|descricao:String,pontoReferencia:PontoReferencia;PontoReferencia|descricao:String,distanciaMetros:Integer,referencia:Referencia;Referencia|nome:String,origem:Origem;Origem|bairro:String,detalhe:Detalhe;Detalhe|codigo:String,observacao:String" `
   -Dcontract_enum_definitions="Status:ATIVO|CANCELADO;nested.Uf:SP|RJ" `
   -Dentity_name=ContractEntity -Dentity_package_name=contractentity -DinteractiveMode=false
@@ -40,9 +40,9 @@ mvn archetype:generate -DarchetypeGroupId=com.eda-archetype -DarchetypeArtifactI
 No módulo:
 
 ```powershell
-cd demo-contract; ./mvnw test        # 1) verde: classes do pacote contract executadas
+cd demo-contract; ./mvnw test        # 1) verde: 19 arquivos / 41 testes do pacote contract executados
 # renomeie/remova um campo da entidade OU edite contracts/contract.json
-./mvnw test                          # 2) vermelho: falha agregada com atributo/tipo/sentido
+./mvnw test                          # 2) vermelho: uma falha por divergência, com atributo/tipo/sentido
 ./mvnw test                          # 3) verde novamente após corrigir
 ```
 
@@ -50,7 +50,7 @@ cd demo-contract; ./mvnw test        # 1) verde: classes do pacote contract exec
 
 Gerar sem `entity_contract_file_path`/`none`, ou com `enable_folder_src_test_java=false`:
 
-**Esperado**: pacote `contract/` ausente; `mvn test` da aplicação verde. (Também assegurado por 21 `verify.groovy`.)
+**Esperado**: pacote `contract/` ausente; `mvn test` da aplicação verde. (Também assegurado pelos 19 `verify.groovy` que verificam a ausência pelo diretório `contract/`.)
 
 ## 5. Lombok on/off
 
@@ -64,7 +64,7 @@ Revisão manual do README (não há comando de build envolvido):
 2. O `<summary>` deve exibir `Contratos📜: a 'Fonte da Verdade' do Módulo da API`, sem título interno repetindo o nome.
 3. O conteúdo deve ter seis itens numerados, nesta ordem: 1) Raciocínio central; 2) O que faz; 3) Como funciona; 4) Para quem serve; 5) Quando ele existe; 6) Detalhes técnicos.
 4. O item 1 deve abrir com o ciclo fechado (desenho da tela → contrato → módulo da API → tela) e conter o diagrama em bloco `text`, com a seta de retorno da TELA ao DESENHO.
-5. O link de **Detalhes técnicos** para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* deve abrir a seção existente, que permanece inalterada.
+5. O link de **Detalhes técnicos** para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* deve abrir a seção existente, que preserva título, âncora, premissa, ativação, regras espelhadas e nota de JSON; apenas os 4 bullets técnicos (contagem/nomes, forma da falha, perfis de prova e agregação) refletem o desenho novo.
 6. Nenhuma menção duplicada do mecanismo de contrato (inferência/formato/flags) dentro do subtópico.
 
 **Esperado**: os seis itens conferem; nenhuma outra seção do README alterada.

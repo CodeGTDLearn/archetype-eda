@@ -24,15 +24,15 @@ Contrato comportamental do artefato da Frente 01. Consumido pelo `verify.groovy`
 
 1. **Contrato→Entidade**: todo atributo efetivo existe como campo declarado, com o tipo esperado, recursivo em aninhados.
 2. **Entidade→Contrato**: nenhum campo foge ao contrato, exceto `<entidade>Id` e o scaffold `username/password` quando o contrato não tem atributos.
-3. **Tipo**: `type` declarado (`java.lang`/projeto) vence; rejeitado → estimativa; sem tipo → estimativa; arrays: MAIÚSCULAS → enum, resto → `String`.
+3. **Tipo**: o tipo efetivo vem das flags que geraram a entidade; `ContractTypeMappingTest` aplica a precedência de FR-007 ao `type` declarado aceito (`java.lang`/tipo do projeto) e o compara com o tipo efetivo. `type` rejeitado (ex.: `java.time.Clock`) é ignorado; a inferência por valor permanece no mecanismo de geração (D17).
 4. **Id**: `id` do contrato ≡ `<entidade>Id` (`Long`).
 5. **Enum**: nome do tipo derivado + conjunto de constantes.
-6. **Round-trip**: visão normalizada (nomes Java; `id` → `<entidade>Id`) desserializada com `FAIL_ON_UNKNOWN_PROPERTIES=true` e re-serializada; conjuntos de chaves e hierarquia iguais.
+6. **Round-trip**: payload sintético com nomes Java (`id` → `<entidade>Id`) desserializado com `FAIL_ON_UNKNOWN_PROPERTIES=true` e re-serializado; conjuntos de chaves e hierarquia iguais.
 7. **Lombok**: veredito idêntico on/off (introspecção de campos).
 
-## 4. Falha agregada
+## 4. Falha por divergência
 
-Uma única falha por classe de teste; corpo = lista determinística:
+Uma falha por divergência, no teste que a detectou; o arquivo de regra agrupa as suas. Cada falha carrega:
 
 ```text
 [<direction>] <path> | expected: <expected> | found: <found|absent> | kind: <kind>
@@ -41,15 +41,17 @@ Uma única falha por classe de teste; corpo = lista determinística:
 - `direction`: `CONTRACT_TO_ENTITY` | `ENTITY_TO_CONTRACT`
 - `path`: caminho hierárquico (ex.: `endereco.uf`) ou `<contract>` em falha estrutural
 - `kind`: `MISSING_FIELD`, `EXTRA_FIELD`, `TYPE_MISMATCH`, `ENUM_NAME_MISMATCH`, `ENUM_CONSTANT_MISMATCH`, `STRUCTURAL`
-- ordem: ordem do contrato; excedentes por nome (determinismo JVM-safe)
+- ordem: determinística dentro do arquivo (`@TestMethodOrder(MethodName.class)`); o surefire não garante ordem global entre classes
 - cabeçalho: classe/método que falhou + `src/test/resources/contracts/contract.json`
+- falha estrutural: uma vez por arquivo (`@BeforeAll`), prefixo `CONTRACT STRUCTURAL FAILURE`; `MalformedContractTest` testa o parser diretamente
 
 ## 5. Verificação (Frente 02 — o archetype não interpreta contrato)
 
 | Prova | Onde |
 |---|---|
 | presença/ausência por condição | `SnippetContractSchemaTestTest.groovy` (harness) |
-| execução verde na app gerada | `entity-contract/verify.groovy`: relatório surefire da app com `<Entidade>ContractTest`, 0 falhas/erros |
-| sabotagem falha com diagnóstico | `entity-contract/verify.groovy`: cópia em temp + adulteração + `mvnw test` aninhado → exit ≠ 0 e mensagem |
-| ausência nos perfis sem contrato | 21 `verify.groovy` |
+| execução verde na app gerada | `entity-contract/verify.groovy`: 19 relatórios surefire e 41 testes, 0 falhas/erros |
+| execução em outro formato | `custom-nested-objects/verify.groovy` e `custom-enums-from-payload/verify.groovy`: presença + surefire verde |
+| sabotagem falha com diagnóstico | `entity-contract/verify.groovy`: cópia em temp + adulteração + `mvnw test` aninhado → exit ≠ 0 e mensagem; golden em `expected/divergences.txt` |
+| ausência nos perfis sem contrato | 19 `verify.groovy`, pelo diretório `contract/` (nunca por glob de nome) |
 | zero dependência nova | diff do `pom.xml` da app gerada |

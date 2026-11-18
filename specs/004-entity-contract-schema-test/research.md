@@ -71,7 +71,7 @@ Tabela consolidada (regras-02 §1–2, §5): `type` declarado `java.lang` (FQN r
 
 ## R11 — Múltiplas classes e remoção atômica
 
-- **Decision**: 6 classes de teste (entrada, conformidade, cobertura, aninhados, enums, round-trip) + 2 de apoio no pacote `contract`; a guarda remove o **diretório** inteiro.
+- **Decision**: 6 classes de teste (entrada, conformidade, cobertura, aninhados, enums, round-trip) + 2 de apoio no pacote `contract`; a guarda remove o **diretório** inteiro. *(Superada em 2026-11-18: ver R15 — 7 fixos + 15 gerados.)*
 - **Rationale**: responsabilidade única e legibilidade (instrução do mantenedor); remoção continua atômica.
 - **Alternatives**: classe única (instrução anterior, substituída); helpers fora do pacote (violaria III).
 
@@ -89,13 +89,61 @@ Tabela consolidada (regras-02 §1–2, §5): `type` declarado `java.lang` (FQN r
 
 ## R14 — Documentação da feature no README
 
-- **Decision**: subtópico **Contratos** dentro do tópico existente **Funcionalidades** (`README.md`, `<details><summary><strong> Funcionalidades 🛠️ </strong></summary>` na linha 2642), no mesmo padrão `<details>`/`<summary>` do restante do README. Título no `<summary>`: `Contratos📜: a 'Fonte da Verdade' do Módulo da API`; o ícone 📜 é decorativo e o nome canônico é **Contratos: a 'Fonte da Verdade' do Módulo da API**. Sem título interno repetindo o nome. Conteúdo em seis itens numerados: 1) Raciocínio central; 2) O que faz; 3) Como funciona; 4) Para quem serve; 5) Quando ele existe; 6) Detalhes técnicos. O item 1 abre com o ciclo fechado (desenho da tela → contrato → módulo da API → tela) e traz diagrama em bloco `text`, no padrão do "Grafo de dependências". Linguagem simples, frases curtas, **sem** tutorial passo a passo e **sem** reexplicar o mecanismo de contrato; link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO*, que permanece intacta.
+- **Decision**: subtópico **Contratos** dentro do tópico existente **Funcionalidades** (`README.md`, `<details><summary><strong> Funcionalidades 🛠️ </strong></summary>` na linha 2642), no mesmo padrão `<details>`/`<summary>` do restante do README. Título no `<summary>`: `Contratos📜: a 'Fonte da Verdade' do Módulo da API`; o ícone 📜 é decorativo e o nome canônico é **Contratos: a 'Fonte da Verdade' do Módulo da API**. Sem título interno repetindo o nome. Conteúdo em seis itens numerados: 1) Raciocínio central; 2) O que faz; 3) Como funciona; 4) Para quem serve; 5) Quando ele existe; 6) Detalhes técnicos. O item 1 abre com o ciclo fechado (desenho da tela → contrato → módulo da API → tela) e traz diagrama em bloco `text`, no padrão do "Grafo de dependências". Linguagem simples, frases curtas, **sem** tutorial passo a passo e **sem** reexplicar o mecanismo de contrato; link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO*, que preserva título, âncora e propósito; os 4 bullets técnicos são atualizados (R22).
 - **Rationale**: FR-019..FR-023, revisadas no clarify de 2026-11-18 (a decisão de 2026-11-17 sobre nome canônico e conteúdo fica superada). O README já usa `<details>` como padrão de leitura e o subtópico "Funcionalidades" é o encaixe natural; evitar duplicação mantém uma única fonte por assunto.
 - **Alternatives**: mover o conteúdo de 2.1 para o subtópico (descartado — FR-023 manda manter); duplicar (duas versões divergentes); documentar o mecanismo de contrato inteiro (descartado — FR-022); manter título interno repetindo o nome (descartado — duplicação dentro do mesmo bloco).
 
+## R15 - Divisão entre camada fixa e camada gerada
+
+- **Decision**: 7 arquivos fixos (4 de teste + 3 de apoio) por Velocity e 15 arquivos de teste emitidos pelo `generator-04` no perfil de referência. `ContractRoundTripTest` é gerado.
+- **Rationale**: o payload do round-trip depende dos tipos das flags; mantê-lo fixo exigiria reintroduzir a inferência de tipo que o refactor remove. Os 15 gerados cobrem exatamente o que varia com o contrato.
+- **Alternatives**: 8 fixos (exigiria inferência); gerar os 18 (perderia a legibilidade dos templates Velocity); 18 fixos (impossível sem hardcode).
+
+## R16 - `ContractJson` em ≤60 linhas de código
+
+- **Decision**: Java 17 (streams e text blocks) e apoio em 3 classes: `EntityFields`, `ContractJson`, `ContractKeys`.
+- **Rationale**: FR-026/FR-027; o antigo `ContractModel` (491 linhas) concentrava cinco responsabilidades. A contagem exclui `package`, `import`, linhas em branco e comentários.
+- **Alternatives**: quatro classes de apoio (contraria a leitura de FR-027); elevar o limite (contraria a spec).
+
+## R17 - `@BeforeAll` sem estado estático mutável
+
+- **Decision**: `@TestInstance(PER_CLASS)` + `@BeforeAll` não estático + campos de instância.
+- **Rationale**: FR-013 (falha estrutural uma vez por arquivo) + FR-026 (sem estático mutável).
+- **Alternatives**: `static` + `@BeforeAll` (viola FR-026); `@BeforeEach` (carrega o contrato N vezes).
+
+## R18 - Golden por multiconjunto
+
+- **Decision**: `expected/divergences.txt` com uma linha por divergência; comparação por multiconjunto; ordem verificada por arquivo; cenário estrutural por prefixo.
+- **Rationale**: o surefire não garante ordem global entre classes; a mensagem do parser é volátil entre versões do Jackson.
+- **Alternatives**: dump completo (frágil); só fragmentos (não prova equivalência).
+
+## R19 - Colisão explícita
+
+- **Decision**: pré-computar os nomes; `writeJavaSourceIfAbsent == null` ⇒ `throw` com os dois nomes.
+- **Rationale**: FR-025; o comportamento atual (aviso + skip) esconderia a colisão.
+- **Alternatives**: aviso + skip (atual); sobrescrever (perde trabalho do usuário).
+
+## R20 - Ausência por diretório
+
+- **Decision**: os 19 `verify.groovy` procuram o diretório `contract/` sob `src/test/java`.
+- **Rationale**: o glob `*ContractTest.java` deixa de casar com os novos nomes — nenhum arquivo termina em `ContractTest.java`.
+- **Alternatives**: listar nomes fixos (quebraria com contrato variável); manter o glob (falso negativo).
+
+## R21 - `ContractTestLayoutTest`
+
+- **Decision**: uma suite lê os 7 templates e roda o gerador nas 3 variantes; mede linhas de código, tamanho de método, laço dentro de `@Test`, estático não-final, "And" no nome e chamada entre testes.
+- **Rationale**: FR-026/SC-010; sem medição, "legível" é opinião.
+- **Alternatives**: só revisão manual; só o verify da fixture (não cobre os templates).
+
+## R22 - Bullets da seção 2.1
+
+- **Decision**: os 4 bullets técnicos (2026, 2027, 2030, 2031) são atualizados; título, âncora, premissa, ativação, regras espelhadas e nota de JSON ficam intactos.
+- **Rationale**: FR-023 revisada; os bullets descreviam 8 classes e falha agregada.
+- **Alternatives**: não tocar (contradição com a FR-012); reescrever a seção (perde a referência de testabilidade).
+
 ## Decisões reaproveitadas da rodada anterior (ainda válidas)
 
-- Reflexão de campos declarados (imune a Lombok); Jackson já presente; teste lê o contrato do classpath; falha agregada e determinística; sabotagem não cria fixture.
+- Reflexão de campos declarados (imune a Lombok); Jackson já presente; teste lê o contrato do classpath; sabotagem não cria fixture. **Exceção**: a falha agregada foi substituída por uma falha por divergência (FR-012, 2026-11-18).
 
 ## Achado factual
 

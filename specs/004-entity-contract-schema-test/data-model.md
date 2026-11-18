@@ -1,44 +1,55 @@
-# Data Model: Gate de Conformidade Entidade–Contrato (replan)
+# Data Model: Gate de Conformidade Entidade–Contrato (delta 2026-11-18)
 
-**Feature**: `004-entity-contract-schema-test` | **Date**: 2026-11-13
+**Feature**: `004-entity-contract-schema-test` | **Date**: 2026-11-13 | **Updated**: 2026-11-18
 
 ## A. Pacote de teste gerado (`<pkg>.<entity_package>.contract`)
 
-| Classe | Papel | Roda como teste? |
-|---|---|---|
-| `<Entidade>ContractTest` | entrada JUnit 5; agrega as divergências de todas as direções numa única falha | sim |
-| `<Entidade>ContractConformanceTest` | contrato→entidade: campos, tipos, id técnico | sim |
-| `<Entidade>ContractCoverageTest` | entidade→contrato: nenhum campo clandestino (exceto id e scaffold) | sim |
-| `ContractNestedTypesTest` | recursão nos POJOs de `.nested` (2+ níveis, limite 25) | sim |
-| `ContractEnumsTest` | nome do tipo derivado + conjunto de constantes | sim |
-| `ContractRoundTripTest` | round-trip estrito Jackson (`FAIL_ON_UNKNOWN_PROPERTIES=true`) | sim |
-| `ContractModel` | leitura + normalização do contrato (visão efetiva) | não (apoio) |
-| `ContractDiagnostics` | coleta de divergências + formatação da mensagem | não (apoio) |
+| Arquivo | Papel | Roda como teste? | Origem |
+|---|---|---|---|
+| `TechnicalIdMappingTest` | `id` do contrato ↔ `<entidade>Id`; sem `id` comum | sim | Velocity |
+| `MalformedContractTest` | falha estrutural explícita, sem skip | sim | Velocity |
+| `ContractKeyNormalizationTest` | acento, camelCase, caixa, grafias de `id` | sim | Velocity |
+| `ContractKeyDiscardTest` | chave inválida descartada | sim | Velocity |
+| `EntityFields` | leitura de campo declarado (apoio) | não | Velocity |
+| `ContractJson` | leitura do contrato (apoio) | não | Velocity |
+| `ContractKeys` | normalização de chaves (apoio) | não | Velocity |
+| `SimpleAttributeFieldsTest` | atributos simples da entidade | sim | `generator-04` |
+| `NestedAttributeReferenceTest` | referência a tipo aninhado | sim | `generator-04` |
+| `EnumAttributeReferenceTest` | referência a enum | sim | `generator-04` |
+| `NoExtraEntityFieldTest` | nenhum campo fora do conjunto esperado | sim | `generator-04` |
+| `ContractRoundTripTest` | payload sintético entra e sai sem perder chave | sim | `generator-04` |
+| `SavedContractMatchesGeneratedModelTest` | contrato salvo × modelo gerado (chaves) | sim | `generator-04` |
+| `ContractTypeMappingTest` | `type` declarado aceito × tipo efetivo das flags | sim | `generator-04` |
+| `<Tipo>FieldsTest` | campos de cada POJO aninhado | sim | `generator-04` |
+| `<Enum>EnumTest` | constantes de cada enum | sim | `generator-04` |
+| `ScaffoldFieldsTest` | `username`/`password` no ramo sem atributos | sim | `generator-04` (condicional) |
 
-Remoção: a guarda apaga o diretório `contract` inteiro.
+**Perfil de referência**: 19 arquivos de teste, 41 testes, 3 de apoio.
+**Remoção**: a guarda (`snippet-20`) apaga o diretório `contract` inteiro quando não há contrato persistido.
 
-## B. Modelo de contrato (runtime do teste)
+## B. Modelo de contrato em runtime
 
-### ContractDocument
+### ContractJson
 
 | Campo | Tipo | Regra |
 |---|---|---|
-| `entityName` | `String` | `entity_name` > `entityName` > `entity`; meta-chave |
-| `attributes` / `fields` | `ObjectNode` \| `ArrayNode` | precedência `attributes` > `fields` > topo |
-| topo | `ObjectNode` | atributos quando não há coleção; meta-chaves excluídas |
+| `entityName` | `String` | `entity_name` > `entityName` > `entity` |
+| `attributes` | `List<Attribute>` | precedência `attributes` > `fields` > topo; meta-chaves excluídas |
+| `Attribute.key` | `String` | chave bruta do contrato |
+| `Attribute.value` | `JsonNode` | valor bruto (sem inferência de tipo) |
+| `Attribute.declaredType` | `String` | `type` declarado, quando houver |
+| `Attribute.explicitConstants` | `List<String>` | `enumValues` / `values`, quando houver |
 
-Meta-chaves: `entity_name`, `entityName`, `entity`, `package`, `entity_package_name`, `description`, `attributes`, `fields`.
+`ContractJson` carrega uma vez por arquivo (ver D15), é imutável e expõe `load()` e `parse(String)` (este último para a falha estrutural).
 
-### EffectiveAttribute
+### ContractKeys
 
-| Campo | Tipo | Regra |
-|---|---|---|
-| `contractPath` | `String` | ex.: `endereco.complemento.descricao` |
-| `javaName` | `String` | camelCase em aninhados; tipo do projeto nomeia; grafias de `id` descartadas |
-| `expectedJavaType` | `String` | simples; aninhados = FQN `<pkg>.<entity_package>.nested.<Tipo>` |
-| `kind` | enum | `VALUE`, `NESTED`, `ENUM`, `PROJECT_TYPE` |
-| `enumConstants` | `List<String>` | `enumValues` > `values` > valor observado |
-| `children` | `List<EffectiveAttribute>` | recursivo; profundidade > 25 → `String` |
+| Método | Regra |
+|---|---|
+| `topLevelName(key)` | `id` (qualquer caixa) → `<entidade>Id`; senão `stripAccents` + `lowerFirst`; válido se `^[a-z][a-zA-Z0-9_]*$`; senão `null` |
+| `nestedName(key)` | camelCase; palavra reservada ganha sufixo `_`; senão `null` |
+| `typeName(key)` | PascalCase; palavra reservada ganha `Type`; vazio → `Type` |
+| `discarded(key)` | `true` quando o nome aplicável é `null` |
 
 ### DivergenceRecord
 
@@ -50,35 +61,68 @@ Meta-chaves: `entity_name`, `entityName`, `entity`, `package`, `entity_package_n
 | `found` | `String` (`absent` quando ausente) |
 | `kind` | `MISSING_FIELD`, `EXTRA_FIELD`, `TYPE_MISMATCH`, `ENUM_NAME_MISMATCH`, `ENUM_CONSTANT_MISMATCH`, `STRUCTURAL` |
 
-### Regras de comparação
+Uma divergência = uma falha. O arquivo de regra agrupa as suas; não há agregador entre arquivos (FR-012).
 
-- **Campos**: `Class.getDeclaredFields()` (nunca getters) → imune a Lombok.
-- **Id**: `id` do contrato ≡ `<entidade>Id` (`Long`); sempre excluído de ENTITY_TO_CONTRACT.
-- **Scaffold**: contrato sem atributos efetivos ⇒ excluir `username` e `password` de ENTITY_TO_CONTRACT (R10).
-- **Aninhados**: FQN do campo é carregado e comparado recursivamente; mesmo nome simples da entidade não ambíguo (ex.: `nested.Pedido` vs entidade `Pedido`).
-- **Enums**: nome do tipo + constantes; sem tolerar remoção/renomeação em um dos lados.
-- **Round-trip**: visão normalizada com nomes Java (id → `<entidade>Id`), `FAIL_ON_UNKNOWN_PROPERTIES=true`, re-serialização e comparação de conjuntos de chaves/hierarquia.
+## C. Modelo de geração (flags)
 
-## C. Artefatos do archetype
+| Flag | Uso no `generator-04` |
+|---|---|
+| `custom_entity_attributes_list` | atributos simples; `id` é técnico e não vira teste simples |
+| `contract_nested_type_definitions` | um `<Tipo>FieldsTest` por tipo e os campos de cada um |
+| `contract_enum_definitions` | um `<Enum>EnumTest` por tipo; `nested.` resolve para o subpacote |
+| `enable_custom_entity_attributes` | gera `ScaffoldFieldsTest` e escolhe o ramo do `NoExtraEntityFieldTest` |
+| `entity_name` | nome da entidade e campo técnico `<entidade>Id` |
+| `entity_package_name` | pacote de destino do pacote `contract` |
+
+**Regras de emissão**:
+
+- Ordem das flags é a ordem de emissão (determinística).
+- Tipo sem pacote na flag é comparado por nome simples; `java.lang`, pacote da entidade e `nested` usam `Class<?>`.
+- Nenhum arquivo com zero testes.
+- Colisão de nome de arquivo ⇒ exceção explícita com os dois nomes; nunca sobrescrever.
+
+## D. Artefatos do archetype
 
 | Artefato | Caminho | Papel |
 |---|---|---|
-| `SchemaTestTemplateSet` | `archetype-resources/src/test/java/__entity_package_name__/contract/*.java` | materializa o pacote de teste; interpola só `${package}`, `${entity_package_name}`, `${entity_name}` |
-| `RemovalGuard` | `snippets/snippet-20-contract_schema_test.groovy` | remove `<srcTestJava>/<entity pkg>/contract` quando `contract.json` não existe; loga decisão |
-| `GuardSuite` | `src/test/archetype-post-generate/SnippetContractSchemaTestTest.groovy` | prova remoção/presença por condição no harness |
-| `FixtureAsserts` | `entity-contract/verify.groovy` | presença + surefire verde + sabotagem |
-| `AbsenceAsserts` | 21 `verify.groovy` | ausência da classe nos perfis sem contrato |
+| `SchemaTestTemplateSet` | `archetype-resources/src/test/java/__entity_package_name__/contract/*.java` | 7 arquivos fixos (4 de teste + 3 de apoio) |
+| `SchemaTestGenerator` | `generators/generator-04-contract_schema_tests.groovy` | 15 arquivos derivados das flags |
+| `RemovalGuard` | `snippets/snippet-20-contract_schema_test.groovy` | remove o pacote inteiro quando não há contrato |
+| `GuardSuite` | `src/test/archetype-post-generate/SnippetContractSchemaTestTest.groovy` | prova remoção/presença por diretório |
+| `GeneratorSuite` | `src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy` | 3 variações + colisão |
+| `LayoutSuite` | `src/test/archetype-post-generate/ContractTestLayoutTest.groovy` | limites 120/20/60 e regras de forma |
+| `FixtureAsserts` | `entity-contract/verify.groovy` | 19 arquivos derivados, 41 testes, 9 sabotagens, golden |
+| `PresenceAsserts` | `custom-nested-objects/verify.groovy`, `custom-enums-from-payload/verify.groovy` | presença + surefire verde |
+| `AbsenceAsserts` | 19 `verify.groovy` | ausência pelo diretório `contract/` |
 
-## D. Mapeamento FR → design
+## E. Mapeamento FR → design
 
 | FR | Onde |
 |---|---|
-| FR-001/FR-002 | `RemovalGuard` + `GuardSuite` |
-| FR-004/FR-006 | `ContractConformanceTest`, `ContractCoverageTest` |
-| FR-007 | `ContractModel` (precedência de tipo) |
-| FR-008 | `ContractModel` + `ContractConformanceTest` (id) |
-| FR-009 | `ContractModel` (normalização/descarte) |
-| FR-010 | `ContractNestedTypesTest`, `ContractEnumsTest` |
-| FR-011 | comparação por campos declarados |
-| FR-012/FR-013 | `ContractDiagnostics` + `ContractRoundTripTest` |
-| FR-014..FR-018 | `FixtureAsserts`, `AbsenceAsserts`, matriz 22, pom |
+| FR-001/FR-002 | `RemovalGuard` + `GuardSuite` + condição do `generator-04` |
+| FR-004/FR-006 | `<Tipo>FieldsTest`, `SimpleAttributeFieldsTest`, `NoExtraEntityFieldTest` |
+| FR-007 | `generator-04` (tipos das flags) + `ContractTypeMappingTest` + `EntityFields` |
+| FR-008 | `TechnicalIdMappingTest` + `ContractKeys` |
+| FR-009 | `ContractKeys` + `ContractKeyNormalizationTest` + `ContractKeyDiscardTest` |
+| FR-010 | `<Tipo>FieldsTest` + `<Enum>EnumTest` |
+| FR-011 | comparação por campos declarados (`EntityFields`) |
+| FR-012/FR-013 | uma falha por divergência; `@BeforeAll` + `MalformedContractTest` |
+| FR-014..FR-018 | `FixtureAsserts`, `PresenceAsserts`, matriz 22, pom |
+| FR-019..FR-023 | README + 2.1 (4 bullets) |
+| FR-024 | tabela da seção A |
+| FR-025 | `generator-04` + `ContractSchemaTestGeneratorTest` |
+| FR-026 | `ContractTestLayoutTest` |
+| FR-027 | 3 classes de apoio |
+| FR-028 | nome do arquivo = sujeito; nome do método = caso |
+| FR-029 | `ContractSchemaTestGeneratorTest` (3 variações) |
+
+## F. Regras de comparação
+
+- **Campos**: `Class.getDeclaredFields()` (nunca getters) → imune a Lombok.
+- **Id**: `id` do contrato ≡ `<entidade>Id` (`Long`); sempre excluído de ENTITY_TO_CONTRACT.
+- **Scaffold**: contrato sem atributos efetivos ⇒ `username` e `password` permitidos em ENTITY_TO_CONTRACT.
+- **Aninhados**: um arquivo por tipo; o tipo esperado é resolvido para `Class<?>` quando o pacote é conhecido.
+- **Enums**: nome do tipo + conjunto de constantes; sem tolerar remoção/renomeação em um dos lados.
+- **Tipo declarado**: `ContractTypeMappingTest` aplica a precedência de FR-007 ao `type` aceito (`java.lang`/tipo do projeto) e compara com o tipo efetivo das flags; a inferência por valor permanece no mecanismo de geração (D17).
+- **Round-trip**: payload sintético com nomes Java (`id` → `<entidade>Id`), `FAIL_ON_UNKNOWN_PROPERTIES=true`, re-serialização e comparação do conjunto de chaves.
+- **Ordem**: `@TestMethodOrder(MethodOrderer.MethodName.class)` nos arquivos com mais de um teste.
