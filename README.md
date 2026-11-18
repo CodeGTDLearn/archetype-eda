@@ -2641,29 +2641,61 @@ enable_folder_src_test_java = true
 
 <details><summary><strong> Funcionalidades 🛠️ </strong></summary>
 
-  <details style="margin-left: 2em;"><summary><strong> Contratos 🛠️ </strong></summary>
+  <details style="margin-left: 2em;"><summary><strong> Contratos📜: a 'Fonte da Verdade' do Módulo da API </strong></summary>
 
-  <strong>Teste de Conformidade Entidade–Contrato</strong>
+  * **1. Raciocínio central**:
+    * o contrato nasce do desenho da tela (Design de Front-End) e é a fonte da verdade do módulo da API que alimenta essa tela.
+    * a entidade é a classe que representa esse módulo: a expressão programática do contrato.
+    * o ciclo é: desenho da tela → contrato → módulo da API → tela.
+    * é um ciclo fechado: cada etapa depende da anterior.
+    * se a entidade se separar do contrato, o ciclo se rompe.
+    * a tela passa a receber dado errado, incompleto ou nenhum dado.
+    * por isso a conferência protege o ciclo, e não apenas confere campos.
 
-  * **O que faz**: 
-    * toda aplicação gerada que recebe um contrato salvo já nasce com um teste automático que confere, a cada execução dos testes do projeto, se a entidade continua fiel ao contrato. 
-    * Se alguém alterar a entidade ou o contrato e os dois deixarem de combinar, o teste falha e aponta qual campo divergiu, o motivo e o sentido da diferença.
+  ```text
+        DESENHO DA TELA
+               │
+               │ 1. o desenho diz o que a tela precisa
+               ▼
+           CONTRATO   ◄── fonte da verdade do módulo
+               │
+               │ 2. o contrato diz o que o módulo entrega
+               ▼
+         MÓDULO DA API
+               │
+               │ 3. o módulo entrega os dados
+               ▼
+              TELA
+               │
+               │ 4. a tela pede ajuste
+               └──────────────► volta ao desenho: o ciclo recomeça
+  ```
 
-  * **Como funciona**: 
-    * o teste lê o próprio contrato que foi salvo no projeto e compara com a entidade campo por campo. 
-    * A conferência vale nos dois sentidos: nenhum item do contrato pode faltar na entidade e nenhum item da entidade pode sobrar em relação ao contrato. 
-    * Objetos que contêm outros objetos e listas de valores fixos também são conferidos. 
-    * Quando há mais de um problema, todos aparecem juntos em uma única mensagem, em ordem previsível.
+  * **2. O que faz**:
+    * quando há contrato salvo e a pasta de testes habilitada, a aplicação nasce com um teste automático.
+    * a cada execução, ele confere se a entidade continua fiel ao contrato.
+    * se alguém mudar um dos dois, o teste falha.
+    * a falha aponta o campo, o motivo e o sentido da diferença.
 
-  * **Para quem serve**: 
-    * para quem usa o módulo gerado, é a garantia de que a entidade e o contrato não se desencontram com o tempo; 
-    * para quem mantém o archetype, é a garantia de que todo módulo novo sai com essa conferência já funcionando.
+  * **3. Como funciona**:
+    * o teste lê o contrato salvo no próprio projeto.
+    * depois compara com a entidade, campo por campo.
+    * vale nos dois sentidos: nada do contrato pode faltar; nada da entidade pode sobrar.
+    * objetos dentro de objetos e listas de valores fixos também entram na conferência.
+    * havendo vários problemas, todos aparecem juntos, em ordem previsível.
 
-  * **Quando ele existe**: 
-    * apenas quando o projeto é gerado com a pasta de testes habilitada e com o contrato salvo. 
-    * Sem contrato, o teste não é criado e o projeto segue compilando e passando normalmente.
+  * **4. Para quem serve**:
+    * para quem usa o módulo gerado: entidade e contrato não se desencontram com o tempo.
+    * para quem mantém o archetype: todo módulo novo já sai com a conferência funcionando.
+    * para o front-end: os dados que chegam continuam sendo os combinados no desenho.
 
-  * **Detalhes técnicos** (onde o teste vive, o que ele cobre e como a entrega é provada): [Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO](#21-schema-test-entidade-contrato-gerado-na-aplicacao).
+  * **5. Quando ele existe**:
+    * apenas quando a pasta de testes está habilitada e o contrato foi salvo.
+    * sem contrato, o teste não é criado.
+    * nesse caso, o projeto segue compilando e passando normalmente.
+
+  * **6. Detalhes técnicos**:
+    * onde o teste vive, o que cobre e como a entrega é provada: [Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO](#21-schema-test-entidade-contrato-gerado-na-aplicacao).
 
   </details>
 

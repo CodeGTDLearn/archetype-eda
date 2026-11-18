@@ -248,11 +248,11 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 **Arquivo único**: `README.md` — tarefas sequenciais (mesmo bloco de texto)
 
-- [ ] T049 Substituir o bloco do subtópico **Contratos** em `README.md` (tópico **Funcionalidades**, linhas 2644–2668) pelo formato `<details style="margin-left: 2em;"><summary><strong> Contratos📜: a 'Fonte da Verdade' do Módulo da API </strong></summary>` … `</details>`, removendo o título interno que repetia o nome, per FR-020
-- [ ] T050 Escrever o item 1 **Raciocínio central**: ciclo fechado desenho da tela (Design de Front-End) → contrato → módulo da API → tela, deixando explícito que a conferência não é um mero teste de conformidade, com diagrama em bloco de código text (DESENHO DA TELA → CONTRATO → MÓDULO DA API → TELA, com seta de retorno), per FR-021, Session 2026-11-18
-- [ ] T051 Escrever os itens 2 a 5 — **O que faz**, **Como funciona**, **Para quem serve**, **Quando ele existe** — em frases curtas, uma ideia por linha, sem jargão e sem tutorial, nomeando os dois públicos no item 4 e sem reexplicar o mecanismo no item 3, per FR-019, FR-021, FR-022
-- [ ] T052 Escrever o item 6 **Detalhes técnicos** com o link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* (texto e href inalterados), sem alterar a seção 2.1, per FR-022, FR-023
-- [ ] T053 Validar a documentação conforme `quickstart.md` §6 (6 itens) e confirmar por `git diff` que apenas o bloco do subtópico mudou no `README.md`, per quickstart §6, FR-019..FR-023
+- [X] T049 Substituir o bloco do subtópico **Contratos** em `README.md` (tópico **Funcionalidades**, linhas 2644–2668) pelo formato `<details style="margin-left: 2em;"><summary><strong> Contratos📜: a 'Fonte da Verdade' do Módulo da API </strong></summary>` … `</details>`, removendo o título interno que repetia o nome, per FR-020
+- [X] T050 Escrever o item 1 **Raciocínio central**: ciclo fechado desenho da tela (Design de Front-End) → contrato → módulo da API → tela, deixando explícito que a conferência não é um mero teste de conformidade, com diagrama em bloco de código text (DESENHO DA TELA → CONTRATO → MÓDULO DA API → TELA, com seta de retorno), per FR-021, Session 2026-11-18
+- [X] T051 Escrever os itens 2 a 5 — **O que faz**, **Como funciona**, **Para quem serve**, **Quando ele existe** — em frases curtas, uma ideia por linha, sem jargão e sem tutorial, nomeando os dois públicos no item 4 e sem reexplicar o mecanismo no item 3, per FR-019, FR-021, FR-022
+- [X] T052 Escrever o item 6 **Detalhes técnicos** com o link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* (texto e href inalterados), sem alterar a seção 2.1, per FR-022, FR-023
+- [X] T053 Validar a documentação conforme `quickstart.md` §6 (6 itens) e confirmar por `git diff` que apenas o bloco do subtópico mudou no `README.md`, per quickstart §6, FR-019..FR-023
 
 **Checkpoint**: documentação publicada e verificada; nenhuma outra seção do README alterada
 
