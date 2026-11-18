@@ -61,11 +61,13 @@ Repetir o cenário 3 com `enable_lombok_support=true|false`: veredito idêntico.
 Revisão manual do README (não há comando de build envolvido):
 
 1. Abrir `README.md` e expandir **Funcionalidades** → deve existir o subtópico **Contratos**, em `<details>`/`<summary>`.
-2. Dentro dele, o título **Teste de Conformidade Entidade–Contrato** e o texto de "o que faz" e "como funciona", sem jargão e sem passo a passo.
-3. O link para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* deve abrir a seção existente, que permanece inalterada.
-4. Nenhuma menção duplicada do mecanismo de contrato (inferência/formato/flags) dentro do subtópico.
+2. O `<summary>` deve exibir `Contratos📜: a 'Fonte da Verdade' do Módulo da API`, sem título interno repetindo o nome.
+3. O conteúdo deve ter seis itens numerados, nesta ordem: 1) Raciocínio central; 2) O que faz; 3) Como funciona; 4) Para quem serve; 5) Quando ele existe; 6) Detalhes técnicos.
+4. O item 1 deve abrir com o ciclo fechado (desenho da tela → contrato → módulo da API → tela) e conter o diagrama em bloco `text`, com a seta de retorno da TELA ao DESENHO.
+5. O link de **Detalhes técnicos** para *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* deve abrir a seção existente, que permanece inalterada.
+6. Nenhuma menção duplicada do mecanismo de contrato (inferência/formato/flags) dentro do subtópico.
 
-**Esperado**: os quatro itens conferem; nenhuma outra seção do README alterada.
+**Esperado**: os seis itens conferem; nenhuma outra seção do README alterada.
 
 ## Referências
 

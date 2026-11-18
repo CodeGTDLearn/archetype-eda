@@ -92,25 +92,26 @@ src/test/resources/projects/
 ├── <21 fixtures sem contrato>/verify.groovy     # MOD: asserção de AUSÊNCIA da classe
 └── README.md                                   # MOD: linha da fixture entity-contract
 
-README.md                                       # MOD: subtópico "Contratos" em "Funcionalidades" (linha 2642)
+README.md                                       # MOD: subtópico "Contratos" em "Funcionalidades" — título no <summary>, 6 itens numerados, diagrama do ciclo
 ```
 
 **Structure Decision**: o artefato é um **pacote de teste** dentro do pacote da entidade; a guarda remove o diretório inteiro, mantendo a remoção atômica com múltiplas classes. O IT reutiliza `entity-contract` (goal `clean,verify`); nenhuma fixture nova.
 
 ## Documentação (README.md)
 
-Origem: FR-019..FR-023 (clarify 2026-11-17) · Decisão de pesquisa: R14.
+Origem: FR-019..FR-023 (clarify 2026-11-17, revisado no clarify 2026-11-18) · Decisão de pesquisa: R14 (revisada em 2026-11-18).
 
 | Item | Definição |
 |------|-----------|
-| Local | Subtópico **Contratos**, dentro de **Funcionalidades** (README.md, tópico hoje vazio na linha 2642) |
-| Formato | `<details><summary><strong> Contratos 🛠️ </strong></summary>` … `</details>`, mesmo padrão de collapse do README |
-| Nome da feature | **Teste de Conformidade Entidade–Contrato** ("schema test" fica como nome de trabalho interno) |
-| Públicos | Quem usa o módulo gerado e quem mantém o archetype |
-| Linguagem | Simples, clara e objetiva; sem jargão; compreensível por estagiário sem experiência |
-| Conteúdo | O que a feature faz e como funciona — **sem** tutorial passo a passo |
-| Fronteira | Não reexplica o mecanismo de contrato; apenas linka as seções existentes |
-| Seção 2.1 | *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* permanece intacta e é referenciada por link |
+| Local | Subtópico **Contratos**, dentro de **Funcionalidades** (README.md, tópico na linha 2642) |
+| Formato | `<details style="margin-left: 2em;"><summary><strong> Contratos📜: a 'Fonte da Verdade' do Módulo da API </strong></summary>` … `</details>`, mesmo padrão de collapse do README; sem título interno repetindo o nome |
+| Nome canônico | **Contratos: a 'Fonte da Verdade' do Módulo da API** (o ícone 📜 é decorativo e não integra o nome; "schema test" fica como nome de trabalho interno) |
+| Públicos | Quem usa o módulo gerado e quem mantém o archetype — atendidos pelo item 4 (**Para quem serve**) |
+| Linguagem | Simples, clara e objetiva; sem jargão; frases curtas, uma ideia por linha; compreensível por estagiário sem experiência |
+| Conteúdo | Seis itens numerados, nesta ordem: 1) **Raciocínio central**; 2) **O que faz**; 3) **Como funciona**; 4) **Para quem serve**; 5) **Quando ele existe**; 6) **Detalhes técnicos** — **sem** tutorial passo a passo |
+| Raciocínio central | Abre a documentação com o ciclo fechado — desenho da tela (Design de Front-End) → contrato → módulo da API → tela —, deixando explícito que a conferência não é um mero teste de conformidade; inclui diagrama em bloco de código `text` (padrão do "Grafo de dependências") com fluxo vertical DESENHO DA TELA → CONTRATO → MÓDULO DA API → TELA e seta de retorno da TELA ao DESENHO |
+| Fronteira | Não reexplica o mecanismo de contrato (inferência, formato, flags); os itens 2–5 descrevem apenas o comportamento observável; linka as seções existentes |
+| Seção 2.1 | *Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO* permanece intacta; o item 6 linka para ela com texto e href inalterados |
 | Não faz | Não duplica conteúdo, não move seções, não renomeia a 2.1 |
 
 ## Desvios deliberados das instruções
