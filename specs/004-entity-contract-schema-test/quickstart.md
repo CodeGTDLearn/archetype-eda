@@ -21,7 +21,7 @@ mvn clean integration-test -Darchetype.test.projectsDirectory=target/it-single
 
 **Esperado** no `verify.groovy`:
 1. pacote `contract/` presente na aplicação gerada;
-2. `target/surefire-reports` da aplicação contém 19 relatórios e 41 testes, com 0 falhas/erros;
+2. `target/surefire-reports` da aplicação contém 21 relatórios e 43 testes, com 0 falhas/erros;
 3. cópia sabotada falha `mvnw test` com uma falha por divergência, nomeando atributo e sentido.
 
 ## 3. Frente 01 manual
@@ -40,7 +40,7 @@ mvn archetype:generate -DarchetypeGroupId=com.eda-archetype -DarchetypeArtifactI
 No módulo:
 
 ```powershell
-cd demo-contract; ./mvnw test        # 1) verde: 19 arquivos / 41 testes do pacote contract executados
+cd demo-contract; ./mvnw test        # 1) verde: 21 arquivos / 43 testes do pacote contract executados
 # renomeie/remova um campo da entidade OU edite contracts/contract.json
 ./mvnw test                          # 2) vermelho: uma falha por divergência, com atributo/tipo/sentido
 ./mvnw test                          # 3) verde novamente após corrigir

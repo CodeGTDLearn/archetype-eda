@@ -320,3 +320,7 @@ Task: "Adicionar asserção de ausência nas fixtures binding/logback/full"
 
 **Paralelo**: T056, T057, T058, T060, T061, T062 e T063 são arquivos distintos; T068 e T069 são arquivos distintos; T074 e T075 são arquivos distintos.
 
+## Phase 15: Convergence
+
+- [X] T077 Reconciliar os artefatos de design com a implementação: atualizar `spec.md` (Clarifications 19→21 arquivos e 3→6 apoios; FR-027 para permitir a divisão dos apoios em classes pequenas pelo limite de 60 linhas), `plan.md` (Scale/Scope; Camada fixa 7→10; Camada gerada 15→17; Total 19/41/3→21/43/6; `gateFiles` 7→10; 121→122 arquivos; incluir `SavedContractNestedKeysTest`, `SavedContractEnumsMatchTest`, `ContractNames`, `ContractAttributes` e `ContractNavigation`; registrar que a lista do `entity-contract/verify.groovy` é o oráculo do perfil de referência e que a derivação é provada pela `ContractSchemaTestGeneratorTest`), `data-model.md` (seções A, D e E), `contracts/schema-test-contract.md` §5, `quickstart.md` §2/§3 e `research.md` R15/R16 — per FR-024/FR-027, SC-010..SC-012, plan §Camada fixa/gerada (contradicts)
+

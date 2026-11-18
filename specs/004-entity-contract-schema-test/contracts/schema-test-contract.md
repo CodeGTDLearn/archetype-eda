@@ -50,7 +50,7 @@ Uma falha por divergência, no teste que a detectou; o arquivo de regra agrupa a
 | Prova | Onde |
 |---|---|
 | presença/ausência por condição | `SnippetContractSchemaTestTest.groovy` (harness) |
-| execução verde na app gerada | `entity-contract/verify.groovy`: 19 relatórios surefire e 41 testes, 0 falhas/erros |
+| execução verde na app gerada | `entity-contract/verify.groovy`: 21 relatórios surefire e 43 testes, 0 falhas/erros |
 | execução em outro formato | `custom-nested-objects/verify.groovy` e `custom-enums-from-payload/verify.groovy`: presença + surefire verde |
 | sabotagem falha com diagnóstico | `entity-contract/verify.groovy`: cópia em temp + adulteração + `mvnw test` aninhado → exit ≠ 0 e mensagem; golden em `expected/divergences.txt` |
 | ausência nos perfis sem contrato | 19 `verify.groovy`, pelo diretório `contract/` (nunca por glob de nome) |

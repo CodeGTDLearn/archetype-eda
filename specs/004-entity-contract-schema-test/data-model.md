@@ -13,18 +13,23 @@
 | `EntityFields` | leitura de campo declarado (apoio) | não | Velocity |
 | `ContractJson` | leitura do contrato (apoio) | não | Velocity |
 | `ContractKeys` | normalização de chaves (apoio) | não | Velocity |
+| `ContractNames` | transformações puras de nome (apoio) | não | Velocity |
+| `ContractAttributes` | extração da lista efetiva do contrato (apoio) | não | Velocity |
+| `ContractNavigation` | navegação do contrato por caminho (apoio) | não | Velocity |
 | `SimpleAttributeFieldsTest` | atributos simples da entidade | sim | `generator-04` |
 | `NestedAttributeReferenceTest` | referência a tipo aninhado | sim | `generator-04` |
 | `EnumAttributeReferenceTest` | referência a enum | sim | `generator-04` |
 | `NoExtraEntityFieldTest` | nenhum campo fora do conjunto esperado | sim | `generator-04` |
 | `ContractRoundTripTest` | payload sintético entra e sai sem perder chave | sim | `generator-04` |
 | `SavedContractMatchesGeneratedModelTest` | contrato salvo × modelo gerado (chaves) | sim | `generator-04` |
+| `SavedContractNestedKeysTest` | chaves de cada objeto aninhado do contrato | sim | `generator-04` |
+| `SavedContractEnumsMatchTest` | constantes de enum do contrato | sim | `generator-04` |
 | `ContractTypeMappingTest` | `type` declarado aceito × tipo efetivo das flags | sim | `generator-04` |
 | `<Tipo>FieldsTest` | campos de cada POJO aninhado | sim | `generator-04` |
 | `<Enum>EnumTest` | constantes de cada enum | sim | `generator-04` |
 | `ScaffoldFieldsTest` | `username`/`password` no ramo sem atributos | sim | `generator-04` (condicional) |
 
-**Perfil de referência**: 19 arquivos de teste, 41 testes, 3 de apoio.
+**Perfil de referência**: 21 arquivos de teste, 43 testes, 6 de apoio.
 **Remoção**: a guarda (`snippet-20`) apaga o diretório `contract` inteiro quando não há contrato persistido.
 
 ## B. Modelo de contrato em runtime
@@ -85,13 +90,13 @@ Uma divergência = uma falha. O arquivo de regra agrupa as suas; não há agrega
 
 | Artefato | Caminho | Papel |
 |---|---|---|
-| `SchemaTestTemplateSet` | `archetype-resources/src/test/java/__entity_package_name__/contract/*.java` | 7 arquivos fixos (4 de teste + 3 de apoio) |
-| `SchemaTestGenerator` | `generators/generator-04-contract_schema_tests.groovy` | 15 arquivos derivados das flags |
+| `SchemaTestTemplateSet` | `archetype-resources/src/test/java/__entity_package_name__/contract/*.java` | 10 arquivos fixos (4 de teste + 6 de apoio) |
+| `SchemaTestGenerator` | `generators/generator-04-contract_schema_tests.groovy` | 17 arquivos derivados das flags |
 | `RemovalGuard` | `snippets/snippet-20-contract_schema_test.groovy` | remove o pacote inteiro quando não há contrato |
 | `GuardSuite` | `src/test/archetype-post-generate/SnippetContractSchemaTestTest.groovy` | prova remoção/presença por diretório |
 | `GeneratorSuite` | `src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy` | 3 variações + colisão |
 | `LayoutSuite` | `src/test/archetype-post-generate/ContractTestLayoutTest.groovy` | limites 120/20/60 e regras de forma |
-| `FixtureAsserts` | `entity-contract/verify.groovy` | 19 arquivos derivados, 41 testes, 9 sabotagens, golden |
+| `FixtureAsserts` | `entity-contract/verify.groovy` | 21 arquivos derivados, 43 testes, 9 sabotagens, golden |
 | `PresenceAsserts` | `custom-nested-objects/verify.groovy`, `custom-enums-from-payload/verify.groovy` | presença + surefire verde |
 | `AbsenceAsserts` | 19 `verify.groovy` | ausência pelo diretório `contract/` |
 
@@ -112,7 +117,7 @@ Uma divergência = uma falha. O arquivo de regra agrupa as suas; não há agrega
 | FR-024 | tabela da seção A |
 | FR-025 | `generator-04` + `ContractSchemaTestGeneratorTest` |
 | FR-026 | `ContractTestLayoutTest` |
-| FR-027 | 3 classes de apoio |
+| FR-027 | 6 classes de apoio, em 3 responsabilidades |
 | FR-028 | nome do arquivo = sujeito; nome do método = caso |
 | FR-029 | `ContractSchemaTestGeneratorTest` (3 variações) |
 

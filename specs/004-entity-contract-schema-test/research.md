@@ -95,13 +95,13 @@ Tabela consolidada (regras-02 §1–2, §5): `type` declarado `java.lang` (FQN r
 
 ## R15 - Divisão entre camada fixa e camada gerada
 
-- **Decision**: 7 arquivos fixos (4 de teste + 3 de apoio) por Velocity e 15 arquivos de teste emitidos pelo `generator-04` no perfil de referência. `ContractRoundTripTest` é gerado.
-- **Rationale**: o payload do round-trip depende dos tipos das flags; mantê-lo fixo exigiria reintroduzir a inferência de tipo que o refactor remove. Os 15 gerados cobrem exatamente o que varia com o contrato.
+- **Decision**: 10 arquivos fixos (4 de teste + 6 de apoio) por Velocity e 17 arquivos de teste emitidos pelo `generator-04` no perfil de referência. `ContractRoundTripTest` é gerado.
+- **Rationale**: o payload do round-trip depende dos tipos das flags; mantê-lo fixo exigiria reintroduzir a inferência de tipo que o refactor remove. Os 17 gerados cobrem exatamente o que varia com o contrato.
 - **Alternatives**: 8 fixos (exigiria inferência); gerar os 18 (perderia a legibilidade dos templates Velocity); 18 fixos (impossível sem hardcode).
 
 ## R16 - `ContractJson` em ≤60 linhas de código
 
-- **Decision**: Java 17 (streams e text blocks) e apoio em 3 classes: `EntityFields`, `ContractJson`, `ContractKeys`.
+- **Decision**: Java 17 (streams e text blocks) e apoio em 6 classes, dentro das 3 responsabilidades: `EntityFields`; `ContractJson` + `ContractAttributes`; `ContractKeys` + `ContractNames`; `ContractNavigation`.
 - **Rationale**: FR-026/FR-027; o antigo `ContractModel` (491 linhas) concentrava cinco responsabilidades. A contagem exclui `package`, `import`, linhas em branco e comentários.
 - **Alternatives**: quatro classes de apoio (contraria a leitura de FR-027); elevar o limite (contraria a spec).
 
