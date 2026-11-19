@@ -14,6 +14,16 @@ A palavra que identifica o destino não aparece em nenhum arquivo do procediment
 
 Não se trata de um defeito contra uma intenção acordada: é uma intenção que ainda não foi definida. Por isso esta feature cria o contrato, em vez de restaurar um comportamento perdido.
 
+## Clarifications
+
+### Session 2026-11-19
+
+- Q: Qual é o marcador que o operador escreve no spec para indicar a pasta de destino da geração? → A: `PASTA DE DESTINO` — palavra composta em português que jamais colidiria com uma chave de contrato, e que segue o estilo dos marcadores em maiúsculas do spec (`USE-CASE`, `CONTRATO`).
+- Q: Quando o operador informa o destino dentro do contrato em vez de usar a marcação no spec, o que o agente deve fazer com essa chave? → A: a marcação `PASTA DE DESTINO` jamais pertence ao contrato e não pode estar dentro dele; dentro do contrato, toda chave é atributo da entidade — a lista de metachaves do procedimento não ganha nenhuma entrada nova por causa desta feature.
+- Q: Quando o destino aponta para dentro da árvore do archetype, o agente deve recusar sempre, ou avisar e seguir se o operador confirmar? → A: recusa absoluta, sem exceção. O agente avisa que o destino é proibido e pergunta onde fica o destino; se o operador insistir que o destino é a própria pasta do archetype, ou continuar sem informar um destino, o fluxo é finalizado.
+- Q: Quando o destino é absoluto mas a pasta ainda não existe, o agente deve criá-la sozinho ou perguntar antes? → A: perguntar uma vez, mostrando o caminho completo que será criado, e prosseguir após a confirmação do operador.
+- Q: Quando a pasta de destino já contém um módulo com o mesmo nome do artefato a gerar, o que o agente deve fazer? → A: perguntar uma vez, oferecendo "sobrescrever o existente" ou "manter o existente e encerrar"; o agente nunca apaga nada por conta própria.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Operador informa o destino e o projeto nasce onde ele pediu (Priority: P1)
@@ -26,7 +36,7 @@ O operador entrega o use-case, o contrato e a pasta de destino. O agente lê o p
 
 **Acceptance Scenarios**:
 
-1. **Given** um spec com use-case, contrato e destino absoluto, **When** o agente prepara a geração, **Then** a linha de comando emitida carrega o destino informado e o agente mostra o caminho absoluto ao operador antes de executar.
+1. **Given** um spec com use-case, contrato e a marcação `PASTA DE DESTINO` de caminho absoluto, **When** o agente prepara a geração, **Then** a linha de comando emitida carrega o destino informado e o agente mostra o caminho absoluto ao operador antes de executar.
 2. **Given** a geração concluída, **When** se verifica o disco, **Then** o módulo existe em `<destino>/<artifactId>` e **nenhum** arquivo novo apareceu dentro da árvore do archetype.
 3. **Given** o módulo gerado, **When** a verificação de compilação é executada, **Then** ela ocorre dentro de `<destino>/<artifactId>` e o resultado é reportado com o caminho absoluto.
 4. **Given** o relatório final, **When** o operador o lê, **Then** ele informa o caminho absoluto do módulo gerado e a linha de comando executada.
@@ -54,19 +64,20 @@ Quando o operador não informa o destino, o agente interrompe o fluxo antes de q
 
 ### User Story 3 - Destino inválido ou ambíguo é recusado com clareza (Priority: P2)
 
-O operador informa um destino relativo, um caminho dentro da árvore do archetype, uma pasta que já contém um módulo com o mesmo nome, ou coloca a chave de destino por engano dentro do contrato. Nenhum desses casos pode passar em silêncio: o agente recusa, pergunta ou ignora com aviso — e, sobretudo, o contrato jamais vira um campo da entidade gerada.
+O operador informa um destino relativo, um caminho dentro da árvore do archetype, uma pasta que já contém um módulo com o mesmo nome, ou escreve por engano a marcação de destino dentro do contrato. Nenhum desses casos pode passar em silêncio: o agente recusa, pergunta ou trata a marcação fora de lugar — e, sobretudo, o contrato jamais vira um campo da entidade gerada.
 
-**Why this priority**: destinos dentro da árvore do archetype são exatamente o dano que a feature existe para evitar, e uma chave de destino dentro do contrato seria silenciosamente transformada em atributo de negócio, produzindo uma entidade com campo espúrio.
+**Why this priority**: destinos dentro da árvore do archetype são exatamente o dano que a feature existe para evitar, e a marcação de destino escrita dentro do contrato é uma confusão de domínio que precisa ser reconhecida como tal, em vez de virar silenciosamente um atributo de negócio na entidade gerada.
 
 **Independent Test**: pode ser testado de forma isolada gerando com cada variação inválida e verificando a recusa, o aviso e a ausência do campo espúrio na entidade gerada.
 
 **Acceptance Scenarios**:
 
 1. **Given** um destino relativo, **When** o agente o valida, **Then** ele recusa ou pede um caminho absoluto, e não gera nada.
-2. **Given** um destino dentro da árvore do archetype, **When** o agente o valida, **Then** ele recusa com um aviso explícito e não gera nada.
-3. **Given** um destino cuja pasta de módulo já existe, **When** o agente valida, **Then** ele pergunta antes de sobrescrever e nunca apaga o conteúdo existente por conta própria.
-4. **Given** uma chave de destino dentro do contrato, **When** o agente deriva os atributos, **Then** a chave é ignorada com aviso, não vira campo da entidade e não aparece como atributo na lista derivada.
-5. **Given** um destino inexistente mas criável, **When** o agente valida, **Then** ele cria a pasta e prossegue; se a criação falhar, ele para e reporta.
+2. **Given** um destino dentro da árvore do archetype, **When** o agente o valida, **Then** ele recusa com aviso explícito, pergunta onde fica o destino e não gera nada.
+3. **Given** um destino recusado e o operador insistindo que o destino é a própria pasta do archetype, **When** o agente recebe a insistência, **Then** o fluxo é finalizado com relatório de parada, sem geração e sem nova tentativa automática.
+4. **Given** um destino cuja pasta de módulo já existe, **When** o agente valida, **Then** ele pergunta uma vez, oferecendo "sobrescrever o existente" ou "manter o existente e encerrar", e nada é apagado sem a escolha explícita do operador.
+5. **Given** uma marcação de destino escrita dentro do contrato, **When** o agente deriva os atributos, **Then** a marcação é reconhecida como pertencente ao spec e não como chave de contrato, e a lista de atributos derivada permanece a mesma de um contrato equivalente sem essa marcação.
+6. **Given** um destino inexistente mas criável, **When** o agente valida, **Then** ele pergunta mostrando o caminho completo que será criado e só cria a pasta após a confirmação; se a criação falhar depois da confirmação, ele para e reporta.
 
 ---
 
@@ -91,11 +102,11 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 
 - **Destino ausente**: o agente para antes de derivar e pergunta uma vez; em execução sem operador, para e reporta.
 - **Destino relativo**: recusado ou convertido para absoluto após confirmação; nunca aceito em silêncio.
-- **Destino dentro da árvore do archetype** (inclusive nas pastas de código, de recursos ou de build): recusado com aviso.
-- **Pasta de destino inexistente**: criada pelo agente; se a criação falhar, o agente para e reporta o erro.
-- **Pasta de destino já existente e já contendo um módulo de mesmo nome**: o agente pergunta antes de sobrescrever e nunca remove conteúdo por conta própria.
-- **Destino informado dentro do contrato em vez do spec**: a chave é ignorada com aviso e tratada como metachave — nunca como atributo da entidade.
-- **Destino informado em mais de um lugar**: o spec tem precedência; a ocorrência no contrato é ignorada com aviso.
+- **Destino dentro da árvore do archetype** (inclusive nas pastas de código, de recursos ou de build): recusado absolutamente, com aviso e nova pergunta; se o operador insistir na própria pasta do archetype, o fluxo é finalizado.
+- **Pasta de destino inexistente**: o agente pergunta uma vez, exibindo o caminho completo que será criado, e só cria após a confirmação; se a criação falhar depois da confirmação, o agente para e reporta o erro.
+- **Pasta de destino já existente e já contendo um módulo de mesmo nome**: o agente pergunta uma vez, oferecendo "sobrescrever o existente" ou "manter o existente e encerrar"; nunca remove conteúdo por conta própria.
+- **Marcação de destino escrita dentro do contrato**: reconhecida como pertencente ao spec e nunca como chave de contrato; a lista de atributos derivados permanece a mesma de um contrato equivalente sem a marcação.
+- **Destino informado em mais de um lugar**: a marcação `PASTA DE DESTINO` no spec tem precedência; a ocorrência da mesma marcação dentro do contrato é reconhecida como pertencente ao spec e não altera a lista de atributos derivados.
 - **Destino com caractere especial no caminho**: o valor é transportado sem perda, com a proteção de escape exigida pelo shell em uso.
 - **Sinalização de fim de arquivo ou espaços no caminho**: o agente normaliza antes de comparar e de emitir.
 - **Agente suggestivo de pasta temporária**: a sugestão jamais é aplicada sem confirmação do operador.
@@ -111,7 +122,7 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 **Entrada do destino**
 
 - **FR-001**: O procedimento MUST declarar o destino de geração como entrada explícita do spec do operador, distinta do contrato, e MUST declarar de forma inequívoca que o destino nunca faz parte do contrato.
-- **FR-002**: A entrada de destino MUST ser identificada por marcador reconhecível, e a ausência de marcador reconhecível MUST ser tratada como ausência de destino.
+- **FR-002**: A entrada de destino MUST ser identificada pela marcação `PASTA DE DESTINO` no spec, e a ausência da marcação MUST ser tratada como ausência de destino. A marcação MUST seguir a convenção de maiúsculas dos marcadores já existentes no spec.
 - **FR-003**: A entrada de destino MUST aceitar um caminho absoluto de destino e MUST rejeitar, com aviso, caminho relativo, caminho com caractere de expansão de diretório do usuário, ou caminho com sinalização de fim de arquivo.
 - **FR-004**: A entrada de destino MUST ser registrada como entrada permitida do spec e MUST ser listada na verificação de integridade do artefato empacotado.
 
@@ -131,9 +142,9 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 
 **Validação do destino**
 
-- **FR-013**: Antes de executar, o agente MUST validar que o destino existe ou pode ser criado, e MUST NOT prosseguir quando a validação falhar.
-- **FR-014**: O agente MUST validar que o destino não está dentro da árvore do archetype, e MUST recusar com aviso explícito quando estiver.
-- **FR-015**: Quando a pasta de destino já contiver um módulo com o mesmo nome do artefato a gerar, o agente MUST perguntar antes de sobrescrever e MUST NOT remover o conteúdo existente por conta própria.
+- **FR-013**: Antes de executar, o agente MUST validar que o destino é absoluto e que está fora da árvore do archetype. Quando o destino ainda não existir, o agente MUST perguntar uma vez, exibindo o caminho completo que será criado, e MUST prosseguir somente após a confirmação do operador. MUST NOT criar a pasta sem essa confirmação. Se a criação falhar após a confirmação, o agente MUST parar e reportar.
+- **FR-014**: O agente MUST validar que o destino não está dentro da árvore do archetype, e MUST recusá-lo **absolutamente, sem exceção** — não existe confirmação do operador que autorize um destino dentro da árvore. A recusa MUST vir acompanhada de aviso explícito e de nova pergunta sobre onde fica o destino. Se o operador insistir que o destino é a própria pasta do archetype, ou continuar sem informar um destino, o fluxo MUST ser finalizado com relatório de parada.
+- **FR-015**: Quando a pasta de destino já contiver um módulo com o mesmo nome do artefato a gerar, o agente MUST perguntar uma vez, oferecendo "sobrescrever o existente" ou "manter o existente e encerrar". O agente MUST NOT apagar conteúdo existente por conta própria, e MUST NOT sobrescrever sem que o operador tenha escolhido explicitamente essa opção.
 - **FR-016**: Após a geração, o agente MUST confirmar que o módulo gerado está na pasta de destino informada e que possui o próprio descritor de projeto, e MUST reportar o caminho absoluto do módulo gerado.
 - **FR-017**: A verificação de compilação MUST ocorrer dentro do módulo gerado e MUST NOT ocorrer na raiz do archetype, e o resultado MUST ser reportado junto do caminho utilizado.
 
@@ -145,8 +156,8 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 
 **Contrato e metachaves**
 
-- **FR-021**: Uma chave de destino presente dentro do contrato MUST ser tratada como metachave: ignorada com aviso, nunca convertida em atributo da entidade e nunca convertida em atributo da lista de atributos derivada.
-- **FR-022**: A lista de metachaves reconhecidas pelo procedimento MUST incluir explicitamente a chave de destino, e a verificação automatizada do procedimento MUST falhar quando uma chave de destino não estiver nessa lista.
+- **FR-021**: A marcação `PASTA DE DESTINO` MUST NOT existir dentro do contrato: o destino de geração pertence exclusivamente ao spec. O procedimento MUST NOT acrescentar à lista de metachaves nenhuma entrada nova por causa desta feature — dentro do contrato, toda chave que não seja uma flag do catálogo permanece atributo da entidade, conforme a regra já vigente.
+- **FR-022**: A verificação automatizada do procedimento MUST confirmar que a lista de metachaves do procedimento permanece inalterada e que a marcação `PASTA DE DESTINO` é reconhecida apenas como entrada do spec, nunca como chave de contrato.
 
 **Limites de escopo**
 
@@ -164,11 +175,11 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 
 ### Key Entities
 
-- **Spec do operador**: entrada externa única do procedimento; passa a conter, além do tipo de módulo, do package base, do use-case e do contrato, a pasta de destino da geração.
+- **Spec do operador**: entrada externa única do procedimento; passa a conter, além do tipo de módulo, do package base, do use-case e do contrato, a pasta de destino da geração, identificada pela marcação `PASTA DE DESTINO`.
 - **Destino de geração**: caminho absoluto onde o módulo será criado; não é flag, não é atributo da entidade e não recebe fonte de proveniência; é exibido ao operador antes e depois da execução.
 - **Módulo gerado**: artefato produzido pela geração; vive dentro do destino informado, com descritor de projeto próprio, e é onde a verificação de compilação ocorre.
 - **Procedimento empacotado**: conjunto de arquivos que viajam dentro do artefato e que o agente lê em runtime; é a fonte da verdade sobre o destino de geração.
-- **Contrato**: documento JSON de domínio entregue pelo operador; o destino de geração nunca faz parte dele.
+- **Contrato**: documento JSON de domínio entregue pelo operador; o destino de geração nunca faz parte dele — a marcação `PASTA DE DESTINO` pertence exclusivamente ao spec.
 - **Catálogo de flags**: conjunto declarado de propriedades de geração; permanece inalterado por esta feature.
 - **Tabela de proveniência**: relatório das flags e de suas origens; não recebe o destino de geração.
 
@@ -181,12 +192,12 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 - **SC-003**: 0 destinos presumidos em silêncio; 100% dos casos de destino ausente resultam em interrupção antes da derivação com uma única pergunta, ou em parada com relatório quando não há operador disponível.
 - **SC-004**: 100% dos relatórios finais registram o caminho absoluto do módulo gerado e o resultado da verificação de compilação nele executada.
 - **SC-005**: 100% das verificações de compilação ocorrem dentro do módulo gerado e nenhuma ocorre na raiz do archetype.
-- **SC-006**: 0 módulos gerados contêm atributo de entidade derivado de uma chave de destino informada dentro do contrato.
+- **SC-006**: 0 módulos gerados contêm atributo derivado de uma marcação de destino escrita dentro do contrato, e a lista de metachaves do procedimento permanece inalterada.
 - **SC-007**: 0 caminhos absolutos de usuário ou de máquina específicos permanecem no procedimento empacotado, e 0 mecanismos concorrentes de definição de destino coexistem nele.
 - **SC-008**: O número de flags do catálogo, o número de arquivos do procedimento, o número de conjuntos de arquivos, o número de suítes e o número de fixtures de integração permanecem inalterados após a entrega.
 - **SC-009**: 100% das suítes e das fixtures de integração existentes permanecem verdes após a entrega.
 - **SC-010**: 100% das verificações automatizadas da feature passam quando lidas a partir do artefato reinstalado, e 0 verificações passam apenas porque a árvore de desenvolvimento foi alterada.
-- **SC-011**: 100% das gerações em que o destino aponta para dentro da árvore do archetype são recusadas com aviso explícito, sem criação de arquivos.
+- **SC-011**: 100% das gerações em que o destino aponta para dentro da árvore do archetype são recusadas com aviso explícito e nova pergunta, sem criação de arquivos; e 0 delas prosseguem por insistência do operador.
 
 ## Assumptions
 
