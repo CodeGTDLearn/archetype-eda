@@ -5,7 +5,8 @@
  * NATIVE property `outputDirectory` of the archetype generation goal — it is
  * NOT a catalog flag — and the procedure must never presume it.
  *
- * This suite proves, by reading the PACKAGED procedure:
+ * This suite proves, by reading the PACKAGED procedure (target/classes/utils,
+ * which is what goes into the JAR — not the development tree):
  *
  *   A. the procedure tree keeps the 19 files (count is locked);
  *   B. the marker PASTA DE DESTINO is declared where the rule lives;
@@ -14,7 +15,7 @@
  *      provenance table;
  *   E. the procedure carries no absolute user path and no post-generation move;
  *   F. the catalog counts are unchanged and the property is not a flag;
- *   G. (opt-in) the installed artifact carries the rule. Run with
+ *   G. (opt-in) the INSTALLED artifact carries the rule. Run with
  *      -Deda.verify.installed.jar=true AFTER `mvn install`.
  */
 def utils = new File("src/main/resources/utils")
@@ -26,8 +27,10 @@ def check = { String name, boolean cond ->
     if (cond) { println "PASS: ${name}" } else { println "FAIL: ${name}"; failures++ }
 }
 
+// Content assertions read the PACKAGED copy — the one that goes into the JAR —
+// so the verification never passes because of the development tree alone.
 def read = { String relative ->
-    new File(utils, relative).getText("UTF-8")
+    new File(packaged, relative).getText("UTF-8")
 }
 
 def p00 = read("01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md")
@@ -71,6 +74,8 @@ check("3.4 prompt-04 declares the property as native, not a catalog flag",
         p04.contains("nativa do plugin"))
 check("3.5 prompt-04 distinguishes the output destination from the execution directory",
         p04.contains("não onde o Maven roda"))
+check("3.6 prompt-04 instructs displaying the destination before executing",
+        p04.contains("antes de executar"))
 
 // ---------------------------------------------------------------------------
 // D. the destination stays outside the contract and outside the provenance
@@ -89,7 +94,8 @@ check("4.4 regras-06 keeps the destination out of the provenance table",
 // ---------------------------------------------------------------------------
 // E. the procedure carries no user path and no post-generation move
 // ---------------------------------------------------------------------------
-def corpus = sourceFiles.collect { it.getText("UTF-8") }.join("\n")
+def corpus = packagedFiles.collect { it.getText("UTF-8") }.join("\n")
+check("5.0 the packaged procedure is readable: ${packagedFiles.size()} files", packagedFiles.size() == 19)
 check("5.1 the procedure carries no absolute user path",
         !corpus.contains("C:\\Users\\") && !corpus.contains("/Users/") && !corpus.contains("/home/"))
 check("5.2 the procedure carries no robocopy", !corpus.toLowerCase().contains("robocopy"))

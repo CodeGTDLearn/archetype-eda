@@ -33,6 +33,7 @@ Antes de montar a command line, confirme o destino:
 
 - o destino vem da marcação `PASTA DE DESTINO` do spec — nunca do contrato;
 - o destino é absoluto e está fora da árvore do archetype;
+- exiba o destino absoluto ao operador **antes de executar**, junto do resultado da validação (válido e fora da árvore do archetype);
 - se o destino estiver dentro da árvore do archetype, recuse com aviso e pergunte onde fica o destino; se o operador insistir, finalize o fluxo com relatório de parada;
 - se a pasta de destino ainda não existir, pergunte uma vez exibindo o caminho completo que será criado e só crie após a confirmação;
 - se já existir um módulo com o mesmo nome do artefato, pergunte uma vez, oferecendo "sobrescrever o existente" ou "manter o existente e encerrar"; nunca apague nada por conta própria.

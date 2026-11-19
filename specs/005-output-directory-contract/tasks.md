@@ -155,7 +155,7 @@ Projeto único. O alvo da feature é o **procedimento empacotado** em `src/main/
 - [X] T038 [P] Confirmar que `git status --short` mostra apenas o `README.md` modificado e nenhum resíduo de geração dentro da árvore do archetype
 - [X] T039 [P] Validar o procedimento empacotado montado: `mvn -B clean process-resources` e conferir em `target/classes/utils/` que a marcação `PASTA DE DESTINO` e a propriedade `outputDirectory` estão presentes
 - [X] T040 Executar o guia de validação `specs/005-output-directory-contract/quickstart.md` — Cenários 1, 2, 3 e 10 (determinísticos)
-- [ ] T041 Executar os Cenários 4 a 9 de `specs/005-output-directory-contract/quickstart.md` (homologação manual do agente: destino informado, destino ausente, destino dentro da árvore, pasta inexistente, módulo de mesmo nome, marcação dentro do contrato) e limpar os diretórios de teste ao final
+- [X] T041 Executar os Cenários 4 a 9 de `specs/005-output-directory-contract/quickstart.md` (homologação manual do agente: destino informado, destino ausente, destino dentro da árvore, pasta inexistente, módulo de mesmo nome, marcação dentro do contrato) e limpar os diretórios de teste ao final
 
 ---
 
@@ -261,6 +261,6 @@ Com várias pessoas:
 
 ## Phase 8: Convergence
 
-- [ ] T042 Declarar em `src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` §1.3 que o agente exibe o destino absoluto ao operador antes de executar a geração, com o caminho completo e o resultado da validação per FR-018 / US1/AC1 (partial)
-- [ ] T043 Ler o conteúdo do procedimento de `target/classes/utils` (o artefato empacotado) nas asserções de conteúdo de `src/test/archetype-post-generate/DestinationContractTest.groovy`, em vez de `src/main/resources/utils`, mantendo a contagem na árvore-fonte per FR-032 / SC-010 (partial)
-- [ ] T044 Executar os Cenários 5 a 8 de `specs/005-output-directory-contract/quickstart.md` (homologação manual do agente: destino ausente, destino dentro da árvore, pasta inexistente, módulo de mesmo nome) e registrar o resultado per T041 (partial)
+- [X] T042 Declarar em `src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` §1.3 que o agente exibe o destino absoluto ao operador antes de executar a geração, com o caminho completo e o resultado da validação per FR-018 / US1/AC1 (partial)
+- [X] T043 Ler o conteúdo do procedimento de `target/classes/utils` (o artefato empacotado) nas asserções de conteúdo de `src/test/archetype-post-generate/DestinationContractTest.groovy`, em vez de `src/main/resources/utils`, mantendo a contagem na árvore-fonte per FR-032 / SC-010 (partial)
+- [X] T044 Executar os Cenários 5 a 8 de `specs/005-output-directory-contract/quickstart.md` (homologação manual do agente: destino ausente, destino dentro da árvore, pasta inexistente, módulo de mesmo nome) e registrar o resultado per T041 (partial)
