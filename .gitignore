@@ -18,3 +18,7 @@ target/
 ### Exclude files with '~'/'ini' in "end of file"
 *~
 *ini
+### Python ###
+__pycache__/
+*.pyc
+
