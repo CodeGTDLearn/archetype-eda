@@ -29,9 +29,9 @@ Projeto único. O alvo da feature é o **procedimento empacotado** em `src/main/
 
 **Purpose**: Preparar o terreno — baseline verde e convenções do projeto confirmadas antes de qualquer edição.
 
-- [ ] T001 Registrar o baseline: rodar `mvn -B clean test` e confirmar que as 40 suítes Groovy existentes passam verdes (nenhuma alteração feita até aqui)
+- [ ] T001 Registrar o baseline: rodar `mvn -B clean test` e confirmar que as 38 suítes Groovy existentes passam verdes (nenhuma alteração feita até aqui)
 - [ ] T002 Registrar o baseline de integração: rodar `mvn -B clean integration-test` e confirmar que as 22 fixtures de integração passam verdes
-- [ ] T003 [P] Confirmar as contagens de referência que a feature NÃO pode alterar: 19 arquivos em `src/main/resources/utils/`, 35 `requiredProperty` e 18 `fileSet` em `src/main/resources/META-INF/maven/`
+- [ ] T003 [P] Confirmar as contagens de referência que a feature NÃO pode alterar (FR-024, FR-025): 19 arquivos em `src/main/resources/utils/`, 35 `requiredProperty` e 18 `fileSet` em `src/main/resources/META-INF/maven/` — e que `pom.xml` segue sem dependência nova e com a versão do artefato inalterada (FR-027)
 - [ ] T004 [P] Confirmar o gate `ProcedureContractTest` 1.4: nenhum termo entre backticks em `src/main/resources/utils/**/*.md` pode casar com `^[a-z][a-z0-9_]*_[a-z0-9_]+$` sem ser flag do catálogo — o marcador `PASTA DE DESTINO` (maiúsculas, com espaço) é a única forma segura
 
 **Checkpoint**: baseline verde e contagens registradas — nenhuma regressão pode ser atribuída à feature.
@@ -44,7 +44,7 @@ Projeto único. O alvo da feature é o **procedimento empacotado** em `src/main/
 
 **?? CRITICAL**: nenhuma história pode começar antes desta fase — o gate de destino e o catálogo de flags são a base de todas.
 
-- [ ] T005 Declarar a entrada de destino como 5ª entrada do spec em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` §2 (Entradas externas permitidas) — listar tipo de módulo, package base, use-case, contrato JSON e **pasta de destino**, com a marcação `PASTA DE DESTINO`
+- [ ] T005 Declarar a entrada de destino como 5ª entrada do spec em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` §2 (Entradas externas permitidas) — listar tipo de módulo, package base, use-case, contrato JSON e **pasta de destino**, com a marcação `PASTA DE DESTINO` — cobre FR-002 e FR-004
 - [ ] T006 Declarar o **Gate de destino** em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` §0.2 — avaliação após os Gates A, B e C; destino ausente, relativo, ambíguo ou dentro da árvore do archetype → parar e perguntar; **nunca** aplicar default presumido (FR-005, FR-007, FR-014)
 - [ ] T007 Estender o **relatório de parada** em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-esta-arquivo-primeiro.md` §0.3 para cobrir o Gate de destino, com o mesmo formato dos demais: gate acionado, o que falta, o que o operador deve fornecer, e a afirmação de que nenhuma derivação e nenhuma execução ocorreram (FR-008)
 - [ ] T008 Acrescentar a condição de destino em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` §6 (Condições de parada) e atualizar o item do checklist em §7 — substituir "Executei fora do projeto pai" por item que nomeie o destino absoluto e a emissão da propriedade (FR-021)
@@ -132,7 +132,7 @@ Projeto único. O alvo da feature é o **procedimento empacotado** em `src/main/
 
 ### Tests for User Story 4 ?? (OPTIONAL - only if tests requested)
 
-- [ ] T030 [P] [US4] Em `src/test/archetype-post-generate/DestinationContractTest.groovy`, adicionar os checks de **contagem travada**: `utils/` com exatamente 19 arquivos, catálogo com exatamente 35 `requiredProperty` e 18 `fileSet` — **deve falhar antes da implementação**
+- [ ] T030 [P] [US4] Em `src/test/archetype-post-generate/DestinationContractTest.groovy`, adicionar os checks de **contagem travada** (FR-024, FR-025): `utils/` com exatamente 19 arquivos, catálogo com exatamente 35 `requiredProperty` e 18 `fileSet` — **deve falhar antes da implementação**
 - [ ] T031 [P] [US4] Em `src/test/archetype-post-generate/DestinationContractTest.groovy`, adicionar o check de que o procedimento é lido **de dentro do artefato reinstalado** em `~/.m2/repository/com/eda-archetype/eda-archetype/0.0.1-SNAPSHOT/`, e não da árvore de desenvolvimento (FR-032)
 
 ### Implementation for User Story 4
@@ -150,7 +150,7 @@ Projeto único. O alvo da feature é o **procedimento empacotado** em `src/main/
 
 **Purpose**: Validação de ponta a ponta e confirmação de que nada regrediu.
 
-- [ ] T036 Rodar `mvn -B clean test` e confirmar que as 40 suítes (39 existentes + a nova `DestinationContractTest`) passam verdes
+- [ ] T036 Rodar `mvn -B clean test` e confirmar que as 39 suítes (38 existentes + a nova `DestinationContractTest`) passam verdes
 - [ ] T037 Rodar `mvn -B clean integration-test` e confirmar que as 22 fixtures de integração continuam verdes
 - [ ] T038 [P] Confirmar que `git status --short` mostra apenas o `README.md` modificado e nenhum resíduo de geração dentro da árvore do archetype
 - [ ] T039 [P] Validar o procedimento empacotado montado: `mvn -B clean process-resources` e conferir em `target/classes/utils/` que a marcação `PASTA DE DESTINO` e a propriedade `outputDirectory` estão presentes
