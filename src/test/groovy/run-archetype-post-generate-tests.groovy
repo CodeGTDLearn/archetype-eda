@@ -23,6 +23,9 @@ List<String> suites = [
         // templates
         "src/test/archetype-post-generate/TemplateResourceContractTest.groovy",
         "src/test/archetype-post-generate/TemplateGuardSemanticsTest.groovy",
+        "src/test/archetype-post-generate/EntityContractLombokParityTest.groovy",
+        "src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy",
+        "src/test/archetype-post-generate/ContractTestLayoutTest.groovy",
         // packaged procedure
         "src/test/archetype-post-generate/ProcedureContractTest.groovy",
         // catalog fragments
@@ -50,6 +53,7 @@ List<String> suites = [
         "src/test/archetype-post-generate/SnippetContractNestedTypesTest.groovy",
         "src/test/archetype-post-generate/SnippetDockerTest.groovy",
         "src/test/archetype-post-generate/SnippetEntityContractTest.groovy",
+        "src/test/archetype-post-generate/SnippetContractSchemaTestTest.groovy",
         "src/test/archetype-post-generate/SnippetExtraPomDependenciesTest.groovy",
         "src/test/archetype-post-generate/SnippetGithubTest.groovy",
         "src/test/archetype-post-generate/SnippetLogbackTest.groovy",

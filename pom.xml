@@ -35,7 +35,7 @@
     </dependency>
     <!--
       groovy-json (test scope): parses the JSON contract schema and the JSON
-      examples of the PACKAGED PROCEDURE (utils/templates-de-contrato/).
+      examples of the PACKAGED PROCEDURE (utils/04-referencia-templates-de-contrato/).
       Same version as the Groovy the build already uses.
     -->
     <dependency>

@@ -377,10 +377,10 @@ install           → install + archetype:update-local-catalog
   externo: o procedimento é um conjunto de arquivos Markdown e JSON empacotados
   no JAR.
 * **Composição:** [`src/main/resources/utils/`](src/main/resources/utils/) — 19 arquivos em 4 categorias:
-  - `inicializacao/` — porta de entrada (`prompt-00`) e mapa de leitura (`indice-01`);
-  - `procedimento-do-agente/` — papel, leitura do JAR, regras obrigatórias, execução e entregáveis;
-  - `regras-de-formacao-do-contrato/` — derivação da entidade, tipos, tipos aninhados, precedência, materialização e proveniência;
-  - `templates-de-contrato/` — schema e exemplos.
+  - `01-entrada-inicializacao/` — porta de entrada (`prompt-00`) e mapa de leitura (`indice-01`);
+  - `02-operacao-procedimento-do-agente/` — papel, leitura do JAR, regras obrigatórias, execução e entregáveis;
+  - `03-derivacao-regras-de-formacao-do-contrato/` — derivação da entidade, tipos, tipos aninhados, precedência, materialização e proveniência;
+  - `04-referencia-templates-de-contrato/` — schema e exemplos.
 * **Entrada/Saída:** spec (tipo de módulo, package base, use-case, contrato JSON)
   → command line do Maven + tabela de proveniência.
 * **Fonte da verdade:** o JAR instalado (`com.eda-archetype:eda-archetype`) e,
@@ -414,7 +414,7 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 | Artefato | Local | Papel |
 |----------|-------|-------|
 | Templates | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
-| Procedimento para Especificação | `src/main/resources/utils/` | 19 arquivos em 4 categorias (`inicializacao/`, `procedimento-do-agente/`, `regras-de-formacao-do-contrato/`, `templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
+| Procedimento para Especificação | `src/main/resources/utils/` | 19 arquivos em 4 categorias (`01-entrada-inicializacao/`, `02-operacao-procedimento-do-agente/`, `03-derivacao-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
 | Fixtures de integração | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um validado com `mvn clean verify` |
 
 * **Montagem do catálogo:** fragmentos (A1 + A2) + DOCTYPE (A3) →
@@ -435,7 +435,7 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
-| A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 62 fragmentos Groovy (15 `body/` + 25 `variables/` + 3 `generators/` + 19 `snippets/`) |
+| A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 64 fragmentos Groovy (15 `body/` + 25 `variables/` + 4 `generators/` + 20 `snippets/`) |
 | A6 | Compositor do pós-processador | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
 
 * **Montagem:** `ArchetypePostGenerateComposer` (A6) via `groovy-maven-plugin:execute` na fase
@@ -456,7 +456,7 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 | Fase | Plugin | Entrada | Saída |
 |------|--------|---------|-------|
 | `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
-| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 62 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
+| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 64 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
 | `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-archetype-post-generate-tests.groovy` | as suítes unitárias do pós-processador (o build falha se alguma falhar) |
 | `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um com `mvn clean verify` |
 | `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
@@ -480,7 +480,7 @@ TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
 [1] CATÁLOGO         35 property-*.xml + 18 fileset-*.xml + DOCTYPE (53 entities)
                      └─ xml-maven-plugin:transform + archetype-metadata-identity.xsl (generate-resources)
                      
-[2] PÓS-PROCESSADOR  62 fragmentos .groovy
+[2] PÓS-PROCESSADOR  64 fragmentos .groovy
                      └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
                         (local: src/main/groovy/ArchetypePostGenerateComposer.groovy)
                         
@@ -558,7 +558,21 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 | Entrada | Exemplo |
 |---|---|
 | **Use case** | *"Cadastro de clientes de uma clínica. API REST com autenticação JWT na porta 8080."* |
-| **Contrato JSON** | `{"entityName":"Cliente","attributes":{"nome":"Maria","ativo":true,"nascimento":"1990-05-14"},"api_port":8080}` |
+| **Contrato JSON** | objeto JSON completo — corpo abaixo |
+
+**Contrato JSON:**
+
+```json
+{
+  "entityName": "Cliente",
+  "attributes": {
+    "nome": "Maria",
+    "ativo": true,
+    "nascimento": "1990-05-14"
+  },
+  "api_port": 8080
+}
+```
 
 </details>
 
@@ -664,7 +678,7 @@ mvn archetype:generate --batch-mode \
 
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados.
 
-> **Onde está o detalhe de cada coluna?** Em [`src/main/resources/utils/regras-de-formacao-do-contrato/`](src/main/resources/utils/regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
+> **Onde está o detalhe de cada coluna?** Em [`src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/`](src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
 
 </details>
 
@@ -1747,12 +1761,28 @@ if (keep_binding_properties == 'false') {
 
 </details>
 
-<details><summary><strong> Procedimento para Especificação </strong></summary>
+<details><summary><strong> Procedimento para Especificação/Spec </strong></summary>
 
 #### Como usar no 'OpenCode' OU na Spec do 'GitHub Spec Kit'
 * O procedimento completo **está empacotado no JAR** do archetype.
 * O operador entrega apenas o **spec mínimo** abaixo; o agente lê o procedimento de dentro do JAR.
 * O README não é fonte de runtime.
+
+> ⚠️ **Advertência — premissa de entrada obrigatória.**
+> Este modelo de prompt só é válido com **as _'duas partes'_, _'nesta ordem'_**:
+>
+> 1. **use-case** (texto) — seção `3. USE-CASE` ou marcador `USE CASE`;
+> 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`.
+>
+> O procedimento Para e Reporta quando:
+>
+> - o use-case estiver **AUSENTE** ou em branco (**Gate A**);
+> - o contrato estiver **AUSENTE**, em branco, for `{}` ou **'NAO FOR**' um **'OBJETO JSON'** (**Gate B**);
+> - o contrato aparecer **ANTES** do use-case (**Gate C**).
+>
+> Não reordene as seções, não omita o contrato e não use `none` como substituto.
+> A fonte normativa é `prompt-00` §0, dentro do JAR.
+
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
 
@@ -1781,7 +1811,9 @@ org.clinica
 }
 ```
 
-* O agente começa por `utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, dentro do JAR
+* A ordem é normativa: **use-case primeiro, contrato depois**. Sem um dos dois, ou com o contrato
+  antes do use-case, o procedimento para (Gates A, B e C de `prompt-00` §0).
+* O agente começa por `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, dentro do JAR
   instalado (`com.eda-archetype:eda-archetype`).
 * O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.
   - ✅ `-Dpackage=org.clinica` → `package org.clinica.cliente;`
@@ -1792,7 +1824,7 @@ org.clinica
 O detalhamento do procedimento não vive mais no README. Ele está empacotado no JAR, em
 `utils/`, e é lido pelo agente antes de qualquer derivação.
 
-**Regras de formação do contrato** (`utils/regras-de-formacao-do-contrato/`):
+**Regras de formação do contrato** (`utils/03-derivacao-regras-de-formacao-do-contrato/`):
 
 | Arquivo | Papel |
 |---|---|
@@ -1803,7 +1835,7 @@ O detalhamento do procedimento não vive mais no README. Ele está empacotado no
 | `regras-05-como-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
 | `regras-06-como-relatar-proveniencia.md` | tabela de proveniência e resumo |
 
-**Templates de contrato** (`utils/templates-de-contrato/`):
+**Templates de contrato** (`utils/04-referencia-templates-de-contrato/`):
 
 | Arquivo | Papel |
 |---|---|
@@ -1831,8 +1863,8 @@ O detalhamento do procedimento não vive mais no README. Ele está empacotado no
 **Em ambos os casos**, o seu modelo mental é o mesmo: descrição em cima,
 JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
 fica a cargo do procedimento empacotado no JAR —
-`utils/inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e as regras em
-`utils/regras-de-formacao-do-contrato/`.
+`utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e as regras em
+`utils/03-derivacao-regras-de-formacao-do-contrato/`.
 
 </details>
 
@@ -1886,12 +1918,12 @@ fica a cargo do procedimento empacotado no JAR —
 * **OBJETIVO**
   * Manter 1 arquivo final gerado em (`target/classes/META-INF/archetype-post-generate.groovy`) e consumido pelo (`maven-archetype-plugin`)
     durante o pos-processamento do projeto gerado,
-    mas organizado no source em modulos menores (15 arquivos de (`body/`) + 25 de (`variables/`) + 3 de (`generators/`) + 19 de (`snippets/`)).
+    mas organizado no source em modulos menores (15 arquivos de (`body/`) + 25 de (`variables/`) + 4 de (`generators/`) + 20 de (`snippets/`)).
 
 * **MECANISMO**
   * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 4 diretorios.
   * A [`List<String> SECTIONS`](src/main/groovy/ArchetypePostGenerateComposer.groovy) no topo do compositor e a **fonte unica da verdade da ordem** (substitui o `ls -1` alfabetico implicito do bash legado).
-  * Resultado: o source continua sendo uma colecao de 62 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
+  * Resultado: o source continua sendo uma colecao de 63 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
   * Visibilidade: (`target/`) esta no (`.gitignore`) e o IDE normalmente o exclui — o arquivo **nao aparece** na arvore do projeto. Use `mvn clean process-resources` e abra (`target/classes/META-INF/archetype-post-generate.groovy`), ou `Ctrl+Shift+N` no IntelliJ.
 
 * **PLUGIN** — [`groovy-maven-plugin`](https://groovy.github.io/gmaven/) 2.1.1
@@ -1982,6 +2014,21 @@ fica a cargo do procedimento empacotado no JAR —
 
   > **Uma subpasta = um cenário = um vetor de flags.** A *assinatura* de cada fixture (as flags cujo valor **difere do default do catálogo**) fica declarada no cabeçalho `# FIXTURE SIGNATURE` do `archetype.properties` e é verificada por `FixturesMatrixTest.groovy`.
   > Matriz completa (cluster × flags sob teste × o que assere) → [src/test/resources/projects/README.md](src/test/resources/projects/README.md).
+
+</details>
+
+<a name="21-schema-test-entidade-contrato-gerado-na-aplicacao"></a>
+
+<details style="margin-left: 2em;"><summary><strong> 2.1) SCHEMA TEST ENTIDADE-CONTRATO (gerado na aplicacao)</strong></summary>
+
+  * **Premissa**: o schema test e um artefato DA APLICACAO GERADA. O archetype apenas o materializa/remove e verifica a entrega.
+  * **Ativacao derivada** (sem flag nova): o pacote `src/test/java/<entity_package>/contract/` so existe quando `enable_folder_src_test_java=true` **e** `src/test/resources/contracts/contract.json` foi persistido. Caso contrario, `snippet-20-contract_schema_test.groovy` remove o pacote.
+  * **Conteudo**: um arquivo de teste por sujeito - campos simples, cada tipo aninhado e cada enum - mais os arquivos das regras transversais (id tecnico, campos excedentes, round-trip, contrato salvo, contrato malformado, normalizacao de chaves, mapeamento de tipos e reconciliacao de aninhados/enums). Apoio: classes pequenas de leitura de campos, do contrato, de normalizacao de chaves e de navegacao.
+  * **Execucao**: pelo ciclo de testes da propria aplicacao (`mvnw test`), para sempre. Cada divergencia produz uma falha propria, agrupada no arquivo de regra, em ordem deterministica, com atributo, tipo esperado/encontrado, direcao (contrato->entidade ou entidade->contrato) e caminho hierarquico.
+  * **Regras espelhadas**: `utils/03-derivacao-regras-de-formacao-do-contrato/regras-01..03` (formas, precedencia `attributes` > `fields` > topo, tipos/enums, aninhados ate 25 niveis, `id` -> `<entidade>Id`).
+  * **JSON**: Spring Boot 4 usa Jackson 3 (`tools.jackson.databind`), disponivel via `spring-boot-starter-web`; nenhuma dependencia nova entra no `pom.xml` gerado.
+  * **Prova no archetype (Frente 02)**: as fixtures `entity-contract`, `custom-nested-objects` e `custom-enums-from-payload` verificam a presenca do pacote, o relatorio surefire verde da aplicacao e a matriz de sabotagem da Frente 02.
+  * **Sabotagem coberta**: contrato (chave removida, folha mais profunda renomeada, JSON corrompido), entidade (campo renomeado, campos clandestinos, tipo alterado), enums de topo e aninhado, e multiplas divergencias reportadas uma por falha, em ordem deterministica - mais a paridade Lombok on/off com o mesmo veredito. O contrato da fixture cobre 6 POJOs aninhados em cadeia (7 niveis), enums de topo/aninhado, tipo de projeto sobre array e dois campos do mesmo enum.
 
 </details>
 
@@ -2113,7 +2160,8 @@ br.com.loja
 {
   "nome_produto": "Teclado Mecânico",
   "preco": 250.50,
-  "quantidade_estoque": 15
+  "quantidade_estoque": 15,
+  "status": ["ATIVO", "CANCELADO"]
 }
 
 5. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
@@ -2125,6 +2173,7 @@ br.com.loja
 - Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
   "idea <pasta_do_projeto_gerado>".
 - O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
+- A API gerada deve ter amplo suporte a testabilidade.
 ```
 
   * **O que esperar:** 
@@ -2159,12 +2208,14 @@ br.com.loja
   "nome_produto": "Smartphone",
   "preco": 1500.0,
   "quantidade_estoque": 10,
+  "status": ["ATIVO", "CANCELADO"],
   "detalhes_categoria": {
     "nome_categoria": "Eletrônicos",
     "codigo_setor": "E01",
     "fabricante_origem": {
       "nome_empresa": "Tech Corp",
-      "cnpj_distribuidor": "12.345.678/0001-99"
+      "cnpj_distribuidor": "12.345.678/0001-99",
+      "tipo_origem": ["NACIONAL", "IMPORTADO"]
     }
   }
 }
@@ -2178,17 +2229,22 @@ br.com.loja
 - Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
   "idea <pasta_do_projeto_gerado>".
 - O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
+- A API gerada deve ter amplo suporte a testabilidade.
 ```
 
-  * **O que esperar:** 
-    * os mesmos 3 atributos do Cenário A **mais** o objeto aninhado; 
-      * `contract_nested_type_definitions` com **2 POJOs**:
-        * `DetalhesCategoria` (campos `nomeCategoria`, `codigoSetor` e o filho `fabricanteOrigem`) e 
-        * `FabricanteOrigem` (campos `nomeEmpresa`, `cnpjDistribuidor`).
-    * Os POJOs nascem em `br.com.loja.produto.nested`, com campos em **camelCase** e o pai emitido antes do filho.
+  * **O que esperar:**
+    * os mesmos 3 atributos do Cenário A **mais** o `status`, o objeto aninhado e o enum aninhado;
+      * `custom_entity_attributes_list=String:nome_produto,Double:preco,Integer:quantidade_estoque,Status:status,DetalhesCategoria:detalhes_categoria`;
+      * `contract_nested_type_definitions=DetalhesCategoria|nomeCategoria:String,codigoSetor:String,fabricanteOrigem:FabricanteOrigem;FabricanteOrigem|nomeEmpresa:String,cnpjDistribuidor:String,tipoOrigem:TipoOrigem`;
+      * `contract_enum_definitions=Status:ATIVO|CANCELADO;nested.TipoOrigem:NACIONAL|IMPORTADO`.
+    * Os POJOs nascem em `br.com.loja.produto.nested`, com campos em **camelCase** e o pai emitido antes do filho:
+      * `DetalhesCategoria` (`nomeCategoria`, `codigoSetor`, `fabricanteOrigem`) e
+      * `FabricanteOrigem` (`nomeEmpresa`, `cnpjDistribuidor`, `tipoOrigem`).
+    * O enum aninhado `TipoOrigem` nasce em `br.com.loja.produto.nested` com `NACIONAL` e `IMPORTADO`; o enum de topo `Status` fica em `br.com.loja.produto` com `ATIVO` e `CANCELADO`.
     * Na entidade, o campo do objeto aninhado é referenciado por **FQN** e marcado com `@Transient`.
-    * **Sinal de alerta:** 
-      * se o agente devolver `detalhes_categoria` como `String`, a profundidade não foi reconhecida
+    * **Sinal de alerta:**
+      * se o agente devolver `detalhes_categoria` como `String`, a profundidade não foi reconhecida;
+      * se `tipo_origem` vier como `String` ou o agente não emitir `nested.TipoOrigem`, o enum aninhado não foi reconhecido;
       * o contrato tem 2 níveis (filho + neto) e a regra manda virar POJO.
 
 </details>
@@ -2218,7 +2274,7 @@ br.com.loja
 > As siglas `FR-XXX` citadas nesta seção vêm da spec `003-llm-flag-inference`,
 > **arquivada** em [`specs/_archive/003-llm-flag-inference/`](specs/_archive/003-llm-flag-inference/).
 > O motor que a implementava foi removido; as regras de formação do contrato
-> que ele aplicava estão em [`src/main/resources/utils/regras-de-formacao-do-contrato/`](src/main/resources/utils/regras-de-formacao-do-contrato/).
+> que ele aplicava estão em [`src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/`](src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/).
 
 </details>
 
@@ -2289,7 +2345,7 @@ br.com.loja
   * Padrão: `MyEntity`
   * Efeito: nomeia as **classes** da entidade em `src/main/java/<package>/<entity_package_name>/` — `<entity_name>.java`, `<entity_name>Controller.java`, `<entity_name>Service.java` e `<entity_name>Repository.java`. A **pasta** é `entity_package_name`, **não** `entity_name`. Validação `^[A-Z][a-zA-Z0-9_]+$`.
   * Sem dependência.
-  * *Derivação:* o agente (`utils/regras-de-formacao-do-contrato/regras-01` §2) resolve o nome
+  * *Derivação:* o agente (`utils/03-derivacao-regras-de-formacao-do-contrato/regras-01` §2) resolve o nome
     **a partir do contrato** (campo `entityName`/`entity_name`/`entity`) e, na ausência dele,
     aceita a inferência do use-case — `entity_name` é a única flag da *allowlist* de
     inferência (`regras-04` §6). O default do catálogo só entra como último recurso.
@@ -2591,5 +2647,74 @@ enable_folder_src_test_java = true
   └─→ entity_contract_file_path (contrato copiado para src/test/resources/contracts/)
 ```
 </details>
+
+</details>
+
+<details><summary><strong> Funcionalidades 🛠️ </strong></summary>
+
+  <details style="margin-left: 2em;"><summary><strong> Contratos📜: a 'Fonte da Verdade' do Módulo da API </strong></summary>
+
+  * **1. Raciocínio central**:
+    * o contrato nasce do desenho da tela (Design de Front-End) e é a fonte da verdade do módulo da API que alimenta essa tela.
+    * a entidade é a classe que representa esse módulo: a expressão programática do contrato.
+    * o ciclo é: desenho da tela → contrato → módulo da API → tela.
+    * é um ciclo fechado: cada etapa depende da anterior.
+    * se a entidade se separar do contrato, o ciclo se rompe.
+    * a tela passa a receber dado errado, incompleto ou nenhum dado.
+    * por isso a conferência protege o ciclo, e não apenas confere campos.
+
+  ```text
+        DESENHO DA TELA 
+ (High/Low Definition Prototype)
+               │
+               │ 1. o Prototipo diz o que a tela/Front-End precisa
+               │    um contrato JSON sera a fonte de dados da tela
+               ▼
+           EXTRACAO 
+           CONTRATO   ◄── Contrato extraido a partir da HD/LD prototype
+               │          O Contrato e a 'fonte da verdade'(provedor) do módulo
+               │
+               │ 2. o contrato diz o que o módulo entrega/serve/prove ao Front-End
+               ▼
+         MÓDULO DA API (Provedor de Dados ao Front-End)
+               │
+               │ 3. o módulo entrega os dados, obedecendo ao contrato,
+               │    Servindo/Provendo ao Front-End(Client) os dados
+               ▼
+           FRONT-END
+            (TELA)
+               │
+               │ 4. a tela cumpre sua funcao ao USER
+               │    consumindo os dados providos pela API(Contrato)
+               └──────────────► volta ao desenho: o ciclo recomeça
+  ```
+
+  * **2. O que faz**:
+    * quando há contrato salvo e a pasta de testes habilitada, a aplicação nasce com um teste automático.
+    * a cada execução, ele confere se a entidade continua fiel ao contrato.
+    * se alguém mudar um dos dois, o teste falha.
+    * a falha aponta o campo, o motivo e o sentido da diferença.
+
+  * **3. Como funciona**:
+    * o teste lê o contrato salvo no próprio projeto.
+    * depois compara com a entidade, campo por campo.
+    * vale nos dois sentidos: nada do contrato pode faltar; nada da entidade pode sobrar.
+    * objetos dentro de objetos e listas de valores fixos também entram na conferência.
+    * havendo vários problemas, todos aparecem juntos, em ordem previsível.
+
+  * **4. Para quem serve**:
+    * para quem usa o módulo gerado: entidade e contrato não se desencontram com o tempo.
+    * para quem mantém o archetype: todo módulo novo já sai com a conferência funcionando.
+    * para o front-end: os dados que chegam continuam sendo os combinados no desenho.
+
+  * **5. Quando ele existe**:
+    * apenas quando a pasta de testes está habilitada e o contrato foi salvo.
+    * sem contrato, o teste não é criado.
+    * nesse caso, o projeto segue compilando e passando normalmente.
+
+  * **6. Detalhes técnicos**:
+    * onde o teste vive, o que cobre e como a entrega é provada: [Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO](#21-schema-test-entidade-contrato-gerado-na-aplicacao).
+
+  </details>
 
 </details>

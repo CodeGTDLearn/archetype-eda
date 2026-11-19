@@ -110,10 +110,18 @@ def flagOf = { File f, String prefix ->
             .find { true }
 }
 def allAssets = [[variableAssets, "variables"], [snippetAssets, "snippet"], [generatorAssets, "generator"]]
+// Assets deliberately NOT flag-gated: the capability is derived from the
+// persisted contract (Constituição, Princípio I), not from a user-facing flag.
+def NON_FLAG_ASSETS = [
+        "snippet-20-contract_schema_test.groovy":
+                "derived from the persisted contract, never from a flag",
+        "generator-04-contract_schema_tests.groovy":
+                "derived from the persisted contract, never from a flag"
+]
 def unresolved = []
 allAssets.each { assets, prefix ->
     assets.each { f ->
-        if (flagOf(f, prefix) == null) unresolved << f.name
+        if (flagOf(f, prefix) == null && !NON_FLAG_ASSETS.containsKey(f.name)) unresolved << f.name
     }
 }
 check("4.4 every asset resolves to a declared catalog flag: ${unresolved}", unresolved.isEmpty())
@@ -144,6 +152,11 @@ def readerText = readers.collect { it.getText("UTF-8") }.join("\n")
 def isUsedByReader = { String flag -> (readerText =~ (/\b/ + flag + /\b/)).find() }
 def orphanBindings = boundFlags.findAll { !isUsedByReader(it) && !bindingOnlyAllowlist.contains(it) }
 check("4.6 every variables fragment is consumed by a reader: ${orphanBindings}", orphanBindings.isEmpty())
+
+def staleNonFlag = NON_FLAG_ASSETS.keySet().findAll { String name ->
+    !allAssets.any { assets, prefix -> assets.any { it.name == name } }
+}
+check("4.7 the NON_FLAG_ASSETS allowlist has no stale entry: ${staleNonFlag}", staleNonFlag.isEmpty())
 
 // ---------------------------------------------------------------------------
 // 5) EXECUTION coverage: the asset is not only CITED, it is INVOKED by a

@@ -1,0 +1,30 @@
+# 7.1
+[ENTITY_TO_CONTRACT] name | expected: absent | found: String | kind: EXTRA_FIELD
+
+# 7.2
+[CONTRACT_TO_ENTITY] endereco.complemento.pontoReferencia.referencia.origem.detalhe.observacaoRenomeada | expected: String | found: absent | kind: MISSING_FIELD
+[ENTITY_TO_CONTRACT] endereco.complemento.pontoReferencia.referencia.origem.detalhe.observacao | expected: absent | found: String | kind: EXTRA_FIELD
+
+# 7.4
+[CONTRACT_TO_ENTITY] name | expected: String | found: absent | kind: MISSING_FIELD
+[ENTITY_TO_CONTRACT] nome | expected: absent | found: String | kind: EXTRA_FIELD
+
+# 7.5
+[ENTITY_TO_CONTRACT] alfa | expected: absent | found: String | kind: EXTRA_FIELD
+[ENTITY_TO_CONTRACT] zeta | expected: absent | found: String | kind: EXTRA_FIELD
+
+# 7.6
+[CONTRACT_TO_ENTITY] active | expected: Boolean | found: String | kind: TYPE_MISMATCH
+
+# 7.7
+[CONTRACT_TO_ENTITY] status | expected: [SUSPENSO, CANCELADO] | found: [ATIVO, CANCELADO] | kind: ENUM_CONSTANT_MISMATCH
+[CONTRACT_TO_ENTITY] previousStatus | expected: [SUSPENSO, CANCELADO] | found: [ATIVO, CANCELADO] | kind: ENUM_CONSTANT_MISMATCH
+
+# 7.8
+[CONTRACT_TO_ENTITY] endereco.uf | expected: [MG, RJ] | found: [SP, RJ] | kind: ENUM_CONSTANT_MISMATCH
+
+# 7.9
+[CONTRACT_TO_ENTITY] endereco.complemento.pontoReferencia.referencia.origem.detalhe.observacaoRenomeada | expected: String | found: absent | kind: MISSING_FIELD
+[ENTITY_TO_CONTRACT] name | expected: absent | found: String | kind: EXTRA_FIELD
+[ENTITY_TO_CONTRACT] endereco.complemento.pontoReferencia.referencia.origem.detalhe.observacao | expected: absent | found: String | kind: EXTRA_FIELD
+

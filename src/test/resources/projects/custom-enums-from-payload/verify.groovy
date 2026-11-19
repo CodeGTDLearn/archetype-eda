@@ -105,4 +105,57 @@ if (endereco.contains("lombok")) fail("Endereco uses Lombok")
 if (endereco.contains("jakarta.persistence")) fail("Endereco uses JPA")
 if (endereco.contains("@Transient")) fail("Endereco must not use @Transient (plain POJO)")
 
+
+// ---------------------------------------------------------------------------
+// Contract schema test: this profile persists a contract, so the generated
+// application MUST carry the sliced test package and run it green.
+// ---------------------------------------------------------------------------
+def _contractGateBase = null
+try { _contractGateBase = basedir } catch (Throwable ignored) { _contractGateBase = System.getProperty('basedir') }
+def _contractGateRoot = new File(_contractGateBase as String)
+def _contractGateProjects = []
+if (new File(_contractGateRoot, 'project').isDirectory()) {
+    new File(_contractGateRoot, 'project').eachDir { _cgProject -> _contractGateProjects << _cgProject }
+} else {
+    _contractGateProjects << _contractGateRoot
+}
+_contractGateProjects.each { _cgProject ->
+    def _cgTestJava = new File(_cgProject, 'src/test/java')
+    def _cgContractFiles = []
+    if (_cgTestJava.isDirectory()) {
+        _cgTestJava.eachFileRecurse { _cgFile ->
+            if (_cgFile.isFile() && _cgFile.name.endsWith('.java')
+                    && _cgFile.path.replace('\\', '/').contains('/contract/')) {
+                _cgContractFiles << _cgFile
+            }
+        }
+    }
+    if (_cgContractFiles.isEmpty()) {
+        throw new IllegalStateException(
+            "verify.groovy: contract schema test package missing in ${_cgProject.path}")
+    }
+    def _cgSurefire = new File(_cgProject, 'target/surefire-reports')
+    if (!_cgSurefire.isDirectory()) {
+        throw new IllegalStateException(
+            "verify.groovy: surefire reports missing in ${_cgProject.path}")
+    }
+    def _cgReports = _cgSurefire.listFiles().findAll {
+        it.isFile() && it.name.startsWith('it.pkg.') && it.name.contains('.contract.') && it.name.endsWith('.txt')
+    }
+    if (_cgReports.isEmpty()) {
+        throw new IllegalStateException(
+            "verify.groovy: no contract test report in ${_cgProject.path}")
+    }
+    _cgReports.each { _cgReport ->
+        def _cgText = _cgReport.getText('UTF-8')
+        def _cgMatcher = _cgText =~ /Tests run: (\d+), Failures: (\d+), Errors: (\d+)/
+        if (!_cgMatcher.find()) {
+            throw new IllegalStateException("verify.groovy: cannot parse ${_cgReport.name}")
+        }
+        if ((_cgMatcher.group(2) as int) != 0 || (_cgMatcher.group(3) as int) != 0) {
+            throw new IllegalStateException("verify.groovy: contract test is not green: ${_cgReport.name}")
+        }
+    }
+}
+
 return null

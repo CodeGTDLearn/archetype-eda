@@ -130,5 +130,5 @@ Use o repositório-fonte apenas quando o usuário pedir explicitamente. O caminh
 Não use código de motor, CLI ou script externo para redescobrir semântica de flags. As regras estão em:
 
 ```text
-utils/regras-de-formacao-do-contrato/
+utils/03-derivacao-regras-de-formacao-do-contrato/
 ```

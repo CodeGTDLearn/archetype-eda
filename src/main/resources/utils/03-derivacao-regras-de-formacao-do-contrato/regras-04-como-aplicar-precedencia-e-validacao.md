@@ -47,7 +47,7 @@ Toda flag precisa satisfazer a `validationRegex` do catálogo.
 | `custom_entity_attribute_imports` | `none` | FQNs separados por vírgula |
 | `contract_enum_definitions` | `none` | `Tipo:CONST|CONST` separados por `;` |
 | `contract_nested_type_definitions` | `none` | `Tipo|Campo:Tipo` separados por `;` |
-| `entity_contract_file_path` | `none` | `none` ou caminho `.json` |
+| `entity_contract_file_path` | `none` (catálogo; não usado aqui) | `none` ou caminho `.json` |
 | `enable_custom_entity_attributes` | `false` | `true` ou `false` |
 | `enable_folder_src_test_java` | `false` | `true` ou `false` |
 
@@ -60,7 +60,7 @@ O catálogo é a autoridade final. As regex acima são um resumo; em caso de div
 - `custom_entity_attribute_imports`, `contract_enum_definitions` e `contract_nested_type_definitions` são derivados apenas quando há atributos.
 - `entity_contract_file_path` só produz cópia com `enable_folder_src_test_java=true`.
 - `entity_contract_file_path` usa barras normais.
-- `entity_contract_file_path` é `none` quando não houver contrato.
+- `entity_contract_file_path` é sempre um caminho `.json`: sem contrato, pare pelo Gate B de `prompt-00` §0.
 
 ## 5. Flags não definidas no catálogo
 

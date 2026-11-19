@@ -51,8 +51,8 @@ Ficam fora da assinatura (identidade/metadados): `project_description`, `entity_
 | Fixture | Flags sob teste | O que o `verify.groovy` assere |
 |---|---|---|
 | `custom-attributes/` | `contract_enum_definitions`, `custom_entity_attribute_imports`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `entity_contract_file_path` | imports FQN, enums nos pacotes declarados, classe referenciada intacta, contracts/ ausente |
-| `custom-enums-from-payload/` | `contract_enum_definitions`, `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java` | enums gerados a partir de array UPPERCASE |
-| `entity-contract/` | `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java`, `entity_contract_file_path` | contract.json byte-a-byte + entidade coerente com o contrato |
+| `custom-enums-from-payload/` | `contract_enum_definitions`, `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java`, `entity_contract_file_path` | enums gerados a partir de array UPPERCASE + schema test presente e verde |
+| `entity-contract/` | `contract_enum_definitions`, `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java`, `entity_contract_file_path` | contract.json byte-a-byte + entidade coerente + pacote `contract/` fatiado (21 arquivos de teste + 6 de apoio) + surefire verde com 43 testes + sabotagem com o golden (cadeia de 7 niveis + enums) |
 | `id-normalization/` | `custom_entity_attributes_list`, `enable_custom_entity_attributes` | uma unica PK; as grafias id/iD sao descartadas |
 
 ### `nested`
@@ -60,7 +60,7 @@ Ficam fora da assinatura (identidade/metadados): `project_description`, `entity_
 | Fixture | Flags sob teste | O que o `verify.groovy` assere |
 |---|---|---|
 | `custom-nested-edge-cases/` | `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java`, `enable_lombok_support` | nome reservado, palavra-chave, acento, array->String |
-| `custom-nested-objects/` | `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java` | @Transient, referencia por FQN, pacote nested, POJOs plain |
+| `custom-nested-objects/` | `contract_nested_type_definitions`, `custom_entity_attributes_list`, `enable_custom_entity_attributes`, `enable_folder_src_test_java`, `entity_contract_file_path` | @Transient, referencia por FQN, pacote nested, POJOs plain + schema test presente e verde |
 
 ### `multi`
 

@@ -3,6 +3,34 @@
   "attributes": [
     { "name": "id", "value": 1024 },
     { "name": "name", "value": "Acme Corp" },
-    { "name": "active", "value": true }
+    { "name": "active", "value": true, "type": "java.time.Clock" },
+    {
+      "name": "endereco",
+      "value": {
+        "logradouro": "Rua A",
+        "numero": 10,
+        "uf": ["SP", "RJ"],
+        "complemento": {
+          "descricao": "Apto 12",
+          "pontoReferencia": {
+            "descricao": "Portao azul",
+            "distanciaMetros": 50,
+            "referencia": {
+              "nome": "Igreja",
+              "origem": {
+                "bairro": "Centro",
+                "detalhe": {
+                  "codigo": "REF-1",
+                  "observacao": "Ao lado da praca"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    { "name": "status", "type": "Status", "value": ["ATIVO", "CANCELADO", "ATIVO"] },
+    { "name": "tags", "type": "Endereco", "value": ["a", "b"] },
+    { "name": "previousStatus", "type": "Status", "value": "CANCELADO" }
   ]
 }

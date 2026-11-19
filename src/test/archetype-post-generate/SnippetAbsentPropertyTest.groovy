@@ -19,7 +19,7 @@ def check = { String n, boolean c -> if (c) { println "PASS: ${n}" } else { prin
 
 def snippetDir = new File("src/main/resources/META-INF/archetype_post_generate_snippets")
 def snippets = snippetDir.listFiles().findAll { it.isFile() && it.name.endsWith(".groovy") }.sort { it.name }*.name
-check("1.1 the post-processor has 19 snippets", snippets.size() == 19)
+check("1.1 the post-processor has 20 snippets", snippets.size() == 20)
 
 // Every artifact a snippet may touch.
 def artifacts = [

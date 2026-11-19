@@ -12,6 +12,10 @@ O package base nunca vem do contrato. O contrato pode ter uma chave `package`, m
 
 ## 2. Nome da entidade
 
+Antes de resolver o nome, confirme que o contrato existe e é objeto JSON.
+
+Se não for, pare pelo Gate B de `prompt-00` §0: não infira o nome pelo use-case e não use default.
+
 Resolva o nome nesta ordem:
 
 1. `entity_name` no contrato.
