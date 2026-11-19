@@ -1806,18 +1806,20 @@ if (keep_binding_properties == 'false') {
 * O README não é fonte de runtime.
 
 > ⚠️ **Advertência — premissa de entrada obrigatória.**
-> Este modelo de prompt só é válido com **as _'duas partes'_, _'nesta ordem'_**:
+> Este modelo de prompt só é válido com **as _'duas partes'_, _'nesta ordem'_**, mais a **pasta de destino**:
 >
 > 1. **use-case** (texto) — seção `3. USE-CASE` ou marcador `USE CASE`;
-> 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`.
+> 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`;
+> 3. **pasta de destino** (caminho absoluto) — seção `5. PASTA DE DESTINO`.
 >
 > O procedimento Para e Reporta quando:
 >
 > - o use-case estiver **AUSENTE** ou em branco (**Gate A**);
 > - o contrato estiver **AUSENTE**, em branco, for `{}` ou **'NAO FOR**' um **'OBJETO JSON'** (**Gate B**);
-> - o contrato aparecer **ANTES** do use-case (**Gate C**).
+> - o contrato aparecer **ANTES** do use-case (**Gate C**);
+> - a pasta de destino estiver **AUSENTE**, for **relativa/ambígua** ou estiver **dentro da árvore do archetype** (**Gate D**).
 >
-> Não reordene as seções, não omita o contrato e não use `none` como substituto.
+> Não reordene as seções, não omita o contrato, não use `none` como substituto e não presuma destino.
 > A fonte normativa é `prompt-00` §0, dentro do JAR.
 
 ```text
@@ -1846,10 +1848,14 @@ org.clinica
   "enable_jwt_authentication": true,
   "api_port": 8080
 }
+
+5. PASTA DE DESTINO:
+C:\Temp\eda-sandbox
 ```
 
-* A ordem é normativa: **use-case primeiro, contrato depois**. Sem um dos dois, ou com o contrato
-  antes do use-case, o procedimento para (Gates A, B e C de `prompt-00` §0).
+* A ordem é normativa: **use-case primeiro, contrato depois**; a pasta de destino é entrada
+  independente e obrigatória. Sem qualquer uma delas, com o contrato antes do use-case, ou com
+  destino dentro da árvore do archetype, o procedimento para (Gates A, B, C e D de `prompt-00` §0).
 * O agente começa por `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, dentro do JAR
   instalado (`com.eda-archetype:eda-archetype`).
 * O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.

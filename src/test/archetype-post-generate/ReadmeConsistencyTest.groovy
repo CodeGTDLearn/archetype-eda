@@ -101,6 +101,24 @@ def hardCoded = []
 }
 check("3.3 the README does not hard-code the test counts: ${hardCoded}", hardCoded.isEmpty())
 
+// ---------------------------------------------------------------------------
+// 3.4 The operator spec template documents the destination entry
+//
+// The "Procedimento para Especificação/Spec" section is the canonical place
+// where the operator learns the minimal spec. It MUST match the procedure:
+// three entries (use-case, contract, destination) and Gates A-D.
+// ---------------------------------------------------------------------------
+def specSectionStart = text.indexOf('<a id="procedimento-para-especificacao-spec" name=')
+def specSectionEnd = specSectionStart < 0 ? -1 : text.indexOf("### Onde estão as regras", specSectionStart)
+def specSection = (specSectionStart >= 0 && specSectionEnd > specSectionStart)
+        ? text.substring(specSectionStart, specSectionEnd) : ""
+check("3.4 the operator spec section exists", !specSection.isEmpty())
+check("3.4.1 the operator spec section documents PASTA DE DESTINO",
+        specSection.contains("PASTA DE DESTINO"))
+check("3.4.2 the operator spec section names Gate D", specSection.contains("Gate D"))
+check("3.4.3 the operator spec example carries the destination section",
+        specSection.contains("5. PASTA DE DESTINO:"))
+
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"
 if (failures > 0) throw new RuntimeException("${failures} CHECK(S) FAILED")
