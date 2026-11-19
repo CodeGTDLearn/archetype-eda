@@ -241,6 +241,27 @@ def unexpectedUncited = (uncited - allowedUncited).sort()
 check("1.10 every flag NOT cited by the procedure is an explicit allowlist entry: ${unexpectedUncited}",
         unexpectedUncited.isEmpty())
 
+// ---------------------------------------------------------------------------
+// G. the destination of generation is native, not a catalog flag
+//
+// Feature 005 made the destination an explicit spec entry. It travels in the
+// native `outputDirectory` property of the generation goal, so it MUST NOT
+// become a catalog flag, and the contract meta-keys MUST stay untouched.
+// ---------------------------------------------------------------------------
+def regras01 = new File(utils,
+        "03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md")
+        .getText("UTF-8")
+
+check("1.11 the destination property outputDirectory is NOT a catalog flag",
+        !catalogFlags.contains("outputDirectory"))
+
+def metaKeyLine = regras01.readLines().find { it.contains("meta-chaves (`entityName`") }
+def originalMetaKeys = ["entityName", "entity", "package", "description", "attributes", "fields"]
+check("1.12 regras-01 keeps exactly the six contract meta-keys",
+        metaKeyLine != null && originalMetaKeys.every { metaKeyLine.contains(it) })
+check("1.13 the destination marker is not one of the contract meta-keys",
+        metaKeyLine != null && !metaKeyLine.contains("PASTA DE DESTINO"))
+
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"
 if (failures > 0) throw new RuntimeException("${failures} CHECK(S) FAILED")

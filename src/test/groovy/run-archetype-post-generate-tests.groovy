@@ -28,6 +28,7 @@ List<String> suites = [
         "src/test/archetype-post-generate/ContractTestLayoutTest.groovy",
         // packaged procedure
         "src/test/archetype-post-generate/ProcedureContractTest.groovy",
+        "src/test/archetype-post-generate/DestinationContractTest.groovy",
         // catalog fragments
         "src/test/archetype-post-generate/CatalogFragmentContractTest.groovy",
         // absent / malformed flag values

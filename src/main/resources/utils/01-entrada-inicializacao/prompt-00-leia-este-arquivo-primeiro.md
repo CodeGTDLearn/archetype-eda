@@ -30,7 +30,7 @@ Sem marcador reconhecível, a parte é tratada como ausente.
 
 ### 0.2 Gates
 
-Avalie sempre nesta ordem: Gate A, Gate B, Gate C.
+Avalie sempre nesta ordem: Gate A, Gate B, Gate C, Gate D.
 
 **Gate A — use-case ausente**
 
@@ -60,6 +60,20 @@ Pare quando o contrato aparecer antes do use-case no spec.
 
 A posição do contrato precisa ser maior que a posição da última ocorrência do marcador de use-case.
 
+**Gate D — destino de geração ausente, inválido ou proibido**
+
+Avalie depois dos Gates A, B e C.
+
+Pare e pergunte — sem derivar e sem executar — quando a pasta de destino:
+
+- não estiver declarada no spec (marcação `PASTA DE DESTINO` ausente);
+- for caminho relativo, contiver `~` ou sinalização de fim de arquivo;
+- estiver dentro da árvore do archetype.
+
+O destino dentro da árvore do archetype é proibido de forma **absoluta**: não existe confirmação do operador que o autorize. Ao recusar, avise e pergunte onde fica o destino. Se o operador insistir que o destino é a própria pasta do archetype, ou continuar sem informar um destino, finalize o fluxo com o relatório de parada de §0.3.
+
+Nunca presuma destino: não use o diretório de trabalho corrente, a raiz do archetype, nem `src/`, `target/` ou qualquer pasta do próprio archetype. Uma sugestão de pasta temporária, fora da árvore do archetype, só pode ser aplicada após confirmação explícita do operador.
+
 ### 0.3 Relatório de parada
 
 Ao parar, informe apenas:
@@ -67,6 +81,7 @@ Ao parar, informe apenas:
 - o gate acionado;
 - o que falta;
 - o que o operador deve fornecer;
+- o destino informado, quando houver, e o motivo da recusa quando o gate for o de destino;
 - que nenhuma derivação e nenhum Maven foram executados.
 
 Nenhum gate admite exceção, contorno ou tentativa de prosseguir.
@@ -87,9 +102,10 @@ O spec é o único arquivo externo que você deve consumir. Ele contém:
 - tipo de módulo (`RAIZ` ou `SECUNDARIO`);
 - package base;
 - use-case;
-- contrato JSON.
+- contrato JSON;
+- pasta de destino da geração, na marcação `PASTA DE DESTINO`.
 
-Nada disso é regra do archetype. São dados da geração.
+Nada disso é regra do archetype. São dados da geração. A pasta de destino pertence ao spec e **nunca** ao contrato.
 
 ## 3. Fonte da verdade
 
@@ -136,6 +152,7 @@ Pare e reporte antes de executar quando:
   - Gate B: contrato ausente, em branco, `{}` ou não-objeto;
   - Gate C: contrato antes do use-case;
 - o package base estiver ausente ou ambíguo;
+- a pasta de destino estiver ausente, for inválida ou estiver dentro da árvore do archetype (Gate D);
 - uma flag derivada violar a regex e não houver default válido;
 - houver conflito que exigiria adivinhar.
 
@@ -150,7 +167,8 @@ Pare e reporte antes de executar quando:
 - [ ] Validei tudo contra as regex do catálogo.
 - [ ] Materializei o contrato.
 - [ ] Montei a proveniência.
-- [ ] Executei fora do projeto pai.
+- [ ] Confirmei o destino absoluto, fora da árvore do archetype.
+- [ ] Emiti `-DoutputDirectory` com o destino confirmado.
 - [ ] Validei o `package` e compilei o módulo.
 
 ## 8. Verificação de integridade do JAR

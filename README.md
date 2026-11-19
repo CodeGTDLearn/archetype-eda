@@ -667,6 +667,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 |---|---|
 | **Use case** | *"Cadastro de clientes de uma clínica. API REST com autenticação JWT na porta 8080."* |
 | **Contrato JSON** | objeto JSON completo — corpo abaixo |
+| **PASTA DE DESTINO** | `C:\Temp\eda-sandbox` — caminho absoluto, fora da árvore do archetype |
 
 **Contrato JSON:**
 
@@ -681,6 +682,8 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
   "api_port": 8080
 }
 ```
+
+> A **PASTA DE DESTINO** pertence ao spec, nunca ao contrato. Ela viaja na propriedade nativa `outputDirectory` do goal de geração — que **não** é uma flag do catálogo — e o agente nunca a presume: sem a marcação, ele pergunta. A regra normativa vive em `utils/`, dentro do JAR; o README apenas a referencia.
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar"></a>
 ### 2) Onde cada informação vai parar <a href="#indice">↑ topo</a>
@@ -779,7 +782,7 @@ mvn archetype:generate --batch-mode \
 > 1. O goal `generate` declara `executePhase` → o Maven exige um **`pom.xml` no diretório de execução**. Rodar numa pasta vazia falha com *"requires a project to execute but there is no POM"*. Use o diretório do archetype (com `-DoutputDirectory`) ou uma pasta de trabalho com um `pom.xml` mínimo.
 > 2. No **PowerShell**, coloque **cada `-D` entre aspas**. Sem isso, a vírgula de `custom_entity_attributes_list` é tratada como separador de array e o valor chega truncado (`com.eda-archetype` vira `com`, por exemplo).
 
-> O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados.
+> O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados. A propriedade é **nativa do plugin de geração de archetype** (não é uma flag do catálogo) e o valor vem da marcação **PASTA DE DESTINO** do spec. O exemplo acima é ilustração; a regra normativa está em `utils/`.
 
 > **Onde está o detalhe de cada coluna?** Em [`src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/`](src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
 
@@ -2187,9 +2190,11 @@ br.com.loja
   "status": ["ATIVO", "CANCELADO"]
 }
 
-5. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
-- Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml
-  ou passe "-DoutputDirectory=<pasta temporaria>".
+5. PASTA DE DESTINO:
+C:\Temp\eda-005-destino
+
+6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
+- O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
 - No PowerShell, coloque cada -D entre aspas (a virgula da lista de
   atributos quebra o argumento).
 - Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.
@@ -2242,9 +2247,11 @@ br.com.loja
   }
 }
 
-5. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
-- Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml
-  ou passe "-DoutputDirectory=<pasta temporaria>".
+5. PASTA DE DESTINO:
+C:\Temp\eda-005-destino
+
+6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
+- O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
 - No PowerShell, coloque cada -D entre aspas (a virgula da lista de
   atributos quebra o argumento).
 - Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.

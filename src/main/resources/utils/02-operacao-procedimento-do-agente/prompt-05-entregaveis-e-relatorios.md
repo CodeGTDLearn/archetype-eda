@@ -45,7 +45,8 @@ Se não for possível medir com precisão, marque como **estimativa**.
 
 Inclua:
 
-- status dos Gates A, B e C da premissa de entrada;
+- status dos Gates A, B, C e D da premissa de entrada;
+- destino de geração: caminho absoluto do módulo gerado;
 - command line executada;
 - resultado da validação do `package`;
 - resultado da cópia do contrato;
