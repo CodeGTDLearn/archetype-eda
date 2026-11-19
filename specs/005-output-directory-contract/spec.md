@@ -14,6 +14,8 @@ A palavra que identifica o destino não aparece em nenhum arquivo do procediment
 
 Não se trata de um defeito contra uma intenção acordada: é uma intenção que ainda não foi definida. Por isso esta feature cria o contrato, em vez de restaurar um comportamento perdido.
 
+A propriedade que transporta o destino já existe na ferramenta e é **nativa do plugin de geração de archetype** — passável na linha de comando, ausente do catálogo de flags e já consumida pelo pós-processador para localizar o projeto gerado. O default dela é o diretório onde o Maven é executado: rodando dentro da pasta do archetype, esse default **é** a própria árvore do archetype, ou seja, precisamente o lugar proibido. A feature não cria a propriedade — torna obrigatório o seu preenchimento.
+
 ## Clarifications
 
 ### Session 2026-11-19
@@ -23,6 +25,9 @@ Não se trata de um defeito contra uma intenção acordada: é uma intenção qu
 - Q: Quando o destino aponta para dentro da árvore do archetype, o agente deve recusar sempre, ou avisar e seguir se o operador confirmar? → A: recusa absoluta, sem exceção. O agente avisa que o destino é proibido e pergunta onde fica o destino; se o operador insistir que o destino é a própria pasta do archetype, ou continuar sem informar um destino, o fluxo é finalizado.
 - Q: Quando o destino é absoluto mas a pasta ainda não existe, o agente deve criá-la sozinho ou perguntar antes? → A: perguntar uma vez, mostrando o caminho completo que será criado, e prosseguir após a confirmação do operador.
 - Q: Quando a pasta de destino já contém um módulo com o mesmo nome do artefato a gerar, o que o agente deve fazer? → A: perguntar uma vez, oferecendo "sobrescrever o existente" ou "manter o existente e encerrar"; o agente nunca apaga nada por conta própria.
+- Q: A propriedade que transporta o destino de geração é uma flag do catálogo deste archetype ou existe de forma nativa? → A: é **nativa do plugin de geração de archetype** — existe como parâmetro do goal que gera o projeto, é passável na linha de comando como `-DoutputDirectory`, e não pertence ao catálogo de flags. O pós-processador já consome esse mesmo valor para localizar o projeto gerado.
+- Q: Qual é o default dessa propriedade nativa e o que ele significa para a feature? → A: o default é o diretório onde o Maven é executado. Rodando dentro da pasta do archetype, esse default **é** a própria árvore do archetype — o lugar proibido. Portanto o default não pode ser usado sem uma decisão explícita, e a feature não cria a propriedade: torna obrigatório o seu preenchimento.
+- Q: O escopo desta feature deve incluir as demais propriedades nativas do plugin de geração de archetype (identificação do archetype, grupo, artefato e versão do módulo)? → A: **não**. O foco é **exclusivamente o destino**. As demais propriedades nativas ficam fora do escopo e não são objeto de trabalho futuro.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -135,7 +140,7 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 
 **Emissão da geração**
 
-- **FR-009**: A linha de comando de geração MUST carregar o destino informado, sob a forma de propriedade de diretório de saída do arquétipo, e o valor MUST usar barras normais, sem barra final e sem quebra de linha.
+- **FR-009**: A linha de comando de geração MUST carregar o destino informado na propriedade `outputDirectory`, que é **nativa do plugin de geração de archetype** (e não uma flag do catálogo deste archetype). O valor MUST usar barras normais, sem barra final e sem quebra de linha.
 - **FR-010**: Todas as propriedades da linha de comando MUST permanecer protegidas contra a interpretação do shell em uso, e o caminho do destino MUST receber a mesma proteção quando contiver caracteres especiais.
 - **FR-011**: O procedimento MUST-establishar um único mecanismo de definição de destino, removendo o mecanismo alternativo de mudança de diretório seguido de movimentação posterior do módulo gerado.
 - **FR-012**: O procedimento MUST NOT conter caminho absoluto pertencente a um usuário ou a uma máquina específicos.
@@ -152,26 +157,28 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 
 - **FR-018**: O agente MUST exibir o destino absoluto ao operador antes de executar a geração.
 - **FR-019**: O relatório final MUST incluir o caminho absoluto do módulo gerado, a linha de comando executada e o resultado da verificação de compilação.
-- **FR-020**: O destino MUST NOT ser tratado como uma flag do catálogo, MUST NOT ocupar linha na tabela de proveniência de flags e MUST NOT receber uma fonte de proveniência nova.
+- **FR-020**: O destino MUST NOT ser tratado como uma flag do catálogo, MUST NOT ocupar linha na tabela de proveniência de flags e MUST NOT receber uma fonte de proveniência nova. A propriedade nativa que o transporta MUST NOT alterar o catálogo: o catálogo de flags MUST permanecer com as mesmas propriedades declaradas.
+- **FR-021**: O default da propriedade nativa — o diretório onde o Maven é executado — MUST NOT valer sem uma decisão explícita do operador sobre o destino. O procedimento MUST emitir a propriedade em toda geração, mesmo quando o agente executa a partir da própria árvore do archetype.
 
 **Contrato e metachaves**
 
-- **FR-021**: A marcação `PASTA DE DESTINO` MUST NOT existir dentro do contrato: o destino de geração pertence exclusivamente ao spec. O procedimento MUST NOT acrescentar à lista de metachaves nenhuma entrada nova por causa desta feature — dentro do contrato, toda chave que não seja uma flag do catálogo permanece atributo da entidade, conforme a regra já vigente.
-- **FR-022**: A verificação automatizada do procedimento MUST confirmar que a lista de metachaves do procedimento permanece inalterada e que a marcação `PASTA DE DESTINO` é reconhecida apenas como entrada do spec, nunca como chave de contrato.
+- **FR-022**: A marcação `PASTA DE DESTINO` MUST NOT existir dentro do contrato: o destino de geração pertence exclusivamente ao spec. O procedimento MUST NOT acrescentar à lista de metachaves nenhuma entrada nova por causa desta feature — dentro do contrato, toda chave que não seja uma flag do catálogo permanece atributo da entidade, conforme a regra já vigente.
+- **FR-023**: A verificação automatizada do procedimento MUST confirmar que a lista de metachaves do procedimento permanece inalterada e que a marcação `PASTA DE DESTINO` é reconhecida apenas como entrada do spec, nunca como chave de contrato.
 
 **Limites de escopo**
 
-- **FR-023**: O catálogo de flags MUST permanecer com o mesmo número de propriedades declaradas e o mesmo número de conjuntos de arquivos; a feature MUST NOT criar uma flag nova.
-- **FR-024**: O número de arquivos do procedimento empacotado MUST permanecer o mesmo; a feature MUST NOT criar nem remover arquivo do procedimento.
-- **FR-025**: A feature MUST NOT alterar o formato do contrato, o esquema do contrato, a forma de materialização do contrato, o descritor do arquétipo, o pós-processador, os templates do módulo gerado, o descritor do archetype, as fixtures de integração, o fluxo de integração contínua ou a constituição do projeto.
-- **FR-026**: A feature MUST NOT criar dependência nova, MUST NOT alterar a versão do artefato e MUST NOT executar operação de versionamento fora dos gatilhos declarados pelo kit de especificação.
+- **FR-024**: O catálogo de flags MUST permanecer com o mesmo número de propriedades declaradas e o mesmo número de conjuntos de arquivos; a feature MUST NOT criar uma flag nova.
+- **FR-025**: O número de arquivos do procedimento empacotado MUST permanecer o mesmo; a feature MUST NOT criar nem remover arquivo do procedimento.
+- **FR-026**: A feature MUST NOT alterar o formato do contrato, o esquema do contrato, a forma de materialização do contrato, o descritor do arquétipo, o pós-processador, os templates do módulo gerado, o descritor do archetype, as fixtures de integração, o fluxo de integração contínua ou a constituição do projeto.
+- **FR-027**: A feature MUST NOT criar dependência nova, MUST NOT alterar a versão do artefato e MUST NOT executar operação de versionamento fora dos gatilhos declarados pelo kit de especificação.
+- **FR-028**: O escopo da feature MUST permanecer **exclusivamente o destino de geração**. As demais propriedades nativas do plugin de geração de archetype — identificação do archetype, grupo, artefato e versão do módulo — MUST NOT ser objeto desta feature, e MUST NOT ser registradas como trabalho futuro.
 
 **Prova**
 
-- **FR-027**: O archetype MUST possuir verificação automatizada que prove, por leitura do procedimento empacotado, que a regra de destino está declarada nas instâncias esperadas do procedimento.
-- **FR-028**: A verificação automatizada MUST falhar quando o número de arquivos do procedimento, o número de flags do catálogo ou a lista de metachaves divergirem do esperado.
-- **FR-029**: A verificação automatizada MUST ser executada pela build do archetype e MUST NOT depender de inspeção manual.
-- **FR-030**: Após a alteração, o artefato MUST ser reinstalado e a verificação MUST passar a ler o procedimento de dentro do artefato instalado, e não da árvore de desenvolvimento.
+- **FR-029**: O archetype MUST possuir verificação automatizada que prove, por leitura do procedimento empacotado, que a regra de destino está declarada nas instâncias esperadas do procedimento.
+- **FR-030**: A verificação automatizada MUST falhar quando o número de arquivos do procedimento, o número de flags do catálogo ou a lista de metachaves divergirem do esperado.
+- **FR-031**: A verificação automatizada MUST ser executada pela build do archetype e MUST NOT depender de inspeção manual.
+- **FR-032**: Após a alteração, o artefato MUST ser reinstalado e a verificação MUST passar a ler o procedimento de dentro do artefato instalado, e não da árvore de desenvolvimento.
 
 ### Key Entities
 
@@ -187,7 +194,7 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 
 ### Measurable Outcomes
 
-- **SC-001**: 100% das gerações executadas pelo agente carregam o destino informado na linha de comando, com caminho absoluto.
+- **SC-001**: 100% das gerações executadas pelo agente carregam o destino informado na linha de comando, com caminho absoluto — nenhuma geração fica refém do default nativo do diretório de execução.
 - **SC-002**: 0 módulos gerados dentro da árvore do archetype e 0 resíduos de geração não versionados na árvore do repositório.
 - **SC-003**: 0 destinos presumidos em silêncio; 100% dos casos de destino ausente resultam em interrupção antes da derivação com uma única pergunta, ou em parada com relatório quando não há operador disponível.
 - **SC-004**: 100% dos relatórios finais registram o caminho absoluto do módulo gerado e o resultado da verificação de compilação nele executada.
@@ -202,7 +209,7 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 ## Assumptions
 
 - O fluxo normal é interativo: o operador conduz o agente e pode responder a perguntas.
-- O agente executa a geração a partir de um diretório que contém um descritor de projeto próprio, ou de outro modo que torne a execução possível sem que o destino passe a serWNOME implícito do módulo gerado.
+- O agente executa a geração a partir de um diretório que contém um descritor de projeto próprio, ou de outro modo que torne a execução possível sem que o destino passe a ser implícito.
 - O arquétipo já está instalado no repositório local e registrado no catálogo local, de modo que a geração resolve o artefato empacotado em runtime.
 - O agente lê o procedimento de dentro do artefato instalado, e não da árvore de desenvolvimento — a menos que o repositório-fonte seja explicitamente pedido.
 - A raiz do módulo gerado é sempre composta pelo destino de saída e pelo identificador do artefato, conforme o comportamento já verificado do pós-processador.
@@ -214,6 +221,7 @@ O mantenedor altera o procedimento e precisa de prova, dentro do próprio archet
 ## Out of Scope
 
 - Criar uma flag nova para o destino no catálogo de flags.
+- Tratar as demais propriedades nativas do plugin de geração de archetype (identificação do archetype, grupo, artefato e versão do módulo) — o escopo é exclusivamente o destino.
 - Criar, remover ou renomear arquivo do procedimento empacotado, ou alterar a ordem global de leitura dos arquivos.
 - Alterar o formato do contrato, o esquema do contrato, a forma de materialização do contrato ou o destino da cópia do contrato no módulo gerado.
 - Alterar o descritor do arquétipo, o pós-processador, os templates do módulo gerado, o descritor do archetype, as fixtures de integração ou o fluxo de integração contínua.
