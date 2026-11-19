@@ -387,13 +387,16 @@
   * Quem decide como usá-lo é o metadata.
 
 <a id="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder" name="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder"></a>
-#### 2.3) `archetype-post-generate.groovy` — o pós-processamento (o único com poder) 🧬 <a href="#indice">↑ topo</a>
+#### 2.3) `archetype-post-generate.groovy` — o pós-processamento 🧬 <a href="#indice">↑ topo</a>
 
 * Script Groovy executado **depois** da cópia.
-* Recebe, via `Binding` do `GroovyShell`:
-  * cada `requiredProperty` como **variável direta**;
-  * a variável `request` = `ArchetypeGenerationRequest` completo
-    (`request.properties`, `request.outputDirectory`, `request.artifactId`…).
+  * Recebe, via `Binding` do `GroovyShell`:
+    * cada `requiredProperty` como **variável direta**;
+    * a variável `request` = `ArchetypeGenerationRequest` completo, ex:
+      * `request.properties`
+      * `request.outputDirectory`
+      * `request.artifactId`
+      * etc…
 * **Motivação (a essencial):** o descritor é **estático e sem condição**.
   * No modelo atual (`archetype-metadata.xml` do Maven 3.4.1) **não existe** forma de
     dizer *"este fileSet só entra se a flag X for true"*.
