@@ -18,11 +18,19 @@ branch_prefix: ""
 init_commit_message: "[Spec Kit] Initial commit"
 
 # Commit message style used by auto-commit hooks (speckit.git.commit):
-# "fixed"        - default; use the configured/static messages below.
+# "fixed"        - use the configured/static messages below.
 # "conventional" - ask the agent to inspect the diff and generate a
 #                  Conventional Commit message (e.g. "feat: add OAuth spec")
 #                  instead of using the messages configured below.
-commit_style: fixed
+# "snapshot"     - rollback snapshot taken by before_* hooks: the script
+#                  classifies the frozen phase from the staged diff and
+#                  builds title + body; the agent may refine the synopsis
+#                  via --synopsis-file / -SynopsisFile. The static messages
+#                  below are ignored in this mode.
+commit_style: snapshot
+
+# Prefix of the snapshot title (camera emoji). Read as UTF-8 by the hooks.
+snapshot_prefix: "📸"
 
 # Auto-commit before/after core commands.
 # Set "default" to enable for all commands, then override per-command.
