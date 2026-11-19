@@ -10,11 +10,13 @@
   - <a href="#tecnologias-utilizadas-scripts-e-automacao">3) Scripts e Automação</a>
   - <a href="#tecnologias-utilizadas-inferencia-agentica-com-ai">4) Inferência Agêntica com IA</a>
   - <a href="#tecnologias-utilizadas-testabilidade">5) Testabilidade</a>
+
 - <a href="#maven-archetype-system">Maven Archetype System 🏗️</a>
   - <a href="#maven-archetype-system-cores">1) Cores ⚛️</a>
     - <a href="#maven-archetype-system-cores-flags-maven-archetype-generate">1.1) Flags p/ 'maven:Archetype:Generate'</a>
     - <a href="#maven-archetype-system-cores-manejo-de-arquivos-groovy">1.2) Manejo de Arquivos c/ Groovy</a>
     - <a href="#maven-archetype-system-cores-testes-relativos-ao-archetype">1.3) Testes Relativos ao Archetype</a>
+
   - <a href="#maven-archetype-system-fluxo">2) Fluxo 🔄</a>
     - <a href="#maven-archetype-system-fluxo-os-tres-slots-do-archetype-empacotado">Os três slots do archetype empacotado 📦</a>
       - <a href="#maven-archetype-system-fluxo-archetype-metadata-xml-o-indice-nao-contem-conteudo">1) 
@@ -22,39 +24,52 @@
       - <a href="#maven-archetype-system-fluxo-archetype-resources-o-conteudo-nao-sabe-se-existe">2) 
        <code>archetype-resources/</code> — o conteúdo (não sabe se existe) 📦</a>
       - <a href="#maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder">3) <code>archetype-post-generate.groovy</code> — o pós-processamento (o único com poder) 🧬</a>
+
     - <a href="#maven-archetype-system-fluxo-a-relacao-um-pipeline-de-3-tempos">A relação: um pipeline de 3 tempos ⏱️</a>
+
     - <a href="#maven-archetype-system-fluxo-o-ciclo-do-artefato-o-archetype-packaging-amarra-tudo">O ciclo do artefato (o <code>archetype-packaging</code> amarra tudo) 🔗</a>
+
   - <a href="#maven-archetype-system-velocity">3) Velocity📍</a>
+
 - <a href="#maven-coordinates">Maven Coordinates 📍</a>
   - <a href="#maven-coordinates-configuration-project">Configuration Project 🔧</a>
   - <a href="#maven-coordinates-pom-xml">POM.xml 📝</a>
   - <a href="#maven-coordinates-folder-structure">Folder Structure 🗂️</a>
+
 - <a href="#etapas-de-processamento">Etapas de Processamento 📈</a>
-  - <a href="#etapas-de-processamento-visao-das-tres-etapas">Visão das três etapas 🧭</a>
+  - <a href="#etapas-de-processamento-fluxo-das-tres-etapas">Fluxo das três etapas 🧭</a>
+
   - <a href="#etapas-de-processamento-pre-processamento-empacotado">1) Pré-processamento (empacotado) 🧠</a>
     - <a href="#etapas-de-processamento-pre-processamento-empacotado-suites-unitarias-do-pos-processador">Suítes unitárias do pós-processador 🧪</a>
+
   - <a href="#etapas-de-processamento-processamento-empacotado">2) Processamento (empacotado) 🏗️</a>
+
   - <a href="#etapas-de-processamento-pos-processamento-empacotado">3) Pós-processamento (empacotado) 🧬</a>
+
   - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas">4) Montagem e instalação do artefato 📦 (fora das três etapas)</a>
     - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-fluxo">Fluxo 🔄</a>
     - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-regras-estruturais">Regras estruturais 📏</a>
-    - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-onde-detalhar-cada-parte">Onde detalhar cada parte 🔎</a>
+
 - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli">Inferência de Contrato e Use-Case: do Prompt ao Maven CLI 🧠</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-que-entra-na-spec-ou-prompt">1) O que entra na Spec ou Prompt</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar">2) Onde cada informação vai parar</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-exemplo-ponta-a-ponta">3) O exemplo, ponta a ponta</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-as-tres-regras-que-mais-surpreendem">4) As três regras que mais surpreendem</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado">5) O portão final e o resultado 🚪</a>
+
 - <a href="#instalacao">Instalacao 📦</a>
   - <a href="#instalacao-pre-requisitos">Pré-requisitos</a>
   - <a href="#instalacao-instalar-e-publicar-este-archetype">Instalar e publicar este archetype</a>
+
 - <a href="#cronograma-do-projeto">Cronograma do Projeto 🏗️</a>
   - <a href="#cronograma-do-projeto-milestones">1) Milestones 📅</a>
   - <a href="#cronograma-do-projeto-task-planning">2) Task Planning 📝️</a>
   - <a href="#cronograma-do-projeto-concluded-tasks">3) Concluded Tasks ✅</a>
   - <a href="#cronograma-do-projeto-next-version">4) Next Version 🔮️</a>
+
 - <a href="#acrescentando-novas-flags">Acrescentando Novas Flags ➕️</a>
   - <a href="#acrescentando-novas-flags-areas-alteradas-pela-adicao">1) Areas alteradas pela adição:</a>
+
   - <a href="#acrescentando-novas-flags-exemplo-pratico-na-mao-flag-c-manipulacao-de-pasta-e-arquivo">2) EXEMPLO PRATICO (na mao) - Flag c/ MANIPULACAO de Pasta e Arquivo:</a>
     - <a href="#acrescentando-novas-flags-exemplo-pratico-na-mao-flag-c-manipulacao-de-pasta-e-arquivo-passo-1-criar-a-pasta-e-os-arquivos-dentro-do-archetype-resources">PASSO 1 - Criar a pasta e os arquivos dentro do ARCHETYPE-RESOURCES:</a>
     - <a href="#acrescentando-novas-flags-exemplo-pratico-na-mao-flag-c-manipulacao-de-pasta-e-arquivo-passo-2-criar-a-property-property-37-enable-s3-storage-xml">PASSO 2 - Criar a property 'PROPERTY-37-ENABLE_S3_STORAGE.XML':</a>
@@ -67,14 +82,18 @@
     - <a href="#acrescentando-novas-flags-exemplo-pratico-na-mao-flag-c-manipulacao-de-pasta-e-arquivo-passo-9-recriar-o-archetype-e-testar">PASSO 9 - Recriar o ARCHETYPE e TESTAR:</a>
     - <a href="#acrescentando-novas-flags-exemplo-pratico-na-mao-flag-c-manipulacao-de-pasta-e-arquivo-resumo-9-arquivos-criados-3-editados-em-2-arquivos-existentes">RESUMO - 9 arquivos CRIADOS + 3 EDITADOS (em 2 arquivos existentes):</a>
     - <a href="#acrescentando-novas-flags-exemplo-pratico-na-mao-flag-c-manipulacao-de-pasta-e-arquivo-o-que-nao-foi-feito-e-nao-precisa-ser">O QUE NAO FOI FEITO (e nao precisa ser):</a>
+
   - <a href="#acrescentando-novas-flags-padronizacao">3) Padronização:</a>
+
 - <a href="#procedimento-para-especificacao-spec">Procedimento para Especificação/Spec</a>
   - <a href="#procedimento-para-especificacao-spec-como-usar-no-opencode-ou-na-spec-do-github-spec-kit">Como usar no 'OpenCode' OU na Spec do 'GitHub Spec Kit'</a>
   - <a href="#procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato">Onde estão as regras de formação do contrato</a>
   - <a href="#procedimento-para-especificacao-spec-onde-usar-cada-abordagem">Onde usar cada abordagem</a>
+
 - <a href="#montagem-dos-arquivos-de-archetype">Montagem dos Arquivos de Archetype 🏗️</a>
   - <a href="#montagem-dos-arquivos-de-archetype-archetype-metadata-xml">1) Archetype-Metadata.xml 🏗️</a>
   - <a href="#montagem-dos-arquivos-de-archetype-archetype-post-generate-groovy">2) Archetype-Post-Generate.groovy 🧬</a>
+
 - <a href="#testabilidade">Testabilidade 🧪</a>
   - <a href="#testabilidade-onde-os-testes-vivem">1) ONDE OS TESTES VIVEM</a>
   - <a href="#testabilidade-o-que-cada-pasta-cobre">2) O QUE CADA PASTA COBRE</a>
@@ -86,6 +105,7 @@
   - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios">7) PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 02 Cenários) 🧪</a>
     - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-a-contrato-plano-3-atributos">7.1) Cenário A — contrato plano (3 atributos)</a>
     - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-b-contrato-aninhado-filho-neto">7.2) Cenário B — contrato aninhado (filho + neto)</a>
+
 - <a href="#flags-do-mvn-archetype-generate">Flags do mvn archetype:generate 🤖</a>
   - <a href="#flags-do-mvn-archetype-generate-onde-cada-efeito-acontece">Onde cada efeito acontece</a>
   - <a href="#flags-do-mvn-archetype-generate-property-built-in-fora-do-catalogo">0. Property built-in (fora do catálogo)</a>
@@ -107,10 +127,22 @@
     - <a href="#flags-do-mvn-archetype-generate-externalizacao-de-propriedades-testes-do-binding">9.3 Testes do binding</a>
   - <a href="#flags-do-mvn-archetype-generate-estrutura-de-testes">10. Estrutura de testes</a>
   - <a href="#flags-do-mvn-archetype-generate-grafo-de-dependencias">Grafo de dependências</a>
+
 - <a href="#funcionalidades">Funcionalidades 🛠️</a>
   - <a href="#funcionalidades-contratos-a-fonte-da-verdade-do-modulo-da-api">Contratos📜: a 'Fonte da Verdade' do Módulo da API</a>
 
 ---
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="tecnologias-utilizadas" name="tecnologias-utilizadas"></a>
 ## Tecnologias Utilizadas 🛠️ <a href="#indice">↑ topo</a>
@@ -160,6 +192,13 @@
 |---|---|---|
 | **JUnit 4** | 4.13.2 | Uma das três dependências declaradas (com `velocity-engine-core` e `groovy-json`, ambas em `test`) — mas o `surefire` do archetype não roda nada: não existe `*Test.java` no `src/test/java`. As classes JUnit reais viajam no **projeto gerado**. |
 | **Groovy (suítes próprias)** | 4.0.28 | As suítes do archetype são scripts Groovy com checks próprios (sem infra JUnit), executados pelo `groovy-maven-plugin` na fase `test` — o build falha se qualquer check falhar. A lista e a contagem ficam em `run-archetype-post-generate-tests.groovy` (fonte da verdade). |
+
+
+
+
+
+
+
 
 <a id="maven-archetype-system" name="maven-archetype-system"></a>
 ## Maven Archetype System 🏗️ <a href="#indice">↑ topo</a>
@@ -355,11 +394,20 @@
 #### 2.1) `archetype-metadata.xml` — o índice (não contém conteúdo) 📇 <a href="#indice">↑ topo</a>
 
 * Descreve **o que** o archetype precisa e **o que fazer** com a pasta de templates:
-  * `<requiredProperties>` — as **variáveis** pedidas (`key`, `defaultValue`, `validationRegex`).
-  * `<fileSets>` — o **roteamento**: cada `<fileSet>` diz *qual diretório* de
-    `archetype-resources/` vira *qual lugar* da árvore gerada, e com que tratamento
-    (`filtered`, `packaged`, `encoding`, `includes`/`excludes`).
-* O metadata **nunca lista arquivos**: aponta pastas e deixa o `includes` filtrar.
+  * `<requiredProperties>` — as **variáveis** pedidas, quais sejam:
+    * `key`
+    * `defaultValue`
+    * `validationRegex`
+  * `<fileSets>` — o **roteamento**: 
+    * cada `<fileSet>` diz *qual diretório* de `archetype-resources/` vira 
+    * *qual lugar* da árvore gerada, e com que tratamento:
+      * `filtered`
+      * `packaged`
+      * `encoding`
+      * `includes`/`excludes`
+    * O metadata **nunca lista arquivos**:
+      * aponta pastas e deixa o `includes` filtrar.
+      * 
 * **Motivação:** separar a *declaração* do *conteúdo*.
   * o descritor é pequeno, revisável, substituível;
   * o template pode ser gigante e nunca é lido pelo parser — só copiado.
@@ -368,26 +416,31 @@
 #### 2.2) `archetype-resources/` — o conteúdo (não sabe se existe) 📦 <a href="#indice">↑ topo</a>
 
 * A árvore esqueleto do projeto a ser gerado. Única fonte do *conteúdo* dos arquivos.
-* O parser do metadata nunca entra aqui. Quem entra é o **gerador**, que usa o
+* O parser do metadata nunca entra aqui. 
+* Quem entra é o **gerador**, que usa o
   metadata como instrução de montagem:
   * `__entity_name_package__` no **nome** de arquivo/pasta → substituído pelo valor da flag;
   * `${entity_name}` no **conteúdo** → renderizado pelo Velocity (só com `filtered="true"`).
-* **Motivação:** o template é puro "material virgem" — não carrega lógica de montagem.
-  Quem decide como usá-lo é o metadata.
+* **Motivação:** 
+  * o template é puro "material virgem" — não carrega lógica de montagem.
+  * Quem decide como usá-lo é o metadata.
 
 <a id="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder" name="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder"></a>
-#### 2.3) `archetype-post-generate.groovy` — o pós-processamento (o único com poder) 🧬 <a href="#indice">↑ topo</a>
+#### 2.3) `archetype-post-generate.groovy` — o pós-processamento 🧬 <a href="#indice">↑ topo</a>
 
 * Script Groovy executado **depois** da cópia.
-* Recebe, via `Binding` do `GroovyShell`:
-  * cada `requiredProperty` como **variável direta**;
-  * a variável `request` = `ArchetypeGenerationRequest` completo
-    (`request.properties`, `request.outputDirectory`, `request.artifactId`…).
+  * Recebe, via `Binding` do `GroovyShell`:
+    * cada `requiredProperty` como **variável direta**;
+    * a variável `request` = `ArchetypeGenerationRequest` completo, ex:
+      * `request.properties`
+      * `request.outputDirectory`
+      * `request.artifactId`
+      * etc…
 * **Motivação (a essencial):** o descritor é **estático e sem condição**.
   * No modelo atual (`archetype-metadata.xml` do Maven 3.4.1) **não existe** forma de
     dizer *"este fileSet só entra se a flag X for true"*.
-  * Logo: **quem decide manter/excluir por flag é o Groovy**.
-    Ele existe para o que a forma declarativa não consegue expressar.
+    * Logo: **quem decide manter/excluir por flag é o Groovy**.
+    * Ele existe para o que a forma declarativa não consegue expressar.
 
 <a id="maven-archetype-system-fluxo-a-relacao-um-pipeline-de-3-tempos" name="maven-archetype-system-fluxo-a-relacao-um-pipeline-de-3-tempos"></a>
 #### A relação: um pipeline de 3 tempos ⏱️ <a href="#indice">↑ topo</a>
@@ -404,13 +457,24 @@
 
 * Cada slot é consumido em um **momento diferente da mesma execução** do
   `archetype:generate`:
-  1. **Metadata primeiro** — o configurador lê o descritor, resolve as flags
-     (CLI > `defaultValue` > prompt), monta o `Properties`.
-  2. **Resources no meio** — o gerador percorre os `<fileSet>`, resolve os templates
-     correspondentes, aplica Velocity / `packaged` / `encoding`, e escreve a árvore.
-  3. **Groovy no fim** — roda sobre a árvore já escrita, com as mesmas flags em mãos.
-* **A lei da relação:** o metadata **dirige**, os resources **sofrem**,
-  o Groovy **corrige**.
+  1. **Metadata primeiro**:
+     * o configurador lê o descritor
+     * resolve as flags
+       * (CLI > `defaultValue` > prompt)
+         * monta o `Properties`.
+  2. **Resources no meio**:
+     * o gerador percorre os `<fileSet>`
+     * resolve os templates correspondentes
+       * aplica Velocity / `packaged` / `encoding`, e
+         * escreve a árvore.
+  3. **Groovy no fim**:
+     * roda sobre a árvore já escrita, com as mesmas flags em mãos.
+
+* **A lei da relação:** 
+  * Fluxo:
+    * o metadata **dirige**, 
+    * os resources **sofrem**,
+    * o Groovy **corrige**.
   * Nenhum dos dois primeiros sabe que o terceiro existe;
   * o Groovy não pode adicionar ao contrato — só intervém no resultado.
 
@@ -430,6 +494,13 @@ install           → install + archetype:update-local-catalog
 
 * [User Guide](https://velocity.apache.org/engine/2.4.1/user-guide.html)
 * [VTL Reference](https://velocity.apache.org/engine/2.4.1/vtl-reference.html)
+
+
+
+
+
+
+
 
 <a id="maven-coordinates" name="maven-coordinates"></a>
 ## Maven Coordinates 📍 <a href="#indice">↑ topo</a>
@@ -451,27 +522,51 @@ install           → install + archetype:update-local-catalog
 
 <img alt="" height="400" src="assets/spr_init_folder_structure.png" width="150"/>
 
+
+
+
+
+
+
+
+
+
+
 <a id="etapas-de-processamento" name="etapas-de-processamento"></a>
 ## Etapas de Processamento 📈 <a href="#indice">↑ topo</a>
 
 * Visão geral: o processamento do archetype acontece em **3 etapas** — e apenas 2
   delas viajam empacotadas dentro do JAR:
-  - **1) Pré-processamento** — captura a intenção (use-case + contrato JSON) e
-    produz a command line `-D...` do Maven. ✅ **empacotado** (procedimento em
-    `utils/`, lido pelo agente a partir do JAR).
-  - **2) Processamento** — o `maven-archetype-plugin` materializa a árvore do
-    projeto a partir do catálogo de flags + templates. ✅ **empacotado** (A1–A4).
-  - **3) Pós-processamento** — o Groovy modulariza o projeto gerado (mantém /
-    exclui arquivos e pastas). ✅ **empacotado** (A5–A6).
+  - **1) Pré-processamento**:
+    - captura a intenção (use-case + contrato JSON) e demais elementos
+    - Essa intencao e capturada no 'TUI' do Agente
+    - Os valores das Flags são inferidos 'Agenticamente'
+      - ✅ **JAR empacotado** com as 'Diretivas Agenticas de Inferencia' possui:
+        - Os Procedimento Agenticos (prompts)
+          - Localizados na pasta `utils/`, lido pelo agente a partir do JAR).
+    - RESULTADO: 
+      - Produz a command line `-D...` do Maven.  
 
-<a id="etapas-de-processamento-visao-das-tres-etapas" name="etapas-de-processamento-visao-das-tres-etapas"></a>
-### Visão das três etapas 🧭 <a href="#indice">↑ topo</a>
+  - **2) Processamento**:
+    - o `maven-archetype-plugin` materializa a árvore do
+      projeto
+    - Isso ocorre a partir dos:
+      - catálogo de flags
+      - Procedimentos AGentics
+      - Templates de Contratos
 
-| Etapa | Papel | Tecnologia | Empacotado no JAR? | Momento |
+  - **3) Pós-processamento**:
+    - o Groovy modulariza o projeto gerado
+      - Mecanismo: mantém / exclui arquivos e pastas.
+
+<a id="etapas-de-processamento-fluxo-das-tres-etapas" name="etapas-de-processamento-fluxo-das-tres-etapas"></a>
+### Fluxo de três etapas 🧭 <a href="#indice">↑ topo</a>
+
+| Fluxo | Papel | Tecnologia | Pacote <br> JAR? | Momento no <br>`archetype:generate` |
 |---|---|---|---|---|
-| 1. Pré-processamento | intenção → `mvn ... -D...` | procedimento do agente (`utils/` no JAR) | ✅ | antes do `archetype:generate` |
-| 2. Processamento | catálogo + templates → árvore do projeto | `archetype-metadata.xml` + `archetype-resources/` (Velocity) | ✅ | durante o `mvn archetype:generate` |
-| 3. Pós-processamento | árvore gerada → modularização | `archetype-post-generate.groovy` | ✅ | ao fim do `mvn archetype:generate` |
+| Pré-processamento | intenção → `mvn ... -D...` | procedimento do agente (`utils/` no JAR) | ✅ | antes  |
+| Processamento | catálogo + templates → árvore do projeto | `archetype-metadata.xml` + `archetype-resources/` (Velocity) | ✅ | durante |
+| Pós-processamento | árvore gerada → modularização | `archetype-post-generate.groovy` | ✅ | Depois |
 
 > O `mvn clean install` **não** é uma etapa de processamento: é o passo final do
 > *pipeline do artefato* (montagem, testes e instalação em `~/.m2`), detalhado no
@@ -480,21 +575,44 @@ install           → install + archetype:update-local-catalog
 <a id="etapas-de-processamento-pre-processamento-empacotado" name="etapas-de-processamento-pre-processamento-empacotado"></a>
 ### 1) Pré-processamento (empacotado) 🧠 <a href="#indice">↑ topo</a>
 
-* **Objetivo:** transformar **use-case + contrato JSON** na command line pronta
-  do `mvn archetype:generate` (todas as flags `-D` resolvidas).
-* **Quem faz:** o **agente** que opera o archetype. Não há motor, CLI ou script
-  externo: o procedimento é um conjunto de arquivos Markdown e JSON empacotados
-  no JAR.
+* **Objetivo:** 
+  * transformar **use-case + contrato JSON** + demais elementos contidos no 'Prompt dado ao Agente' em mvn-cli
+    * command line pronta do `mvn archetype:generate` (todas as flags `-D` resolvidas).
+
+* **Quem faz:** 
+  * o **agente** que opera o archetype:
+    * Atraves da Inferencia das Flags de `mvn archetype:generate`
+    * Construindo a `mvn archetype:generate`
+    * Executando a `mvn archetype:generate`
+
+  * Observacoes:
+    * Não há motor, CLI ou script externo: 
+      * 'Diretivas Agenticas de Inferencia':
+        * Sao o conjunto do procedimentos(arquivos) em Markdown e JSON
+          * Empacotados no JAR.
+
 * **Composição:** [`src/main/resources/utils/`](src/main/resources/utils/) — 19 arquivos em 4 categorias:
-  - `01-entrada-inicializacao/` — porta de entrada (`prompt-00`) e mapa de leitura (`indice-01`);
-  - `02-operacao-procedimento-do-agente/` — papel, leitura do JAR, regras obrigatórias, execução e entregáveis;
-  - `03-derivacao-regras-de-formacao-do-contrato/` — derivação da entidade, tipos, tipos aninhados, precedência, materialização e proveniência;
-  - `04-referencia-templates-de-contrato/` — schema e exemplos.
-* **Entrada/Saída:** spec (tipo de módulo, package base, use-case, contrato JSON)
-  → command line do Maven + tabela de proveniência.
-* **Fonte da verdade:** o JAR instalado (`com.eda-archetype:eda-archetype`) e,
-  dentro dele, o catálogo de flags (`META-INF/maven/archetype-metadata.xml`).
-* Detalhes do procedimento → seção **"Procedimento para Especificação"**
+  - `01-entrada-inicializacao/`:
+    - porta de entrada (`prompt-00`) e mapa de leitura (`indice-01`);
+  - `02-operacao-procedimento-do-agente/`:
+    - papel, leitura do JAR, regras obrigatórias, execução e entregáveis;
+  - `03-derivacao-regras-de-formacao-do-contrato/`:
+    - derivação da entidade, tipos, tipos aninhados, precedência, 
+      materialização e proveniência;
+  - `04-referencia-templates-de-contrato/`:
+    - schema e exemplos.
+
+* **Entrada/Saída:** 
+  * Entrada: Dados fornecidos ao Agente e inferidos em flags (tipo de módulo, package base, use-case, contrato JSON)
+  * Command line do Maven + tabela de proveniência.
+
+* **Fonte da verdade:** 
+  * o JAR instalado `com.eda-archetype:eda-archetype` contendo:
+    * Diretivas Agenticas de Inferencia
+    * O catálogo de flags (`META-INF/maven/archetype-metadata.xml`).
+
+* Detalhes do procedimento → seção **"Procedimento para Especificação"**:
+  * Diretivas Agenticas de Inferencia
 
 <a id="etapas-de-processamento-pre-processamento-empacotado-suites-unitarias-do-pos-processador" name="etapas-de-processamento-pre-processamento-empacotado-suites-unitarias-do-pos-processador"></a>
 #### Suítes unitárias do pós-processador 🧪 <a href="#indice">↑ topo</a>
@@ -506,43 +624,55 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 <a id="etapas-de-processamento-processamento-empacotado" name="etapas-de-processamento-processamento-empacotado"></a>
 ### 2) Processamento (empacotado) 🏗️ <a href="#indice">↑ topo</a>
 
-* **Objetivo:** o `maven-archetype-plugin` materializa a árvore do projeto
-  gerado a partir do catálogo de flags + templates — durante o
-  `mvn archetype:generate`.
+* **Objetivo:** 
+  * o `maven-archetype-plugin` materializa a árvore do projeto gerado
+  * Isso ocorre a partir do catálogo de flags + templates
+    * durante o `mvn archetype:generate`.
+
 * **Composição (fonte da verdade):**
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
 | A1 | Catálogo de flags - `archetype_metadata_required_properties` | `src/main/resources/META-INF/maven/archetype_metadata_required_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
 | A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | 18 arquivos, um `<fileSet>` cada; mapeia `archetype-resources/` → árvore do projeto gerado |
-| A3 | Core do metadata | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 53 entities (35 `property-<NN>-<flag>` + 18 `fileset-<NN>-<flag>`) |
+| A3 | Core do metadata (Catalogo Montado) | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 53 entities (35 `property-<NN>-<flag>` + 18 `fileset-<NN>-<flag>`) |
 | A4 | XSLT identidade | `src/main/resources/META-INF/maven/archetype-metadata-identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
 
 | Artefato | Local | Papel |
 |----------|-------|-------|
-| Templates | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
-| Procedimento para Especificação | `src/main/resources/utils/` | 19 arquivos em 4 categorias (`01-entrada-inicializacao/`, `02-operacao-procedimento-do-agente/`, `03-derivacao-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
+| Templates de Criacao do Modulo | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
+| 'Diretivas Agenticas de Inferencia' | `src/main/resources/utils/` | 19 arquivos em 4 categorias (`01-entrada-inicializacao/`, `02-operacao-procedimento-do-agente/`, `03-derivacao-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
 | Fixtures de integração | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um validado com `mvn clean verify` |
 
-* **Montagem do catálogo:** fragmentos (A1 + A2) + DOCTYPE (A3) →
-  `xml-maven-plugin:transform` + `archetype-metadata-identity.xsl` (A4) na fase
-  `generate-resources` → `target/classes/META-INF/maven/archetype-metadata.xml`
-  (cópia convencional excluída — `pom.xml:38-41`).
-* **Execução:** o plugin lê o JAR instalado (`~/.m2`), valida as flags `-D`
-  (default × `validationRegex`) e renderiza os templates — etapa
-  **autossuficiente**: depende apenas do `.m2`, nunca da pasta-fonte.
+* **Montagem do catálogo:** 
+  * fragmentos (A1 + A2) + DOCTYPE (A3) →
+    * `xml-maven-plugin:transform` + `archetype-metadata-identity.xsl` 
+    * (A4) na fase `generate-resources` → `target/classes/META-INF/maven/archetype-metadata.xml`
+      (cópia convencional excluída — `pom.xml:38-41`).
+
+* **Execução:**
+  * Ciclo:
+    * o plugin lê o JAR instalado (`~/.m2`)
+    * valida as flags `-D` (default × `validationRegex`) e 
+    * renderiza os templates
+  * etapa **autossuficiente**: 
+    * depende apenas do `.m2`, nunca da pasta-fonte.
 
 <a id="etapas-de-processamento-pos-processamento-empacotado" name="etapas-de-processamento-pos-processamento-empacotado"></a>
 ### 3) Pós-processamento (empacotado) 🧬 <a href="#indice">↑ topo</a>
 
-* **Objetivo:** modularizar o projeto recém-gerado (mantém / exclui pastas e
-  arquivos conforme as flags escolhidas) — ao fim do `mvn archetype:generate`.
+* **Objetivo:** 
+  * modularizar o projeto recém-gerado
+    * Estrategia: mantém / exclui pastas e arquivos conforme as flags escolhidas)
+  * Momento:
+    * Ao final do `mvn archetype:generate`.
+
 * **Composição:**
 
 | # | Artefato | Local | Papel |
 |---|----------|-------|-------|
 | A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 64 fragmentos Groovy (15 `body/` + 25 `variables/` + 4 `generators/` + 20 `snippets/`) |
-| A6 | Compositor do pós-processador | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
+| A6 | pós-processador montado | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
 
 * **Montagem:** `ArchetypePostGenerateComposer` (A6) via `groovy-maven-plugin:execute` na fase
   `process-resources` → `target/classes/META-INF/archetype-post-generate.groovy`
@@ -557,22 +687,23 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 
 | Fase | Plugin | Entrada | Saída |
 |------|--------|---------|-------|
-| `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + `archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml` (catálogo completo, sem DOCTYPE) |
+| `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + <br>`archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml`<br> (catálogo completo, sem DOCTYPE) |
 | `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 64 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
 | `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-archetype-post-generate-tests.groovy` | as suítes unitárias do pós-processador (o build falha se alguma falhar) |
 | `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um com `mvn clean verify` |
-| `install` | `maven-install-plugin` + `maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
+| `install` | `maven-install-plugin` + <br>`maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
 
 > **Comando canônico:** `mvn clean install`
 >
-> A fase `integration-test` é **anterior** a `install` e já é executada por ele.
+> A fase `integration-test` é **anterior** a `install` e já é executada por ele.<br>
 > Portanto `mvn clean install integration-test` roda a suíte de integração
-> **duas vezes** (cada fixture é gerada e validada 2×) — use `mvn clean install`
-> ou, se não quiser instalar, `mvn clean integration-test`.
+> **duas vezes** (cada fixture é gerada e validada 2×)<br>
+> use `mvn clean install` ou, se não quiser instalar, `mvn clean integration-test`.
 
-* **De volta aos 2 momentos do archetype:** o §4 acima é o **momento de
-  montagem** (build + testes + instalação em `~/.m2`); as **etapas 1 → 3** são o
-  **momento de geração** (`mvn archetype:generate`).
+* **De volta aos 2 momentos do archetype:** 
+  * o §4 acima é o **momento de
+    montagem** (build + testes + instalação em `~/.m2`); 
+  * as **etapas 1 → 3** são o **momento de geração do modulo** (`mvn archetype:generate`).
 
 <a id="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-fluxo" name="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-fluxo"></a>
 #### Fluxo 🔄 <a href="#indice">↑ topo</a>
@@ -592,48 +723,64 @@ TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
                      
 [4] INSTALAÇÃO       ~/.m2/repository + archetype-catalog.xml (fase install)
 
+```
 
+```text
 TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 ──────────────────────────────────────────────────────────-----------───────────
-[5] PRÉ PROCESSAMENTO   use-case + contrato JSON → o agente lê o procedimento em utils/
-    (DENTRO DO JAR)     e o catálogo no JAR → mvn archetype:generate --batch-mode -D...
+[5] PRÉ PROCESSAMENTO   → use-case + contrato JSON + outros elementos (Originados a partir do Agentes[Opencode])
+    (DENTRO DO JAR)     → o agente lê o procedimento em utils/ ('Diretivas Agenticas de Inferencia')
+                        → e o catálogo montado dentro no JAR (archetype-metadata.xml) para conhecer as Flags
+                          → formula-se a mvn-cli (mvn archetype:generate --batch-mode -D...)
                         
-[6] PROCESSAMENTO       archetype-metadata.xml + archetype-resources/ (Velocity)
-                        → árvore do projeto gerado
+[6] PROCESSAMENTO       → archetype-metadata.xml (flags)
+                        → archetype-resources
+                          → Velocity montando o modulo + árvore do projeto gerado
                         
-[7] PÓS PROCESSAMENTO   archetype-post-generate.groovy mantém / exclui
-                        + contrato → src/test/resources/contracts/contract.json
-                              ▼
-                        projeto final
+[7] PÓS PROCESSAMENTO   → archetype-post-generate.groovy:
+                          → mantém / exclui pastas pre-projetadas
+                            → Essas pastas contem Modulos[Codigo + Classe] manejadas pelo Velocity
+                            → contrato → src/test/resources/contracts/contract.json
+ 
+[8] MODULO CONCLUIDO (projeto final)
 ```
 
 <a id="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-regras-estruturais" name="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-regras-estruturais"></a>
 #### Regras estruturais 📏 <a href="#indice">↑ topo</a>
 
-* **Fonte da verdade = os fragmentos** (A1, A2, A5). Os arquivos em `target/classes/`
-  são **gerados** a cada build — editá-los é trabalho perdido.
-* **O pré-processamento é empacotado:** o procedimento para especificação vive em
-  `src/main/resources/utils/` e viaja no JAR — o agente lê de dentro do artefato.
-* **O catálogo é lido do JAR:** o agente usa
-  `META-INF/maven/archetype-metadata.xml` e os fragmentos
-  `META-INF/maven/archetype_metadata_required_properties/*.xml` como fonte da
-  verdade das flags.
-* **O catálogo não é alterado em código:** as flags são lidas em runtime
-  — flag nova = 1 fragmento `property-<NN>-<flag>.xml` + 1..N fragmentos
-  `fileset-<NN>-<flag>[-parte].xml` (um `<fileSet>` cada) + registros no DOCTYPE.
-* **As flags são auto-descritivas:** o `defaultValue` nunca é vazio e o
-  `validationRegex` é aplicado por quem emite a command line.
+* **Fonte da verdade = os fragmentos** (A1, A2, A5). 
+  * Os arquivos em `target/classes/` são **gerados** a cada build
+  * editá-los é trabalho perdido.
 
-<a id="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-onde-detalhar-cada-parte" name="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-onde-detalhar-cada-parte"></a>
-#### Onde detalhar cada parte 🔎 <a href="#indice">↑ topo</a>
+* **O pré-processamento é empacotado:** 
+  * o procedimento para especificação('Diretivas Agenticas de Inferencia') vive em `src/main/resources/utils/`
+  * e empacotado no JAR originariamente, a cada Build:
+    * O agente lê de dentro do artefato.
 
-* Metadata (entities + XSLT) → seção **"Archetype-Metadata.xml"**
-* Pós-processador (compositor Groovy) → seção **"Archetype-Post-Generate.groovy"**
-* Catálogo de flags (35) → seção **"Flags do mvn archetype:generate"**
-* Como adicionar uma flag → seção **"Acrescentando Novas Flags ➕️"**
-* Procedimento do agente (empacotado no JAR) → seção **"Procedimento para Especificação"**
-* Derivação (prompt → linha de comando do Maven) → seção **"A Anatomia da Derivação: do Prompt ao Maven CLI 🧠"**
-* Testabilidade → seção **"Testabilidade 🧪"** (camadas, tecnologias, pastas e comando de cada uma)
+* **O catálogo é lido do JAR pelo Agente(Opencode):** 
+  * o agente considera fonte da verdade das flags:
+      * `META-INF/maven/archetype-metadata.xml`
+        * e os fragmentos `META-INF/maven/archetype_metadata_required_properties/*.xml`
+
+* **O catálogo não é alterado em código:** 
+  * as flags são lidas em runtime:
+    * flag nova = 1 fragmento `property-<NN>-<flag>.xml` + 
+    * 1..N fragmentos `fileset-<NN>-<flag>[-parte].xml` (um `<fileSet>` cada) + 
+    * registros no DOCTYPE.
+
+* **As flags são auto-descritivas:** 
+  * o `defaultValue` nunca é vazio
+  * e o `validationRegex` é aplicado por quem emite a command line.
+
+
+
+
+
+
+
+
+
+
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli"></a>
 ## Inferência de Contrato e Use-Case: do Prompt ao Maven CLI 🧠 <a href="#indice">↑ topo</a>
@@ -656,6 +803,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 |---|---|
 | **Use case** | *"Cadastro de clientes de uma clínica. API REST com autenticação JWT na porta 8080."* |
 | **Contrato JSON** | objeto JSON completo — corpo abaixo |
+| **PASTA DE DESTINO** | `C:\Temp\eda-sandbox` — caminho absoluto, fora da árvore do archetype |
 
 **Contrato JSON:**
 
@@ -670,6 +818,8 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
   "api_port": 8080
 }
 ```
+
+> A **PASTA DE DESTINO** pertence ao spec, nunca ao contrato. Ela viaja na propriedade nativa `outputDirectory` do goal de geração — que **não** é uma flag do catálogo — e o agente nunca a presume: sem a marcação, ele pergunta. A regra normativa vive em `utils/`, dentro do JAR; o README apenas a referencia.
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar"></a>
 ### 2) Onde cada informação vai parar <a href="#indice">↑ topo</a>
@@ -768,9 +918,26 @@ mvn archetype:generate --batch-mode \
 > 1. O goal `generate` declara `executePhase` → o Maven exige um **`pom.xml` no diretório de execução**. Rodar numa pasta vazia falha com *"requires a project to execute but there is no POM"*. Use o diretório do archetype (com `-DoutputDirectory`) ou uma pasta de trabalho com um `pom.xml` mínimo.
 > 2. No **PowerShell**, coloque **cada `-D` entre aspas**. Sem isso, a vírgula de `custom_entity_attributes_list` é tratada como separador de array e o valor chega truncado (`com.eda-archetype` vira `com`, por exemplo).
 
-> O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados.
+> O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados. A propriedade é **nativa do plugin de geração de archetype** (não é uma flag do catálogo) e o valor vem da marcação **PASTA DE DESTINO** do spec. O exemplo acima é ilustração; a regra normativa está em `utils/`.
 
 > **Onde está o detalhe de cada coluna?** Em [`src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/`](src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="instalacao" name="instalacao"></a>
 ## Instalacao 📦 <a href="#indice">↑ topo</a>
@@ -834,6 +1001,21 @@ mvn clean install
 **e) Exemplo ilustrativo de seleção no catálogo local**
   ![img_2.png](assets/archetype-log_2.png)
   - A imagem é ilustrativa; o entry deste projeto é `com.eda-archetype:eda-archetype`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="cronograma-do-projeto" name="cronograma-do-projeto"></a>
 ## Cronograma do Projeto 🏗️ <a href="#indice">↑ topo</a>
@@ -1211,6 +1393,17 @@ mvn clean install
   - 2FA Authentication
   - Passwordless Authentication
   - UbyKey (OTP)
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="acrescentando-novas-flags" name="acrescentando-novas-flags"></a>
 ## Acrescentando Novas Flags ➕️ <a href="#indice">↑ topo</a>
@@ -1778,6 +1971,18 @@ if (keep_binding_properties == 'false') {
 }
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
 <a id="procedimento-para-especificacao-spec" name="procedimento-para-especificacao-spec"></a>
 ## Procedimento para Especificação/Spec <a href="#indice">↑ topo</a>
 
@@ -1789,18 +1994,20 @@ if (keep_binding_properties == 'false') {
 * O README não é fonte de runtime.
 
 > ⚠️ **Advertência — premissa de entrada obrigatória.**
-> Este modelo de prompt só é válido com **as _'duas partes'_, _'nesta ordem'_**:
+> Este modelo de prompt só é válido com **as _'duas partes'_, _'nesta ordem'_**, mais a **pasta de destino**:
 >
 > 1. **use-case** (texto) — seção `3. USE-CASE` ou marcador `USE CASE`;
-> 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`.
+> 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`;
+> 3. **pasta de destino** (caminho absoluto) — seção `5. PASTA DE DESTINO`.
 >
 > O procedimento Para e Reporta quando:
 >
 > - o use-case estiver **AUSENTE** ou em branco (**Gate A**);
 > - o contrato estiver **AUSENTE**, em branco, for `{}` ou **'NAO FOR**' um **'OBJETO JSON'** (**Gate B**);
-> - o contrato aparecer **ANTES** do use-case (**Gate C**).
+> - o contrato aparecer **ANTES** do use-case (**Gate C**);
+> - a pasta de destino estiver **AUSENTE**, for **relativa/ambígua** ou estiver **dentro da árvore do archetype** (**Gate D**).
 >
-> Não reordene as seções, não omita o contrato e não use `none` como substituto.
+> Não reordene as seções, não omita o contrato, não use `none` como substituto e não presuma destino.
 > A fonte normativa é `prompt-00` §0, dentro do JAR.
 
 ```text
@@ -1829,10 +2036,14 @@ org.clinica
   "enable_jwt_authentication": true,
   "api_port": 8080
 }
+
+5. PASTA DE DESTINO:
+C:\Temp\eda-sandbox
 ```
 
-* A ordem é normativa: **use-case primeiro, contrato depois**. Sem um dos dois, ou com o contrato
-  antes do use-case, o procedimento para (Gates A, B e C de `prompt-00` §0).
+* A ordem é normativa: **use-case primeiro, contrato depois**; a pasta de destino é entrada
+  independente e obrigatória. Sem qualquer uma delas, com o contrato antes do use-case, ou com
+  destino dentro da árvore do archetype, o procedimento para (Gates A, B, C e D de `prompt-00` §0).
 * O agente começa por `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, dentro do JAR
   instalado (`com.eda-archetype:eda-archetype`).
 * O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.
@@ -1887,6 +2098,22 @@ JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
 fica a cargo do procedimento empacotado no JAR —
 `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e as regras em
 `utils/03-derivacao-regras-de-formacao-do-contrato/`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="montagem-dos-arquivos-de-archetype" name="montagem-dos-arquivos-de-archetype"></a>
 ## Montagem dos Arquivos de Archetype 🏗️ <a href="#indice">↑ topo</a>
@@ -1985,6 +2212,20 @@ fica a cargo do procedimento empacotado no JAR —
 * **⚠️ ADVERTENCIAS** (particularidades deste mecanismo)
   * **1. Plugin estagnado**: o (`groovy-maven-plugin:2.1.1`) nao recebe release desde **2019-08-04** — risco latente se o (`groovy-bom`) do archetype-plugin migrar para Groovy 5/6.
   * **2. Override de Groovy 4.0.28 via (`<dependencies>`) nao pega**: o gmaven roda em classloader proprio com Groovy 2.4.9 default. O composer funciona com 2.4.9.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="testabilidade" name="testabilidade"></a>
 ## Testabilidade 🧪 <a href="#indice">↑ topo</a>
@@ -2176,9 +2417,11 @@ br.com.loja
   "status": ["ATIVO", "CANCELADO"]
 }
 
-5. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
-- Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml
-  ou passe "-DoutputDirectory=<pasta temporaria>".
+5. PASTA DE DESTINO:
+C:\Temp\eda-005-destino
+
+6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
+- O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
 - No PowerShell, coloque cada -D entre aspas (a virgula da lista de
   atributos quebra o argumento).
 - Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.
@@ -2231,9 +2474,11 @@ br.com.loja
   }
 }
 
-5. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
-- Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml
-  ou passe "-DoutputDirectory=<pasta temporaria>".
+5. PASTA DE DESTINO:
+C:\Temp\eda-005-destino
+
+6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
+- O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
 - No PowerShell, coloque cada -D entre aspas (a virgula da lista de
   atributos quebra o argumento).
 - Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.
@@ -2257,6 +2502,21 @@ br.com.loja
       * se o agente devolver `detalhes_categoria` como `String`, a profundidade não foi reconhecida;
       * se `tipo_origem` vier como `String` ou o agente não emitir `nested.TipoOrigem`, o enum aninhado não foi reconhecido;
       * o contrato tem 2 níveis (filho + neto) e a regra manda virar POJO.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="flags-do-mvn-archetype-generate" name="flags-do-mvn-archetype-generate"></a>
 ## Flags do mvn archetype:generate 🤖 <a href="#indice">↑ topo</a>
@@ -2615,6 +2875,21 @@ entity_name
 enable_folder_src_test_java = true
   └─→ entity_contract_file_path (contrato copiado para src/test/resources/contracts/)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <a id="funcionalidades" name="funcionalidades"></a>
 ## Funcionalidades 🛠️ <a href="#indice">↑ topo</a>

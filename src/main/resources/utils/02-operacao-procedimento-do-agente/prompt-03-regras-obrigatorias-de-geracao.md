@@ -76,33 +76,24 @@ Passe sempre:
 - `true` quando o contrato precisar ser copiado para o módulo.
 - `false` quando a árvore de testes não for mantida.
 
-## 3. Execução fora do projeto pai
+## 3. Destino da geração
 
-Execute o `mvn archetype:generate` fora do diretório do projeto pai.
+O destino vai **sempre** na propriedade `outputDirectory` da linha de comando, com o caminho absoluto confirmado no spec. A propriedade é nativa do plugin de geração de archetype e **não** é uma flag do catálogo.
 
-Exemplo:
+- O valor precisa ser um caminho absoluto. Caminho relativo, caminho com `~` ou com sinalização de fim de arquivo é recusado com aviso.
+- Use barras normais, sem barra final e sem quebra de linha. Normalize espaços e barra final antes de comparar e de emitir.
+- Destino dentro da árvore do archetype é proibido, sem exceção.
+- Não use caminho absoluto de usuário ou de máquina no procedimento.
+- O módulo nasce em `<destino>/<artifactId>`; não existe movimentação posterior.
 
-```text
-cd C:\Users\edufi\Downloads
-```
-
-Depois mova a pasta gerada:
-
-```powershell
-robocopy .\cliente-module ..\projeto\cliente-module /E /MOVE
-```
-
-Isso evita o erro:
-
-```text
-Unable to add module to the current project as it is not of packaging type 'pom'
-```
+O diretório onde o Maven executa continua precisando de um `pom.xml` — o destino de saída é outra coisa. Operando na raiz do archetype, esse requisito já está satisfeito.
 
 ## 4. PowerShell
 
 - Coloque todos os `-D...` entre aspas simples.
 - Não use parênteses nos valores.
 - Não quebre a linha com `\`; use uma linha única ou a continuação do PowerShell.
+- O caminho do destino também vai entre aspas — inclusive quando contiver espaços, acentos ou barras invertidas.
 
 Exemplo:
 

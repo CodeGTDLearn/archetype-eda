@@ -6,9 +6,11 @@
 # Usage: auto-commit.sh <event_name> [generated_message]
 #        auto-commit.sh <event_name> --message-file <path>
 #        auto-commit.sh <event_name> --synopsis-file <path>   (commit_style: snapshot)
+#        auto-commit.sh <event_name> --title-file <path>      (commit_style: snapshot)
 #   e.g.: auto-commit.sh after_specify
 #   e.g.: auto-commit.sh after_specify --message-file /tmp/commit-msg.txt  (commit_style: conventional)
 #   e.g.: auto-commit.sh before_implement --synopsis-file /tmp/synopsis.txt (commit_style: snapshot)
+#   e.g.: auto-commit.sh before_implement --title-file /tmp/title.txt (commit_style: snapshot)
 #
 # --message-file is the preferred way to supply an agent-generated commit
 # message: it reads the message from a file instead of a shell argument,
@@ -29,6 +31,7 @@ shift || true
 # passing the message directly as a shell argument.
 GENERATED_MESSAGE=""
 SYNOPSIS_LINES=""
+TITLE_TEXT=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --synopsis-file)
@@ -45,6 +48,22 @@ while [ $# -gt 0 ]; do
             else
                 echo "[specify] Warning: synopsis file '$_synopsis_file' not found" >&2
             fi
+            shift 2
+            ;;
+        --title-file)
+            _title_file="${2:-}"
+            if [ -z "$_title_file" ]; then
+                echo "[specify] Error: --title-file requires a path argument" >&2
+                exit 1
+            fi
+            if [ -f "$_title_file" ]; then
+                # Transport-only artifact: read the first non-empty line, then
+                # delete BEFORE `git add .` so it is never staged.
+                TITLE_TEXT=$(grep -m1 '[^[:space:]]' "$_title_file" | sed -E 's/^[[:space:]]*-[[:space:]]*//' | sed 's/[[:space:]]*$//' || true)
+            else
+                echo "[specify] Warning: title file '$_title_file' not found" >&2
+            fi
+            rm -f "$_title_file"
             shift 2
             ;;
         --message-file)
@@ -374,6 +393,18 @@ EOF
     fi
 
     # title (max 72 chars)
+    # An agent-authored title (--title-file) replaces the automatic per-phase
+    # summary; the first ASCII letter is capitalized for consistency.
+    if [ -n "$TITLE_TEXT" ]; then
+        _first_char="${TITLE_TEXT:0:1}"
+        case "$_first_char" in
+            [a-z])
+                _upper_char=$(printf '%s' "$_first_char" | tr '[:lower:]' '[:upper:]')
+                TITLE_TEXT="${_upper_char}${TITLE_TEXT:1}"
+                ;;
+        esac
+        _summary="$TITLE_TEXT"
+    fi
     _title_head="$_snap_prefix $_frozen: "
     _head_len=$(printf '%s' "$_title_head" | wc -m | tr -d '[:space:]')
     _allowed=$((72 - _head_len))

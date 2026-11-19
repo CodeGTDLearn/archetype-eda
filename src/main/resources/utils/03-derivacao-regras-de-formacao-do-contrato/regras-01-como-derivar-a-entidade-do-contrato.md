@@ -4,7 +4,7 @@ Esta regra transforma o contrato JSON no nome da entidade, no pacote da entidade
 
 ## 1. Entradas
 
-- Spec: tipo de módulo, package base, use-case e contrato JSON.
+- Spec: tipo de módulo, package base, use-case, contrato JSON e pasta de destino da geração, na marcação `PASTA DE DESTINO`.
 - Catálogo de flags do JAR: usado para separar flags de campos de negócio.
 - Contrato JSON: pode declarar `attributes`, `fields` ou campos de negócio no topo.
 
@@ -102,6 +102,8 @@ Quando não há `attributes` nem `fields`, use as chaves de topo que:
 
 - não existem no catálogo de flags;
 - não são meta-chaves (`entityName`, `entity`, `package`, `description`, `attributes`, `fields`).
+
+A marcação `PASTA DE DESTINO` não é chave de contrato: ela pertence ao spec e nunca vira atributo da entidade. A lista de meta-chaves permanece exatamente a acima.
 
 Atenção:
 

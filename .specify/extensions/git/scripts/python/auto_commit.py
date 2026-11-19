@@ -5,9 +5,11 @@ Automatically commit changes after a Spec Kit command completes.
 Python port of ``auto-commit.sh`` / ``auto-commit.ps1``.
 Checks per-command config keys in git-config.yml before committing.
 
-Usage: auto_commit.py <event_name> [--synopsis-file <path>]
+Usage: auto_commit.py <event_name> [--synopsis-file <path>] [--title-file <path>]
   e.g.: auto_commit.py after_specify
   e.g.: auto_commit.py before_implement --synopsis-file /tmp/synopsis.txt
+        (commit_style: snapshot)
+  e.g.: auto_commit.py before_implement --title-file /tmp/title.txt
         (commit_style: snapshot)
 """
 
@@ -145,6 +147,7 @@ def _snapshot(
     repo_root: Path,
     event_name: str,
     synopsis_lines: list[str],
+    title_text: str,
     snap_prefix: str,
 ) -> int:
     """Commit a rollback snapshot of the state left by the previous phase.
@@ -301,7 +304,10 @@ def _snapshot(
     if range_text:
         summary = f"{summary} ({range_text})"
 
-    # Title (max 72 chars).
+    # Title (max 72 chars). An agent-authored title replaces the automatic
+    # per-phase summary; the first character is capitalized for consistency.
+    if title_text:
+        summary = title_text[:1].upper() + title_text[1:]
     title_head = f"{snap_prefix} {frozen}: "
     allowed = max(1, 72 - len(title_head))
     if len(summary) > allowed:
@@ -419,12 +425,14 @@ def main(argv: list[str]) -> int:
     event_name = argv[0] if argv else ""
     if not event_name:
         print(
-            f"Usage: {Path(sys.argv[0]).name} <event_name> [--synopsis-file <path>]",
+            f"Usage: {Path(sys.argv[0]).name} <event_name> "
+            "[--synopsis-file <path>] [--title-file <path>]",
             file=sys.stderr,
         )
         return 1
 
     synopsis_file = ""
+    title_file = ""
     index = 1
     while index < len(argv):
         if argv[index] == "--synopsis-file":
@@ -435,6 +443,15 @@ def main(argv: list[str]) -> int:
                 )
                 return 1
             synopsis_file = argv[index + 1]
+            index += 2
+        elif argv[index] == "--title-file":
+            if index + 1 >= len(argv):
+                print(
+                    "[specify] Error: --title-file requires a path argument",
+                    file=sys.stderr,
+                )
+                return 1
+            title_file = argv[index + 1]
             index += 2
         else:
             index += 1
@@ -468,6 +485,39 @@ def main(argv: list[str]) -> int:
                     synopsis_path.unlink()
                 except OSError:
                     pass
+
+    # Snapshot mode: agent-authored title text (transport-only artifact).
+    # Read and delete BEFORE `git add .`; the finally block guarantees the
+    # temporary file is removed even when reading fails.
+    title_text = ""
+    if title_file:
+        title_path = Path(title_file)
+        try:
+            if not title_path.is_file():
+                print(
+                    f"[specify] Warning: title file '{title_file}' not found",
+                    file=sys.stderr,
+                )
+            else:
+                try:
+                    raw_title = title_path.read_text(encoding="utf-8")
+                except (OSError, UnicodeDecodeError) as exc:
+                    print(
+                        f"[specify] Warning: could not read title file "
+                        f"'{title_file}': {exc}",
+                        file=sys.stderr,
+                    )
+                else:
+                    for line in raw_title.splitlines():
+                        cleaned = re.sub(r"^\s*-\s*", "", line).strip()
+                        if cleaned:
+                            title_text = cleaned
+                            break
+        finally:
+            try:
+                title_path.unlink()
+            except OSError:
+                pass
 
     script_dir = Path(__file__).resolve().parent
     repo_root = _find_project_root(script_dir) or Path.cwd()
@@ -533,7 +583,7 @@ def main(argv: list[str]) -> int:
         return 0
 
     if commit_style == "snapshot":
-        return _snapshot(repo_root, event_name, synopsis_lines, snap_prefix)
+        return _snapshot(repo_root, event_name, synopsis_lines, title_text, snap_prefix)
 
     # Derive a human-readable command name from the event
     # e.g., after_specify -> specify, before_plan -> plan
