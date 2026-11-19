@@ -2160,7 +2160,8 @@ br.com.loja
 {
   "nome_produto": "Teclado Mecânico",
   "preco": 250.50,
-  "quantidade_estoque": 15
+  "quantidade_estoque": 15,
+  "status": ["ATIVO", "CANCELADO"]
 }
 
 5. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
@@ -2172,6 +2173,7 @@ br.com.loja
 - Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
   "idea <pasta_do_projeto_gerado>".
 - O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
+- A API gerada deve ter amplo suporte a testabilidade.
 ```
 
   * **O que esperar:** 
@@ -2206,12 +2208,14 @@ br.com.loja
   "nome_produto": "Smartphone",
   "preco": 1500.0,
   "quantidade_estoque": 10,
+  "status": ["ATIVO", "CANCELADO"],
   "detalhes_categoria": {
     "nome_categoria": "Eletrônicos",
     "codigo_setor": "E01",
     "fabricante_origem": {
       "nome_empresa": "Tech Corp",
-      "cnpj_distribuidor": "12.345.678/0001-99"
+      "cnpj_distribuidor": "12.345.678/0001-99",
+      "tipo_origem": ["NACIONAL", "IMPORTADO"]
     }
   }
 }
@@ -2225,17 +2229,22 @@ br.com.loja
 - Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
   "idea <pasta_do_projeto_gerado>".
 - O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
+- A API gerada deve ter amplo suporte a testabilidade.
 ```
 
-  * **O que esperar:** 
-    * os mesmos 3 atributos do Cenário A **mais** o objeto aninhado; 
-      * `contract_nested_type_definitions` com **2 POJOs**:
-        * `DetalhesCategoria` (campos `nomeCategoria`, `codigoSetor` e o filho `fabricanteOrigem`) e 
-        * `FabricanteOrigem` (campos `nomeEmpresa`, `cnpjDistribuidor`).
-    * Os POJOs nascem em `br.com.loja.produto.nested`, com campos em **camelCase** e o pai emitido antes do filho.
+  * **O que esperar:**
+    * os mesmos 3 atributos do Cenário A **mais** o `status`, o objeto aninhado e o enum aninhado;
+      * `custom_entity_attributes_list=String:nome_produto,Double:preco,Integer:quantidade_estoque,Status:status,DetalhesCategoria:detalhes_categoria`;
+      * `contract_nested_type_definitions=DetalhesCategoria|nomeCategoria:String,codigoSetor:String,fabricanteOrigem:FabricanteOrigem;FabricanteOrigem|nomeEmpresa:String,cnpjDistribuidor:String,tipoOrigem:TipoOrigem`;
+      * `contract_enum_definitions=Status:ATIVO|CANCELADO;nested.TipoOrigem:NACIONAL|IMPORTADO`.
+    * Os POJOs nascem em `br.com.loja.produto.nested`, com campos em **camelCase** e o pai emitido antes do filho:
+      * `DetalhesCategoria` (`nomeCategoria`, `codigoSetor`, `fabricanteOrigem`) e
+      * `FabricanteOrigem` (`nomeEmpresa`, `cnpjDistribuidor`, `tipoOrigem`).
+    * O enum aninhado `TipoOrigem` nasce em `br.com.loja.produto.nested` com `NACIONAL` e `IMPORTADO`; o enum de topo `Status` fica em `br.com.loja.produto` com `ATIVO` e `CANCELADO`.
     * Na entidade, o campo do objeto aninhado é referenciado por **FQN** e marcado com `@Transient`.
-    * **Sinal de alerta:** 
-      * se o agente devolver `detalhes_categoria` como `String`, a profundidade não foi reconhecida
+    * **Sinal de alerta:**
+      * se o agente devolver `detalhes_categoria` como `String`, a profundidade não foi reconhecida;
+      * se `tipo_origem` vier como `String` ou o agente não emitir `nested.TipoOrigem`, o enum aninhado não foi reconhecido;
       * o contrato tem 2 níveis (filho + neto) e a regra manda virar POJO.
 
 </details>
@@ -2655,21 +2664,28 @@ enable_folder_src_test_java = true
     * por isso a conferência protege o ciclo, e não apenas confere campos.
 
   ```text
-        DESENHO DA TELA
+        DESENHO DA TELA 
+ (High/Low Definition Prototype)
                │
-               │ 1. o desenho diz o que a tela precisa
+               │ 1. o Prototipo diz o que a tela/Front-End precisa
+               │    um contrato JSON sera a fonte de dados da tela
                ▼
-           CONTRATO   ◄── fonte da verdade do módulo
+           EXTRACAO 
+           CONTRATO   ◄── Contrato extraido a partir da HD/LD prototype
+               │          O Contrato e a 'fonte da verdade'(provedor) do módulo
                │
-               │ 2. o contrato diz o que o módulo entrega
+               │ 2. o contrato diz o que o módulo entrega/serve/prove ao Front-End
                ▼
-         MÓDULO DA API
+         MÓDULO DA API (Provedor de Dados ao Front-End)
                │
-               │ 3. o módulo entrega os dados
+               │ 3. o módulo entrega os dados, obedecendo ao contrato,
+               │    Servindo/Provendo ao Front-End(Client) os dados
                ▼
-              TELA
+           FRONT-END
+            (TELA)
                │
-               │ 4. a tela pede ajuste
+               │ 4. a tela cumpre sua funcao ao USER
+               │    consumindo os dados providos pela API(Contrato)
                └──────────────► volta ao desenho: o ciclo recomeça
   ```
 
