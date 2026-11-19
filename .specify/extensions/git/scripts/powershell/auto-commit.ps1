@@ -29,7 +29,12 @@ param(
     # Optional agent-revised synopsis bullets (used when commit_style: snapshot is configured).
     # Read and deleted before `git add .`, same transport-only pattern as -MessageFile.
     [Parameter(Mandatory = $false)]
-    [string]$SynopsisFile = ""
+    [string]$SynopsisFile = "",
+
+    # Optional agent-authored free-text title (used when commit_style: snapshot is configured).
+    # One line; read and deleted before `git add .`, same transport-only pattern.
+    [Parameter(Mandatory = $false)]
+    [string]$TitleFile = ""
 )
 $ErrorActionPreference = 'Stop'
 
@@ -66,6 +71,26 @@ if ($SynopsisFile) {
             } | Where-Object { $_ })
         }
         Remove-Item -Path $SynopsisFile -Force -ErrorAction SilentlyContinue
+    }
+}
+
+# Snapshot mode: agent-authored title text (transport-only artifact).
+# Must be read and deleted BEFORE any `git add .` so the file itself is
+# never staged into the snapshot it describes. The finally block guarantees
+# the temporary file is removed even when reading fails.
+$titleText = ""
+if ($TitleFile) {
+    try {
+        if (-not (Test-Path $TitleFile -PathType Leaf)) {
+            Write-Warning "[specify] Warning: title file '$TitleFile' not found"
+        } else {
+            $rawTitle = (Get-Content -Path $TitleFile -Raw -Encoding UTF8)
+            if ($rawTitle) {
+                $titleText = (($rawTitle -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -First 1) -replace '^\s*-\s*', '').Trim()
+            }
+        }
+    } finally {
+        Remove-Item -Path $TitleFile -Force -ErrorAction SilentlyContinue
     }
 }
 
@@ -418,6 +443,11 @@ if ($commitStyle -eq 'snapshot') {
     if ($rangeText) { $summary = "$summary ($rangeText)" }
 
     # --- title (max 72 chars) ------------------------------------------------
+    # An agent-authored title (-TitleFile) replaces the automatic per-phase
+    # summary; the first letter is capitalized for consistency.
+    if ($titleText) {
+        $summary = $titleText.Substring(0, 1).ToUpperInvariant() + $titleText.Substring(1)
+    }
     $titleHead = "$snapPrefix $frozenPhase`: "
     $allowed = 72 - $titleHead.Length
     if ($allowed -lt 1) { $allowed = 1 }

@@ -355,11 +355,20 @@
 #### 2.1) `archetype-metadata.xml` — o índice (não contém conteúdo) 📇 <a href="#indice">↑ topo</a>
 
 * Descreve **o que** o archetype precisa e **o que fazer** com a pasta de templates:
-  * `<requiredProperties>` — as **variáveis** pedidas (`key`, `defaultValue`, `validationRegex`).
-  * `<fileSets>` — o **roteamento**: cada `<fileSet>` diz *qual diretório* de
-    `archetype-resources/` vira *qual lugar* da árvore gerada, e com que tratamento
-    (`filtered`, `packaged`, `encoding`, `includes`/`excludes`).
-* O metadata **nunca lista arquivos**: aponta pastas e deixa o `includes` filtrar.
+  * `<requiredProperties>` — as **variáveis** pedidas, quais sejam:
+    * `key`
+    * `defaultValue`
+    * `validationRegex`
+  * `<fileSets>` — o **roteamento**: 
+    * cada `<fileSet>` diz *qual diretório* de `archetype-resources/` vira 
+    * *qual lugar* da árvore gerada, e com que tratamento:
+      * `filtered`
+      * `packaged`
+      * `encoding`
+      * `includes`/`excludes`
+    * O metadata **nunca lista arquivos**:
+      * aponta pastas e deixa o `includes` filtrar.
+      * 
 * **Motivação:** separar a *declaração* do *conteúdo*.
   * o descritor é pequeno, revisável, substituível;
   * o template pode ser gigante e nunca é lido pelo parser — só copiado.
@@ -368,12 +377,14 @@
 #### 2.2) `archetype-resources/` — o conteúdo (não sabe se existe) 📦 <a href="#indice">↑ topo</a>
 
 * A árvore esqueleto do projeto a ser gerado. Única fonte do *conteúdo* dos arquivos.
-* O parser do metadata nunca entra aqui. Quem entra é o **gerador**, que usa o
+* O parser do metadata nunca entra aqui. 
+* Quem entra é o **gerador**, que usa o
   metadata como instrução de montagem:
   * `__entity_name_package__` no **nome** de arquivo/pasta → substituído pelo valor da flag;
   * `${entity_name}` no **conteúdo** → renderizado pelo Velocity (só com `filtered="true"`).
-* **Motivação:** o template é puro "material virgem" — não carrega lógica de montagem.
-  Quem decide como usá-lo é o metadata.
+* **Motivação:** 
+  * o template é puro "material virgem" — não carrega lógica de montagem.
+  * Quem decide como usá-lo é o metadata.
 
 <a id="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder" name="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder"></a>
 #### 2.3) `archetype-post-generate.groovy` — o pós-processamento (o único com poder) 🧬 <a href="#indice">↑ topo</a>
