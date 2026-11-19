@@ -256,3 +256,11 @@ Com várias pessoas:
 - Evitar: tasks vagas, conflitos de arquivo, dependências entre histórias que quebrem a independência
 - **Ordem obrigatória**: a regra só chega ao agente pelo artefato reinstalado — T032 (reinstalação + verificação do JAR) precede qualquer afirmação de que a feature funciona
 - **Princípio VI**: antes de concluir que uma alteração "não teve efeito", confirmar reinstalação limpa
+
+---
+
+## Phase 8: Convergence
+
+- [ ] T042 Declarar em `src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` §1.3 que o agente exibe o destino absoluto ao operador antes de executar a geração, com o caminho completo e o resultado da validação per FR-018 / US1/AC1 (partial)
+- [ ] T043 Ler o conteúdo do procedimento de `target/classes/utils` (o artefato empacotado) nas asserções de conteúdo de `src/test/archetype-post-generate/DestinationContractTest.groovy`, em vez de `src/main/resources/utils`, mantendo a contagem na árvore-fonte per FR-032 / SC-010 (partial)
+- [ ] T044 Executar os Cenários 5 a 8 de `specs/005-output-directory-contract/quickstart.md` (homologação manual do agente: destino ausente, destino dentro da árvore, pasta inexistente, módulo de mesmo nome) e registrar o resultado per T041 (partial)
