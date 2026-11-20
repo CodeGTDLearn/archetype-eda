@@ -24,10 +24,14 @@ init_commit_message: "[Spec Kit] Initial commit"
 #                  instead of using the messages configured below.
 # "snapshot"     - rollback snapshot taken by before_* hooks: the script
 #                  classifies the frozen phase from the staged diff and
-#                  builds title + body. Title format: "📸 <fase>: <texto
-#                  livre>", where the text comes from the agent via
-#                  --title-file / -TitleFile (falls back to an automatic
-#                  per-phase summary). The agent may refine the synopsis via
+#                  builds title + body. Title format:
+#                  "📸 <fase>: "<assunto>" (<detalhes>)", where <assunto>
+#                  comes from the agent via --title-file / -TitleFile
+#                  (falls back to a per-phase default) and <detalhes> are
+#                  automatic metrics (Implement: "N arquivos - T012–T015";
+#                  Tasks: "N tarefas em M fases"; Plan: "N artefatos de
+#                  design"; Checklist: "N listas"; Specify/Snapshot:
+#                  omitted). The agent may refine the synopsis via
 #                  --synopsis-file / -SynopsisFile. The static messages
 #                  below are ignored in this mode.
 commit_style: snapshot

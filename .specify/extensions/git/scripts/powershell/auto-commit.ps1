@@ -1,4 +1,5 @@
 ﻿#!/usr/bin/env pwsh
+# SNAPSHOT-AUTOCOMMIT-V2
 # Git extension: auto-commit.ps1
 # Automatically commit changes after a Spec Kit command completes.
 # Checks per-command config keys in git-config.yml before committing.
@@ -43,7 +44,7 @@ if ($MessageFile) {
         Write-Warning "[specify] Error: message file '$MessageFile' not found"
         exit 1
     }
-    $GeneratedMessage = (Get-Content -Path $MessageFile -Raw)
+    $GeneratedMessage = (Get-Content -Path $MessageFile -Raw -Encoding UTF8)
     if ($null -ne $GeneratedMessage) {
         $GeneratedMessage = $GeneratedMessage.TrimEnd("`r", "`n")
     }
@@ -440,22 +441,51 @@ if ($commitStyle -eq 'snapshot') {
             $rangeText = "$firstId$([char]0x2013)$lastId +$($taskIds.Count - 2)"
         }
     }
-    if ($rangeText) { $summary = "$summary ($rangeText)" }
+    # >>> SNAPSHOT-TITLE-V2 >>>
+    # Compose: <prefix> <phase>: "<subject>"[ (<details>)]
+    # $summary holds the automatic per-phase metrics computed above.
+    $defaultSubject = 'Implementacao Aplicada'
+    $details = $summary
+    switch ($frozenPhase) {
+        'Specify' {
+            $defaultSubject = 'Especificacao Gerada'
+            $details = ''
+        }
+        'Plan' {
+            $defaultSubject = 'Plano Gerado'
+        }
+        'Tasks' {
+            $defaultSubject = 'Tarefas Geradas'
+        }
+        'Implement' {
+            $defaultSubject = 'Implementacao Aplicada'
+            if ($rangeText) { $details = "$summary - $rangeText" }
+        }
+        'Checklist' {
+            $defaultSubject = 'Checklist Gerada'
+        }
+        default {
+            $defaultSubject = "$($staged.Count) arquivos Snapeados"
+            $details = ''
+        }
+    }
 
-    # --- title (max 72 chars) ------------------------------------------------
-    # An agent-authored title (-TitleFile) replaces the automatic per-phase
-    # summary; the first letter is capitalized for consistency.
+    $subject = $defaultSubject
     if ($titleText) {
-        $summary = $titleText.Substring(0, 1).ToUpperInvariant() + $titleText.Substring(1)
+        $subject = $titleText.Substring(0, 1).ToUpperInvariant() + $titleText.Substring(1)
     }
+    $subject = $subject.Replace('"', "'")
+
     $titleHead = "$snapPrefix $frozenPhase`: "
-    $allowed = 72 - $titleHead.Length
+    $suffix = ''
+    if ($details) { $suffix = " ($details)" }
+    $allowed = 72 - $titleHead.Length - 2 - $suffix.Length
     if ($allowed -lt 1) { $allowed = 1 }
-    if ($summary.Length -gt $allowed) {
-        $title = "$titleHead$($summary.Substring(0, $allowed - 1))$([char]0x2026)"
-    } else {
-        $title = "$titleHead$summary"
+    if ($subject.Length -gt $allowed) {
+        $subject = $subject.Substring(0, $allowed - 1) + [char]0x2026
     }
+    $title = "$titleHead`"$subject`"$suffix"
+    # <<< SNAPSHOT-TITLE-V2 <<<
 
     # --- synopsis (inherited from the previous snapshot, like /git-commit) ---
     # The agent may supply a revised synopsis via -SynopsisFile. Otherwise the
@@ -555,14 +585,19 @@ if ($commitStyle -eq 'snapshot') {
     $body = (($bodyParts -join "`n")).TrimEnd()
 
     # --- commit the snapshot --------------------------------------------------
+    # Pass the message through a file: the title now contains double quotes,
+    # and Windows PowerShell 5.1 splits native arguments with embedded quotes.
+    $msgFile = Join-Path ([IO.Path]::GetTempPath()) ("speckit-snapshot-" + [guid]::NewGuid().ToString("N") + ".txt")
+    [IO.File]::WriteAllText($msgFile, ($title + "`n`n" + $body), (New-Object System.Text.UTF8Encoding($false)))
     $ErrorActionPreference = 'Continue'
     try {
-        $out = git commit -q -m $title -m $body 2>&1 | Out-String
+        $out = git commit -q -F $msgFile 2>&1 | Out-String
         if ($LASTEXITCODE -ne 0) { throw "git commit failed: $out" }
     } catch {
         Write-Warning "[specify] Error: $_"
         exit 1
     } finally {
+        Remove-Item -LiteralPath $msgFile -Force -ErrorAction SilentlyContinue
         $ErrorActionPreference = $savedEAP
     }
 

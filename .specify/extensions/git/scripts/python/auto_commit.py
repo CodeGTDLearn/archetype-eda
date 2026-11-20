@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SNAPSHOT-AUTOCOMMIT-V2
 """Git extension: auto_commit.py
 
 Automatically commit changes after a Spec Kit command completes.
@@ -301,19 +302,40 @@ def _snapshot(
             range_text = ",".join(f"T{task_id:03d}" for task_id in task_ids)
         else:
             range_text = f"T{first:03d}\u2013T{last:03d} +{len(task_ids) - 2}"
-    if range_text:
-        summary = f"{summary} ({range_text})"
-
-    # Title (max 72 chars). An agent-authored title replaces the automatic
-    # per-phase summary; the first character is capitalized for consistency.
-    if title_text:
-        summary = title_text[:1].upper() + title_text[1:]
-    title_head = f"{snap_prefix} {frozen}: "
-    allowed = max(1, 72 - len(title_head))
-    if len(summary) > allowed:
-        title = f"{title_head}{summary[: allowed - 1]}\u2026"
+    # >>> SNAPSHOT-TITLE-V2 >>>
+    # Compose: <prefix> <phase>: "<subject>"[ (<details>)]
+    # ``summary`` holds the automatic per-phase metrics computed above.
+    default_subject = "Implementacao Aplicada"
+    details = summary
+    if frozen == "Specify":
+        default_subject = "Especificacao Gerada"
+        details = ""
+    elif frozen == "Plan":
+        default_subject = "Plano Gerado"
+    elif frozen == "Tasks":
+        default_subject = "Tarefas Geradas"
+    elif frozen == "Implement":
+        default_subject = "Implementacao Aplicada"
+        if range_text:
+            details = f"{summary} - {range_text}"
+    elif frozen == "Checklist":
+        default_subject = "Checklist Gerada"
     else:
-        title = f"{title_head}{summary}"
+        default_subject = f"{len(staged)} arquivos Snapeados"
+        details = ""
+
+    subject = default_subject
+    if title_text:
+        subject = title_text[:1].upper() + title_text[1:]
+    subject = subject.replace('"', "'")
+
+    title_head = f"{snap_prefix} {frozen}: "
+    suffix = f" ({details})" if details else ""
+    allowed = max(1, 72 - len(title_head) - 2 - len(suffix))
+    if len(subject) > allowed:
+        subject = subject[: allowed - 1] + "\u2026"
+    title = f'{title_head}"{subject}"{suffix}'
+    # <<< SNAPSHOT-TITLE-V2 <<<
 
     # Synopsis (inherited from the previous snapshot, like /git-commit).
     if synopsis_lines:

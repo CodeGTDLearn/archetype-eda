@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SNAPSHOT-AUTOCOMMIT-V2
 # Git extension: auto-commit.sh
 # Automatically commit changes after a Spec Kit command completes.
 # Checks per-command config keys in git-config.yml before committing.
@@ -388,35 +389,57 @@ EOF
                 printf "T%03d%sT%03d +%d", v[1], dash, v[n], n - 2
             }')
     fi
-    if [ -n "$_range" ]; then
-        _summary="$_summary ($_range)"
-    fi
+    # >>> SNAPSHOT-TITLE-V2 >>>
+    # Compose: <prefix> <phase>: "<subject>"[ (<details>)]
+    # _summary holds the automatic per-phase metrics computed above.
+    _default_subject="Implementacao Aplicada"
+    _details="$_summary"
+    case "$_frozen" in
+        Specify)
+            _default_subject="Especificacao Gerada"
+            _details="" ;;
+        Plan)
+            _default_subject="Plano Gerado" ;;
+        Tasks)
+            _default_subject="Tarefas Geradas" ;;
+        Implement)
+            _default_subject="Implementacao Aplicada"
+            if [ -n "$_range" ]; then _details="$_summary - $_range"; fi ;;
+        Checklist)
+            _default_subject="Checklist Gerada" ;;
+        *)
+            _default_subject="$_staged_count arquivos Snapeados"
+            _details="" ;;
+    esac
 
-    # title (max 72 chars)
-    # An agent-authored title (--title-file) replaces the automatic per-phase
-    # summary; the first ASCII letter is capitalized for consistency.
+    _subject="$_default_subject"
     if [ -n "$TITLE_TEXT" ]; then
         _first_char="${TITLE_TEXT:0:1}"
         case "$_first_char" in
             [a-z])
                 _upper_char=$(printf '%s' "$_first_char" | tr '[:lower:]' '[:upper:]')
-                TITLE_TEXT="${_upper_char}${TITLE_TEXT:1}"
-                ;;
+                _subject="${_upper_char}${TITLE_TEXT:1}" ;;
+            *)
+                _subject="$TITLE_TEXT" ;;
         esac
-        _summary="$TITLE_TEXT"
     fi
+    _subject=$(printf '%s' "$_subject" | tr '"' "'")
+
     _title_head="$_snap_prefix $_frozen: "
+    _suffix=""
+    if [ -n "$_details" ]; then _suffix=" ($_details)"; fi
     _head_len=$(printf '%s' "$_title_head" | wc -m | tr -d '[:space:]')
-    _allowed=$((72 - _head_len))
+    _suffix_len=$(printf '%s' "$_suffix" | wc -m | tr -d '[:space:]')
+    _allowed=$((72 - _head_len - 2 - _suffix_len))
     if [ "$_allowed" -lt 1 ]; then _allowed=1; fi
-    _summary_len=$(printf '%s' "$_summary" | wc -m | tr -d '[:space:]')
-    if [ "$_summary_len" -gt "$_allowed" ]; then
+    _subject_len=$(printf '%s' "$_subject" | wc -m | tr -d '[:space:]')
+    if [ "$_subject_len" -gt "$_allowed" ]; then
         _ellipsis=$(printf '\342\200\246')
         _cut=$((_allowed - 1))
-        _title="${_title_head}${_summary:0:$_cut}${_ellipsis}"
-    else
-        _title="${_title_head}${_summary}"
+        _subject="${_subject:0:$_cut}${_ellipsis}"
     fi
+    _title="${_title_head}\"${_subject}\"${_suffix}"
+    # <<< SNAPSHOT-TITLE-V2 <<<
 
     # synopsis (inherited from the previous snapshot, like /git-commit)
     _syn_final=""
