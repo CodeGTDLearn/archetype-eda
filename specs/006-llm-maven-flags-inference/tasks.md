@@ -26,8 +26,8 @@
 
 **Purpose**: confirmar a linha de base antes de qualquer alteração.
 
-- [ ] T001 [P] Confirmar a linha de base: 19 arquivos em 4 subpastas em `src/main/resources/utils/` e registrar os 19 caminhos relativos.
-- [ ] T002 [P] Confirmar as referências ao caminho antigo nas 4 suítes de `src/test/archetype-post-generate/` e nos 3 comentários de `src/test/resources/projects/*/archetype.properties`.
+- [X] T001 [P] Confirmar a linha de base: 19 arquivos em 4 subpastas em `src/main/resources/utils/` e registrar os 19 caminhos relativos.
+- [X] T002 [P] Confirmar as referências ao caminho antigo nas 4 suítes de `src/test/archetype-post-generate/` e nos 3 comentários de `src/test/resources/projects/*/archetype.properties`.
 
 ---
 
@@ -37,18 +37,18 @@
 
 **CRITICAL**: nenhuma user story começa antes desta fase.
 
-- [ ] T003 Mover as 4 subpastas de `src/main/resources/utils/` para `src/main/resources/llm-maven-flags-inference/` no sistema de arquivos, preservando os 19 arquivos e os nomes.
-- [ ] T004 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`; trocar só o prefixo, sem alterar regra.
-- [ ] T005 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md`; trocar só o prefixo.
-- [ ] T006 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md`.
-- [ ] T007 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md`, incluindo o comando `jar xf <jar> utils`.
-- [ ] T008 Remover as subpastas vazias remanescentes em `src/main/resources/utils/`.
-- [ ] T009 [P] Atualizar o comentário `utils/03-...` em `src/test/resources/projects/custom-nested-edge-cases/archetype.properties`.
-- [ ] T010 [P] Atualizar o comentário `utils/03-...` em `src/test/resources/projects/custom-enums-from-payload/archetype.properties`.
-- [ ] T011 [P] Atualizar o comentário `utils/03-...` em `src/test/resources/projects/entity-contract/archetype.properties`.
-- [ ] T012 [P] Trocar `eda-llm-flag-inference` por `llm-maven-flags-inference` em `.specify/templates/spec-template.md`.
-- [ ] T013 [P] Trocar `eda-llm-flag-inference` por `llm-maven-flags-inference` em `.specify/templates/plan-template.md`.
-- [ ] T014 [P] Trocar `eda-llm-flag-inference` por `llm-maven-flags-inference` em `.specify/templates/tasks-template.md`.
+- [X] T003 Mover as 4 subpastas de `src/main/resources/utils/` para `src/main/resources/llm-maven-flags-inference/` no sistema de arquivos, preservando os 19 arquivos e os nomes.
+- [X] T004 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`; trocar só o prefixo, sem alterar regra.
+- [X] T005 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md`; trocar só o prefixo.
+- [X] T006 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md`.
+- [X] T007 [P] Atualizar as referências de caminho em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md`, incluindo o comando `jar xf <jar> utils`.
+- [X] T008 Remover as subpastas vazias remanescentes em `src/main/resources/utils/`.
+- [X] T009 [P] Atualizar o comentário `utils/03-...` em `src/test/resources/projects/custom-nested-edge-cases/archetype.properties`.
+- [X] T010 [P] Atualizar o comentário `utils/03-...` em `src/test/resources/projects/custom-enums-from-payload/archetype.properties`.
+- [X] T011 [P] Atualizar os comentários `utils/03-...` em `src/test/resources/projects/entity-contract/archetype.properties` e `src/test/resources/projects/custom-nested-objects/archetype.properties`.
+- [X] T012 [P] Trocar `eda-llm-flag-inference` por `llm-maven-flags-inference` em `.specify/templates/spec-template.md`.
+- [X] T013 [P] Trocar `eda-llm-flag-inference` por `llm-maven-flags-inference` em `.specify/templates/plan-template.md`.
+- [X] T014 [P] Trocar `eda-llm-flag-inference` por `llm-maven-flags-inference` em `.specify/templates/tasks-template.md`.
 
 **Checkpoint**: 19 arquivos na nova raiz; caminho legado vazio.
 
@@ -62,16 +62,16 @@
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` §5 para a nova raiz e o alvo empacotado.
-- [ ] T016 [P] [US1] Atualizar `src/test/archetype-post-generate/ProcedureContractTest.groovy`: raiz nova e prefixo `llm-maven-flags-inference/` no check 1.5.
-- [ ] T017 [P] [US1] Atualizar `src/test/archetype-post-generate/DestinationContractTest.groovy`: raiz, cópia em `target/classes` e entrada do JAR instalado.
-- [ ] T018 [P] [US1] Atualizar `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy`: diretório da contagem e caminhos do `prompt-00` e do `prompt-04`.
-- [ ] T019 [US1] Atualizar todas as referências ao caminho antigo em `README.md` para `llm-maven-flags-inference/`, incluindo o template canônico e os cenários A/B.
-- [ ] T020 [US1] Criar `src/test/archetype-post-generate/PathRenameContractTest.groovy` com os checks de US1: 4 subpastas, 19 arquivos nominais e nova entrada na árvore-fonte e em `target/classes`.
-- [ ] T021 [US1] Registrar `PathRenameContractTest.groovy` em `src/test/groovy/run-archetype-post-generate-tests.groovy`.
-- [ ] T022 [US1] Rodar `mvn -B test` a partir de `pom.xml` e confirmar as suítes verdes.
-- [ ] T023 [US1] Rodar `mvn -B clean install "-Darchetype.test.skip=true"` a partir de `pom.xml` e confirmar o JAR instalado.
-- [ ] T024 [US1] Executar o Cenário 7 do `specs/006-llm-maven-flags-inference/quickstart.md` com um spec novo e registrar a linha emitida.
+- [X] T015 [P] [US1] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` §5 para a nova raiz e o alvo empacotado.
+- [X] T016 [P] [US1] Atualizar `src/test/archetype-post-generate/ProcedureContractTest.groovy`: raiz nova e prefixo `llm-maven-flags-inference/` no check 1.5.
+- [X] T017 [P] [US1] Atualizar `src/test/archetype-post-generate/DestinationContractTest.groovy`: raiz, cópia em `target/classes` e entrada do JAR instalado.
+- [X] T018 [P] [US1] Atualizar `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy`: diretório da contagem e caminhos do `prompt-00` e do `prompt-04`.
+- [X] T019 [US1] Atualizar todas as referências ao caminho antigo em `README.md` para `llm-maven-flags-inference/`, incluindo o template canônico e os cenários A/B.
+- [X] T020 [US1] Criar `src/test/archetype-post-generate/PathRenameContractTest.groovy` com os checks de US1: 4 subpastas, 19 arquivos nominais e nova entrada na árvore-fonte e em `target/classes`.
+- [X] T021 [US1] Registrar `PathRenameContractTest.groovy` em `src/test/groovy/run-archetype-post-generate-tests.groovy`.
+- [X] T022 [US1] Rodar `mvn -B test` a partir de `pom.xml` e confirmar as suítes verdes.
+- [X] T023 [US1] Rodar `mvn -B clean install "-Darchetype.test.skip=true"` a partir de `pom.xml` e confirmar o JAR instalado.
+- [X] T024 [US1] Executar o Cenário 7 do `specs/006-llm-maven-flags-inference/quickstart.md` com um spec novo e registrar a linha emitida.
 
 **Checkpoint**: o caminho novo está funcional e a suíte está verde.
 
@@ -85,10 +85,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T025 [US2] Criar o único redirect em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, apontando para a nova entrada e sem regra.
-- [ ] T026 [US2] Estender `src/test/archetype-post-generate/PathRenameContractTest.groovy` com os checks do redirect: exatamente 1 arquivo no caminho antigo, alvo correto e nenhuma regra.
-- [ ] T027 [US2] Estender `src/test/archetype-post-generate/PathRenameContractTest.groovy` com o check opt-in do JAR instalado: nova entrada e stub presentes.
-- [ ] T028 [US2] Rodar `mvn -B test` a partir de `pom.xml` e executar o Cenário 7 do `specs/006-llm-maven-flags-inference/quickstart.md` com um spec antigo; comparar a linha com a do spec novo.
+- [X] T025 [US2] Criar o único redirect em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, apontando para a nova entrada e sem regra.
+- [X] T026 [US2] Estender `src/test/archetype-post-generate/PathRenameContractTest.groovy` com os checks do redirect: exatamente 1 arquivo no caminho antigo, alvo correto e nenhuma regra.
+- [X] T027 [US2] Estender `src/test/archetype-post-generate/PathRenameContractTest.groovy` com o check opt-in do JAR instalado: nova entrada e stub presentes.
+- [X] T028 [US2] Rodar `mvn -B test` a partir de `pom.xml` e executar o Cenário 7 do `specs/006-llm-maven-flags-inference/quickstart.md` com um spec antigo; comparar a linha com a do spec novo.
 
 **Checkpoint**: spec antiga e spec nova produzem a mesma linha.
 
@@ -102,11 +102,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] Adicionar a `README.md` o tópico H2 `llm-maven-flags-inference` com a declaração de alvo do prompt, a responsabilidade pelo pré-processamento, a sequência de 5 passos e a frase de fronteira.
-- [ ] T030 [US3] Adicionar a `README.md` as 4 subseções H3 com os nomes atuais e um parágrafo curto cada, sem repetir regras.
-- [ ] T031 [US3] Adicionar ao índice de `README.md` as entradas do tópico e das 4 subseções.
-- [ ] T032 [US3] Estender `src/test/archetype-post-generate/PathRenameContractTest.groovy` com os checks do README e o anti-drift: título, 5 passos, frase de fronteira, 4 subseções e 0 termos proibidos no corpus operacional.
-- [ ] T033 [US3] Rodar `mvn -B test` a partir de `pom.xml` e confirmar a suíte verde.
+- [X] T029 [US3] Adicionar a `README.md` o tópico H2 `llm-maven-flags-inference` com a declaração de alvo do prompt, a responsabilidade pelo pré-processamento, a sequência de 5 passos e a frase de fronteira.
+- [X] T030 [US3] Adicionar a `README.md` as 4 subseções H3 com os nomes atuais e um parágrafo curto cada, sem repetir regras.
+- [X] T031 [US3] Adicionar ao índice de `README.md` as entradas do tópico e das 4 subseções.
+- [X] T032 [US3] Estender `src/test/archetype-post-generate/PathRenameContractTest.groovy` com os checks do README e o anti-drift: título, 5 passos, frase de fronteira, 4 subseções e 0 termos proibidos no corpus operacional.
+- [X] T033 [US3] Rodar `mvn -B test` a partir de `pom.xml` e confirmar a suíte verde.
 
 **Checkpoint**: o README cobre a pasta e as 4 subpastas; o anti-drift passa.
 
@@ -116,13 +116,13 @@
 
 **Purpose**: provar o contrato completo no artefato instalado.
 
-- [ ] T034 [P] Verificar que `specs/004-entity-contract-schema-test/`, `specs/005-output-directory-contract/` e `specs/_archive/003-llm-flag-inference/` permanecem intactos.
-- [ ] T035 [P] Executar os Cenários 1 a 3 do `specs/006-llm-maven-flags-inference/quickstart.md` (layout, redirect, anti-drift).
-- [ ] T036 Executar `mvn -B clean install "-Darchetype.test.skip=true"` a partir de `pom.xml`.
-- [ ] T037 Executar `mvn -B clean integration-test` a partir de `pom.xml`.
-- [ ] T038 Executar o Cenário 6 do `specs/006-llm-maven-flags-inference/quickstart.md` (JAR instalado: 19 arquivos + redirect).
-- [ ] T039 Executar o Cenário 7 do `specs/006-llm-maven-flags-inference/quickstart.md` com spec antiga e nova e registrar a mesma linha.
-- [ ] T040 Revisar `specs/006-llm-maven-flags-inference/spec.md` SC-001 a SC-007 e registrar a evidência de cada critério.
+- [X] T034 [P] Verificar que `specs/004-entity-contract-schema-test/`, `specs/005-output-directory-contract/` e `specs/_archive/003-llm-flag-inference/` permanecem intactos.
+- [X] T035 [P] Executar os Cenários 1 a 3 do `specs/006-llm-maven-flags-inference/quickstart.md` (layout, redirect, anti-drift).
+- [X] T036 Executar `mvn -B clean install "-Darchetype.test.skip=true"` a partir de `pom.xml`.
+- [X] T037 Executar `mvn -B clean integration-test` a partir de `pom.xml`.
+- [X] T038 Executar o Cenário 6 do `specs/006-llm-maven-flags-inference/quickstart.md` (JAR instalado: 19 arquivos + redirect).
+- [X] T039 Executar o Cenário 7 do `specs/006-llm-maven-flags-inference/quickstart.md` com spec antiga e nova e registrar a mesma linha.
+- [X] T040 Revisar `specs/006-llm-maven-flags-inference/spec.md` SC-001 a SC-007 e registrar a evidência de cada critério.
 
 ---
 
@@ -196,3 +196,10 @@ Task: "Atualizar ReadmeConsistencyTest: contagem e caminhos do prompt"
 - Não alterar regra, contagem de 19, nomes de subpasta, catálogo de 35 flags ou 18 filesets.
 - Não tocar em `specs/003`, `specs/004`, `specs/005` nem em `graphify-out/`.
 - Parar em cada checkpoint para validar a story de forma independente.
+
+---
+
+## Phase 7: Convergence
+
+- [ ] T041 Atualizar o comentário de `pom.xml` que cita `utils/04-referencia-templates-de-contrato/` para `llm-maven-flags-inference/04-referencia-templates-de-contrato/` per FR-006 (partial)
+- [ ] T042 Incluir `pom.xml` no corpus da verificação anti-drift em `src/test/archetype-post-generate/PathRenameContractTest.groovy` e no contrato em `specs/006-llm-maven-flags-inference/contracts/documentation-contract.md` per FR-012 (partial)

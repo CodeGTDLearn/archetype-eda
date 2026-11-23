@@ -308,19 +308,81 @@ if ($commitStyle -eq 'snapshot') {
         }
     }
 
-    # --- frozen phase, from the staged diff ---------------------------------
+    # --- frozen phase: hook event narrows the candidates, staged diff decides -
+    # Phases in Spec Kit order. A before_* hook freezes whatever the previous
+    # phase left, so only earlier phases are candidates; an after_* hook
+    # freezes that phase itself.
+    $phaseOrder = @('Constitution', 'Specify', 'Clarify', 'Plan', 'Tasks', 'Implement', 'Checklist', 'Analyze')
+    $phaseOfEvent = @{
+        'constitution' = 'Constitution'
+        'specify'      = 'Specify'
+        'clarify'      = 'Clarify'
+        'plan'         = 'Plan'
+        'tasks'        = 'Tasks'
+        'implement'    = 'Implement'
+        'checklist'    = 'Checklist'
+        'analyze'      = 'Analyze'
+    }
+
+    function Get-FrozenPhaseCandidates {
+        param([string]$Name)
+        if ($Name -match '^after_(.+)$') {
+            $phase = $phaseOfEvent[$matches[1]]
+            if ($phase) { return @($phase) }
+            return @()
+        }
+        if ($Name -match '^before_(.+)$') {
+            $phase = $phaseOfEvent[$matches[1]]
+            if (-not $phase) { return @() }
+            $index = [array]::IndexOf($phaseOrder, $phase)
+            if ($index -le 0) { return @() }
+            return @($phaseOrder[0..($index - 1)])
+        }
+        return @()
+    }
+
+    # spec.md feeds both the Specify/Clarify distinction and the Clarify details.
+    $specRel = ($staged | Where-Object { $_ -match '(^|/)spec\.md$' } | Select-Object -First 1)
+    $specText = ''
+    if ($specRel) {
+        $specPath = Join-Path $repoRoot $specRel
+        if (Test-Path $specPath) {
+            $specText = Get-Content $specPath -Raw -Encoding UTF8
+            if ($null -eq $specText) { $specText = '' }
+        }
+    }
+
+    function Get-DetectedPhases {
+        $detected = @()
+        if (Test-StagedMatch $staged '^\.specify/memory/constitution\.md$') { $detected += 'Constitution' }
+        if ($specRel) {
+            # /clarify appends a "## Clarifications" section to spec.md.
+            if ($specText -match '(?m)^## Clarifications') { $detected += 'Clarify' }
+            else { $detected += 'Specify' }
+        }
+        if ((Test-StagedMatch $staged '(^|/)(plan|research|data-model|quickstart)\.md$') -or
+            (Test-StagedMatch $staged '(^|/)contracts/')) { $detected += 'Plan' }
+        if (Test-StagedMatch $staged '(^|/)tasks\.md$') { $detected += 'Tasks' }
+        if (Test-StagedMatch $staged '^src/') { $detected += 'Implement' }
+        if (Test-StagedMatch $staged '(^|/)checklists/') { $detected += 'Checklist' }
+        if (Test-StagedMatch $staged '(^|/)analysis\.md$') { $detected += 'Analyze' }
+        # Most advanced phase first.
+        [array]::Reverse($detected)
+        return $detected
+    }
+
+    # Within the candidates, the most advanced detected phase wins. Without a
+    # known event, fall back to the most advanced phase overall. This keeps a
+    # leftover checklists/ file from mislabelling a Specify snapshot.
+    $candidates = @(Get-FrozenPhaseCandidates $EventName)
+    $detectedPhases = @(Get-DetectedPhases)
     $frozenPhase = 'Snapshot'
-    if (Test-StagedMatch $staged '^src/') {
-        $frozenPhase = 'Implement'
-    } elseif (Test-StagedMatch $staged '(^|/)tasks\.md$') {
-        $frozenPhase = 'Tasks'
-    } elseif (Test-StagedMatch $staged '(^|/)checklists/') {
-        $frozenPhase = 'Checklist'
-    } elseif ((Test-StagedMatch $staged '(^|/)(plan|research|data-model|quickstart)\.md$') -or
-              (Test-StagedMatch $staged '(^|/)contracts/')) {
-        $frozenPhase = 'Plan'
-    } elseif (Test-StagedMatch $staged '(^|/)spec\.md$') {
-        $frozenPhase = 'Specify'
+    if ($candidates.Count -gt 0) {
+        foreach ($phase in $detectedPhases) {
+            if ($candidates -contains $phase) { $frozenPhase = $phase; break }
+        }
+    } elseif ($detectedPhases.Count -gt 0) {
+        $frozenPhase = $detectedPhases[0]
     }
 
     # --- tasks.md location (used by Tasks summary and Implement bullets) ----
@@ -341,6 +403,10 @@ if ($commitStyle -eq 'snapshot') {
     $summary = ''
     switch ($frozenPhase) {
         'Specify'   { $summary = 'spec.md' }
+        'Clarify'   {
+            $sessions = @($specText -split "`r?`n" | Where-Object { $_ -match '^### Session ' }).Count
+            $summary = "$sessions sessões"
+        }
         'Plan' {
             $planCount = @($staged | Where-Object {
                 $_ -match '(^|/)(plan|research|data-model|quickstart)\.md$' -or $_ -match '(^|/)contracts/'
@@ -359,6 +425,8 @@ if ($commitStyle -eq 'snapshot') {
             }
             $summary = "$checkCount listas"
         }
+        'Analyze'      { $summary = 'analysis.md' }
+        'Constitution' { $summary = 'constitution.md' }
         default     { $summary = "$($staged.Count) arquivos" }
     }
 
@@ -451,6 +519,9 @@ if ($commitStyle -eq 'snapshot') {
             $defaultSubject = 'Especificacao Gerada'
             $details = ''
         }
+        'Clarify' {
+            $defaultSubject = 'Duvidas Esclarecidas'
+        }
         'Plan' {
             $defaultSubject = 'Plano Gerado'
         }
@@ -463,6 +534,12 @@ if ($commitStyle -eq 'snapshot') {
         }
         'Checklist' {
             $defaultSubject = 'Checklist Gerada'
+        }
+        'Analyze' {
+            $defaultSubject = 'Analise Concluida'
+        }
+        'Constitution' {
+            $defaultSubject = 'Constituicao Definida'
         }
         default {
             $defaultSubject = "$($staged.Count) arquivos Snapeados"

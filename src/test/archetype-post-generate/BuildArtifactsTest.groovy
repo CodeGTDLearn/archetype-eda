@@ -70,21 +70,22 @@ check("4.4 the post-generate test runner is wired (test)",
 check("4.5 surefire is restricted to **/*Test.java", pomText.contains("**/*Test.java"))
 
 // ---------------------------------------------------------------------------
-// 5) Packaged procedure (utils/) - the Option A artifacts travel in the JAR
+// 5) Packaged procedure (llm-maven-flags-inference/) - the Option A artifacts
+//    travel in the JAR
 // ---------------------------------------------------------------------------
-def utilsSource = new File("src/main/resources/utils")
-def utilsClasses = new File("target/classes/utils")
-def utilsIndex = new File(utilsSource,
+def procedureSource = new File("src/main/resources/llm-maven-flags-inference")
+def procedureClasses = new File("target/classes/llm-maven-flags-inference")
+def procedureIndex = new File(procedureSource,
         "01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md")
 
-def utilsCategories = [
+def procedureCategories = [
         "01-entrada-inicializacao",
         "02-operacao-procedimento-do-agente",
         "03-derivacao-regras-de-formacao-do-contrato",
         "04-referencia-templates-de-contrato"
 ]
 
-def utilsFiles = [
+def procedureFiles = [
         "01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md",
         "01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md",
         "02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md",
@@ -106,19 +107,21 @@ def utilsFiles = [
         "04-referencia-templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json"
 ]
 
-def utilsIndexText = utilsIndex.isFile() ? utilsIndex.getText("UTF-8") : ""
+def procedureIndexText = procedureIndex.isFile() ? procedureIndex.getText("UTF-8") : ""
 
-check("5.1 the four utils categories exist in the source tree",
-        utilsCategories.every { new File(utilsSource, it).isDirectory() })
-check("5.2 the utils tree carries the 19 procedure files",
-        utilsFiles.size() == 19 && utilsFiles.every { new File(utilsSource, it).isFile() })
+check("5.1 the four procedure categories exist in the source tree",
+        procedureCategories.every { new File(procedureSource, it).isDirectory() })
+check("5.2 the procedure tree carries the 19 procedure files",
+        procedureFiles.size() == 19 && procedureFiles.every { new File(procedureSource, it).isFile() })
 check("5.3 the index lists every procedure file",
-        utilsIndexText.length() > 0 && utilsFiles.every { utilsIndexText.contains(it) })
+        procedureIndexText.length() > 0 && procedureFiles.every { procedureIndexText.contains(it) })
 check("5.4 target/classes carries the 19 procedure files",
-        utilsFiles.every { new File(utilsClasses, it).isFile() })
-check("5.5 the archetype-resources tree carries no utils folder",
+        procedureFiles.every { new File(procedureClasses, it).isFile() })
+check("5.5 the archetype-resources tree carries no procedure folder",
         !new File("src/main/resources/archetype-resources/utils").exists() &&
-                !new File("target/classes/archetype-resources/utils").exists())
+                !new File("target/classes/archetype-resources/utils").exists() &&
+                !new File("src/main/resources/archetype-resources/llm-maven-flags-inference").exists() &&
+                !new File("target/classes/archetype-resources/llm-maven-flags-inference").exists())
 
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"

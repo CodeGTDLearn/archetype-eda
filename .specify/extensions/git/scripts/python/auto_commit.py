@@ -144,6 +144,45 @@ def _parse_auto_commit_config(
     return enabled, commit_msg
 
 
+# Phases in Spec Kit order. A ``before_<phase>`` hook freezes whatever the
+# previous phase left, so only earlier phases are candidates; an
+# ``after_<phase>`` hook freezes that phase itself.
+_PHASE_ORDER = [
+    "Constitution",
+    "Specify",
+    "Clarify",
+    "Plan",
+    "Tasks",
+    "Implement",
+    "Checklist",
+    "Analyze",
+]
+
+_PHASE_OF_EVENT = {
+    "constitution": "Constitution",
+    "specify": "Specify",
+    "clarify": "Clarify",
+    "plan": "Plan",
+    "tasks": "Tasks",
+    "implement": "Implement",
+    "checklist": "Checklist",
+    "analyze": "Analyze",
+}
+
+
+def _frozen_phase_candidates(event_name: str) -> list[str]:
+    """Phases the hook may be freezing, or [] when the event is unknown."""
+    if event_name.startswith("after_"):
+        phase = _PHASE_OF_EVENT.get(event_name[len("after_"):])
+        return [phase] if phase else []
+    if event_name.startswith("before_"):
+        phase = _PHASE_OF_EVENT.get(event_name[len("before_"):])
+        if not phase or phase not in _PHASE_ORDER:
+            return []
+        return _PHASE_ORDER[: _PHASE_ORDER.index(phase)]
+    return []
+
+
 def _snapshot(
     repo_root: Path,
     event_name: str,
@@ -191,21 +230,55 @@ def _snapshot(
     def matches(pattern: str) -> bool:
         return any(re.search(pattern, path) for path in staged)
 
-    # Frozen phase, from the staged diff (never from hook order: /analyze and
-    # /checklist may run in either order).
-    frozen = "Snapshot"
-    if matches(r"^src/"):
-        frozen = "Implement"
-    elif matches(r"(^|/)tasks\.md$"):
-        frozen = "Tasks"
-    elif matches(r"(^|/)checklists/"):
-        frozen = "Checklist"
-    elif matches(r"(^|/)(plan|research|data-model|quickstart)\.md$") or matches(
-        r"(^|/)contracts/"
-    ):
-        frozen = "Plan"
-    elif matches(r"(^|/)spec\.md$"):
-        frozen = "Specify"
+    # spec.md feeds both the Specify/Clarify distinction and the Clarify details.
+    spec_rel = next(
+        (path for path in staged if re.search(r"(^|/)spec\.md$", path)), ""
+    )
+    spec_text = ""
+    spec_file = repo_root / spec_rel if spec_rel else None
+    if spec_file is not None and spec_file.is_file():
+        try:
+            spec_text = spec_file.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            spec_text = ""
+
+    def detect_phases() -> list[str]:
+        """Phases with signature artifacts staged, most advanced first."""
+        detected: list[str] = []
+        if matches(r"^\.specify/memory/constitution\.md$"):
+            detected.append("Constitution")
+        if spec_rel:
+            # /clarify appends a "## Clarifications" section to spec.md.
+            if re.search(r"^## Clarifications", spec_text, re.MULTILINE):
+                detected.append("Clarify")
+            else:
+                detected.append("Specify")
+        if matches(r"(^|/)(plan|research|data-model|quickstart)\.md$") or matches(
+            r"(^|/)contracts/"
+        ):
+            detected.append("Plan")
+        if matches(r"(^|/)tasks\.md$"):
+            detected.append("Tasks")
+        if matches(r"^src/"):
+            detected.append("Implement")
+        if matches(r"(^|/)checklists/"):
+            detected.append("Checklist")
+        if matches(r"(^|/)analysis\.md$"):
+            detected.append("Analyze")
+        return detected[::-1]
+
+    # The hook event narrows down which phases may have produced the staged
+    # state; within those, the most advanced detected phase wins. Without a
+    # known event, fall back to the most advanced phase overall. This keeps a
+    # leftover checklists/ file from mislabelling a Specify snapshot.
+    candidates = _frozen_phase_candidates(event_name)
+    detected_phases = detect_phases()
+    if candidates:
+        frozen = next(
+            (phase for phase in detected_phases if phase in candidates), "Snapshot"
+        )
+    else:
+        frozen = detected_phases[0] if detected_phases else "Snapshot"
 
     tasks_rel = next(
         (path for path in staged if re.search(r"(^|/)tasks\.md$", path)), ""
@@ -222,6 +295,11 @@ def _snapshot(
 
     if frozen == "Specify":
         summary = "spec.md"
+    elif frozen == "Clarify":
+        sessions = sum(
+            1 for line in spec_text.splitlines() if line.startswith("### Session ")
+        )
+        summary = f"{sessions} sessões"
     elif frozen == "Plan":
         plan_count = sum(
             1
@@ -239,6 +317,10 @@ def _snapshot(
             if check_dir.is_dir():
                 check_count = sum(1 for entry in check_dir.iterdir() if entry.is_file())
         summary = f"{check_count} listas"
+    elif frozen == "Analyze":
+        summary = "analysis.md"
+    elif frozen == "Constitution":
+        summary = "constitution.md"
     else:
         summary = f"{len(staged)} arquivos"
 
@@ -310,6 +392,8 @@ def _snapshot(
     if frozen == "Specify":
         default_subject = "Especificacao Gerada"
         details = ""
+    elif frozen == "Clarify":
+        default_subject = "Duvidas Esclarecidas"
     elif frozen == "Plan":
         default_subject = "Plano Gerado"
     elif frozen == "Tasks":
@@ -320,6 +404,10 @@ def _snapshot(
             details = f"{summary} - {range_text}"
     elif frozen == "Checklist":
         default_subject = "Checklist Gerada"
+    elif frozen == "Analyze":
+        default_subject = "Analise Concluida"
+    elif frozen == "Constitution":
+        default_subject = "Constituicao Definida"
     else:
         default_subject = f"{len(staged)} arquivos Snapeados"
         details = ""

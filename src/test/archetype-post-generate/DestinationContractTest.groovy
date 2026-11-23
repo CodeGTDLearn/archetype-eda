@@ -5,7 +5,7 @@
  * NATIVE property `outputDirectory` of the archetype generation goal — it is
  * NOT a catalog flag — and the procedure must never presume it.
  *
- * This suite proves, by reading the PACKAGED procedure (target/classes/utils,
+ * This suite proves, by reading the PACKAGED procedure (target/classes/llm-maven-flags-inference,
  * which is what goes into the JAR — not the development tree):
  *
  *   A. the procedure tree keeps the 19 files (count is locked);
@@ -18,8 +18,8 @@
  *   G. (opt-in) the INSTALLED artifact carries the rule. Run with
  *      -Deda.verify.installed.jar=true AFTER `mvn install`.
  */
-def utils = new File("src/main/resources/utils")
-def packaged = new File("target/classes/utils")
+def procedure = new File("src/main/resources/llm-maven-flags-inference")
+def packaged = new File("target/classes/llm-maven-flags-inference")
 def catalogFile = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 
 int failures = 0
@@ -44,12 +44,12 @@ def r06 = read("03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relat
 // A. the procedure tree keeps the locked count
 // ---------------------------------------------------------------------------
 def sourceFiles = []
-utils.eachFileRecurse { if (it.isFile()) sourceFiles << it }
-check("1.1 utils carries exactly 19 procedure files: ${sourceFiles.size()}", sourceFiles.size() == 19)
+procedure.eachFileRecurse { if (it.isFile()) sourceFiles << it }
+check("1.1 the procedure carries exactly 19 procedure files: ${sourceFiles.size()}", sourceFiles.size() == 19)
 
 def packagedFiles = []
 if (packaged.isDirectory()) packaged.eachFileRecurse { if (it.isFile()) packagedFiles << it }
-check("1.2 target/classes/utils carries the same 19 files: ${packagedFiles.size()}", packagedFiles.size() == 19)
+check("1.2 target/classes/llm-maven-flags-inference carries the same 19 files: ${packagedFiles.size()}", packagedFiles.size() == 19)
 
 // ---------------------------------------------------------------------------
 // B. the marker is declared where the rule lives
@@ -131,7 +131,7 @@ if (System.getProperty("eda.verify.installed.jar") == "true") {
     check("7.1 the installed artifact exists", jar.isFile())
     if (jar.isFile()) {
         def zip = new java.util.zip.ZipFile(jar)
-        def entry = zip.getEntry("utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md")
+        def entry = zip.getEntry("llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md")
         def installed = entry == null ? "" : zip.getInputStream(entry).getText("UTF-8")
         zip.close()
         check("7.2 the installed artifact carries the destination rule",

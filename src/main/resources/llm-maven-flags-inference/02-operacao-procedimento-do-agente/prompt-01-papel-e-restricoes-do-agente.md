@@ -28,7 +28,7 @@ mvn archetype:generate --batch-mode -D...
 ## 3. Fonte da verdade
 
 1. O catálogo de flags dentro do JAR.
-2. Os arquivos de `utils/`.
+2. Os arquivos de `llm-maven-flags-inference/`.
 3. O pós-processador e os templates dentro do JAR.
 4. O spec, apenas para tipo de módulo, package base, use-case e contrato.
 
