@@ -119,6 +119,112 @@ check("3.4.2 the operator spec section names Gate D", specSection.contains("Gate
 check("3.4.3 the operator spec example carries the destination section",
         specSection.contains("5. PASTA DE DESTINO:"))
 
+// ---------------------------------------------------------------------------
+// 3.5 The operator spec is portable: preamble, canonical entries and no
+//     module identity. The preamble points at the packaged procedure; the
+//     module identity stays in the procedure.
+// ---------------------------------------------------------------------------
+def pom = new File("pom.xml")
+def pomText = pom.isFile() ? pom.getText("UTF-8") : ""
+def versionMatcher = pomText =~ /(?s)<artifactId>eda-archetype<\/artifactId>\s*<version>([^<]+)<\/version>/
+def archetypeVersion = versionMatcher.find() ? versionMatcher.group(1).trim() : ""
+
+def scenarioAStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-a-contrato-plano-3-atributos" name=')
+def scenarioBStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-b-contrato-aninhado-filho-neto" name=')
+def flagsStart = text.indexOf('<a id="flags-do-mvn-archetype-generate" name=')
+def scenarioA = (scenarioAStart >= 0 && scenarioBStart > scenarioAStart)
+        ? text.substring(scenarioAStart, scenarioBStart) : ""
+def scenarioB = (scenarioBStart >= 0 && flagsStart > scenarioBStart)
+        ? text.substring(scenarioBStart, flagsStart) : ""
+
+def specSections = [canonical: specSection, scenarioA: scenarioA, scenarioB: scenarioB]
+
+def missingPreamble = []
+specSections.each { String name, String body ->
+    if (!body.contains("0. PROCEDIMENTO:")) missingPreamble << name
+}
+check("3.5.1 every spec template carries the 0. PROCEDIMENTO preamble: ${missingPreamble}",
+        missingPreamble.isEmpty())
+
+def prompt00Path = "utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md"
+def missingPromptPath = []
+specSections.each { String name, String body ->
+    if (!body.contains(prompt00Path)) missingPromptPath << name
+}
+check("3.5.2 every spec template points at the packaged prompt-00: ${missingPromptPath}",
+        missingPromptPath.isEmpty())
+
+def expectedArchetype = "com.eda-archetype:eda-archetype:${archetypeVersion}"
+def missingVersion = []
+specSections.each { String name, String body ->
+    if (!body.contains(expectedArchetype)) missingVersion << name
+}
+check("3.5.3 every spec template pins the pom version ${archetypeVersion}: ${missingVersion}",
+        archetypeVersion.length() > 0 && missingVersion.isEmpty())
+
+def requiredEntries = [
+        "1. TIPO DE MÓDULO",
+        "2. PACKAGE BASE (sem o nome da entidade)",
+        "3. USE-CASE",
+        "4. CONTRATO JSON",
+        "5. PASTA DE DESTINO"
+]
+def missingEntries = []
+specSections.each { String name, String body ->
+    requiredEntries.each { String entry ->
+        if (!body.contains(entry)) missingEntries << "${name}:${entry}"
+    }
+}
+check("3.5.4 every spec template carries the five canonical entries: ${missingEntries}",
+        missingEntries.isEmpty())
+
+check("3.5.5 the canonical template carries the package-base examples",
+        specSection.contains("`-Dpackage=org.clinica`") &&
+                specSection.contains("`-Dpackage=org.clinica.cliente`"))
+check("3.5.6 scenario A and B use distinct destinations",
+        scenarioA.contains("C:\\Temp\\eda-005-destino-a") &&
+                scenarioB.contains("C:\\Temp\\eda-005-destino-b"))
+
+def forbiddenIdentity = ["ARTIFACT ID", "MODULE VERSION", "-DartifactId", "-Dversion"]
+def identityLeaks = []
+specSections.each { String name, String body ->
+    forbiddenIdentity.each { String token ->
+        if (body.contains(token)) identityLeaks << "${name}:${token}"
+    }
+}
+check("3.5.7 the spec templates carry no module identity: ${identityLeaks}",
+        identityLeaks.isEmpty())
+
+def whatEntersStart = text.indexOf('<a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-que-entra-na-spec-ou-prompt" name=')
+def whatEntersEnd = text.indexOf('<a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar" name=', whatEntersStart)
+def whatEnters = (whatEntersStart >= 0 && whatEntersEnd > whatEntersStart)
+        ? text.substring(whatEntersStart, whatEntersEnd) : ""
+def whatEntersLower = whatEnters.toLowerCase()
+def entryMarkers = ["tipo de módulo", "package base", "use case", "contrato json", "pasta de destino"]
+def missingMarkers = entryMarkers.findAll { String marker -> !whatEntersLower.contains(marker) }
+check("3.5.8 the spec entry table lists the five entries: ${missingMarkers}",
+        missingMarkers.isEmpty())
+
+// ---------------------------------------------------------------------------
+// 3.6 Reproducibility: the generation command pins the archetype plugin
+//     version, and the README and the packaged procedure agree with the
+//     pluginManagement of the pom. The pin keeps requiresProject=false true
+//     for every generation, regardless of what the ~/.m2 resolves.
+// ---------------------------------------------------------------------------
+def pluginVersionMatcher = pomText =~ /(?s)<artifactId>maven-archetype-plugin<\/artifactId>\s*<version>([^<]+)<\/version>/
+def pluginVersion = pluginVersionMatcher.find() ? pluginVersionMatcher.group(1).trim() : ""
+def pluginCoordinate = "maven-archetype-plugin:${pluginVersion}"
+def prompt04 = new File("src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md")
+def prompt04Text = prompt04.isFile() ? prompt04.getText("UTF-8") : ""
+check("3.6.1 the pom pins the archetype plugin: ${pluginVersion}",
+        pluginVersion.length() > 0)
+check("3.6.2 the README generation example pins the archetype plugin: ${pluginCoordinate}",
+        text.contains(pluginCoordinate))
+check("3.6.3 the packaged procedure pins the archetype plugin: ${pluginCoordinate}",
+        prompt04Text.contains(pluginCoordinate))
+check("3.6.4 the packaged procedure keeps the requiresProject=false note",
+        prompt04Text.contains("requiresProject=false") && prompt04Text.contains("standalone-pom"))
+
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"
 if (failures > 0) throw new RuntimeException("${failures} CHECK(S) FAILED")

@@ -18,8 +18,14 @@
       "output_tokens": 8000,
       "files": 202,
       "mode": "deep"
+    },
+    {
+      "date": "2026-11-23T16:58:39.816146+00:00",
+      "input_tokens": 234600,
+      "output_tokens": 101700,
+      "files": 319
     }
   ],
-  "total_input_tokens": 28000,
-  "total_output_tokens": 8000
+  "total_input_tokens": 262600,
+  "total_output_tokens": 109700
 }

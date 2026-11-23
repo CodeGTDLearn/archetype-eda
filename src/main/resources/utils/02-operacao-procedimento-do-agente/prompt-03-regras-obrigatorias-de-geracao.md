@@ -76,6 +76,17 @@ Passe sempre:
 - `true` quando o contrato precisar ser copiado para o módulo.
 - `false` quando a árvore de testes não for mantida.
 
+### 2.1 Identidade do módulo (propriedades nativas)
+
+Estas propriedades não são flags do catálogo; são nativas do plugin e derivadas pelo procedimento:
+
+- `groupId` = package base do spec.
+- `artifactId` = `entity_name` em kebab-case.
+  - `Cliente` → `cliente`
+  - `PedidoItem` → `pedido-item`
+- `version` = default fixo `1.0.0-SNAPSHOT`.
+- A SPEC não informa `groupId`, `artifactId` nem `version`.
+
 ## 3. Destino da geração
 
 O destino vai **sempre** na propriedade `outputDirectory` da linha de comando, com o caminho absoluto confirmado no spec. A propriedade é nativa do plugin de geração de archetype e **não** é uma flag do catálogo.
@@ -86,7 +97,7 @@ O destino vai **sempre** na propriedade `outputDirectory` da linha de comando, c
 - Não use caminho absoluto de usuário ou de máquina no procedimento.
 - O módulo nasce em `<destino>/<artifactId>`; não existe movimentação posterior.
 
-O diretório onde o Maven executa continua precisando de um `pom.xml` — o destino de saída é outra coisa. Operando na raiz do archetype, esse requisito já está satisfeito.
+O diretório onde o Maven executa não precisa ter um `pom.xml`: o goal `archetype:generate` declara `requiresProject=false`. Rode de um diretório neutro ou de qualquer pasta; o destino de saída é outra coisa.
 
 ## 4. PowerShell
 
@@ -98,7 +109,7 @@ O diretório onde o Maven executa continua precisando de um `pom.xml` — o dest
 Exemplo:
 
 ```powershell
-mvn archetype:generate --batch-mode `
+mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode `
   '-DarchetypeGroupId=com.eda-archetype' `
   '-DarchetypeArtifactId=eda-archetype' `
   '-DarchetypeVersion=0.0.1-SNAPSHOT' `

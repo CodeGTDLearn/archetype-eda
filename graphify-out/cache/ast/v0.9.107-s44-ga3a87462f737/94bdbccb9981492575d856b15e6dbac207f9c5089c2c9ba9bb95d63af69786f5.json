@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_src_test_archetype_post_generate_snippetlogbacktest_groovy", "label": "SnippetLogbackTest.groovy", "file_type": "code", "source_file": "src/test/archetype-post-generate/SnippetLogbackTest.groovy", "source_location": "L1"}], "edges": [], "raw_calls": [], "parse_errors": {"first_error_line": 3, "multiline_error": false}}

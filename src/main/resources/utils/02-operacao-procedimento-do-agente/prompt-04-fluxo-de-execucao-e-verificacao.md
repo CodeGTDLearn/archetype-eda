@@ -45,13 +45,13 @@ Siga `regras-05` antes de montar a command line.
 ## 2. Executar
 
 ```powershell
-mvn archetype:generate --batch-mode `
+mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode `
   '-DarchetypeGroupId=com.eda-archetype' `
   '-DarchetypeArtifactId=eda-archetype' `
   '-DarchetypeVersion=<versão>' `
-  '-DgroupId=<grupo>' `
-  '-DartifactId=<artefato>' `
-  '-Dversion=<versão-do-módulo>' `
+  '-DgroupId=<package-base>' `
+  '-DartifactId=<entity-name-em-kebab-case>' `
+  '-Dversion=1.0.0-SNAPSHOT' `
   '-Dpackage=<package-base>' `
   '-Dentity_name=<Entidade>' `
   '-Dentity_package_name=<pacote-da-entidade>' `
@@ -60,9 +60,11 @@ mvn archetype:generate --batch-mode `
 
 A propriedade `outputDirectory` é nativa do plugin de geração de archetype — não é flag do catálogo — e precisa estar presente em toda geração. O módulo nasce em `<destino>/<artifactId>`.
 
+`groupId`, `artifactId` e `version` seguem a identidade de `prompt-03` §2.1: `groupId` = package base, `artifactId` = entity name em kebab-case, `version` = `1.0.0-SNAPSHOT`.
+
 ### 2.1 Onde executar
 
-Execute a partir de um diretório que tenha um `pom.xml` — a raiz do archetype serve. O destino de saída é outra coisa: ele diz onde o módulo nasce, não onde o Maven roda.
+Execute de qualquer diretório. O goal é invocado com a versão fixa `maven-archetype-plugin:3.4.1`: ele declara `requiresProject=false` e `executePhase=generate-sources`, então uma pasta vazia funciona e o Maven usa o "Maven Stub Project (No POM)" (`standalone-pom`). O pin impede que outra versão resolvida no `~/.m2` mude esse comportamento. O destino de saída é outra coisa: ele diz onde o módulo nasce, não onde o Maven roda.
 
 ## 3. Depois de gerar
 

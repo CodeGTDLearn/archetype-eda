@@ -23,9 +23,13 @@ No Windows:
 ### Resolução de versão
 
 1. Se o spec declarar a versão, use-a.
-2. Senão, use a versão do `pom.xml` do projeto.
-3. Senão, use a única versão instalada.
-4. Se houver várias versões e nenhuma referência, pergunte.
+2. Senão, leia as versões instaladas em
+   `~/.m2/repository/com/eda-archetype/eda-archetype/` (Windows:
+   `%USERPROFILE%\.m2\repository\com\eda-archetype\eda-archetype\`).
+3. Se houver exatamente uma versão instalada, use-a.
+4. Se houver várias versões e o spec não apontar nenhuma, pergunte.
+5. Fora do repositório-fonte do archetype, nunca use o `pom.xml` do projeto
+   hospedeiro como fonte de versão.
 
 ## 2. Listar e extrair
 

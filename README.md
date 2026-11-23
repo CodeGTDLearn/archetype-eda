@@ -19,11 +19,9 @@
 
   - <a href="#maven-archetype-system-fluxo">2) Fluxo 🔄</a>
     - <a href="#maven-archetype-system-fluxo-os-tres-slots-do-archetype-empacotado">Os três slots do archetype empacotado 📦</a>
-      - <a href="#maven-archetype-system-fluxo-archetype-metadata-xml-o-indice-nao-contem-conteudo">1) 
-       <code>archetype-metadata.xml</code> — o índice (não contém conteúdo) 📇</a>
-      - <a href="#maven-archetype-system-fluxo-archetype-resources-o-conteudo-nao-sabe-se-existe">2) 
-       <code>archetype-resources/</code> — o conteúdo (não sabe se existe) 📦</a>
-      - <a href="#maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder">3) <code>archetype-post-generate.groovy</code> — o pós-processamento (o único com poder) 🧬</a>
+      - <a href="#maven-archetype-system-fluxo-archetype-metadata-xml-o-indice-nao-contem-conteudo">2.1) <code>archetype-metadata.xml</code> — o índice (não contém conteúdo) 📇</a>
+      - <a href="#maven-archetype-system-fluxo-archetype-resources-o-conteudo-nao-sabe-se-existe">2.2) <code>archetype-resources/</code> — o conteúdo (não sabe se existe) 📦</a>
+      - <a href="#maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento">2.3) <code>archetype-post-generate.groovy</code> — o pós-processamento 🧬</a>
 
     - <a href="#maven-archetype-system-fluxo-a-relacao-um-pipeline-de-3-tempos">A relação: um pipeline de 3 tempos ⏱️</a>
 
@@ -32,9 +30,9 @@
   - <a href="#maven-archetype-system-velocity">3) Velocity📍</a>
 
 - <a href="#maven-coordinates">Maven Coordinates 📍</a>
-  - <a href="#maven-coordinates-configuration-project">Configuration Project 🔧</a>
-  - <a href="#maven-coordinates-pom-xml">POM.xml 📝</a>
-  - <a href="#maven-coordinates-folder-structure">Folder Structure 🗂️</a>
+  - <a href="#maven-coordinates-configuration-project">1) Configuration Project 🔧</a>
+  - <a href="#maven-coordinates-pom-xml">2) POM.xml 📝</a>
+  - <a href="#maven-coordinates-folder-structure">3) Folder Structure 🗂️</a>
 
 - <a href="#etapas-de-processamento">Etapas de Processamento 📈</a>
   - <a href="#etapas-de-processamento-fluxo-das-tres-etapas">Fluxo das três etapas 🧭</a>
@@ -50,12 +48,13 @@
     - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-fluxo">Fluxo 🔄</a>
     - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-regras-estruturais">Regras estruturais 📏</a>
 
-- <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli">Inferência de Contrato e Use-Case: do Prompt ao Maven CLI 🧠</a>
+- <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli">Inferência de Contrato e Use-Case: do 'Prompt 
+  no Agente' ao 'Maven Archetype Generate' 🧠</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-que-entra-na-spec-ou-prompt">1) O que entra na Spec ou Prompt</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar">2) Onde cada informação vai parar</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-exemplo-ponta-a-ponta">3) O exemplo, ponta a ponta</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-as-tres-regras-que-mais-surpreendem">4) As três regras que mais surpreendem</a>
-  - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado">5) O portão final e o resultado 🚪</a>
+  - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado">5) A Validação final 🚪</a>
 
 - <a href="#instalacao">Instalacao 📦</a>
   - <a href="#instalacao-pre-requisitos">Pré-requisitos</a>
@@ -86,7 +85,7 @@
   - <a href="#acrescentando-novas-flags-padronizacao">3) Padronização:</a>
 
 - <a href="#procedimento-para-especificacao-spec">Procedimento para Especificação/Spec</a>
-  - <a href="#procedimento-para-especificacao-spec-como-usar-no-opencode-ou-na-spec-do-github-spec-kit">Como usar no 'OpenCode' OU na Spec do 'GitHub Spec Kit'</a>
+  - <a href="#procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit">Como usar no 'OpenCode' OU no 'GitHub Spec Kit'</a>
   - <a href="#procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato">Onde estão as regras de formação do contrato</a>
   - <a href="#procedimento-para-especificacao-spec-onde-usar-cada-abordagem">Onde usar cada abordagem</a>
 
@@ -425,7 +424,7 @@
   * o template é puro "material virgem" — não carrega lógica de montagem.
   * Quem decide como usá-lo é o metadata.
 
-<a id="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder" name="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento-o-unico-com-poder"></a>
+<a id="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento" name="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento"></a>
 #### 2.3) `archetype-post-generate.groovy` — o pós-processamento 🧬 <a href="#indice">↑ topo</a>
 
 * Script Groovy executado **depois** da cópia.
@@ -508,17 +507,17 @@ install           → install + archetype:update-local-catalog
 * [Click to check the Coordinates Documentation](https://maven.apache.org/pom.html#Maven_Coordinates)
 
 <a id="maven-coordinates-configuration-project" name="maven-coordinates-configuration-project"></a>
-### Configuration Project 🔧 <a href="#indice">↑ topo</a>
+### 1) Configuration Project 🔧 <a href="#indice">↑ topo</a>
 
 <img alt="" height="303" src="assets/spr_init_config.png" width="300"/>
 
 <a id="maven-coordinates-pom-xml" name="maven-coordinates-pom-xml"></a>
-### POM.xml 📝 <a href="#indice">↑ topo</a>
+### 2) POM.xml 📝 <a href="#indice">↑ topo</a>
 
 <img alt="" height="140" src="assets/spr_init_pom.png" width="314"/>
 
 <a id="maven-coordinates-folder-structure" name="maven-coordinates-folder-structure"></a>
-### Folder Structure 🗂️ <a href="#indice">↑ topo</a>
+### 3) Folder Structure 🗂️ <a href="#indice">↑ topo</a>
 
 <img alt="" height="400" src="assets/spr_init_folder_structure.png" width="150"/>
 
@@ -783,7 +782,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli"></a>
-## Inferência de Contrato e Use-Case: do Prompt ao Maven CLI 🧠 <a href="#indice">↑ topo</a>
+## Inferência de Contrato e Use-Case: do 'Prompt no Agente' ao 'Maven Archetype Generate' 🧠 <a href="#indice">↑ topo</a>
 
 * **A pergunta:** 
   * o operador entrega um **use case** (texto) + um **contrato JSON**; 
@@ -801,11 +800,17 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 | Entrada | Exemplo |
 |---|---|
+| **PROCEDIMENTO** (preâmbulo, não é entrada) | `0. PROCEDIMENTO` — ponteiro para o `prompt-00` dentro do JAR |
+| **Tipo de módulo** | `RAIZ` ou `SECUNDARIO` |
+| **Package base** | `br.com.loja` — prefixo; o archetype concatena `entity_package_name` |
 | **Use case** | *"Cadastro de clientes de uma clínica. API REST com autenticação JWT na porta 8080."* |
 | **Contrato JSON** | objeto JSON completo — corpo abaixo |
 | **PASTA DE DESTINO** | `C:\Temp\eda-sandbox` — caminho absoluto, fora da árvore do archetype |
 
-**Contrato JSON:**
+> Não são entradas da SPEC: `groupId` (= package base), `artifactId`, `version` do
+> módulo, flags e defaults. O procedimento resolve.
+
+**Exemplo de Contrato JSON:**
 
 ```json
 {
@@ -819,7 +824,10 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 }
 ```
 
-> A **PASTA DE DESTINO** pertence ao spec, nunca ao contrato. Ela viaja na propriedade nativa `outputDirectory` do goal de geração — que **não** é uma flag do catálogo — e o agente nunca a presume: sem a marcação, ele pergunta. A regra normativa vive em `utils/`, dentro do JAR; o README apenas a referencia.
+> A **PASTA DE DESTINO** pertence ao spec, nunca ao contrato.
+> Ela viaja na propriedade nativa `outputDirectory` do goal de geração — que **não** é uma flag do catálogo.
+> O agente nunca a presume: sem a marcação, ele pergunta.
+> Essa regra normativa vive em `utils/`, dentro do JAR; o README apenas a referencia.
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-onde-cada-informacao-vai-parar"></a>
 ### 2) Onde cada informação vai parar <a href="#indice">↑ topo</a>
@@ -859,9 +867,9 @@ SPEC: USE CASE + CONTRATO
 
 | Regra | Efeito |
 |---|---|
-| **O tipo vem do valor** | `true`→`Boolean` · inteiro que cabe em `int`→`Integer` · inteiro maior→`Long` · decimal→`Double` · string→`String` · objeto→POJO em `<pacote>.nested` · array→`String` |
-| **Valor explícito vence** | um `type` declarado no contrato tem precedência **se** for `java.lang` ou um **tipo do projeto**; `java.time.Instant`, `List<String>` etc. são rejeitados com aviso e o tipo volta a ser estimado pelo valor |
-| **Flag derivada em cascata** | `entity_package_name` vem de `entity_name`; `enable_custom_entity_attributes` é forçado a `true` quando há atributos; `entity_contract_file_path` só é emitido depois de gravar o contrato |
+| **O tipo vem do valor** | ·`true`→`Boolean`<br>· inteiro que cabe em `int`→`Integer`<br>·inteiro maior→`Long`<br>·decimal→`Double`<br>·string→`String`<br>·objeto→POJO em `<pacote>.nested`<br>·array→`String` |
+| **Valor explícito vence** | ·um `type` declarado no contrato tem precedência **se** for `java.lang` ou um **tipo do projeto**(ex:`java.time.Instant`, `List<String>` etc)<br>·são rejeitados com aviso e o tipo volta a ser estimado pelo valor |
+| **Flag derivada em cascata** | ·`entity_package_name` vem de `entity_name`<br>·`enable_custom_entity_attributes` é forçado a `true` quando há atributos<br>·`entity_contract_file_path` só é emitido depois de gravar o contrato |
 
 **Precedência** (quem vence quando duas fontes discordam):
 
@@ -873,8 +881,18 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 * Um valor **inferido do use case** só entra quando o contrato silencia.
 * O **default** é o último recurso — e nunca é vazio.
 
+**O que é cada fase** (tabela de apoio):
+
+| Nível | O que é numa frase | Exemplo canônico | Reporta como (regras-06) |
+|---|---|---|---|
+| ① CONTRACT | Valor escrito **literalmente** no JSON pelo operador | `"entityName": "Cliente"` | `CONTRACT` |
+| ② CONTRACT_DERIVED | Valor **calculado do contrato** por regra mecânica | `entity_package_name` ← `entity_name` em minúsculas | `CONTRACT_DERIVED` |
+| ③ Semântica da entidade | O que o **próprio contrato revela** ser a entidade: nome, pacote, atributos — e o **tipo vem do valor** (`true`→`Boolean`, decimal→`Double`, objeto→POJO em `.nested`, array→`String`) | `"ativo": true` → campo `Boolean ativo` | aparece como `CONTRACT` ou `CONTRACT_DERIVED` — é um **degrau de decisão**, não uma tag do relatório |
+| ④ INFERENCE (use case) | Proposta lida do **texto narrativo** — só para flags elegíveis: `entity_name` é a única da allowlist | contrato silencia + use-case menciona "clientes" → `Cliente` | `INFERENCE` (fora da allowlist vai para "descartadas") |
+| ⑤ DEFAULT (catálogo) | Valor de fábrica da flag no catálogo | `api_port=8080`, `java_version=21`, `entity_name=MyEntity` | `DEFAULT` |
+
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado"></a>
-### 5) O portão final e o resultado 🚪 <a href="#indice">↑ topo</a>
+### 5) A Validação final 🚪 <a href="#indice">↑ topo</a>
 
 *   **Regra Geral:**
     * Antes de montar a linha, **cada valor** passa pela `validationRegex` localizada em sua flag 
@@ -887,7 +905,11 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 *   **Validação Estrita:**
     *   valor válido → mantém valor e fonte;
     *   valor inválido → cai no `defaultValue` **com aviso barulhento** (nunca em silêncio).
-        *   **Objetivo:** Garantir que o operador esteja ciente de que o valor inferido ou fornecido foi rejeitado por não cumprir o contrato técnico da flag, forçando o uso do padrão seguro.
+        *   **Objetivo:** 
+          * Garantir que o operador esteja ciente de que 
+          * o valor inferido ou fornecido foi rejeitado
+          * por não cumprir o contrato técnico da flag
+          * forçando o uso do padrão seguro.
         *   *ex.:* derivar `api_port=abc` → a regex `^([1-9][0-9]{3,4})$` rejeita → o valor final vira `8080`.
         * exemplo de codigo `validationRegex'`:
 ```xml
@@ -904,7 +926,7 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 
 Uma linha única, sem prompt interativo.
 ```bash
-mvn archetype:generate --batch-mode \
+mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode \
   -DarchetypeGroupId=com.eda-archetype -DarchetypeArtifactId=eda-archetype -DarchetypeVersion=0.0.1-SNAPSHOT \
   -DgroupId=org.clinica -DartifactId=cliente -Dpackage=org.clinica \
   -Dentity_name=Cliente -Dentity_package_name=cliente \
@@ -914,8 +936,8 @@ mvn archetype:generate --batch-mode \
   "-DoutputDirectory=C:\Temp\eda-sandbox"
 ```
 
-> ⚠️ **Duas armadilhas de ambiente** (validadas em Maven 3.9.16 + Windows):
-> 1. O goal `generate` declara `executePhase` → o Maven exige um **`pom.xml` no diretório de execução**. Rodar numa pasta vazia falha com *"requires a project to execute but there is no POM"*. Use o diretório do archetype (com `-DoutputDirectory`) ou uma pasta de trabalho com um `pom.xml` mínimo.
+> ⚠️ **Duas notas de ambiente** (revalidadas em 2026-11-23, Maven 3.9.16 + Windows):
+> 1. O goal `generate` do `maven-archetype-plugin` **3.4.1** (versão fixa na linha de comando e no `pluginManagement` deste `pom.xml`) declara `executePhase` (`generate-sources`) e `requiresProject=false`: rodar de uma pasta sem `pom.xml` funciona — o Maven usa o "Maven Stub Project (No POM)" (`standalone-pom`). O destino continua vindo de `-DoutputDirectory`.
 > 2. No **PowerShell**, coloque **cada `-D` entre aspas**. Sem isso, a vírgula de `custom_entity_attributes_list` é tratada como separador de array e o valor chega truncado (`com.eda-archetype` vira `com`, por exemplo).
 
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados. A propriedade é **nativa do plugin de geração de archetype** (não é uma flag do catálogo) e o valor vem da marcação **PASTA DE DESTINO** do spec. O exemplo acima é ilustração; a regra normativa está em `utils/`.
@@ -1986,15 +2008,28 @@ if (keep_binding_properties == 'false') {
 <a id="procedimento-para-especificacao-spec" name="procedimento-para-especificacao-spec"></a>
 ## Procedimento para Especificação/Spec <a href="#indice">↑ topo</a>
 
-<a id="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-na-spec-do-github-spec-kit" name="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-na-spec-do-github-spec-kit"></a>
-### Como usar no 'OpenCode' OU na Spec do 'GitHub Spec Kit' <a href="#indice">↑ topo</a>
+<a id="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit" name="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit"></a>
+### Como usar no 'OpenCode' OU no 'GitHub Spec Kit' <a href="#indice">↑ topo</a>
 
 * O procedimento completo **está empacotado no JAR** do archetype.
-* O operador entrega apenas o **spec mínimo** abaixo; o agente lê o procedimento de dentro do JAR.
-* O README não é fonte de runtime.
+* O operador entrega a **spec**(usando, por ex.: 'GitHub Spec Kit') ao agente(por ex.: OpenCode)
+  * A Spec devera obrigatoriamente conter (ORDEM OBRIGATORIA):
+    * Preambulo `0. PROCEDIMENTO` — ponteiro para o `prompt-00` dentro do JAR; nao e entrada de derivacao
+    * Tipo de Modulo (Root/Principal ou Branch/Secundario)
+    * PACKAGE BASE (sem o nome da entidade)
+    * Descricao do USE-CASE desejado para o modulo (OBRIGATORIO)
+    * O Contrato que sera fornecido pelo modulo a ser criado (OBRIGATORIO)
+    * O Local de destino onde o projeto deve ser gerado (OBRIGATORIO)
+  * Detalhes tecnicos adicionais:
+    * se forem flags do catalogo, vao no contrato;
+    * se forem contexto, vao no use-case;
+    * instrucoes de execucao (PowerShell, `mvn clean verify`, IDE) sao opcionais e nao sao entradas de derivacao.
+  * Nao fazem parte da Spec: `groupId` (= package base), `artifactId`, `version` do modulo, flags e defaults — o procedimento resolve.
+* OBS1: Os procedimentos de Inferencia sao originariamente 'empacotados' na JAR.
+* OBS2: O README não é fonte de runtime, sendo ele mera documentacao.
 
 > ⚠️ **Advertência — premissa de entrada obrigatória.**
-> Este modelo de prompt só é válido com **as _'duas partes'_, _'nesta ordem'_**, mais a **pasta de destino**:
+> Este modelo de prompt só é válido com o preâmbulo, **as _'duas partes'_, _'nesta ordem'_**, mais a **pasta de destino** e as demais entradas do spec (tipo de módulo e package base):
 >
 > 1. **use-case** (texto) — seção `3. USE-CASE` ou marcador `USE CASE`;
 > 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`;
@@ -2007,17 +2042,27 @@ if (keep_binding_properties == 'false') {
 > - o contrato aparecer **ANTES** do use-case (**Gate C**);
 > - a pasta de destino estiver **AUSENTE**, for **relativa/ambígua** ou estiver **dentro da árvore do archetype** (**Gate D**).
 >
+> O preâmbulo `0. PROCEDIMENTO` não é entrada de derivação: é a ordem de leitura do procedimento dentro do JAR.
+> As 5 entradas continuam obrigatórias; os Gates A–D permanecem inalterados.
+>
 > Não reordene as seções, não omita o contrato, não use `none` como substituto e não presuma destino.
 > A fonte normativa é `prompt-00` §0, dentro do JAR.
 
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
 
+0. PROCEDIMENTO:
+- Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
+  repositório local, leia
+  utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  de dentro do JAR e siga-o antes de derivar.
+- Este spec pode ser executado fora da pasta do repositório do archetype.
+
 1. TIPO DE MÓDULO:
 [X] RAIZ
 [ ] SECUNDARIO
 
-2. PACKAGE BASE:
+2. PACKAGE BASE (sem o nome da entidade):
 org.clinica
 
 3. USE-CASE:
@@ -2041,20 +2086,29 @@ org.clinica
 C:\Temp\eda-sandbox
 ```
 
-* A ordem é normativa: **use-case primeiro, contrato depois**; a pasta de destino é entrada
-  independente e obrigatória. Sem qualquer uma delas, com o contrato antes do use-case, ou com
-  destino dentro da árvore do archetype, o procedimento para (Gates A, B, C e D de `prompt-00` §0).
-* O agente começa por `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, dentro do JAR
-  instalado (`com.eda-archetype:eda-archetype`).
+* A ordem é normativa: 
+  * Sequencia: 
+    * **use-case primeiro**;
+    * **contrato depois**;
+    * **pasta de destino** em seguida;
+  * Sem qualquer uma delas
+    * com o contrato antes do use-case
+    * ou com destino dentro da árvore do archetype
+    * o procedimento para (Gates A, B, C e D de `prompt-00` §0).
+* O agente começa por `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`
+  * dentro do JAR empacotado/instalado (`com.eda-archetype:eda-archetype`).
 * O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.
   - ✅ `-Dpackage=org.clinica` → `package org.clinica.cliente;`
   - ❌ `-Dpackage=org.clinica.cliente` → `package org.clinica.cliente.cliente;`
+* `entity_package_name` não é entrada da SPEC; o procedimento deriva.
+* A SPEC não informa `groupId`, `artifactId` nem `version` do módulo.
+  * O procedimento deriva `groupId` do package base, `artifactId` do nome da entidade e aplica a `version` default.
 
 <a id="procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato" name="procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato"></a>
 ### Onde estão as regras de formação do contrato <a href="#indice">↑ topo</a>
 
-O detalhamento do procedimento não vive mais no README. Ele está empacotado no JAR, em
-`utils/`, e é lido pelo agente antes de qualquer derivação.
+* O detalhamento do procedimento não vive mais no README. 
+* Ele está empacotado no JAR, em `utils/`, e é lido pelo Agente(ex.: Opencode) antes de qualquer derivação.
 
 **Regras de formação do contrato** (`utils/03-derivacao-regras-de-formacao-do-contrato/`):
 
@@ -2387,6 +2441,8 @@ fica a cargo do procedimento empacotado no JAR —
   * Estes prompts **simulam o spec** que o operador entrega: 
     * use case + contrato JSON. 
     * Não fazem parte da suíte automatizada — eles exercitam o **agente**, não o build.
+  * São portáveis: o procedimento vem do JAR, não do repositório do EDA.
+  * O destino é sempre a `PASTA DE DESTINO`; a identidade do módulo não é informada no spec.
   * Servem para validar o **alinhamento da inferência**: 
     * se o agente derivar as flags erradas, 
     * o projeto gerado sai torto e você percebe antes de rodar `mvn archetype:generate`.
@@ -2397,11 +2453,18 @@ fica a cargo do procedimento empacotado no JAR —
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
 
+0. PROCEDIMENTO:
+- Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
+  repositório local, leia
+  utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  de dentro do JAR e siga-o antes de derivar.
+- Este spec pode ser executado fora da pasta do repositório do archetype.
+
 1. TIPO DE MÓDULO:
 [X] RAIZ
 [ ] SECUNDARIO
 
-2. PACKAGE BASE:
+2. PACKAGE BASE (sem o nome da entidade):
 br.com.loja
 
 3. USE-CASE:
@@ -2418,7 +2481,7 @@ br.com.loja
 }
 
 5. PASTA DE DESTINO:
-C:\Temp\eda-005-destino
+C:\Temp\eda-005-destino-a
 
 6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
 - O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
@@ -2426,7 +2489,7 @@ C:\Temp\eda-005-destino
   atributos quebra o argumento).
 - Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.
 - Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
-  "idea <pasta_do_projeto_gerado>".
+  "idea64 <pasta_do_projeto_gerado>".
 - O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
 - A API gerada deve ter amplo suporte a testabilidade.
 ```
@@ -2444,11 +2507,18 @@ C:\Temp\eda-005-destino
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
 
+0. PROCEDIMENTO:
+- Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
+  repositório local, leia
+  utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  de dentro do JAR e siga-o antes de derivar.
+- Este spec pode ser executado fora da pasta do repositório do archetype.
+
 1. TIPO DE MÓDULO:
 [X] RAIZ
 [ ] SECUNDARIO
 
-2. PACKAGE BASE:
+2. PACKAGE BASE (sem o nome da entidade):
 br.com.loja
 
 3. USE-CASE:
@@ -2475,7 +2545,7 @@ br.com.loja
 }
 
 5. PASTA DE DESTINO:
-C:\Temp\eda-005-destino
+C:\Temp\eda-005-destino-b
 
 6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
 - O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
@@ -2483,7 +2553,7 @@ C:\Temp\eda-005-destino
   atributos quebra o argumento).
 - Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.
 - Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
-  "idea <pasta_do_projeto_gerado>".
+  "idea64 <pasta_do_projeto_gerado>".
 - O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
 - A API gerada deve ter amplo suporte a testabilidade.
 ```
