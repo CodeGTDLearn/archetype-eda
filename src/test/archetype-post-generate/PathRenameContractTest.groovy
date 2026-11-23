@@ -158,7 +158,7 @@ check("4.8 the README index links the topic",
 // ---------------------------------------------------------------------------
 // E. anti-drift across the operational corpus
 // ---------------------------------------------------------------------------
-def corpusFiles = [readme]
+def corpusFiles = [readme, new File("pom.xml")]
 if (templatesDir.isDirectory()) {
     templatesDir.listFiles().findAll { it.isFile() && it.name.endsWith(".md") }.each { corpusFiles << it }
 }

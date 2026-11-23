@@ -61,6 +61,7 @@ As cinco entradas do spec permanecem na ordem atual.
 ### Corpus verificado
 
 - `README.md`
+- `pom.xml` (descritor de build)
 - `.specify/templates/spec-template.md`, `plan-template.md`, `tasks-template.md`
 - Procedimento empacotado em `target/classes/llm-maven-flags-inference/`
 - Comentários de `src/test/resources/projects/*/archetype.properties`

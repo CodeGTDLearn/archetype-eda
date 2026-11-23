@@ -201,5 +201,5 @@ Task: "Atualizar ReadmeConsistencyTest: contagem e caminhos do prompt"
 
 ## Phase 7: Convergence
 
-- [ ] T041 Atualizar o comentário de `pom.xml` que cita `utils/04-referencia-templates-de-contrato/` para `llm-maven-flags-inference/04-referencia-templates-de-contrato/` per FR-006 (partial)
-- [ ] T042 Incluir `pom.xml` no corpus da verificação anti-drift em `src/test/archetype-post-generate/PathRenameContractTest.groovy` e no contrato em `specs/006-llm-maven-flags-inference/contracts/documentation-contract.md` per FR-012 (partial)
+- [X] T041 Atualizar o comentário de `pom.xml` que cita `utils/04-referencia-templates-de-contrato/` para `llm-maven-flags-inference/04-referencia-templates-de-contrato/` per FR-006 (partial)
+- [X] T042 Incluir `pom.xml` no corpus da verificação anti-drift em `src/test/archetype-post-generate/PathRenameContractTest.groovy` e no contrato em `specs/006-llm-maven-flags-inference/contracts/documentation-contract.md` per FR-012 (partial)
