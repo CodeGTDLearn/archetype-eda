@@ -9,7 +9,7 @@ description: "Task list template for feature implementation"
 
 <!--
   When the feature being specified requires generating a new project from the
-  archetype, use the LLM flag inference mechanism (`eda-llm-flag-inference`)
+  archetype, use the LLM flag inference mechanism (`llm-maven-flags-inference`)
   to produce the project generation command line. Provide the textual
   description of the use case and a JSON contract; do not construct the
   command line ad-hoc.

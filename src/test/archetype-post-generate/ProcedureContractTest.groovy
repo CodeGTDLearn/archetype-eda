@@ -1,5 +1,5 @@
 /**
- * Contract test for the PACKAGED PROCEDURE (utils/).
+ * Contract test for the PACKAGED PROCEDURE (llm-maven-flags-inference/).
  *
  * The procedure is what the AGENT reads from the JAR to derive the contract
  * and the command line of the archetype: after the inference engine was
@@ -20,7 +20,7 @@
  */
 import groovy.json.JsonSlurper
 
-def utils = new File("src/main/resources/utils")
+def procedure = new File("src/main/resources/llm-maven-flags-inference")
 def resources = new File("src/main/resources")
 def classes = new File("target/classes")
 def catalogFile = new File(classes, "META-INF/maven/archetype-metadata.xml")
@@ -46,7 +46,7 @@ def slurper = new JsonSlurper()
 // ---------------------------------------------------------------------------
 // A. the JSON files of the procedure are valid JSON
 // ---------------------------------------------------------------------------
-def contractTemplates = new File(utils, "04-referencia-templates-de-contrato")
+def contractTemplates = new File(procedure, "04-referencia-templates-de-contrato")
 def jsonFiles = contractTemplates.listFiles().findAll { it.isFile() && it.name.endsWith(".json") }.sort { it.name }
 def invalidJson = []
 def parsed = [:]
@@ -152,7 +152,7 @@ check("1.3 every contract example validates against template-01-schema-do-contra
 // C. every flag-like term of the procedure is a declared catalog flag
 // ---------------------------------------------------------------------------
 def mdFiles = []
-utils.eachFileRecurse { File f -> if (f.isFile() && f.name.endsWith(".md")) mdFiles << f }
+procedure.eachFileRecurse { File f -> if (f.isFile() && f.name.endsWith(".md")) mdFiles << f }
 // terms that look like a flag but are not one (metadata keywords, env vars)
 def nonFlagTerms = ["CONTRACT_DERIVED", "DEPENDS_ON", "XDG_CACHE_HOME"]
 def unknownTerms = []
@@ -176,7 +176,7 @@ mdFiles.each { File f ->
     (f.getText("UTF-8") =~ /`([^`]*\/[^`\s]*)`/).each { m ->
         String path = m[1]
         // only the paths that live INSIDE the JAR are validated
-        if (!(path.startsWith("utils/") || path.startsWith("META-INF/") || path.startsWith("archetype-resources/"))) return
+        if (!(path.startsWith("llm-maven-flags-inference/") || path.startsWith("META-INF/") || path.startsWith("archetype-resources/"))) return
         // a glob is not a path
         if (path.contains("*")) return
         boolean found = new File(resources, path).exists() ||
@@ -194,7 +194,7 @@ check("1.5 every path the procedure points at exists in the JAR layout: ${broken
 // ---------------------------------------------------------------------------
 def entityTemplate = new File(resources,
         "archetype-resources/src/main/java/__entity_package_name__/__entity_name__.java")
-def rulesFile = new File(utils,
+def rulesFile = new File(procedure,
         "03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md")
 def exampleFile = new File(contractTemplates, "template-03-exemplo-contrato-com-objetos-aninhados.json")
 
@@ -211,7 +211,7 @@ check("1.8 the nested-type example does not claim a simple-name reference",
 // F. the flags the procedure does NOT cite are an explicit allowlist
 // ---------------------------------------------------------------------------
 def corpusParts = []
-utils.eachFileRecurse { File f -> if (f.isFile()) corpusParts << f.getText("UTF-8") }
+procedure.eachFileRecurse { File f -> if (f.isFile()) corpusParts << f.getText("UTF-8") }
 def corpus = corpusParts.join("\n")
 
 // The procedure MUST derive these flags from the contract.
@@ -248,7 +248,7 @@ check("1.10 every flag NOT cited by the procedure is an explicit allowlist entry
 // native `outputDirectory` property of the generation goal, so it MUST NOT
 // become a catalog flag, and the contract meta-keys MUST stay untouched.
 // ---------------------------------------------------------------------------
-def regras01 = new File(utils,
+def regras01 = new File(procedure,
         "03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md")
         .getText("UTF-8")
 

@@ -42,7 +42,7 @@ jar tf <jar>
 Extraia para um diretório temporário:
 
 ```powershell
-jar xf <jar> utils
+jar xf <jar> llm-maven-flags-inference
 jar xf <jar> META-INF/maven/archetype-metadata.xml
 jar xf <jar> META-INF/archetype-post-generate.groovy
 jar xf <jar> archetype-resources
@@ -134,5 +134,5 @@ Use o repositório-fonte apenas quando o usuário pedir explicitamente. O caminh
 Não use código de motor, CLI ou script externo para redescobrir semântica de flags. As regras estão em:
 
 ```text
-utils/03-derivacao-regras-de-formacao-do-contrato/
+llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/
 ```
