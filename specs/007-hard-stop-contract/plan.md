@@ -6,7 +6,7 @@
 
 ## Summary
 
-Adicionar ao procedimento empacotado um Contrato de Parada Dura canônico, com 10 campos, regras de linguagem simples, dicionário de 20 termos, registro de 16 paradas + 2 confirmações e um código em cada site de parada. Substituir o fallback `String:name` por `STOP-DER-02` quando a lista derivada de atributos violar a regra de formato. Corrigir as divergências documentais — caminho absoluto do contrato, exceção de proveniência para `none`, pipes da tabela, nota FR-006 e diferença entre pacote da entidade e artefato — e provar o contrato com suítes Groovy. Nenhum arquivo novo no procedimento, nenhuma dependência nova, nenhum `defaultValue` ou `validationRegex` alterado.
+Adicionar ao procedimento empacotado um Contrato de Parada Dura canônico, com 10 campos, regras de linguagem simples, dicionário de 20 termos, registro de 16 paradas + 2 confirmações e um código em cada site de parada. Substituir o fallback `String:name` por `STOP-DER-02` quando a lista derivada de atributos violar a regra de formato. Corrigir as divergências documentais — caminho absoluto do contrato, exceção de proveniência para `none`, pipes da tabela, nota FR-006 e diferença entre pacote da entidade e artefato — e provar o contrato com suítes Groovy. A verificação inclui amostra manual de 6 mensagens, baseline de build ≤10% e duas execuções offline. Nenhum arquivo novo no procedimento, nenhuma dependência nova, nenhum `defaultValue` ou `validationRegex` alterado.
 
 ## Technical Context
 
@@ -16,17 +16,17 @@ Adicionar ao procedimento empacotado um Contrato de Parada Dura canônico, com 1
 
 **Storage**: Sistema de arquivos e JAR: 19 arquivos do procedimento (13 Markdown e 6 JSON), catálogo XML com 35 propriedades e 18 filesets; sem banco de dados.
 
-**Testing**: Suítes Groovy em `src/test/archetype-post-generate/`, executadas pelo runner `src/test/groovy/run-archetype-post-generate-tests.groovy` na fase `test`; `mvn -B test`, `mvn clean install` e verificação opt-in do JAR instalado com `-Deda.verify.installed.jar=true`.
+**Testing**: Suítes Groovy em `src/test/archetype-post-generate/`, executadas pelo runner `src/test/groovy/run-archetype-post-generate-tests.groovy` na fase `test`; `mvn -B test`, `mvn clean install`, verificação opt-in do JAR instalado com `-Deda.verify.installed.jar=true`, duas execuções offline e amostra manual de 6 mensagens.
 
 **Target Platform**: JAR consumido por agentes e operadores; Windows e POSIX; procedimento sem motor, CLI ou script em runtime.
 
 **Project Type**: Maven archetype / promptware (documentação executável + suítes de contrato).
 
-**Performance Goals**: Aumento do build de no máximo 10% (NFR-001); suítes determinísticas, offline e sem dependência de rede.
+**Performance Goals**: Aumento do build de no máximo 10% sobre a linha de base local de `mvn -B test`; suítes determinísticas, offline e sem dependência de rede.
 
 **Constraints**: 19 arquivos no procedimento (13 Markdown, 6 JSON); 35 propriedades e 18 filesets; não alterar `defaultValue` nem `validationRegex`; não criar arquivo novo no procedimento; mensagens em português; não expor segredos; o JAR instalado é a fonte de runtime.
 
-**Scale/Scope**: 16 paradas + 2 confirmações; 20 termos no dicionário; 9 flags críticas; 10 dos 13 Markdown alterados; 1 comentário de catálogo; 2 suítes de teste novas.
+**Scale/Scope**: 16 paradas + 2 confirmações; 20 termos no dicionário; 9 flags críticas; 10 dos 13 Markdown alterados; 1 comentário de catálogo; 2 suítes de teste novas; amostra manual de 6 mensagens; 3 verificações de SC-002/NFR-001/NFR-002.
 
 ## Constitution Check
 
@@ -42,7 +42,7 @@ Adicionar ao procedimento empacotado um Contrato de Parada Dura canônico, com 1
 | VI. Validar Antes de Culpar o Código | A validação reinstala o JAR com `mvn clean install` e confere o artefato instalado com a propriedade opt-in | PASS |
 | Technology Stack | Java 17, Maven 3.9.16, Spring Boot 4.0.0, plugin 3.4.1 e dependências existentes permanecem | PASS |
 
-**Reavaliação após a Fase 1**: PASS — o desenho não cria flag, arquivo de extensão, dependência, estrutura de dados ou alteração no código gerado. As alterações fora do procedimento são um comentário descritivo no fragmento `property-20` do catálogo (sem tocar em `defaultValue` ou `validationRegex`) e duas suítes de teste.
+**Reavaliação após a Fase 1**: PASS — o desenho não cria flag, arquivo de extensão, dependência, estrutura de dados ou alteração no código gerado. As alterações fora do procedimento são um comentário descritivo no fragmento `property-20` do catálogo (sem tocar em `defaultValue` ou `validationRegex`) e duas suítes de teste. A verificação de SC-002/NFR-001/NFR-002 usa `validation-report.md` e não altera o gate.
 
 ## Project Structure
 
@@ -54,12 +54,15 @@ specs/007-hard-stop-contract/
 ├── research.md                     # Fase 0
 ├── data-model.md                   # Fase 1
 ├── quickstart.md                   # Fase 1
+├── validation-report.md            # Evidência de SC-002/NFR-001/NFR-002
 ├── contracts/
 │   ├── hard-stop-message.md        # Contrato dos 10 campos e da linguagem
 │   ├── stop-registry.md            # Registro, sites e códigos
-│   └── catalog-sync.md             # Tabela de flags × catálogo
+│   ├── catalog-sync.md             # Tabela de flags × catálogo
+│   └── verification.md             # SC-002, NFR-001 e NFR-002
 ├── checklists/
-│   └── requirements.md             # Checklist de qualidade
+│   ├── requirements.md             # Checklist de qualidade (16 itens)
+│   └── hard-stop.md                # Checklist custom do revisor (39 itens)
 └── tasks.md                        # Fase 2 (/speckit.tasks)
 ```
 
@@ -168,6 +171,8 @@ Duas suítes novas, registradas no runner:
 - `HardStopContractTest.groovy`: lê a cópia empacotada em `target/classes`; valida os 18 códigos, o registro, as 18 mensagens, os 10 campos, as opções, o template, o dicionário de 20 termos, a ausência de "informe apenas", os sites com `Pare` e os blocos `PARADA DURA`, as contagens 19/13/6, o limite de 20 palavras por frase e, de forma opt-in, o JAR instalado.
 - `CatalogSyncContractTest.groovy`: lê `target/classes/META-INF/maven/archetype-metadata.xml` e os fragmentos; valida as 3 colunas da tabela, os 9 defaults, as 3 regras de formato literais, os exemplos das 6 regras descritivas, a descrição de caminho absoluto, a exceção de proveniência, a nota FR-006, a diferença pacote × artefato e a ausência de mudança em `defaultValue`/`validationRegex` (35/18).
 
+A verificação de SC-002/NFR-001/NFR-002 fica em `contracts/verification.md` e nos cenários 12–14 do `quickstart.md`.
+
 ### 6. Fora de alteração
 
 - `README.md`: permanece como está; a observação do contexto não reabre a reestruturação.
@@ -180,12 +185,28 @@ Duas suítes novas, registradas no runner:
 ### Positivo
 
 ```powershell
+# antes da implementação: aqueça o cache e capture a linha de base
 mvn -B test
+$baseline = (Measure-Command { mvn -B test }).TotalSeconds
+
+# depois da implementação
+mvn -B test
+$final = (Measure-Command { mvn -B test }).TotalSeconds
+mvn -o -B test
+mvn -o -B test
 mvn clean install
 mvn -B test "-Deda.verify.installed.jar=true"
 ```
 
 Esperado: todas as suítes passam; o JAR instalado contém o registro, o dicionário e a mensagem `STOP-DER-02`.
+
+### Métricas
+
+| Métrica | Procedimento | Aceite |
+|---|---|---|
+| **NFR-001** | Comparar `$baseline` e `$final` de `mvn -B test` no mesmo ambiente, após o aquecimento. | `($final - $baseline) / $baseline ≤ 10%`. |
+| **NFR-002** | Rodar `mvn -o -B test` duas vezes e comparar as linhas do runner (`[archetype-post-generate]`). | Saídas idênticas; nenhuma chamada de rede. |
+| **SC-002** | Amostra mínima de 6 mensagens, incluindo `STOP-DER-02` e as 2 confirmações; revisor independente; tabela com data e resultado. | 6/6 respostas corretas às 5 perguntas. |
 
 ### Negativo (temporário, reverter depois)
 
@@ -200,6 +221,9 @@ Esperado: todas as suítes passam; o JAR instalado contém o registro, o dicion�
 | Mudar uma regex literal na tabela | `CatalogSyncContractTest` nomeia a flag |
 | Mudar a descrição de caminho absoluto do catálogo | `CatalogSyncContractTest` falha |
 | Adicionar um 20º arquivo ao procedimento | A suíte de contagem falha |
+| Build final >10% acima da linha de base | A verificação de NFR-001 falha |
+| Duas execuções offline com saídas diferentes | A verificação de NFR-002 falha |
+| Amostra de SC-002 com menos de 6 mensagens ou sem `STOP-DER-02`/confirmações | A verificação de SC-002 falha |
 
 ### Manual
 
@@ -207,6 +231,7 @@ Esperado: todas as suítes passam; o JAR instalado contém o registro, o dicion�
 2. Conferir o template, os 20 termos e as 18 mensagens.
 3. Provocar `STOP-DER-02` com um contrato de lista inválida e confirmar: nenhuma linha `mvn`, nenhum módulo, 3 opções e a sugestão.
 4. Confirmar que a mensagem não imprime o contrato completo nem segredos.
+5. Aplicar a amostra de SC-002 do `contracts/verification.md` e registrar a tabela em `validation-report.md`.
 
 ## Complexity Tracking
 
@@ -223,6 +248,8 @@ Nenhuma violação. O gate da Constitution passou antes e depois do desenho; a t
 - Caminho absoluto documentado no catálogo, proveniência com exceção de `none`, FR-006 explicado e pacote × artefato explícito.
 - 19 arquivos (13 Markdown, 6 JSON), 35 propriedades e 18 filesets.
 - 0 ocorrências de "informe apenas".
-- Um operador que começou ontem responde às 5 perguntas de orientação em 100% das paradas revisadas (SC-002, revisão manual).
+- Um operador que começou ontem responde às 5 perguntas em 6/6 mensagens da amostra, com revisor independente e registro em tabela (SC-002).
+- O build final fica ≤10% acima da linha de base local de `mvn -B test` (NFR-001).
+- As suítes rodam duas vezes offline com a mesma saída (NFR-002).
 - `mvn -B test`, `mvn clean install` e a verificação opt-in do JAR passam.
 - Nenhum arquivo novo no procedimento, nenhuma dependência nova, nenhum default ou regex alterado.

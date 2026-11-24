@@ -140,6 +140,9 @@ Aplicar cada alteração temporariamente e reverter depois:
 | Mudar um default na tabela | `CatalogSyncContractTest` nomeia a flag |
 | Mudar uma regex literal na tabela | `CatalogSyncContractTest` nomeia a flag |
 | Adicionar um 20º arquivo ao procedimento | A suíte de contagem falha |
+| Build final >10% acima da linha de base | A verificação de NFR-001 falha |
+| Duas execuções offline com saídas diferentes | A verificação de NFR-002 falha |
+| Amostra de SC-002 com menos de 6 mensagens | A verificação de SC-002 falha |
 
 **Cobre**: FR-019, FR-020, FR-021, FR-022, FR-023, FR-018.
 
@@ -158,18 +161,48 @@ $root = "src/main/resources/llm-maven-flags-inference"
 
 ## Cenário 12 — Operador iniciante (manual)
 
-1. Selecione uma amostra das 18 mensagens, incluindo `STOP-DER-02` e as 2 confirmações.
-2. Peça a uma pessoa que começou ontem para responder, sem ajuda externa:
+Amostra fixa de 6 mensagens: `STOP-IN-01`, `STOP-ENV-03`, `STOP-DER-01`, `STOP-DER-02`, `STOP-CONF-01` e `STOP-CONF-02`.
+
+1. Peça a uma pessoa que começou ontem, e que **não participou da implementação**, para responder sem ajuda externa:
    - O que aconteceu?
    - Onde está o problema?
    - Quais são as opções?
    - Qual é a recomendada?
    - O que fazer agora para retomar?
-3. Registre as respostas.
+2. Registre as respostas em `specs/007-hard-stop-contract/validation-report.md`, com revisor e data.
 
-**Esperado**: 100% das paradas revisadas respondidas corretamente.
+**Esperado**: 6/6 mensagens com as 5 respostas corretas e `Resultado = OK`.
 
 **Cobre**: SC-002, FR-005, FR-026, FR-027, FR-028, FR-029.
+
+## Cenário 13 — NFR-001: tempo de build
+
+```powershell
+mvn -B test
+$baseline = (Measure-Command { mvn -B test }).TotalSeconds
+# depois da implementação
+$final = (Measure-Command { mvn -B test }).TotalSeconds
+$delta = (($final - $baseline) / $baseline) * 100
+$delta
+```
+
+**Esperado**: `delta ≤ 10`; registrar `baseline`, `final` e `delta` em `validation-report.md`.
+
+**Cobre**: NFR-001.
+
+## Cenário 14 — NFR-002: determinismo offline
+
+```powershell
+$run1 = Join-Path $env:TEMP "eda-run1.txt"
+$run2 = Join-Path $env:TEMP "eda-run2.txt"
+mvn -o -B test | Select-String '^\[archetype-post-generate\]' | Set-Content $run1
+mvn -o -B test | Select-String '^\[archetype-post-generate\]' | Set-Content $run2
+Compare-Object (Get-Content $run1) (Get-Content $run2)
+```
+
+**Esperado**: nenhuma diferença; nenhuma chamada de rede. Registrar o resultado em `validation-report.md`.
+
+**Cobre**: NFR-002.
 
 ## Matriz de cobertura
 
@@ -187,3 +220,5 @@ $root = "src/main/resources/llm-maven-flags-inference"
 | 10 | FR-018, FR-019, FR-020, FR-021, FR-022 | SC-003, SC-007 |
 | 11 | FR-022 | SC-005 |
 | 12 | FR-005, FR-026, FR-027, FR-028, FR-029 | SC-002 |
+| 13 | — | NFR-001 |
+| 14 | — | NFR-002 |

@@ -115,6 +115,36 @@ As 9 flags: `entity_name`, `entity_package_name`, `custom_entity_attributes_list
 | `artifactId` | Kebab-case: `PedidoItem` → `pedido-item` | FR-017 |
 | `packageBase` | Não contém o nome da entidade | FR-017 |
 
+### AcceptanceReview
+
+| Campo | Regra | Requisito |
+|---|---|---|
+| `sample` | 6 mensagens fixas: `STOP-IN-01`, `STOP-ENV-03`, `STOP-DER-01`, `STOP-DER-02`, `STOP-CONF-01`, `STOP-CONF-02` | SC-002 |
+| `reviewer` | Não participou da implementação | SC-002 |
+| `questions` | O que aconteceu, onde, opções, sugestão, retomada | SC-002 |
+| `result` | 6/6 linhas com `Resultado = OK` | SC-002 |
+| `evidence` | Tabela em `validation-report.md`, com revisor e data | SC-002 |
+
+### BuildBaseline
+
+| Campo | Regra | Requisito |
+|---|---|---|
+| `command` | `mvn -B test` no mesmo ambiente, após aquecimento | NFR-001 |
+| `baselineSeconds` | Medição antes da mudança | NFR-001 |
+| `finalSeconds` | Medição depois da mudança | NFR-001 |
+| `delta` | `(final - baseline) / baseline ≤ 0.10` | NFR-001 |
+| `evidence` | `validation-report.md` | NFR-001 |
+
+### OfflineRun
+
+| Campo | Regra | Requisito |
+|---|---|---|
+| `command` | `mvn -o -B test` | NFR-002 |
+| `runs` | Duas execuções no mesmo ambiente, sem rede | NFR-002 |
+| `filter` | Linhas `[archetype-post-generate]` | NFR-002 |
+| `result` | Saídas idênticas | NFR-002 |
+| `evidence` | `validation-report.md` | NFR-002 |
+
 ## Invariantes
 
 | ID | Invariante | Requisito |
@@ -135,6 +165,9 @@ As 9 flags: `entity_name`, `entity_package_name`, `custom_entity_attributes_list
 | INV-14 | `FR-006` está explicado em linguagem simples | FR-016 |
 | INV-15 | `pedidoitem` e `pedido-item` aparecem com a diferença explícita | FR-017 |
 | INV-16 | O JAR instalado contém o registro, o dicionário e as mensagens | SC-012 |
+| INV-17 | SC-002 usa 6 mensagens fixas, revisor independente e tabela com data/resultado | SC-002 |
+| INV-18 | NFR-001 registra baseline e final de `mvn -B test`, com delta ≤10% | NFR-001 |
+| INV-19 | NFR-002 registra duas execuções offline com a mesma saída | NFR-002 |
 
 ## Fluxo de parada
 
@@ -177,4 +210,7 @@ contrato JSON
 | Proveniência | Exceção de `none` presente | `CatalogSyncContractTest` |
 | FR-006 | Explicação simples presente | `CatalogSyncContractTest` |
 | Nomes | `pedidoitem` × `pedido-item` explícitos | `CatalogSyncContractTest` |
+| **SC-002** | 6 mensagens fixas, revisor independente, 5 respostas e tabela em `validation-report.md` | `validation-report.md` |
+| **NFR-001** | Baseline/final de `mvn -B test`; delta ≤10% | `validation-report.md` |
+| **NFR-002** | Duas execuções `mvn -o -B test` com saídas idênticas | `validation-report.md` |
 | JAR | Registro, dicionário e `STOP-DER-02` no artefato instalado | `HardStopContractTest` (opt-in) |

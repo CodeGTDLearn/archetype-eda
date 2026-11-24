@@ -82,6 +82,24 @@ Fechar as decisões de desenho que a spec não fixa: onde o contrato, o dicioná
 - **Rationale**: FR-012 manda as 2 confirmações seguirem o mesmo contrato; a mensagem de confirmação também precisa orientar o operador e não pode gerar antes da escolha.
 - **Alternatives considered**: tratar confirmação como mensagem curta (rejeitado — FR-012); usar template separado (rejeitado — duas linguagens e dois testes).
 
+### D13 — SC-002 com amostra fixa e revisor independente
+
+- **Decision**: a amostra de SC-002 tem 6 mensagens fixas (`STOP-IN-01`, `STOP-ENV-03`, `STOP-DER-01`, `STOP-DER-02`, `STOP-CONF-01`, `STOP-CONF-02`); o revisor não participou da implementação; o resultado fica em uma tabela com as 5 respostas, revisor e data.
+- **Rationale**: amostra fixa evita escolha enviesada; 6 mensagens cobrem entrada, ambiente, derivação, a parada central e as 2 confirmações; o registro em tabela torna SC-002 auditável.
+- **Alternatives considered**: amostra livre (rejeitado — não auditável); todas as 18 (rejeitado — custo alto para o mesmo critério); revisor que implementou (rejeitado — viés).
+
+### D14 — NFR-001 com baseline local e delta de 10%
+
+- **Decision**: medir `mvn -B test` no mesmo ambiente, após aquecimento, antes e depois da mudança; aceitar `(final - baseline) / baseline ≤ 10%`.
+- **Rationale**: o projeto já usa 10% como interpretação de "aumento perceptível"; a medição antes/depois elimina a ambiguidade e permite repetir a verificação.
+- **Alternatives considered**: teto absoluto de tempo (rejeitado — depende da máquina); revisão qualitativa (rejeitado — não auditável).
+
+### D15 — NFR-002 com duas execuções offline
+
+- **Decision**: rodar `mvn -o -B test` duas vezes e comparar as linhas `[archetype-post-generate]`; exigir saídas idênticas e nenhuma chamada de rede.
+- **Rationale**: duas execuções provam determinismo; o modo offline prova ausência de dependência de rede; a comparação filtrada ignora timestamps do Maven.
+- **Alternatives considered**: uma execução offline (rejeitado — não prova determinismo); inspeção manual do código (rejeitado — não executa a prova).
+
 ## Restrições preservadas
 
 - Gates avaliados sempre na ordem A → B → C → D.
@@ -104,6 +122,10 @@ Fechar as decisões de desenho que a spec não fixa: onde o contrato, o dicioná
 | JAR instalado ficar obsoleto | `mvn clean install` antes da verificação opt-in |
 | Regressão em testes existentes | Preservar âncoras já testadas (`Nunca presuma destino`, `nativa do plugin`, `meta-chaves`, plugin pin) |
 | 10º campo ausente nas mensagens | Template e 18 mensagens com `**Segurança:**`; teste conta 10 rótulos |
+| Amostra de SC-002 enviesada | Amostra fixa de 6 mensagens; revisor que não implementou; tabela em `validation-report.md` |
+| Medição de build ruidosa | Aquecer o cache; medir antes/depois no mesmo ambiente; repetir se o ambiente estiver sob carga anormal |
+| Saída offline divergente | Comparar apenas linhas do runner; corrigir a fonte de não determinismo |
+| Resultados de validação espalhados | Registro único em `validation-report.md`; quickstart permanece guia reutilizável |
 
 ## Baseline confirmado
 
