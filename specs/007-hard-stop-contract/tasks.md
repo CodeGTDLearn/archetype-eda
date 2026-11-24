@@ -28,7 +28,7 @@
 
 **Purpose**: Confirm the baseline and create the two failing contract suites before touching the procedure.
 
-- [ ] T001 Confirm the baseline in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19 procedure files (13 Markdown, 6 JSON), 35 properties, 18 filesets and the 9 critical flags; record the counts.
+- [ ] T001 Confirm the baseline in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19 procedure files (13 Markdown, 6 JSON), 35 properties, 18 filesets and the 9 critical flags; record the counts. Capture also the NFR-001 baseline: warm up with `mvn -B test`, measure `(Measure-Command { mvn -B test }).TotalSeconds` and record the value in `specs/007-hard-stop-contract/validation-report.md`.
 - [ ] T002 [P] Create `src/test/archetype-post-generate/HardStopContractTest.groovy` as a minimal red skeleton: one assertion for the 18-code registry and one for the message count. Detailed checks belong to T026–T028; the suite must fail before the procedure is updated.
 - [ ] T003 [P] Create `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` as a minimal red skeleton: one assertion for the 3-column table and one for the 9 defaults. Detailed checks belong to T033; the suite must fail before the procedure is updated.
 - [ ] T004 Register `HardStopContractTest.groovy` and `CatalogSyncContractTest.groovy` in `src/test/groovy/run-archetype-post-generate-tests.groovy`.
@@ -150,7 +150,7 @@
 - [ ] T047 Run the 14 scenarios in `specs/007-hard-stop-contract/quickstart.md` and record the outcomes in `specs/007-hard-stop-contract/validation-report.md`, including the negative build checks, SC-002 and the NFR checks.
 - [ ] T048 Review `src/main/resources/llm-maven-flags-inference/` for Portuguese, 20-word sentences, active voice, translated acronyms, no secrets and no "informe apenas"; fix the findings.
 - [ ] T049 Final diff review: `README.md` unchanged, no new dependency, no `defaultValue`/`validationRegex` change, no new procedure file, no generated code or fixture change.
-- [ ] T050 Run the NFR-001 timing check: warm up `mvn -B test`, measure baseline and final, compute the delta, require ≤10%, and record baseline/final/delta in `specs/007-hard-stop-contract/validation-report.md`.
+- [ ] T050 Run the NFR-001 timing check using the baseline recorded in T001: measure the final `(Measure-Command { mvn -B test }).TotalSeconds`, compute `(final - baseline) / baseline`, require ≤10%, and record final/delta in `specs/007-hard-stop-contract/validation-report.md`. Fail if the baseline is missing.
 - [ ] T051 Run the NFR-002 offline check: `mvn -o -B test` twice, filter the `[archetype-post-generate]` lines, compare the outputs, and record the result in `specs/007-hard-stop-contract/validation-report.md`.
 - [ ] T052 Consolidate `specs/007-hard-stop-contract/validation-report.md`: 6/6 SC-002 rows, NFR-001 delta ≤10%, NFR-002 identical runs, reviewer/date and no secrets; reject incomplete evidence.
 
