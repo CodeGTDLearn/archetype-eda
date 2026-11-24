@@ -22,7 +22,7 @@ Fechar as decisões de desenho que a spec não fixa: onde o contrato, o dicioná
 
 ### D3 — Convenção de site: **Pare com `STOP-...`**
 
-- **Decision**: toda ordem de interrupção usa a forma literal **Pare com `STOP-<CATEGORIA>-<NN>`**. O teste varre cada linha do procedimento com a palavra isolada `pare` e exige um código registrado. As mensagens do registro usam `Por que parou`, não `pare`, para não se autoidentificarem como site.
+- **Decision**: toda ordem de interrupção usa a forma literal **Pare com `STOP-<CATEGORIA>-<NN>`**. O teste varre cada linha com a palavra isolada `pare` e cada bloco `PARADA DURA`, e exige um código registrado. As mensagens do registro usam `Por que parou` e trazem o código no título, então passam pela varredura.
 - **Rationale**: dá ao build uma definição determinística de "site de parada"; qualquer linha com `pare` sem código falha e nomeia o arquivo.
 - **Alternatives considered**: detectar sinônimos como "interrompa", "recuse" e "não continue" (rejeitado — heurística frágil); confiar só na revisão humana (rejeitado — FR-019 exige falha de build).
 

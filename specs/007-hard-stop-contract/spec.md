@@ -38,6 +38,11 @@
 - Q: O dicionário deve apresentar a tradução de cada um dos 20 termos, e não apenas a lista? → A: Sim.
 - Q: O spec deve incluir o template canônico da mensagem de parada e um exemplo completo de STOP-DER-02? → A: Sim.
 - Q: As confirmações STOP-CONF-01 e STOP-CONF-02 devem ter opções explícitas em requisito funcional? → A: Sim.
+- Q: O template canônico e o exemplo de STOP-DER-02 devem ter uma linha explícita **Segurança:** como o 10º campo, ou a segurança deve continuar dentro de **O que não fazer:**? → A: Linha **Segurança:** explícita, separada de **O que não fazer:**.
+- Q: O STOP-DER-02 deve ser acionado quando a lista final derivada viola a regex do catálogo, ou quando qualquer atributo individual tem nome ou tipo inválido? → A: Quando a lista final derivada viola a regex; os avisos individuais de nome e tipo permanecem avisos.
+- Q: O STOP-ENV-02 deve cobrir apenas a ausência dos 19 arquivos do procedimento, ou também a ausência da árvore `archetype-resources/` no JAR? → A: Cobre os 19 arquivos e a árvore `archetype-resources/`; a mensagem nomeia o item ausente.
+- Q: Para a sincronia da tabela, o que conta como "regra de formato literal": apenas as três regexes exibidas, ou todas as nove linhas, incluindo as seis descritas em prosa? → A: Apenas as três regexes literais; as seis descritivas são verificadas por exemplos contra a regex do catálogo.
+- Q: Para o build falhar quando um site de parada não cita código, o que conta como site: toda linha com a palavra isolada **Pare** e todo bloco **PARADA DURA**, ou apenas os blocos **PARADA DURA**? → A: Linhas com **Pare** e blocos **PARADA DURA**; as mensagens usam "Por que parou" para não se autoidentificarem como site.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -64,7 +69,7 @@ Como operador, quando a lista de atributos derivada do contrato não respeita o 
 
 **Why this priority**: hoje o fallback `String:name` produz um resultado plausível e incorreto.
 
-**Independent Test**: usar um contrato com um atributo de nome ou tipo inválido e verificar que nenhum módulo é gerado e que a mensagem `STOP-DER-02` oferece três opções.
+**Independent Test**: usar um contrato cuja lista final derivada viola o formato aceito e verificar que nenhum módulo é gerado e que a mensagem `STOP-DER-02` oferece três opções.
 
 **Acceptance Scenarios**:
 
@@ -129,7 +134,7 @@ Como leitor do procedimento, quero que a tabela de flags críticas renderize cor
 - Destino dentro da árvore do archetype: proibição absoluta, sem confirmação possível.
 - Destino relativo, com `~` ou com sinalização de fim de arquivo: parada com exemplo de caminho absoluto.
 - Várias versões do archetype instaladas: parada com opções para declarar a versão, escolher uma ou remover antigas.
-- JAR ausente, catálogo ausente, pós-processador ausente ou arquivo obrigatório ausente: parada com instruções de reconstrução e reinstalação.
+- JAR ausente, catálogo ausente, pós-processador ausente, arquivo obrigatório ausente ou árvore `archetype-resources/` ausente: parada com instruções de reconstrução e reinstalação.
 - Nome de entidade ambíguo: parada com os candidatos e opções.
 - Conflito de mesma prioridade: parada com as duas fontes, as flags afetadas e opções.
 - Falha ao gravar o contrato ou caminho não absoluto: parada com opções de diretório e permissão.
@@ -162,8 +167,8 @@ Como leitor do procedimento, quero que a tabela de flags críticas renderize cor
 - **FR-015**: A tabela de flags críticas MUST ter os pipes internos escapados e renderizar exatamente três colunas.
 - **FR-016**: A referência `FR-006` MUST ser explicada em linguagem simples no próprio procedimento.
 - **FR-017**: A diferença entre o nome do pacote da entidade, sem separadores, e o nome do artefato, em kebab-case, MUST estar explícita.
-- **FR-018**: A tabela de flags críticas MUST ser verificada contra o catálogo para os 9 defaults e para as regras de formato literais.
-- **FR-019**: O build MUST falhar se uma parada não tiver código, se o código não estiver registrado ou se um site de parada não citar um código.
+- **FR-018**: A tabela de flags críticas MUST ser verificada contra o catálogo para os 9 defaults e para as regras de formato literais. As 3 regras literais são comparadas por regex; as 6 descritivas são verificadas por exemplos contra a regex do catálogo.
+- **FR-019**: O build MUST falhar se uma parada não tiver código, se o código não estiver registrado ou se um site de parada não citar um código. Um site de parada é uma linha com a palavra isolada `Pare` ou um bloco `PARADA DURA`.
 - **FR-020**: O build MUST falhar se o dicionário não contiver os 20 termos obrigatórios.
 - **FR-021**: O procedimento MUST NOT conter a expressão "informe apenas".
 - **FR-022**: Nenhum arquivo novo MUST ser adicionado ao procedimento; a contagem MUST permanecer em 19 arquivos, 13 Markdown e 6 JSON.
@@ -202,7 +207,7 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 **Paradas de ambiente**
 
 - `STOP-ENV-01`: JAR instalado não encontrado.
-- `STOP-ENV-02`: arquivo obrigatório do procedimento ausente.
+- `STOP-ENV-02`: arquivo obrigatório do procedimento ou árvore obrigatória do JAR ausente.
 - `STOP-ENV-03`: catálogo ausente ou ilegível.
 - `STOP-ENV-04`: pós-processador ausente.
 - `STOP-ENV-05`: várias versões instaladas e o spec não declara qual usar.
@@ -249,6 +254,7 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 > **Sugestão:** opção recomendada + motivo em uma linha.
 > **Como retomar:** o que corrigir e de onde o procedimento recomeça.
 > **O que não fazer:** proibições específicas do caso.
+> **Segurança:** não exponha segredos, credenciais ou o contrato completo.
 ---
 ```
 
@@ -271,6 +277,7 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 > **Sugestão:** use a opção 1 se o campo é necessário; use a opção 3 se você quer definir a lista inteira.
 > **Como retomar:** salve o contrato corrigido e comece o procedimento de novo, desde a leitura do use-case.
 > **O que não fazer:** não use "String:name"; não edite o código gerado; não rode o Maven; não coloque senhas ou chaves no contrato.
+> **Segurança:** não exponha segredos, credenciais ou o contrato completo.
 ---
 ```
 
@@ -326,10 +333,12 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 - As mensagens são em português.
 - O valor padrão `String:name` continua no catálogo, mas o procedimento não o usa como fallback.
 - O registro das 16 paradas e das 2 confirmações está completo. A parada `STOP-DER-02` substitui o aviso com fallback e é a única mudança de comportamento; as "15 outras paradas" de FR-012 são as demais entradas do registro.
+- A parada `STOP-DER-02` é da lista final; nomes e tipos individuais inválidos continuam com o tratamento atual de aviso/estimativa, como em FR-024 e no fora de escopo.
 - As specs históricas e o README não são fontes de runtime.
 - A numeração da feature sucede a 006; a 003 permanece arquivada.
 - As observações sobre o README foram registradas como contexto, mas a reestruturação do tópico permanece fora do escopo por decisão explícita do operador.
 - "Aumento perceptível" em NFR-001 foi interpretado como aumento relativo de até 10% no build local; acima disso, a mudança deve ser investigada antes da conclusão.
+- As "regras de formato literais" de FR-018 são as três regexes da tabela (`entity_name`, `entity_package_name` e `custom_entity_attributes_list`); as seis descritivas são verificadas por exemplos contra a regex do catálogo.
 - O estado atual foi conferido como linha de base: 19 arquivos no procedimento (13 Markdown e 6 JSON), 35 propriedades e 18 filesets no catálogo.
 - As 9 flags críticas da tabela são `entity_name`, `entity_package_name`, `custom_entity_attributes_list`, `custom_entity_attribute_imports`, `contract_enum_definitions`, `contract_nested_type_definitions`, `entity_contract_file_path`, `enable_custom_entity_attributes` e `enable_folder_src_test_java`; a tabela-resumo fica em `regras-04` §3.1.
 

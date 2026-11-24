@@ -67,12 +67,12 @@ Fixar os 18 códigos canônicos, seus gatilhos, as opções obrigatórias e os a
 ## Sites e convenção de teste
 
 - Toda ordem de interrupção usa a forma **Pare com `STOP-...`**.
-- O teste `HardStopContractTest` varre as linhas dos 13 Markdown e exige código em toda linha com a palavra isolada `pare`.
+- O teste `HardStopContractTest` varre as linhas dos 13 Markdown e exige código em toda linha com a palavra isolada `pare` e em todo bloco `PARADA DURA`.
 - As mensagens do registro usam `Por que parou`, não `pare`, para não se autoidentificarem como site.
 - Um código pode aparecer em mais de um site; todos precisam estar registrados.
 - Um código registrado sem mensagem falha.
 - Um site com código não registrado falha.
-- Um site com `Pare` e sem código falha e nomeia o arquivo.
+- Um site com `Pare` ou um bloco `PARADA DURA` sem código falha e nomeia o arquivo.
 
 ## Mapa de sites
 
@@ -99,7 +99,7 @@ Fixar os 18 códigos canônicos, seus gatilhos, as opções obrigatórias e os a
 | REG-02 | 5 IN, 5 ENV, 4 DER, 1 EXEC, 1 RULE, 2 CONF | `HardStopContractTest` |
 | REG-03 | 18 códigos únicos | `HardStopContractTest` |
 | REG-04 | 18 mensagens, uma por código | `HardStopContractTest` |
-| REG-05 | Todo site com `Pare` cita código registrado | `HardStopContractTest` |
+| REG-05 | Todo site com `Pare` e todo bloco `PARADA DURA` citam código registrado | `HardStopContractTest` |
 | REG-06 | `STOP-CONF-01` e `STOP-CONF-02` com exatamente as opções da FR-031/FR-032 | `HardStopContractTest` |
 | REG-07 | `STOP-DER-02` com exatamente 3 opções | `HardStopContractTest` |
 

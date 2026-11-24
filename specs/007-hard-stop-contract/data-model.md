@@ -85,7 +85,7 @@ As 9 flags: `entity_name`, `entity_package_name`, `custom_entity_attributes_list
 |---|---|---|
 | `file` | Um dos 10 Markdown alterados | FR-019 |
 | `section` | Seção legível + caminho | FR-028 |
-| `line` | Contém **Pare com `STOP-...`** | FR-019 |
+| `line` | Contém **Pare com `STOP-...`** ou bloco **PARADA DURA** | FR-019 |
 | `code` | Código registrado | FR-002, FR-019 |
 | `messageRef` | Aponta para `§0.5` | FR-007 |
 

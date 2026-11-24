@@ -140,7 +140,7 @@ O texto "Ao parar, informe apenas" é removido. Cada Gate e cada condição de p
 | `STOP-CONF-01` | pasta de destino ainda não existe | `prompt-04` §1.3 |
 | `STOP-CONF-02` | já existe módulo com o mesmo nome | `prompt-04` §1.3 |
 
-A convenção de site é literal: toda ordem de interrupção usa a forma **Pare com `STOP-...`**. O teste varre as linhas com a palavra isolada `pare` e exige um código registrado. A ordem A → B → C → D dos Gates é preservada; os códigos são anexados aos gates existentes. A introdução de `§6` é reescrita para que cada bullet comece com **Pare com `STOP-...`**, sem linha solta com `Pare`.
+A convenção de site é literal: toda ordem de interrupção usa a forma **Pare com `STOP-...`**. O teste varre as linhas com a palavra isolada `pare` e os blocos `PARADA DURA`, e exige um código registrado. A ordem A → B → C → D dos Gates é preservada; os códigos são anexados aos gates existentes. A introdução de `§6` é reescrita para que cada bullet comece com **Pare com `STOP-...`**, sem linha solta com `Pare`.
 
 ### 3. Lista de atributos inválida
 
@@ -165,7 +165,7 @@ Em `regras-01` §6, o parágrafo que hoje cai no `defaultValue` `String:name` é
 
 Duas suítes novas, registradas no runner:
 
-- `HardStopContractTest.groovy`: lê a cópia empacotada em `target/classes`; valida os 18 códigos, o registro, as 18 mensagens, os 10 campos, as opções, o template, o dicionário de 20 termos, a ausência de "informe apenas", os sites com `pare`, as contagens 19/13/6, o limite de 20 palavras por frase e, de forma opt-in, o JAR instalado.
+- `HardStopContractTest.groovy`: lê a cópia empacotada em `target/classes`; valida os 18 códigos, o registro, as 18 mensagens, os 10 campos, as opções, o template, o dicionário de 20 termos, a ausência de "informe apenas", os sites com `Pare` e os blocos `PARADA DURA`, as contagens 19/13/6, o limite de 20 palavras por frase e, de forma opt-in, o JAR instalado.
 - `CatalogSyncContractTest.groovy`: lê `target/classes/META-INF/maven/archetype-metadata.xml` e os fragmentos; valida as 3 colunas da tabela, os 9 defaults, as 3 regras de formato literais, os exemplos das 6 regras descritivas, a descrição de caminho absoluto, a exceção de proveniência, a nota FR-006, a diferença pacote × artefato e a ausência de mudança em `defaultValue`/`validationRegex` (35/18).
 
 ### 6. Fora de alteração
@@ -191,7 +191,7 @@ Esperado: todas as suítes passam; o JAR instalado contém o registro, o dicion�
 
 | Alteração provocada | Falha esperada |
 |---|---|
-| Remover um código de um site com `Pare` | `HardStopContractTest` nomeia o arquivo e o código ausente |
+| Remover um código de um site com `Pare` ou de um bloco `PARADA DURA` | `HardStopContractTest` nomeia o arquivo e o código ausente |
 | Adicionar um `STOP-*` sem linha no registro | `HardStopContractTest` nomeia o código não registrado |
 | Remover uma mensagem do registro | `HardStopContractTest` nomeia o código sem mensagem |
 | Remover um termo do dicionário | `HardStopContractTest` nomeia o termo ausente |
