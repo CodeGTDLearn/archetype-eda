@@ -27,7 +27,7 @@ Este relatório é o registro oficial de SC-002, NFR-001 e NFR-002. Preencha dur
 
 | Baseline (s) | Final (s) | Delta (%) | Resultado | Data |
 |---:|---:|---:|---|---|
-| | | | | |
+| 23.87 | | | Pendente final | 2026-11-24 |
 
 ## NFR-002 — Determinismo offline
 

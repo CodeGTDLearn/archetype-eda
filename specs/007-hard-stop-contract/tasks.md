@@ -28,11 +28,11 @@
 
 **Purpose**: Confirm the baseline and create the two failing contract suites before touching the procedure.
 
-- [ ] T001 Confirm the baseline in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19 procedure files (13 Markdown, 6 JSON), 35 properties, 18 filesets and the 9 critical flags; record the counts. Capture also the NFR-001 baseline: warm up with `mvn -B test`, measure `(Measure-Command { mvn -B test }).TotalSeconds` and record the value in `specs/007-hard-stop-contract/validation-report.md`.
-- [ ] T002 [P] Create `src/test/archetype-post-generate/HardStopContractTest.groovy` as a minimal red skeleton: one assertion for the 18-code registry and one for the message count. Detailed checks belong to T026–T028; the suite must fail before the procedure is updated.
-- [ ] T003 [P] Create `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` as a minimal red skeleton: one assertion for the 3-column table and one for the 9 defaults. Detailed checks belong to T033; the suite must fail before the procedure is updated.
-- [ ] T004 Register `HardStopContractTest.groovy` and `CatalogSyncContractTest.groovy` in `src/test/groovy/run-archetype-post-generate-tests.groovy`.
-- [ ] T005 Run `mvn -B test` and record the expected failures of `HardStopContractTest.groovy` and `CatalogSyncContractTest.groovy`; do not change the procedure in this task.
+- [X] T001 Confirm the baseline in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19 procedure files (13 Markdown, 6 JSON), 35 properties, 18 filesets and the 9 critical flags; record the counts. Capture also the NFR-001 baseline: warm up with `mvn -B test`, measure `(Measure-Command { mvn -B test }).TotalSeconds` and record the value in `specs/007-hard-stop-contract/validation-report.md`.
+- [X] T002 [P] Create `src/test/archetype-post-generate/HardStopContractTest.groovy` as a minimal red skeleton: one assertion for the 18-code registry and one for the message count. Detailed checks belong to T026–T028; the suite must fail before the procedure is updated.
+- [X] T003 [P] Create `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` as a minimal red skeleton: one assertion for the 3-column table and one for the 9 defaults. Detailed checks belong to T033; the suite must fail before the procedure is updated.
+- [X] T004 Register `HardStopContractTest.groovy` and `CatalogSyncContractTest.groovy` in `src/test/groovy/run-archetype-post-generate-tests.groovy`.
+- [X] T005 Run `mvn -B test` and record the expected failures of `HardStopContractTest.groovy` and `CatalogSyncContractTest.groovy`; do not change the procedure in this task.
 
 ---
 
@@ -42,13 +42,13 @@
 
 **CRITICAL**: No user story work can begin until T006–T012 are complete.
 
-- [ ] T006 Add `§0.3 Contrato de Parada Dura` to `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`: the 10 fields, the writing rules from `specs/007-hard-stop-contract/contracts/hard-stop-message.md`, the canonical template with `**Segurança:**` and the dictionary reference.
-- [ ] T007 Add `§0.4 Dicionário de linguagem simples` to `prompt-00` with the 20 terms and translations from `specs/007-hard-stop-contract/spec.md` (FR-006/FR-030).
-- [ ] T008 Add `§0.5 Registro de paradas` to `prompt-00` with the canonical table of 16 stops + 2 confirmations, their triggers and primary sites from `specs/007-hard-stop-contract/contracts/stop-registry.md`.
-- [ ] T009 Add the 5 `STOP-IN-*` message blocks to `prompt-00` §0.5 using the template and the options/suggestions from `specs/007-hard-stop-contract/contracts/hard-stop-message.md` and `contracts/stop-registry.md`.
-- [ ] T010 Add the 5 `STOP-ENV-*` message blocks to `prompt-00` §0.5 using the same template and the options/suggestions from the contracts.
-- [ ] T011 Add the 4 `STOP-DER-*`, `STOP-EXEC-01`, `STOP-RULE-01` and the 2 `STOP-CONF-*` message blocks to `prompt-00` §0.5 using the same template and the options/suggestions from the contracts.
-- [ ] T012 Run `mvn -B test` against `src/test/archetype-post-generate/HardStopContractTest.groovy` and fix registry/message gaps in `prompt-00`; checkpoint: 18 codes, 18 messages and 20 dictionary terms present.
+- [X] T006 Add `§0.3 Contrato de Parada Dura` to `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`: the 10 fields, the writing rules from `specs/007-hard-stop-contract/contracts/hard-stop-message.md`, the canonical template with `**Segurança:**` and the dictionary reference.
+- [X] T007 Add `§0.4 Dicionário de linguagem simples` to `prompt-00` with the 20 terms and translations from `specs/007-hard-stop-contract/spec.md` (FR-006/FR-030).
+- [X] T008 Add `§0.5 Registro de paradas` to `prompt-00` with the canonical table of 16 stops + 2 confirmations, their triggers and primary sites from `specs/007-hard-stop-contract/contracts/stop-registry.md`.
+- [X] T009 Add the 5 `STOP-IN-*` message blocks to `prompt-00` §0.5 using the template and the options/suggestions from `specs/007-hard-stop-contract/contracts/hard-stop-message.md` and `contracts/stop-registry.md`.
+- [X] T010 Add the 5 `STOP-ENV-*` message blocks to `prompt-00` §0.5 using the same template and the options/suggestions from the contracts.
+- [X] T011 Add the 4 `STOP-DER-*`, `STOP-EXEC-01`, `STOP-RULE-01` and the 2 `STOP-CONF-*` message blocks to `prompt-00` §0.5 using the same template and the options/suggestions from the contracts.
+- [X] T012 Run `mvn -B test` against `src/test/archetype-post-generate/HardStopContractTest.groovy` and fix registry/message gaps in `prompt-00`; checkpoint: 18 codes, 18 messages and 20 dictionary terms present.
 
 **Checkpoint**: The entry point has the contract, dictionary and registry; user stories can start.
 
