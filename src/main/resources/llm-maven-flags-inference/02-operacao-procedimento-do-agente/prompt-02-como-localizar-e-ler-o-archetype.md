@@ -102,7 +102,9 @@ Leia os templates relevantes:
 | `DEPENDS_ON` | dependência ou guarda |
 | `VALIDATION` | forma legível da regex |
 
-Algumas descrições ainda dizem “mecanismo de inferência LLM”, por herança histórica. Neste procedimento, quem deriva é o agente: não procure nem execute motor, CLI ou script externo por causa disso.
+Algumas descrições ainda dizem "mecanismo de inferência LLM", por herança histórica. Neste procedimento, quem deriva é o agente: não procure nem execute motor, CLI ou script externo por causa disso.
+
+Armadilha equivalente: a descrição de `custom_entity_attributes_list` no catálogo declara que o `id` é estrutural — que o template o descarta e emite `<entityName>Id` como chave primária. Essa descrição é normativa e vale: o `id` do contrato não vira atributo comum (ver `regras-01` §4.3).
 
 ## 5. Separação do contrato
 

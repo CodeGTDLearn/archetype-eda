@@ -92,7 +92,8 @@ Estas propriedades não são flags do catálogo; são nativas do plugin e deriva
 O destino vai **sempre** na propriedade `outputDirectory` da linha de comando, com o caminho absoluto confirmado no spec. A propriedade é nativa do plugin de geração de archetype e **não** é uma flag do catálogo.
 
 - O valor precisa ser um caminho absoluto. Caminho relativo, caminho com `~` ou com sinalização de fim de arquivo é recusado com aviso.
-- Use barras normais, sem barra final e sem quebra de linha. Normalize espaços e barra final antes de comparar e de emitir.
+- Use barras normais (`/`) no valor emitido, mesmo no Windows: o caminho do destino é normalizado para barras normais antes de comparar e de emitir.
+- Sem barra final e sem quebra de linha. Normalize espaços e barra final antes de comparar e de emitir.
 - Destino dentro da árvore do archetype é proibido, sem exceção.
 - Não use caminho absoluto de usuário ou de máquina no procedimento.
 - O módulo nasce em `<destino>/<artifactId>`; não existe movimentação posterior.
@@ -114,12 +115,15 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
   '-DarchetypeArtifactId=eda-archetype' `
   '-DarchetypeVersion=0.0.1-SNAPSHOT' `
   '-DgroupId=org.clinica' `
-  '-DartifactId=cliente-module' `
+  '-DartifactId=cliente' `
   '-Dversion=1.0.0-SNAPSHOT' `
   '-Dpackage=org.clinica' `
   '-Dentity_name=Cliente' `
-  '-Dentity_package_name=cliente'
+  '-Dentity_package_name=cliente' `
+  '-DoutputDirectory=C:/Temp/eda-sandbox'
 ```
+
+O `-DartifactId` segue §2.1: `entity_name` em kebab-case (`Cliente` → `cliente`, `PedidoItem` → `pedido-item`). O `-DoutputDirectory` é obrigatório em toda geração (§3).
 
 ## 5. Lembrete final
 
@@ -128,5 +132,7 @@ Antes de executar, confira:
 - [ ] `package` não contém o nome da entidade.
 - [ ] `entity_name` está em PascalCase.
 - [ ] `entity_package_name` está em minúsculas.
+- [ ] `artifactId` é o `entity_name` em kebab-case.
 - [ ] `entity_contract_file_path` usa barras normais.
 - [ ] `enable_custom_entity_attributes` está coerente com os atributos.
+- [ ] `outputDirectory` está presente, é absoluto e usa barras normais.

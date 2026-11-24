@@ -45,10 +45,13 @@ Crie o diretório se ele não existir.
 
 ## 4. Conteúdo do arquivo
 
-- Grave o JSON do contrato em UTF-8.
-- Remova espaços em branco nas extremidades.
-- Não reordene, não reformate e não acrescente comentários.
+- Grave **a forma canônica de §1** no arquivo, em UTF-8.
+- O arquivo gravado é byte a byte a forma canônica: sem espaços, sem quebras de linha, com as chaves ordenadas recursivamente.
+- A forma canônica é o que vai para o disco e o que é copiado para o projeto gerado: o SHA-256 de §2 é calculado sobre exatamente estes mesmos bytes.
+- Não acrescente comentários, campos extras ou formatação posterior.
 - O arquivo gravado é a fonte da cópia do pós-processador.
+
+> **Por que "não reordene" não se aplica aqui:** a reordenação recursiva de chaves **é** a forma canônica. O que é proibido é reordenar de novo, reformatar ou reintroduzir espaçamento fora do §1. Gogar o contrato como o agente o recebeu produziria bytes diferentes do hash que dá nome ao arquivo.
 
 ## 5. Caminho emitido
 
@@ -84,7 +87,9 @@ Se o arquivo de origem não existir:
 - `entity_contract_file_path` deve satisfazer `^[^\r\n]*\.json$`: `none` é valor do catálogo, fora deste procedimento.
 - O caminho não pode conter quebra de linha.
 - O caminho não pode apontar para diretório.
+- O caminho precisa ser **absoluto**: um caminho relativo é recusado com aviso, mesmo que case com a regex do catálogo.
 - O arquivo precisa ser JSON válido com raiz objeto.
+- O SHA-256 do §2 é calculado sobre a forma canônica; o arquivo gravado tem esses mesmos bytes. Se os bytes do disco divergirem da forma canônica, regrave antes de emitir o caminho.
 
 ## 8. Segredos
 

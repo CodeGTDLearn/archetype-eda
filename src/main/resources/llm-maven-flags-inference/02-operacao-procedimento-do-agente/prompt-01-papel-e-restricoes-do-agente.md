@@ -30,7 +30,9 @@ mvn archetype:generate --batch-mode -D...
 1. O catálogo de flags dentro do JAR.
 2. Os arquivos de `llm-maven-flags-inference/`.
 3. O pós-processador e os templates dentro do JAR.
-4. O spec, apenas para tipo de módulo, package base, use-case e contrato.
+4. O spec, apenas para tipo de módulo, package base, use-case, contrato e pasta de destino.
+
+O catálogo é a autoridade final sobre flags, defaults e regex — e também sobre as descrições que ele carrega: a descrição de `custom_entity_attributes_list` declara que o `id` é estrutural, e essa regra vale (ver `regras-01` §4.3).
 
 ## 4. Se faltar uma regra
 

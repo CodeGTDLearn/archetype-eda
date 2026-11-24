@@ -55,7 +55,8 @@ Inclua nota quando:
 - o valor explícito venceu uma derivação;
 - um tipo foi rejeitado;
 - um atributo foi descartado;
-- um POJO ou enum não pôde ser gerado.
+- um POJO ou enum não pôde ser gerado;
+- o atributo `id` do contrato foi mapeado no campo técnico `<entidade>Id` (ver `regras-01` §4.3). Nesse caso, a nota diz `id` → `<entidade>Id` (campo técnico) e o atributo **não** é listado como atributo derivado comum.
 
 Notas devem ser curtas e factuais.
 

@@ -74,7 +74,8 @@ Uma chave do contrato que não existe no catálogo é campo de negócio, não fl
 
 - A inferência só pode propor valores para flags elegíveis.
 - `entity_name` é a única flag elegível por allowlist.
-- As demais flags só recebem inferência quando a chave existe literalmente no contrato.
+- Uma flag que **não** está na allowlist nunca recebe valor inferido. Se o contrato trouxer a chave dela literalmente, a fonte é `CONTRACT` — o valor literal do contrato, não uma inferência.
+- Nenhuma flag fora da allowlist pode ser preenchida a partir do use-case, ainda que a chave exista no contrato: nesse caso, a chave é tratada como literal do contrato (`CONTRACT`) e o valor do contrato vence.
 - Proposta descartada entra na seção de descartadas do relatório.
 
 ## 7. Conflito

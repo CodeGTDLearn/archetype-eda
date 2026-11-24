@@ -23,6 +23,7 @@ Confirme em voz alta:
 - [ ] `entity_name` está em PascalCase.
 - [ ] `entity_package_name` está em minúsculas e foi derivado do nome.
 - [ ] `custom_entity_attributes_list` está no formato `Type:name,Type:name`.
+- [ ] `custom_entity_attributes_list` não contém `id`: o `id` do contrato é o campo técnico `<entidade>Id` (ver `regras-01` §4.3).
 - [ ] `enable_custom_entity_attributes=true` quando há atributos.
 - [ ] `entity_contract_file_path` aponta para um `.json` existente.
 - [ ] `enable_folder_src_test_java=true` quando o contrato precisa ser copiado.

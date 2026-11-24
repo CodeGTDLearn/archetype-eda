@@ -28,8 +28,9 @@ Regras:
 
 - O valor explícito vence qualquer inferência.
 - O valor inferido do use-case precisa ser justificado.
-- O default só pode ser usado quando o use-case não permitir inferir o nome.
-- Nunca use `MyEntity` silenciosamente.
+- O default só entra quando o use-case **não trouxer nenhum nome** de entidade: use-case vazio de nome, sem candidato único.
+- Se o use-case trouxer **mais de um** nome candidato, ou trouxer um nome que não permite inferir qual entidade é a principal, pare e pergunte.
+- Nunca use `MyEntity` silenciosamente: quando o default for aplicado, registre-o na proveniência como `DEFAULT` e notifique o operador.
 - O nome final deve satisfazer `^[A-Z][a-zA-Z0-9_]+$`.
 
 Se o contrato não trouxer o nome e o use-case for ambíguo, pare e pergunte.
@@ -111,12 +112,30 @@ Atenção:
 - `entity_package_name` é flag; ela não vira atributo.
 - Chaves de negócio viram atributos, mesmo que o valor seja um objeto ou um array.
 
+### 4.3 Exceção do `id` — campo técnico de identidade
+
+O atributo `id` do contrato **não vira atributo comum**. Ele é estrutural:
+
+- o archetype já gera, de forma incondicional, o campo técnico de identidade `<entidade>Id`, sempre `Long`;
+- quando o contrato traz `id`, ele corresponde a esse campo técnico;
+- o template descarta qualquer atributo cujo nome seja `id` (em qualquer caixa) ou `<entidade>Id`;
+- por isso, `id` **não** entra em `custom_entity_attributes_list`: ele não é um campo comum, e o tipo não é estimado pelo valor.
+
+Consequências no relatório:
+
+- não liste `id` como atributo derivado;
+- registre o mapeamento na proveniência, na nota do atributo, como `id` → `<entidade>Id` (campo técnico), e não como atributo comum;
+- a ausência de `id` no contrato não é erro: o campo técnico continua existindo na entidade.
+
+Essa regra é a mesma que a descrição da flag `custom_entity_attributes_list` no catálogo declara: o `id` é estrutural e o template o descarta.
+
 ## 5. Nome do atributo
 
 - O nome deve satisfazer `^[a-z][a-zA-Z0-9_]*$`.
 - Normalize acentos e caracteres inválidos.
 - Um nome inválido é descartado com aviso.
 - Nomes duplicados são descartados com aviso.
+- O nome `id`, em qualquer caixa, é reservado: ver §4.3. Ele não vira atributo.
 - Um atributo com tipo do projeto recebe o nome do próprio tipo:
   - `EnderecoCliente` → `enderecoCliente`;
   - `StatusPedido` → `statusPedido`.
@@ -141,10 +160,10 @@ Regras:
 Exemplo:
 
 ```text
-Integer:id,String:nome,Boolean:ativo
+Integer:codigo,String:nome,Boolean:ativo
 ```
 
-Se a lista violar a regex do catálogo, o erro é barulhento: avise, registre a rejeição e não caia em um valor plausível mas errado.
+Se a lista violar a regex do catálogo, o erro é barulhento: avise, registre a rejeição e não caia em um valor plausível mas errado. O desfecho é o de `regras-04` §3: o `defaultValue` do catálogo, com nota e aviso — e o `defaultValue` desta flag (`String:name`) **não** é um valor de negócio: registre na proveniência que a lista derivada foi rejeitada e que o campo renderizado não corresponde ao contrato.
 
 ## 7. Flag de ativação
 
@@ -161,3 +180,5 @@ Se o contrato não tiver `attributes`, `fields` nem campos de negócio:
 - mantenha `enable_custom_entity_attributes=false`;
 - mantenha `custom_entity_attributes_list` no default do catálogo;
 - registre a ausência no relatório.
+
+Se o contrato trouxer **apenas** o atributo `id`, ele não é um atributo comum (ver §4.3): o contrato não tem atributos comuns, e o campo técnico `<entidade>Id` é gerado pelo archetype de qualquer forma. Mantenha `enable_custom_entity_attributes=false`.

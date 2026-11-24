@@ -86,6 +86,8 @@ Ao parar, informe apenas:
 
 Nenhum gate admite exceção, contorno ou tentativa de prosseguir.
 
+O que um gate **admite** é a correção da entrada: um gate acionado interrompe o fluxo e reporta o que falta, e o operador pode fornecer a entrada que falta e o procedimento recomeça do começo. Isso não é exceção — é o caminho normal. O que nenhum gate admite é **prosseguir** com o defeito presente.
+
 ## 1. O que fazer agora
 
 1. Leia `llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md`.
@@ -164,6 +166,7 @@ Pare e reporte antes de executar quando:
 - [ ] Li o catálogo e o pós-processador.
 - [ ] Separei flags, meta-chaves e campos de negócio.
 - [ ] Derivei entidade, package, atributos e flags.
+- [ ] Tratei o `id` do contrato como campo técnico `<entidade>Id`, não como atributo comum.
 - [ ] Validei tudo contra as regex do catálogo.
 - [ ] Materializei o contrato.
 - [ ] Montei a proveniência.
