@@ -148,7 +148,7 @@
 - [ ] T045 Run `mvn -B test "-Deda.verify.installed.jar=true"` and confirm `~/.m2/repository/com/eda-archetype/eda-archetype/0.0.1-SNAPSHOT/eda-archetype-0.0.1-SNAPSHOT.jar` contains the registry, dictionary and `STOP-DER-02`.
 - [ ] T046 Validate the counts in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19/13/6 and 35/18; no file added or removed.
 - [ ] T047 Run the functional scenarios 1–9 and 11 in `specs/007-hard-stop-contract/quickstart.md` and record the outcomes in `specs/007-hard-stop-contract/validation-report.md`; scenario 10 is T030/T031, scenario 12 is T052, and scenarios 13–14 are T050/T051.
-- [ ] T048 Review `src/main/resources/llm-maven-flags-inference/` for Portuguese, 20-word sentences, active voice, translated acronyms, no secrets and no "informe apenas"; fix the findings.
+- [ ] T048 Review `src/main/resources/llm-maven-flags-inference/` for Portuguese, 20-word sentences, active voice, translated acronyms, readable section name/path, neutral tone, no secrets and no "informe apenas"; record the review in `specs/007-hard-stop-contract/validation-report.md` and fix the findings.
 - [ ] T049 Final diff review: `README.md` unchanged, no new dependency, no `defaultValue`/`validationRegex` change, no new procedure file, no generated code or fixture change.
 - [ ] T050 Run the NFR-001 timing check using the baseline recorded in T001: measure the final `(Measure-Command { mvn -B test }).TotalSeconds`, compute `(final - baseline) / baseline`, require ≤10%, and record final/delta in `specs/007-hard-stop-contract/validation-report.md`. Fail if the baseline is missing.
 - [ ] T051 Run the NFR-002 offline check: `mvn -o -B test` twice, filter the `[archetype-post-generate]` lines, compare the outputs, and record the result in `specs/007-hard-stop-contract/validation-report.md`.
@@ -202,7 +202,7 @@
 ```text
 Task: "Add code references to indice-01 §5, prompt-01 §4 and prompt-02 §1/§1.4/§6"
 Task: "Add code references to prompt-03 §1/§2/§3 and prompt-04 §1.2/§1.3/§1.4/§4"
-Task: "Add code references to regras-01 §2/§6, regras-04 §3/§7, regras-05 §5/§7 and regras-06 §2/§5"
+Task: "Add code references to regras-01 §2/§6, regras-04 §3/§7, regras-05 §5/§7 and regras-06 §6"
 ```
 
 ## Parallel Example: User Story 2

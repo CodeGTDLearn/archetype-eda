@@ -35,5 +35,5 @@
 - O registro-alvo tem 16 paradas e 2 confirmações. `STOP-DER-02` substitui o aviso com fallback `String:name`; as "15 outras paradas" de FR-012 são as demais entradas do registro.
 - A observação sobre o README foi registrada no contexto, mas a reestruturação do tópico ficou explicitamente fora de escopo, conforme a decisão do operador.
 - Linha de base conferida no repositório: 19 arquivos no procedimento (13 Markdown e 6 JSON), 35 propriedades e 18 filesets no catálogo (o elemento raiz `<fileSets>` não conta como fileset).
-- "Aumento perceptível" em NFR-001 foi quantificado como aumento relativo de até 10% no build local (ver Assumptions).
+- O limite de 10% de NFR-001 está no próprio requisito; a baseline é definida em Assumptions.
 - Nenhum marcador `[NEEDS CLARIFICATION]` foi necessário; as duas tensões do texto — contagem de paradas e observação do README — foram resolvidas com premissas documentadas.

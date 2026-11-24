@@ -261,6 +261,8 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 ---
 ```
 
+A referência ao dicionário (`prompt-00` §0.4) é uma linha adicional, fora dos 10 campos do template.
+
 **Exemplo completo — STOP-DER-02**
 
 ```text
