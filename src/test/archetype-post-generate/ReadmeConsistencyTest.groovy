@@ -122,22 +122,30 @@ check("3.4.3 the operator spec example carries the destination section",
 // ---------------------------------------------------------------------------
 // 3.5 The operator spec is portable: preamble, canonical entries and no
 //     module identity. The preamble points at the packaged procedure; the
-//     module identity stays in the procedure.
+//     module identity stays in the procedure. The four §7 scenarios A-D are
+//     validated as spec templates, one exclusive slice per scenario anchor.
 // ---------------------------------------------------------------------------
 def pom = new File("pom.xml")
 def pomText = pom.isFile() ? pom.getText("UTF-8") : ""
 def versionMatcher = pomText =~ /(?s)<artifactId>eda-archetype<\/artifactId>\s*<version>([^<]+)<\/version>/
 def archetypeVersion = versionMatcher.find() ? versionMatcher.group(1).trim() : ""
 
-def scenarioAStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-a-contrato-plano-3-atributos" name=')
-def scenarioBStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-b-contrato-aninhado-filho-neto" name=')
+def scenarioAStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-a-contrato-plano-3-atributos" name=')
+def scenarioBStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-b-array-enum-contrato-aninhado-filho-neto" name=')
+def scenarioCStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-c-contrato-com-array-puro" name=')
+def scenarioDStart = text.indexOf('<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-d-contrato-com-objeto-aninhado-filho-neto-bisneto" name=')
 def flagsStart = text.indexOf('<a id="flags-do-mvn-archetype-generate" name=')
 def scenarioA = (scenarioAStart >= 0 && scenarioBStart > scenarioAStart)
         ? text.substring(scenarioAStart, scenarioBStart) : ""
-def scenarioB = (scenarioBStart >= 0 && flagsStart > scenarioBStart)
-        ? text.substring(scenarioBStart, flagsStart) : ""
+def scenarioB = (scenarioBStart >= 0 && scenarioCStart > scenarioBStart)
+        ? text.substring(scenarioBStart, scenarioCStart) : ""
+def scenarioC = (scenarioCStart >= 0 && scenarioDStart > scenarioCStart)
+        ? text.substring(scenarioCStart, scenarioDStart) : ""
+def scenarioD = (scenarioDStart >= 0 && flagsStart > scenarioDStart)
+        ? text.substring(scenarioDStart, flagsStart) : ""
 
-def specSections = [canonical: specSection, scenarioA: scenarioA, scenarioB: scenarioB]
+def specSections = [canonical: specSection, scenarioA: scenarioA, scenarioB: scenarioB,
+                    scenarioC: scenarioC, scenarioD: scenarioD]
 
 def missingPreamble = []
 specSections.each { String name, String body ->
@@ -181,9 +189,11 @@ check("3.5.4 every spec template carries the five canonical entries: ${missingEn
 check("3.5.5 the canonical template carries the package-base examples",
         specSection.contains("`-Dpackage=org.clinica`") &&
                 specSection.contains("`-Dpackage=org.clinica.cliente`"))
-check("3.5.6 scenario A and B use distinct destinations",
+check("3.5.6 scenario A, B, C and D use distinct destinations",
         scenarioA.contains("C:\\Temp\\eda-005-destino-a") &&
-                scenarioB.contains("C:\\Temp\\eda-005-destino-b"))
+                scenarioB.contains("C:\\Temp\\eda-005-destino-b") &&
+                scenarioC.contains("C:\\Temp\\eda-005-destino-c") &&
+                scenarioD.contains("C:\\Temp\\eda-005-destino-d"))
 
 def forbiddenIdentity = ["ARTIFACT ID", "MODULE VERSION", "-DartifactId", "-Dversion"]
 def identityLeaks = []
@@ -204,6 +214,16 @@ def entryMarkers = ["tipo de módulo", "package base", "use case", "contrato jso
 def missingMarkers = entryMarkers.findAll { String marker -> !whatEntersLower.contains(marker) }
 check("3.5.8 the spec entry table lists the five entries: ${missingMarkers}",
         missingMarkers.isEmpty())
+
+check("3.5.9 scenario C publishes the top-level enum and the String fallback",
+        scenarioC.contains("contract_enum_definitions=Status:ATIVO|CANCELADO") &&
+                !scenarioC.contains("String:status") &&
+                scenarioC.contains("Status:status,String:etiquetas,String:variacoes"))
+
+check("3.5.10 scenario D publishes the three-level nested chain",
+        scenarioD.contains("DadosEntrega|rua:String,numero:Integer,transportadora:Transportadora;" +
+                "Transportadora|nomeFantasia:String,contatoOperacional:ContatoOperacional;" +
+                "ContatoOperacional|nomeResponsavel:String,telefone:String,email:String"))
 
 // ---------------------------------------------------------------------------
 // 3.6 Reproducibility: the generation command pins the archetype plugin

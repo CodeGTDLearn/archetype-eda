@@ -52,6 +52,8 @@ Cada parágrafo diz a função e o momento na sequência. Nenhum parágrafo repe
 | Template canônico do README | `0. PROCEDIMENTO` aponta para o caminho canônico |
 | Cenário A | Idem |
 | Cenário B | Idem |
+| Cenário C | Idem |
+| Cenário D | Idem |
 | Templates do kit | Nome do conceito `llm-maven-flags-inference` |
 
 As cinco entradas do spec permanecem na ordem atual.

@@ -312,7 +312,7 @@ if ($commitStyle -eq 'snapshot') {
     # Phases in Spec Kit order. A before_* hook freezes whatever the previous
     # phase left, so only earlier phases are candidates; an after_* hook
     # freezes that phase itself.
-    $phaseOrder = @('Constitution', 'Specify', 'Clarify', 'Plan', 'Tasks', 'Implement', 'Checklist', 'Analyze')
+    $phaseOrder = @('Constitution', 'Specify', 'Clarify', 'Plan', 'Tasks', 'Implement', 'Checklist', 'Analyze', 'Converge', 'Task2Issues')
     $phaseOfEvent = @{
         'constitution' = 'Constitution'
         'specify'      = 'Specify'
@@ -322,6 +322,8 @@ if ($commitStyle -eq 'snapshot') {
         'implement'    = 'Implement'
         'checklist'    = 'Checklist'
         'analyze'      = 'Analyze'
+        'converge'     = 'Converge'
+        'taskstoissues' = 'Task2Issues'
     }
 
     function Get-FrozenPhaseCandidates {
@@ -366,18 +368,34 @@ if ($commitStyle -eq 'snapshot') {
         if (Test-StagedMatch $staged '^src/') { $detected += 'Implement' }
         if (Test-StagedMatch $staged '(^|/)checklists/') { $detected += 'Checklist' }
         if (Test-StagedMatch $staged '(^|/)analysis\.md$') { $detected += 'Analyze' }
+        # /converge appends a "## Phase N: Convergence" section to tasks.md.
+        if (Test-StagedMatch $staged '(^|/)tasks\.md$') {
+            $tRel = ($staged | Where-Object { $_ -match '(^|/)tasks\.md$' } | Select-Object -First 1)
+            if ($tRel) {
+                $tPath = Join-Path $repoRoot $tRel
+                if (Test-Path $tPath) {
+                    $tText = Get-Content $tPath -Raw -Encoding UTF8
+                    if ($null -eq $tText) { $tText = '' }
+                    if ($tText -match '(?m)^## Phase \d+: Convergence\b') { $detected += 'Converge' }
+                }
+            }
+        }
         # Most advanced phase first.
         [array]::Reverse($detected)
         return $detected
     }
 
-    # Within the candidates, the most advanced detected phase wins. Without a
-    # known event, fall back to the most advanced phase overall. This keeps a
-    # leftover checklists/ file from mislabelling a Specify snapshot.
+    # An after_* hook states which phase just finished, so its label is
+    # authoritative (Task2Issues, for example, leaves no file signature).
+    # A before_* hook narrows the candidates and the staged diff decides;
+    # without a known event, the most advanced detected phase wins. This keeps
+    # a leftover checklists/ file from mislabelling a Specify snapshot.
     $candidates = @(Get-FrozenPhaseCandidates $EventName)
     $detectedPhases = @(Get-DetectedPhases)
     $frozenPhase = 'Snapshot'
-    if ($candidates.Count -gt 0) {
+    if ($EventName -match '^after_' -and $candidates.Count -gt 0) {
+        $frozenPhase = $candidates[0]
+    } elseif ($candidates.Count -gt 0) {
         foreach ($phase in $detectedPhases) {
             if ($candidates -contains $phase) { $frozenPhase = $phase; break }
         }
@@ -426,6 +444,8 @@ if ($commitStyle -eq 'snapshot') {
             $summary = "$checkCount listas"
         }
         'Analyze'      { $summary = 'analysis.md' }
+        'Converge'     { $summary = 'tasks.md' }
+        'Task2Issues'  { $summary = 'issues' }
         'Constitution' { $summary = 'constitution.md' }
         default     { $summary = "$($staged.Count) arquivos" }
     }
@@ -538,6 +558,14 @@ if ($commitStyle -eq 'snapshot') {
         'Analyze' {
             $defaultSubject = 'Analise Concluida'
         }
+        'Converge' {
+            $defaultSubject = 'Convergencia Avaliada'
+            $details = ''
+        }
+        'Task2Issues' {
+            $defaultSubject = 'Issues Sincronizadas'
+            $details = ''
+        }
         'Constitution' {
             $defaultSubject = 'Constituicao Definida'
         }
@@ -632,7 +660,10 @@ if ($commitStyle -eq 'snapshot') {
     }
 
     # --- next phase, from the hook event name --------------------------------
-    $nextPhase = ($EventName -replace '^before_', '')
+    # Only before_* hooks announce the phase that is about to run; after_*
+    # hooks record the phase just completed, so the body omits "A seguir".
+    $nextPhase = ''
+    if ($EventName -match '^before_(.+)$') { $nextPhase = $matches[1] }
     if ($nextPhase) {
         $nextPhase = $nextPhase.Substring(0, 1).ToUpper() + $nextPhase.Substring(1)
     }

@@ -138,7 +138,7 @@ Projeto único. O alvo da feature é o **procedimento empacotado** em `src/main/
 ### Implementation for User Story 4
 
 - [X] T032 [US4] Executar `mvn -B clean install "-Darchetype.test.skip=true"` e confirmar que o JAR reinstalado em `~/.m2/repository/com/eda-archetype/eda-archetype/0.0.1-SNAPSHOT/` contém os 19 arquivos de `utils/` com a regra de destino — **Princípio VI: reinstalação limpa antes de concluir que a mudança "não teve efeito"**
-- [X] T033 [US4] Atualizar `README.md` §7.1 (prompts de homologação manual, linhas ~2189 e ~2244) — trocar a instrução ad-hoc "Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml ou passe `-DoutputDirectory=<pasta temporaria>`" pela entrada `PASTA DE DESTINO` no formato do spec
+- [X] T033 [US4] Atualizar `README.md` §7 (prompts de homologação manual) — trocar a instrução ad-hoc "Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml ou passe `-DoutputDirectory=<pasta temporaria>`" pela entrada `PASTA DE DESTINO` no formato do spec
 - [X] T034 [US4] Atualizar `README.md` na seção "Inferência de Contrato e Use-Case: do Prompt ao Maven CLI" (linhas ~645-780) — citar o destino como 5ª entrada e manter o exemplo `-DoutputDirectory=C:\Temp\eda-sandbox` como **ilustração**, referenciando a regra em `utils/`; o README não é fonte de runtime
 - [X] T035 [US4] Verificar que `README.md` continua publicando as contagens inalteradas — 19 arquivos, 35 flags, 18 filesets, 64 fragmentos, 22 fixtures — exigido por `ReadmeConsistencyTest` 2.1-2.5
 

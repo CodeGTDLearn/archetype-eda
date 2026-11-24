@@ -156,6 +156,8 @@ _PHASE_ORDER = [
     "Implement",
     "Checklist",
     "Analyze",
+    "Converge",
+    "Task2Issues",
 ]
 
 _PHASE_OF_EVENT = {
@@ -167,6 +169,8 @@ _PHASE_OF_EVENT = {
     "implement": "Implement",
     "checklist": "Checklist",
     "analyze": "Analyze",
+    "converge": "Converge",
+    "taskstoissues": "Task2Issues",
 }
 
 
@@ -265,15 +269,34 @@ def _snapshot(
             detected.append("Checklist")
         if matches(r"(^|/)analysis\.md$"):
             detected.append("Analyze")
+        # /converge appends a "## Phase N: Convergence" section to tasks.md, so
+        # a Convergence tasks.md outranks the plain Tasks phase.
+        if matches(r"(^|/)tasks\.md$"):
+            tasks_rel = next(
+                (path for path in staged if re.search(r"(^|/)tasks\.md$", path)), ""
+            )
+            tasks_file = repo_root / tasks_rel if tasks_rel else None
+            if tasks_file is not None and tasks_file.is_file():
+                try:
+                    tasks_text = tasks_file.read_text(encoding="utf-8")
+                except (OSError, UnicodeDecodeError):
+                    tasks_text = ""
+                if re.search(
+                    r"^## Phase \d+: Convergence\b", tasks_text, re.MULTILINE
+                ):
+                    detected.append("Converge")
         return detected[::-1]
 
-    # The hook event narrows down which phases may have produced the staged
-    # state; within those, the most advanced detected phase wins. Without a
-    # known event, fall back to the most advanced phase overall. This keeps a
-    # leftover checklists/ file from mislabelling a Specify snapshot.
+    # An after_* hook states which phase just finished, so its label is
+    # authoritative (Task2Issues, for example, leaves no file signature).
+    # A before_* hook narrows the candidates and the staged diff decides;
+    # without a known event, the most advanced detected phase wins. This keeps
+    # a leftover checklists/ file from mislabelling a Specify snapshot.
     candidates = _frozen_phase_candidates(event_name)
     detected_phases = detect_phases()
-    if candidates:
+    if event_name.startswith("after_") and candidates:
+        frozen = candidates[0]
+    elif candidates:
         frozen = next(
             (phase for phase in detected_phases if phase in candidates), "Snapshot"
         )
@@ -319,6 +342,10 @@ def _snapshot(
         summary = f"{check_count} listas"
     elif frozen == "Analyze":
         summary = "analysis.md"
+    elif frozen == "Converge":
+        summary = "tasks.md"
+    elif frozen == "Task2Issues":
+        summary = "issues"
     elif frozen == "Constitution":
         summary = "constitution.md"
     else:
@@ -406,6 +433,12 @@ def _snapshot(
         default_subject = "Checklist Gerada"
     elif frozen == "Analyze":
         default_subject = "Analise Concluida"
+    elif frozen == "Converge":
+        default_subject = "Convergencia Avaliada"
+        details = ""
+    elif frozen == "Task2Issues":
+        default_subject = "Issues Sincronizadas"
+        details = ""
     elif frozen == "Constitution":
         default_subject = "Constituicao Definida"
     else:
@@ -495,8 +528,12 @@ def _snapshot(
             if total:
                 done.append(f"Checklist: {total} listas")
 
-    # Next phase, from the hook event name.
-    next_phase = re.sub(r"^before_", "", event_name)
+    # Next phase, from the hook event name. Only before_* hooks announce the
+    # phase that is about to run; after_* hooks record the phase just completed,
+    # so the body omits "A seguir".
+    next_phase = ""
+    if event_name.startswith("before_"):
+        next_phase = event_name[len("before_"):]
     if next_phase:
         next_phase = next_phase[:1].upper() + next_phase[1:]
 

@@ -140,7 +140,7 @@ Pesquisa que resolve os pontos técnicos em aberto da spec. Cada decisão regist
 
 | Local | Mudança | Razão |
 |---|---|---|
-| §7.1 / §7.2 (prompts de homologação manual, linhas ~2189 e ~2244) | trocar a instrução ad-hoc *"Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml ou passe `-DoutputDirectory=<pasta temporaria>`"* pela entrada `PASTA DE DESTINO` no formato do spec | o prompt de homologação **simula o spec** que o operador entrega — ele precisa demonstrar a entrada nova |
+| §7 (prompts de homologação manual) | trocar a instrução ad-hoc *"Gere FORA da árvore do archetype: use uma pasta de trabalho com pom.xml ou passe `-DoutputDirectory=<pasta temporaria>`"* pela entrada `PASTA DE DESTINO` no formato do spec | o prompt de homologação **simula o spec** que o operador entrega — ele precisa demonstrar a entrada nova |
 | Seção "Inferência de Contrato e Use-Case" (linhas ~645-780) | citar o destino como 5ª entrada; manter o exemplo `-DoutputDirectory=C:\Temp\eda-sandbox` como **ilustração**, referenciando a regra em `utils/` | o README **não** é fonte de runtime (`prompt-00` §3/§5, `prompt-01` §2) — ele aponta para a regra, não a substitui |
 
 **Rationale**: `README.md:1824` já declara *"O detalhamento do procedimento não vive mais no README. Ele está empacotado no JAR"*. O README deve **referenciar** a regra, nunca ser a única fonte.

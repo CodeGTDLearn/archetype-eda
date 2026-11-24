@@ -22,18 +22,21 @@ init_commit_message: "[Spec Kit] Initial commit"
 # "conventional" - ask the agent to inspect the diff and generate a
 #                  Conventional Commit message (e.g. "feat: add OAuth spec")
 #                  instead of using the messages configured below.
-# "snapshot"     - rollback snapshot taken by before_* hooks: the script
-#                  classifies the frozen phase from the staged diff and
-#                  builds title + body. Title format:
+# "snapshot"     - commit taken by a speckit.git.commit hook: an after_* hook
+#                  states the phase that just finished (authoritative), while a
+#                  before_* hook freezes the previous phase's state. The event
+#                  narrows the candidates and the staged diff picks the most
+#                  advanced one present. Title format:
 #                  "📸 <fase>: "<assunto>" (<detalhes>)", where <assunto>
 #                  comes from the agent via --title-file / -TitleFile
 #                  (falls back to a per-phase default) and <detalhes> are
 #                  automatic metrics (Implement: "N arquivos - T012–T015";
 #                  Tasks: "N tarefas em M fases"; Plan: "N artefatos de
-#                  design"; Checklist: "N listas"; Specify/Snapshot:
-#                  omitted). The agent may refine the synopsis via
-#                  --synopsis-file / -SynopsisFile. The static messages
-#                  below are ignored in this mode.
+#                  design"; Checklist: "N listas"; Clarify: "N sessões";
+#                  Analyze: "analysis.md"; Constitution: "constitution.md";
+#                  Converge/Task2Issues/Specify/Snapshot: omitted). The agent
+#                  may refine the synopsis via --synopsis-file / -SynopsisFile.
+#                  The static messages below are ignored in this mode.
 commit_style: snapshot
 
 # Prefix of the snapshot title (camera emoji). Read as UTF-8 by the hooks.
@@ -62,6 +65,9 @@ auto_commit:
   before_analyze:
     enabled: false
     message: "[Spec Kit] Save progress before analysis"
+  before_converge:
+    enabled: false
+    message: "[Spec Kit] Save progress before convergence"
   before_taskstoissues:
     enabled: false
     message: "[Spec Kit] Save progress before issue sync"
@@ -69,26 +75,29 @@ auto_commit:
     enabled: false
     message: "[Spec Kit] Add project constitution"
   after_specify:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Add specification"
   after_clarify:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Clarify specification"
   after_plan:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Add implementation plan"
   after_tasks:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Add tasks"
   after_implement:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Implementation progress"
   after_checklist:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Add checklist"
   after_analyze:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Add analysis report"
+  after_converge:
+    enabled: true
+    message: "[Spec Kit] Assess convergence"
   after_taskstoissues:
-    enabled: false
+    enabled: true
     message: "[Spec Kit] Sync tasks to issues"

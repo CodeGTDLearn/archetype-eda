@@ -260,18 +260,112 @@ if [ "$_commit_style" = "snapshot" ]; then
         _feature_dir="${_feature_dir%/}"
     fi
 
-    # frozen phase, from the staged diff
-    _frozen="Snapshot"
+    # frozen phase: the hook event narrows the candidates, the staged diff
+    # decides. A before_* hook freezes whatever the previous phase left; an
+    # after_* hook states the phase that just finished. Empty candidates =
+    # unknown event (generic fallback: the most advanced phase present).
+    _candidates=""
+    case "$EVENT_NAME" in
+        before_specify)       _candidates="Constitution" ;;
+        before_clarify)       _candidates="Constitution Specify" ;;
+        before_plan)          _candidates="Constitution Specify Clarify" ;;
+        before_tasks)         _candidates="Constitution Specify Clarify Plan" ;;
+        before_implement)     _candidates="Constitution Specify Clarify Plan Tasks" ;;
+        before_checklist)     _candidates="Constitution Specify Clarify Plan Tasks Implement" ;;
+        before_analyze)       _candidates="Constitution Specify Clarify Plan Tasks Implement Checklist" ;;
+        before_converge)      _candidates="Constitution Specify Clarify Plan Tasks Implement Checklist Analyze" ;;
+        before_taskstoissues) _candidates="Constitution Specify Clarify Plan Tasks Implement Checklist Analyze Converge" ;;
+        after_constitution)   _candidates="Constitution" ;;
+        after_specify)        _candidates="Specify" ;;
+        after_clarify)        _candidates="Clarify" ;;
+        after_plan)           _candidates="Plan" ;;
+        after_tasks)          _candidates="Tasks" ;;
+        after_implement)      _candidates="Implement" ;;
+        after_checklist)      _candidates="Checklist" ;;
+        after_analyze)        _candidates="Analyze" ;;
+        after_converge)       _candidates="Converge" ;;
+        after_taskstoissues)  _candidates="Task2Issues" ;;
+    esac
+
+    _det_constitution=false
+    _det_specify=false
+    _det_clarify=false
+    _det_plan=false
+    _det_tasks=false
+    _det_implement=false
+    _det_checklist=false
+    _det_analyze=false
+    _det_converge=false
+
+    if printf '%s\n' "$_staged" | grep -qE '^\.specify/memory/constitution\.md$'; then
+        _det_constitution=true
+    fi
+    _spec_rel=$(printf '%s\n' "$_staged" | grep -E '(^|/)spec\.md$' | head -n 1 || true)
+    _spec_text=""
+    if [ -n "$_spec_rel" ] && [ -f "$REPO_ROOT/$_spec_rel" ]; then
+        _spec_text=$(cat "$REPO_ROOT/$_spec_rel" 2>/dev/null || true)
+    fi
+    if [ -n "$_spec_rel" ]; then
+        # /clarify appends a "## Clarifications" section to spec.md.
+        if printf '%s\n' "$_spec_text" | grep -qE '^## Clarifications'; then
+            _det_clarify=true
+        else
+            _det_specify=true
+        fi
+    fi
+    if printf '%s\n' "$_staged" | grep -qE '(^|/)(plan|research|data-model|quickstart)\.md$|(^|/)contracts/'; then
+        _det_plan=true
+    fi
+    if printf '%s\n' "$_staged" | grep -qE '(^|/)tasks\.md$'; then
+        _det_tasks=true
+        # /converge appends a "## Phase N: Convergence" section to tasks.md.
+        _t_rel=$(printf '%s\n' "$_staged" | grep -E '(^|/)tasks\.md$' | head -n 1 || true)
+        if [ -n "$_t_rel" ] && [ -f "$REPO_ROOT/$_t_rel" ] && grep -qE '^## Phase [0-9]+: Convergence' "$REPO_ROOT/$_t_rel"; then
+            _det_converge=true
+        fi
+    fi
     if printf '%s\n' "$_staged" | grep -q '^src/'; then
-        _frozen="Implement"
-    elif printf '%s\n' "$_staged" | grep -qE '(^|/)tasks\.md$'; then
-        _frozen="Tasks"
-    elif printf '%s\n' "$_staged" | grep -qE '(^|/)checklists/'; then
-        _frozen="Checklist"
-    elif printf '%s\n' "$_staged" | grep -qE '(^|/)(plan|research|data-model|quickstart)\.md$' || printf '%s\n' "$_staged" | grep -qE '(^|/)contracts/'; then
-        _frozen="Plan"
-    elif printf '%s\n' "$_staged" | grep -qE '(^|/)spec\.md$'; then
-        _frozen="Specify"
+        _det_implement=true
+    fi
+    if printf '%s\n' "$_staged" | grep -qE '(^|/)checklists/'; then
+        _det_checklist=true
+    fi
+    if printf '%s\n' "$_staged" | grep -qE '(^|/)analysis\.md$'; then
+        _det_analyze=true
+    fi
+
+    # An after_* hook states which phase just finished, so its label is
+    # authoritative (Task2Issues, for example, leaves no file signature).
+    # A before_* hook narrows the candidates and the staged diff decides;
+    # without a known event, the most advanced detected phase wins.
+    _frozen="Snapshot"
+    _trust_event=false
+    case "$EVENT_NAME" in
+        after_*)
+            if [ -n "$_candidates" ]; then _trust_event=true; fi
+            ;;
+    esac
+    if [ "$_trust_event" = "true" ]; then
+        _frozen="$_candidates"
+    else
+        for _phase in Converge Analyze Checklist Implement Tasks Plan Clarify Specify Constitution; do
+            case "$_phase" in
+                Converge)     _present="$_det_converge" ;;
+                Analyze)      _present="$_det_analyze" ;;
+                Checklist)    _present="$_det_checklist" ;;
+                Implement)    _present="$_det_implement" ;;
+                Tasks)        _present="$_det_tasks" ;;
+                Plan)         _present="$_det_plan" ;;
+                Clarify)      _present="$_det_clarify" ;;
+                Specify)      _present="$_det_specify" ;;
+                Constitution) _present="$_det_constitution" ;;
+            esac
+            [ "$_present" = "true" ] || continue
+            if [ -z "$_candidates" ] || printf '%s' " $_candidates " | grep -q " $_phase "; then
+                _frozen="$_phase"
+                break
+            fi
+        done
     fi
 
     # tasks.md location and counts
@@ -290,6 +384,9 @@ if [ "$_commit_style" = "snapshot" ]; then
     # per-phase title summary
     case "$_frozen" in
         Specify) _summary="spec.md" ;;
+        Clarify)
+            _sessions=$(printf '%s\n' "$_spec_text" | grep -c '^### Session ' || true)
+            _summary="$_sessions sessões" ;;
         Plan)
             _plan_count=$(printf '%s\n' "$_staged" | grep -cE '(^|/)(plan|research|data-model|quickstart)\.md$|(^|/)contracts/' || true)
             _summary="$_plan_count artefatos de design" ;;
@@ -303,6 +400,14 @@ if [ "$_commit_style" = "snapshot" ]; then
                 _check_count=$(find "$_feature_dir/checklists" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d '[:space:]')
             fi
             _summary="$_check_count listas" ;;
+        Analyze)
+            _summary="analysis.md" ;;
+        Converge)
+            _summary="tasks.md" ;;
+        Task2Issues)
+            _summary="issues" ;;
+        Constitution)
+            _summary="constitution.md" ;;
         *)
             _summary="$_staged_count arquivos" ;;
     esac
@@ -398,6 +503,8 @@ EOF
         Specify)
             _default_subject="Especificacao Gerada"
             _details="" ;;
+        Clarify)
+            _default_subject="Duvidas Esclarecidas" ;;
         Plan)
             _default_subject="Plano Gerado" ;;
         Tasks)
@@ -407,6 +514,16 @@ EOF
             if [ -n "$_range" ]; then _details="$_summary - $_range"; fi ;;
         Checklist)
             _default_subject="Checklist Gerada" ;;
+        Analyze)
+            _default_subject="Analise Concluida" ;;
+        Converge)
+            _default_subject="Convergencia Avaliada"
+            _details="" ;;
+        Task2Issues)
+            _default_subject="Issues Sincronizadas"
+            _details="" ;;
+        Constitution)
+            _default_subject="Constituicao Definida" ;;
         *)
             _default_subject="$_staged_count arquivos Snapeados"
             _details="" ;;
@@ -501,8 +618,13 @@ EOF
         fi
     fi
 
-    # next phase, from the hook event name
-    _next="${EVENT_NAME#before_}"
+    # next phase, from the hook event name. Only before_* hooks announce the
+    # phase that is about to run; after_* hooks record the phase just completed,
+    # so the body omits "A seguir".
+    _next=""
+    case "$EVENT_NAME" in
+        before_*) _next="${EVENT_NAME#before_}" ;;
+    esac
     if [ -n "$_next" ]; then
         _next="$(printf '%s' "$_next" | cut -c1 | tr '[:lower:]' '[:upper:]')$(printf '%s' "$_next" | cut -c2-)"
     fi

@@ -231,7 +231,7 @@ mvn -B clean integration-test
 
 ## Nota sobre a automação do agente
 
-Os Cenários 4 a 9 exercitam o **agente** (um LLM), não código determinístico. Eles são **homologação manual** — o mesmo critério dos prompts de homologação já existentes no README (§7.1/§7.2). A parte determinística da feature (a regra estar declarada, as contagens, a ausência de caminho de usuário) é coberta automaticamente pelo Cenário 2.
+Os Cenários 4 a 9 exercitam o **agente** (um LLM), não código determinístico. Eles são **homologação manual** — o mesmo critério dos prompts de homologação já existentes no README (§7, Cenários A a D). A parte determinística da feature (a regra estar declarada, as contagens, a ausência de caminho de usuário) é coberta automaticamente pelo Cenário 2.
 
 ---
 

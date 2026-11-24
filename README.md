@@ -92,6 +92,7 @@
 
 - <a href="#procedimento-para-especificacao-spec">Procedimento para Especificação/Spec</a>
   - <a href="#procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit">Como usar no 'OpenCode' OU no 'GitHub Spec Kit'</a>
+  - <a href="#exemplo-de-prompt-para-spec">Exemplo de Prompt para Spec</a>
   - <a href="#procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato">Onde estão as regras de formação do contrato</a>
   - <a href="#procedimento-para-especificacao-spec-onde-usar-cada-abordagem">Onde usar cada abordagem</a>
 
@@ -107,9 +108,11 @@
   - <a href="#testabilidade-verify-groovy-o-hook-pos-build">4) verify.groovy — o hook pós-build 🔬</a>
   - <a href="#testabilidade-trabalhar-com-um-verify-groovy">5) TRABALHAR COM UM <code>verify.groovy</code></a>
   - <a href="#testabilidade-sanity-check-completo-1-comando">6) SANITY CHECK COMPLETO (1 comando)</a>
-  - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios">7) PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 02 Cenários) 🧪</a>
-    - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-a-contrato-plano-3-atributos">7.1) Cenário A — contrato plano (3 atributos)</a>
-    - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-b-contrato-aninhado-filho-neto">7.2) Cenário B — contrato aninhado (filho + neto)</a>
+  - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios">7) PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 04 Cenários) 🧪</a>
+    - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-a-contrato-plano-3-atributos">7.1) Cenário A — contrato plano (3 atributos)</a>
+    - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-b-array-enum-contrato-aninhado-filho-neto">7.2) Cenário B — array-enum + contrato aninhado (filho + neto)</a>
+    - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-c-contrato-com-array-puro">7.3) Cenário C — contrato com array puro</a>
+    - <a href="#testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-d-contrato-com-objeto-aninhado-filho-neto-bisneto">7.4) Cenário D — contrato com objeto aninhado puro (filho + neto + bisneto)</a>
 
 - <a href="#flags-do-mvn-archetype-generate">Flags do mvn archetype:generate 🤖</a>
   - <a href="#flags-do-mvn-archetype-generate-onde-cada-efeito-acontece">Onde cada efeito acontece</a>
@@ -2087,6 +2090,10 @@ if (keep_binding_properties == 'false') {
 > Não reordene as seções, não omita o contrato, não use `none` como substituto e não presuma destino.
 > A fonte normativa é `prompt-00` §0, dentro do JAR.
 
+
+<a id="exemplo-de-prompt-para-spec" name="exemplo-de-prompt-para-spec"></a>
+#### Exemplo de Prompt p/ Spec <a href="#indice">↑ topo</a>
+
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
 
@@ -2474,8 +2481,8 @@ fica a cargo do procedimento empacotado no JAR —
     (5.5) Para testes que passaram use o emoji de 'checado' (verde); para testes que falharam use o emoji 'X' (vermelho).
     ```
 
-<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios"></a>
-### 7) PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 02 Cenários) 🧪 <a href="#indice">↑ topo</a>
+<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios"></a>
+### 7) PROMPTS PARA HOMOLOGAÇÃO MANUAL (Geração via OpenCode - 04 Cenários) 🧪 <a href="#indice">↑ topo</a>
 
   * Estes prompts **simulam o spec** que o operador entrega: 
     * use case + contrato JSON. 
@@ -2486,7 +2493,7 @@ fica a cargo do procedimento empacotado no JAR —
     * se o agente derivar as flags erradas, 
     * o projeto gerado sai torto e você percebe antes de rodar `mvn archetype:generate`.
 
-<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-a-contrato-plano-3-atributos" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-a-contrato-plano-3-atributos"></a>
+<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-a-contrato-plano-3-atributos" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-a-contrato-plano-3-atributos"></a>
 #### 7.1) Cenário A — contrato plano (3 atributos) <a href="#indice">↑ topo</a>
 
 ```text
@@ -2535,13 +2542,13 @@ C:\Temp\eda-005-destino-a
 
   * **O que esperar:** 
     * entidade `Produto` no pacote `br.com.loja.produto`; 
-    * `custom_entity_attributes_list=String:nome_produto, Double:preco,Integer:quantidade_estoque` (ordem do contrato, tipo estimado pelo valor);
+    * `custom_entity_attributes_list=String:nome_produto,Double:preco,Integer:quantidade_estoque` (ordem do contrato, tipo estimado pelo valor);
     * `enable_custom_entity_attributes=true`; 
     * `entity_package_name=produto`; 
     * `api_port=8080`.
 
-<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-b-contrato-aninhado-filho-neto" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-02-cenarios-cenario-b-contrato-aninhado-filho-neto"></a>
-#### 7.2) Cenário B — contrato aninhado (filho + neto) <a href="#indice">↑ topo</a>
+<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-b-array-enum-contrato-aninhado-filho-neto" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-b-array-enum-contrato-aninhado-filho-neto"></a>
+#### 7.2) Cenário B — array-enum + contrato aninhado (filho + neto) <a href="#indice">↑ topo</a>
 
 ```text
 # TAREFA: Gerar módulo com o Maven Archetype EDA
@@ -2599,7 +2606,7 @@ C:\Temp\eda-005-destino-b
 
   * **O que esperar:**
     * os mesmos 3 atributos do Cenário A **mais** o `status`, o objeto aninhado e o enum aninhado;
-      * `custom_entity_attributes_list=String:nome_produto,Double:preco,Integer:quantidade_estoque,Status:status,DetalhesCategoria:detalhes_categoria`;
+      * `custom_entity_attributes_list=String:nome_produto,Double:preco,Integer:quantidade_estoque,Status:status,DetalhesCategoria:detalhesCategoria`;
       * `contract_nested_type_definitions=DetalhesCategoria|nomeCategoria:String,codigoSetor:String,fabricanteOrigem:FabricanteOrigem;FabricanteOrigem|nomeEmpresa:String,cnpjDistribuidor:String,tipoOrigem:TipoOrigem`;
       * `contract_enum_definitions=Status:ATIVO|CANCELADO;nested.TipoOrigem:NACIONAL|IMPORTADO`.
     * Os POJOs nascem em `br.com.loja.produto.nested`, com campos em **camelCase** e o pai emitido antes do filho:
@@ -2611,6 +2618,147 @@ C:\Temp\eda-005-destino-b
       * se o agente devolver `detalhes_categoria` como `String`, a profundidade não foi reconhecida;
       * se `tipo_origem` vier como `String` ou o agente não emitir `nested.TipoOrigem`, o enum aninhado não foi reconhecido;
       * o contrato tem 2 níveis (filho + neto) e a regra manda virar POJO.
+
+<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-c-contrato-com-array-puro" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-c-contrato-com-array-puro"></a>
+#### 7.3) Cenário C — contrato com array puro <a href="#indice">↑ topo</a>
+
+```text
+# TAREFA: Gerar módulo com o Maven Archetype EDA
+
+0. PROCEDIMENTO:
+- Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
+  repositório local, leia
+  llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  de dentro do JAR e siga-o antes de derivar.
+- Este spec pode ser executado fora da pasta do repositório do archetype.
+
+1. TIPO DE MÓDULO:
+[X] RAIZ
+[ ] SECUNDARIO
+
+2. PACKAGE BASE (sem o nome da entidade):
+br.com.loja
+
+3. USE-CASE:
+- Cadastro de produtos com status, etiquetas e variações.
+- O cadastro coleta nome do produto, preço, quantidade em estoque,
+  o status, as etiquetas e as variações disponíveis.
+- O sistema expõe uma API REST na porta 8080.
+
+4. CONTRATO JSON do módulo:
+{
+  "nome_produto": "Monitor 27\"",
+  "preco": 1899.90,
+  "quantidade_estoque": 12,
+  "status": ["ATIVO", "CANCELADO"],
+  "etiquetas": ["promocao", "novidade"],
+  "variacoes": [
+    { "cor": "Preto", "tamanho": "27" }
+  ]
+}
+
+5. PASTA DE DESTINO:
+C:\Temp\eda-005-destino-c
+
+6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
+- O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
+- No PowerShell, coloque cada -D entre aspas (a virgula da lista de
+  atributos quebra o argumento).
+- Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.
+- Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
+  "idea64 <pasta_do_projeto_gerado>".
+- O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
+- A API gerada deve ter amplo suporte a testabilidade.
+```
+
+  * **O que esperar:**
+    * entidade `Produto` no pacote `br.com.loja.produto`;
+    * `custom_entity_attributes_list=String:nome_produto,Double:preco,Integer:quantidade_estoque,Status:status,String:etiquetas,String:variacoes`;
+    * `contract_enum_definitions=Status:ATIVO|CANCELADO` (array de MAIÚSCULAS vira enum no pacote da entidade);
+    * `contract_nested_type_definitions` **não emitida** (default `none`);
+    * `enable_custom_entity_attributes=true`, `entity_package_name=produto`, `api_port=8080`;
+    * `etiquetas` (minúsculas) e `variacoes` (array de objetos) caem em `String` **com aviso**;
+    * artefatos: `br.com.loja.produto.Status` apenas; **sem** pasta `nested/` e **sem** POJO para `variacoes`.
+    * **Sinais de alerta:**
+      * `status` como `String` → o array-enum não foi reconhecido;
+      * `etiquetas`/`variacoes` virando enum, `List`/`Map` ou POJO → coleção inventada ou fallback ignorado;
+      * aparecer `nested/` ou `contract_nested_type_definitions` → objeto fantasma.
+
+<a id="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-d-contrato-com-objeto-aninhado-filho-neto-bisneto" name="testabilidade-prompts-para-homologacao-manual-geracao-via-opencode-04-cenarios-cenario-d-contrato-com-objeto-aninhado-filho-neto-bisneto"></a>
+#### 7.4) Cenário D — contrato com objeto aninhado puro (filho + neto + bisneto) <a href="#indice">↑ topo</a>
+
+```text
+# TAREFA: Gerar módulo com o Maven Archetype EDA
+
+0. PROCEDIMENTO:
+- Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
+  repositório local, leia
+  llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  de dentro do JAR e siga-o antes de derivar.
+- Este spec pode ser executado fora da pasta do repositório do archetype.
+
+1. TIPO DE MÓDULO:
+[X] RAIZ
+[ ] SECUNDARIO
+
+2. PACKAGE BASE (sem o nome da entidade):
+br.com.loja
+
+3. USE-CASE:
+- Cadastro de produtos com dados de entrega completos.
+- O cadastro coleta nome do produto, preço, quantidade em estoque,
+  o endereço de entrega, a transportadora e o contato operacional.
+- O sistema expõe uma API REST na porta 8080.
+
+4. CONTRATO JSON do módulo:
+{
+  "nome_produto": "Mesa Escritório",
+  "preco": 1250.0,
+  "quantidade_estoque": 4,
+  "dados_entrega": {
+    "rua": "Rua das Acácias",
+    "numero": 120,
+    "transportadora": {
+      "nome_fantasia": "Rápido Express",
+      "contato_operacional": {
+        "nome_responsavel": "João Souza",
+        "telefone": "11999998888",
+        "email": "joao@rapido.com"
+      }
+    }
+  }
+}
+
+5. PASTA DE DESTINO:
+C:\Temp\eda-005-destino-d
+
+6. INSTRUÇÕES DE EXECUÇÃO (PARA O AGENTE):
+- O destino de geração vem da marcação PASTA DE DESTINO acima; não presuma destino.
+- No PowerShell, coloque cada -D entre aspas (a virgula da lista de
+  atributos quebra o argumento).
+- Depois de gerar, rode "mvn clean verify" na pasta do projeto gerado.
+- Se o build passar, ABRA O PROJETO NO INTELLIJ automaticamente:
+  "idea64 <pasta_do_projeto_gerado>".
+- O projeto gerado TEM o proprio pom.xml; ele nao e um modulo do archetype.
+- A API gerada deve ter amplo suporte a testabilidade.
+```
+
+  * **O que esperar:**
+    * entidade `Produto` no pacote `br.com.loja.produto`;
+    * `custom_entity_attributes_list=String:nome_produto,Double:preco,Integer:quantidade_estoque,DadosEntrega:dadosEntrega`;
+    * `contract_nested_type_definitions=DadosEntrega|rua:String,numero:Integer,transportadora:Transportadora;Transportadora|nomeFantasia:String,contatoOperacional:ContatoOperacional;ContatoOperacional|nomeResponsavel:String,telefone:String,email:String`;
+      * ordem obrigatória: **pai antes do filho** (DadosEntrega → Transportadora → ContatoOperacional);
+    * `contract_enum_definitions` **não emitida** (`none`);
+    * 3 POJOs em `br.com.loja.produto.nested`: `DadosEntrega`, `Transportadora`, `ContatoOperacional`, com campos em **camelCase**;
+    * `custom_entity_attribute_imports` não emitida (a entidade usa o FQN inline);
+    * na entidade: `private br.com.loja.produto.nested.DadosEntrega dadosEntrega;` marcado com `@Transient`;
+    * nenhum enum gerado e nenhuma pasta fora de `nested/`.
+    * **Sinais de alerta:**
+      * qualquer nível virar `String` (ex.: `transportadora` como `String`) → cadeia de profundidade quebrada;
+      * faltar `ContatoOperacional` ou ele nascer fora de `nested/` → bisneto/normalização de nível falhou;
+      * ordem filho-antes-do-pai em `contract_nested_type_definitions` → regra de emissão violada;
+      * `dados_entrega` virar `Map`/`List` → violação de "nunca invente coleção";
+      * aparecer arquivo de enum sem array no contrato.
 
 
 

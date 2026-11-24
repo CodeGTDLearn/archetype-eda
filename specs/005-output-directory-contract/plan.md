@@ -92,7 +92,7 @@ src/test/archetype-post-generate/
 src/test/groovy/
 └── run-archetype-post-generate-tests.groovy      # ALTERADO: registrar a suíte nova (CoverageRegistryTest 2.1/2.2)
 
-README.md                                         # ALTERADO: §7.1/§7.2 (prompts de homologação) e seção de inferência
+README.md                                         # ALTERADO: §7 (prompts de homologação) e seção de inferência
 ```
 
 **Estrutura de dados affected**: nenhuma estrutura Java/Groovy nova. A feature é **documental + verificação**.
