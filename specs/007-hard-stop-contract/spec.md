@@ -43,6 +43,9 @@
 - Q: O STOP-ENV-02 deve cobrir apenas a ausência dos 19 arquivos do procedimento, ou também a ausência da árvore `archetype-resources/` no JAR? → A: Cobre os 19 arquivos e a árvore `archetype-resources/`; a mensagem nomeia o item ausente.
 - Q: Para a sincronia da tabela, o que conta como "regra de formato literal": apenas as três regexes exibidas, ou todas as nove linhas, incluindo as seis descritas em prosa? → A: Apenas as três regexes literais; as seis descritivas são verificadas por exemplos contra a regex do catálogo.
 - Q: Para o build falhar quando um site de parada não cita código, o que conta como site: toda linha com a palavra isolada **Pare** e todo bloco **PARADA DURA**, ou apenas os blocos **PARADA DURA**? → A: Linhas com **Pare** e blocos **PARADA DURA**; as mensagens usam "Por que parou" para não se autoidentificarem como site.
+- Q: Para SC-002 ser verificável, qual amostra e formato de registro devemos fixar para o teste com um operador que começou ontem? → A: Amostra mínima de 6 mensagens, incluindo `STOP-DER-02` e as 2 confirmações; revisor que não participou da implementação; registro em tabela com data e resultado.
+- Q: Como devemos medir o limite de tempo do build para substituir a expressão vaga "aumento perceptível"? → A: Linha de base local de `mvn -B test`; aumento máximo de 10%, medido antes e depois.
+- Q: Como devemos verificar que os testes são determinísticos e não dependem de rede? → A: Duas execuções offline no mesmo ambiente, com a mesma saída; nenhuma chamada de rede.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -186,8 +189,8 @@ Como leitor do procedimento, quero que a tabela de flags críticas renderize cor
 
 ### Non-Functional Requirements
 
-- **NFR-001**: O tempo de build não pode aumentar de forma perceptível.
-- **NFR-002**: Os testes devem ser determinísticos e não depender de rede.
+- **NFR-001**: O tempo de build não pode aumentar mais de 10% em relação à linha de base local de `mvn -B test`, medida antes e depois da mudança.
+- **NFR-002**: Os testes devem ser determinísticos e não depender de rede: as suítes devem rodar duas vezes no mesmo ambiente, sem acesso à rede, e produzir a mesma saída.
 - **NFR-003**: Nenhuma dependência nova pode ser adicionada.
 - **NFR-004**: As mensagens devem ser legíveis em Markdown simples, sem depender de renderizadores específicos.
 - **NFR-005**: O procedimento deve continuar funcionando a partir do JAR instalado, sem depender da árvore-fonte.
@@ -314,7 +317,7 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 ### Measurable Outcomes
 
 - **SC-001**: 100% das 16 paradas e das 2 confirmações têm código, registro e os 10 campos.
-- **SC-002**: Um operador que começou ontem consegue responder às 5 perguntas de orientação em 100% das paradas revisadas.
+- **SC-002**: Um operador que começou ontem consegue responder às 5 perguntas de orientação em 100% de uma amostra mínima de 6 mensagens, incluindo `STOP-DER-02` e as 2 confirmações; o revisor não participou da implementação e registra data e resultado em tabela.
 - **SC-003**: Uma parada nova sem código ou sem registro faz o build falhar.
 - **SC-004**: Uma lista de atributos inválida gera 0 módulos e uma mensagem com 3 opções.
 - **SC-005**: A contagem permanece 19 arquivos, 13 Markdown, 6 JSON, 35 propriedades e 18 filesets.
@@ -337,7 +340,7 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 - As specs históricas e o README não são fontes de runtime.
 - A numeração da feature sucede a 006; a 003 permanece arquivada.
 - As observações sobre o README foram registradas como contexto, mas a reestruturação do tópico permanece fora do escopo por decisão explícita do operador.
-- "Aumento perceptível" em NFR-001 foi interpretado como aumento relativo de até 10% no build local; acima disso, a mudança deve ser investigada antes da conclusão.
+- A linha de base de NFR-001 é uma execução local de `mvn -B test` no mesmo ambiente, imediatamente antes da mudança; o limite é o definido em NFR-001.
 - As "regras de formato literais" de FR-018 são as três regexes da tabela (`entity_name`, `entity_package_name` e `custom_entity_attributes_list`); as seis descritivas são verificadas por exemplos contra a regex do catálogo.
 - O estado atual foi conferido como linha de base: 19 arquivos no procedimento (13 Markdown e 6 JSON), 35 propriedades e 18 filesets no catálogo.
 - As 9 flags críticas da tabela são `entity_name`, `entity_package_name`, `custom_entity_attributes_list`, `custom_entity_attribute_imports`, `contract_enum_definitions`, `contract_nested_type_definitions`, `entity_contract_file_path`, `enable_custom_entity_attributes` e `enable_folder_src_test_java`; a tabela-resumo fica em `regras-04` §3.1.
