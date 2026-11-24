@@ -30,6 +30,15 @@
 - Agente que executa o procedimento e precisa saber exatamente o que reportar.
 - Mantenedor que altera o procedimento e precisa de um contrato testável.
 
+## Clarifications
+
+### Session 2026-11-24
+
+- Q: A R-11 deve exigir explicitamente uma ideia por frase, tradução de siglas, localização pelo nome legível da seção e linguagem sem culpa? → A: Sim, as quatro regras.
+- Q: O dicionário deve apresentar a tradução de cada um dos 20 termos, e não apenas a lista? → A: Sim.
+- Q: O spec deve incluir o template canônico da mensagem de parada e um exemplo completo de STOP-DER-02? → A: Sim.
+- Q: As confirmações STOP-CONF-01 e STOP-CONF-02 devem ter opções explícitas em requisito funcional? → A: Sim.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Orientação completa em qualquer parada dura (Priority: P1)
@@ -124,8 +133,8 @@ Como leitor do procedimento, quero que a tabela de flags críticas renderize cor
 - Nome de entidade ambíguo: parada com os candidatos e opções.
 - Conflito de mesma prioridade: parada com as duas fontes, as flags afetadas e opções.
 - Falha ao gravar o contrato ou caminho não absoluto: parada com opções de diretório e permissão.
-- Pasta de destino inexistente: confirmação com opções criar, escolher outra ou cancelar.
-- Módulo com o mesmo nome já existente: confirmação com opções sobrescrever, manter e encerrar ou escolher outro destino.
+- `STOP-CONF-01` — pasta de destino inexistente: as opções criar a pasta, escolher outra pasta ou cancelar MUST seguir a FR-031.
+- `STOP-CONF-02` — módulo com o mesmo nome já existente: as opções sobrescrever o módulo, manter o existente e encerrar ou escolher outro destino MUST seguir a FR-032.
 - Contrato com chave que parece segredo: aviso antes de gravar, sem imprimir o valor.
 - Tabela Markdown com pipe dentro de código: o pipe deve ser escapado.
 - Termo em backticks que parece flag: deve ser uma flag real do catálogo ou não pode casar o padrão.
@@ -161,6 +170,14 @@ Como leitor do procedimento, quero que a tabela de flags críticas renderize cor
 - **FR-023**: Nenhum default ou regra de formato do catálogo MUST ser alterado; a contagem MUST permanecer em 35 propriedades e 18 filesets.
 - **FR-024**: O comportamento existente MUST ser preservado, exceto pela nova parada `STOP-DER-02`.
 - **FR-025**: As mensagens MUST estar em português e MUST NOT expor segredos, credenciais ou o contrato completo.
+- **FR-026**: A mensagem MUST apresentar uma ideia por frase.
+- **FR-027**: A mensagem MUST traduzir toda sigla e todo termo técnico na primeira aparição, entre parênteses ou em uma frase curta.
+- **FR-028**: A mensagem MUST localizar o problema pelo nome legível da seção e pelo caminho, não apenas pelo número da seção.
+- **FR-029**: A mensagem MUST usar linguagem neutra e factual, sem culpar o operador.
+- **FR-030**: O dicionário MUST apresentar, para cada um dos 20 termos, a tradução em linguagem simples.
+- **FR-031**: `STOP-CONF-01` MUST oferecer as opções: criar a pasta, escolher outra pasta ou cancelar.
+- **FR-032**: `STOP-CONF-02` MUST oferecer as opções: sobrescrever o módulo, manter o existente e encerrar ou escolher outro destino.
+- **FR-033**: O spec MUST incluir o template canônico da mensagem de parada e um exemplo completo de `STOP-DER-02`.
 
 ### Non-Functional Requirements
 
@@ -212,7 +229,76 @@ O registro canônico de códigos e gatilhos fica no ponto de entrada do procedim
 - **Parada Dura**: evento que interrompe o fluxo antes de qualquer geração; possui código, gatilho, causa, local, regra, opções, sugestão e instruções de retomada.
 - **Registro de Paradas**: lista canônica de códigos e gatilhos, mantida no ponto de entrada do procedimento.
 - **Template de Mensagem**: formato obrigatório com os 10 campos e as regras de linguagem simples.
+
+**Template canônico**
+
+```text
+---
+> ## PARADA DURA — STOP-XXX
+>
+> **O que aconteceu:** fato objetivo, em uma frase curta.
+> **Onde está:** arquivo, seção, campo ou comando — com nome legível.
+> **Por que parou:** a regra em linguagem simples; se citar a seção, dê o nome dela.
+> **O que não foi executado:** nada foi gerado; nenhum comando do Maven foi rodado.
+>
+> **Opções de correção:**
+> 1. opção acionável, com exemplo.
+> 2. opção acionável, com exemplo.
+> 3. opção acionável, quando existir.
+>
+> **Sugestão:** opção recomendada + motivo em uma linha.
+> **Como retomar:** o que corrigir e de onde o procedimento recomeça.
+> **O que não fazer:** proibições específicas do caso.
+---
+```
+
+**Exemplo completo — STOP-DER-02**
+
+```text
+---
+> ## PARADA DURA — STOP-DER-02
+>
+> **O que aconteceu:** um dos campos da entidade tem um nome ou um tipo que o sistema não aceita.
+> **Onde está:** no contrato que você enviou, na seção "4. CONTRATO JSON". O trecho com problema é: <segmento>.
+> **Por que parou:** o sistema só aceita campos no formato "Tipo:nome" — por exemplo, "String:nome". O valor padrão "String:name" não serve, porque criaria um campo chamado "name" que não existe no seu contrato.
+> **O que não foi executado:** o comando do Maven não foi montado, nada foi gerado e nenhum arquivo foi criado.
+>
+> **Opções de correção:**
+> 1. Corrija o campo no contrato para o formato "Tipo:nome" — por exemplo, troque "nome" por "String:nome".
+> 2. Remova o campo do contrato, se ele não faz parte da entidade.
+> 3. Escreva a lista completa de campos no contrato, no formato "Tipo:nome,Tipo:nome".
+>
+> **Sugestão:** use a opção 1 se o campo é necessário; use a opção 3 se você quer definir a lista inteira.
+> **Como retomar:** salve o contrato corrigido e comece o procedimento de novo, desde a leitura do use-case.
+> **O que não fazer:** não use "String:name"; não edite o código gerado; não rode o Maven; não coloque senhas ou chaves no contrato.
+---
+```
+
 - **Termo do Dicionário**: termo técnico e sua tradução em linguagem simples.
+
+| Termo técnico | Tradução em linguagem simples |
+|---|---|
+| regex | regra de formato (a regra que diz quais valores são aceitos) |
+| JAR | arquivo empacotado do archetype |
+| Maven | ferramenta que gera o projeto |
+| archetype | modelo que gera o projeto |
+| plugin | extensão do Maven |
+| goal | comando do Maven |
+| package | pacote (agrupamento de classes Java) |
+| FQN | nome completo da classe, incluindo o pacote |
+| POJO | classe simples de dados |
+| hash | impressão digital do conteúdo |
+| canônico | formato único e fixo |
+| idempotente | rodar de novo dá o mesmo resultado |
+| proveniência | tabela que mostra de onde cada valor veio |
+| materializar | gravar o contrato em um arquivo |
+| precedência | ordem de prioridade |
+| fixture | projeto de teste |
+| suíte | conjunto de testes |
+| derivação | cálculo dos valores a partir do contrato |
+| default | valor padrão |
+| command line | comando do Maven |
+
 - **Lista de Atributos**: valor derivado do contrato no formato `Tipo:nome`, sujeito à regra de formato do catálogo.
 - **Divergência Catálogo × Procedimento**: diferença entre o valor declarado no catálogo e o valor resumido no procedimento.
 
