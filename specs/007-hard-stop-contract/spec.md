@@ -11,7 +11,7 @@
 ## Contexto e Problema
 
 - O procedimento empacotado do archetype (`llm-maven-flags-inference`) sabe decidir quando parar, mas não orienta o operador depois da parada.
-- Hoje existem 16 pontos de parada dura e 2 confirmações; nenhum atende integralmente a um padrão de mensagem completa.
+- Hoje existem 16 pontos de parada (15 paradas formais + o aviso de fallback que vira STOP-DER-02) e 2 confirmações; nenhum atende integralmente a um padrão de mensagem completa.
 - Doze são one-liners do tipo "pare e reporte"; quatro (Gates A–D) têm orientação parcial; nenhum tem código, formato destacado, opções de correção e sugestão recomendada.
 - O caso mais grave é a lista de atributos derivada do contrato. Se ela viola a regra de formato do catálogo, o procedimento cai no valor padrão `String:name` com um aviso. O aviso não corrige o resultado: o módulo nasce com um campo `name` que não corresponde ao contrato, e o operador pode seguir com um módulo plausível e errado.
 - Há divergências documentais que confundem o operador:

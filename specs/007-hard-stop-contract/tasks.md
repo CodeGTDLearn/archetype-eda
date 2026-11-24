@@ -58,7 +58,7 @@
 
 **Goal**: Every one of the 16 stops and 2 confirmations has a registered code at its site and a complete message that lets the operator answer the 5 orientation questions.
 
-**Independent Test**: Provoke each stop and verify the code, the 10 fields, at least 2 options, the suggestion, the resume step and that no Maven command is emitted. SC-002 is verified by the 6-message sample in T019.
+**Independent Test**: Provoke each stop and verify the code, the 10 fields, at least 2 options, the suggestion, the resume step and that no Maven command is emitted. SC-002 is verified by the final 6-message sample in T052; T019 only prepares it.
 
 - [ ] T013 [US1] Update `prompt-00` Gates A–D, §6 and §8 to cite `STOP-IN-01` to `STOP-IN-05`, `STOP-ENV-01` to `STOP-ENV-04`, `STOP-DER-03` and `STOP-RULE-01`, and replace "Ao parar, informe apenas" with the full-message instruction.
 - [ ] T014 [P] [US1] Add code references to `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` §5, `02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` §4 and `prompt-02-como-localizar-e-ler-o-archetype.md` §1/§1.4/§6.
@@ -66,7 +66,7 @@
 - [ ] T016 [P] [US1] Add code references to `03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` §2/§6, `regras-04-como-aplicar-precedencia-e-validacao.md` §3/§7, `regras-05-como-materializar-e-emitir-o-contrato.md` §5/§7 and `regras-06-como-relatar-proveniencia.md` §6.
 - [ ] T017 [US1] Verify every message in `prompt-00` §0.5 has the 10 fields, 2+ options, suggestion, resume, forbidden and security lines, and a dictionary reference; fix the gaps.
 - [ ] T018 [US1] Run `mvn -B test` against `src/test/archetype-post-generate/HardStopContractTest.groovy` and fix missing codes, missing labels or sites without codes in the procedure files.
-- [ ] T019 [US1] Run the manual SC-002 sample with the 6 fixed messages (`STOP-IN-01`, `STOP-ENV-03`, `STOP-DER-01`, `STOP-DER-02`, `STOP-CONF-01`, `STOP-CONF-02`), an independent reviewer who did not implement the messages, and record the 5 answers in `specs/007-hard-stop-contract/validation-report.md`; accept 6/6.
+- [ ] T019 [US1] Prepare the SC-002 sample and the independent reviewer for the 6 fixed messages (`STOP-IN-01`, `STOP-ENV-03`, `STOP-DER-01`, `STOP-DER-02`, `STOP-CONF-01`, `STOP-CONF-02`); do not execute the review yet; ensure the table exists in `specs/007-hard-stop-contract/validation-report.md`.
 
 **Checkpoint**: US1 is independently testable; all stops are coded and complete.
 
@@ -95,8 +95,8 @@
 
 **Independent Test**: Remove a code, add an unregistered `STOP-*`, remove a registry message or insert "informe apenas"; `mvn -B test` fails and names the file/code.
 
-- [ ] T026 [US3] Complete the registry/message/site scan in `src/test/archetype-post-generate/HardStopContractTest.groovy`: 18 unique codes, 1:1 messages, `Pare` lines and `PARADA DURA` blocks, title `PARADA DURA` + code + delimiters + bold labels, 20-word sentence limit, concrete example in each option, exact `STOP-CONF-01`/`02` options, file names and counts.
-- [ ] T027 [US3] Add dictionary/prohibition/security checks to `HardStopContractTest.groovy`: 20 terms, 0 "informe apenas", no `String:name` fallback, and a secret-pattern scan with an allowlist for the safety phrases. If the scan is not viable, document manual review as the explicit control.
+- [ ] T026 [US3] Complete the registry/message/site scan in `src/test/archetype-post-generate/HardStopContractTest.groovy`: 18 unique codes, 1:1 messages, `Pare` lines and `PARADA DURA` blocks, title `PARADA DURA` + code + delimiters + bold labels, 20-word sentence limit using `contracts/hard-stop-message.md` MSG-09 (ignore inline code, paths and URLs), concrete example in each option, exact `STOP-CONF-01`/`02` options, file names and counts.
+- [ ] T027 [US3] Add dictionary/prohibition/security checks to `HardStopContractTest.groovy`: 20 terms, 0 "informe apenas", no `String:name` fallback, and a secret-pattern scan using the MSG-08 safety phrases from `contracts/hard-stop-message.md` as the allowlist. If the scan is not viable, record the manual review in `specs/007-hard-stop-contract/validation-report.md`.
 - [ ] T028 [US3] Add the opt-in installed-JAR checks to `HardStopContractTest.groovy` for `-Deda.verify.installed.jar=true`: registry, dictionary and `STOP-DER-02` in the installed artifact.
 - [ ] T029 [US3] Run `mvn -B test` and fix the suite failures; confirm all checks pass at the current state.
 - [ ] T030 [US3] Run the negative scenarios from `specs/007-hard-stop-contract/quickstart.md` §Cenário 10 and restore the files after each failure.
@@ -147,12 +147,12 @@
 - [ ] T044 Run `mvn clean install` and fix any packaging or catalog failure in `pom.xml`, `src/main/resources/META-INF/maven/archetype-metadata.xml` or `src/main/resources/llm-maven-flags-inference/`.
 - [ ] T045 Run `mvn -B test "-Deda.verify.installed.jar=true"` and confirm `~/.m2/repository/com/eda-archetype/eda-archetype/0.0.1-SNAPSHOT/eda-archetype-0.0.1-SNAPSHOT.jar` contains the registry, dictionary and `STOP-DER-02`.
 - [ ] T046 Validate the counts in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19/13/6 and 35/18; no file added or removed.
-- [ ] T047 Run the 14 scenarios in `specs/007-hard-stop-contract/quickstart.md` and record the outcomes in `specs/007-hard-stop-contract/validation-report.md`, including the negative build checks, SC-002 and the NFR checks.
+- [ ] T047 Run the functional scenarios 1–9 and 11 in `specs/007-hard-stop-contract/quickstart.md` and record the outcomes in `specs/007-hard-stop-contract/validation-report.md`; scenario 10 is T030/T031, scenario 12 is T052, and scenarios 13–14 are T050/T051.
 - [ ] T048 Review `src/main/resources/llm-maven-flags-inference/` for Portuguese, 20-word sentences, active voice, translated acronyms, no secrets and no "informe apenas"; fix the findings.
 - [ ] T049 Final diff review: `README.md` unchanged, no new dependency, no `defaultValue`/`validationRegex` change, no new procedure file, no generated code or fixture change.
 - [ ] T050 Run the NFR-001 timing check using the baseline recorded in T001: measure the final `(Measure-Command { mvn -B test }).TotalSeconds`, compute `(final - baseline) / baseline`, require ≤10%, and record final/delta in `specs/007-hard-stop-contract/validation-report.md`. Fail if the baseline is missing.
 - [ ] T051 Run the NFR-002 offline check: `mvn -o -B test` twice, filter the `[archetype-post-generate]` lines, compare the outputs, and record the result in `specs/007-hard-stop-contract/validation-report.md`.
-- [ ] T052 Consolidate `specs/007-hard-stop-contract/validation-report.md`: 6/6 SC-002 rows, NFR-001 delta ≤10%, NFR-002 identical runs, reviewer/date and no secrets; reject incomplete evidence.
+- [ ] T052 After US2 (T023/T024), run the final SC-002 sample with the 6 fixed messages and the independent reviewer, record the 5 answers in `specs/007-hard-stop-contract/validation-report.md`, accept 6/6, then consolidate NFR-001/NFR-002 evidence, reviewer/date and no secrets; reject incomplete evidence.
 
 ---
 
