@@ -36,6 +36,7 @@ Toda flag precisa satisfazer a `validationRegex` do catálogo.
 - Valor inválido → usa o `defaultValue` do catálogo, com nota e aviso.
 - A nota registra a rejeição: `valor '...' rejeitado pela regex; default aplicado (FR-006)`.
 - O erro é barulhento; nunca há fallback silencioso.
+- Exceção: a lista de atributos derivada inválida não usa o default; pare com STOP-DER-02 (ver `regras-01` §6).
 
 ### 3.1 Flags críticas
 
@@ -60,7 +61,7 @@ O catálogo é a autoridade final. As regex acima são um resumo; em caso de div
 - `custom_entity_attribute_imports`, `contract_enum_definitions` e `contract_nested_type_definitions` são derivados apenas quando há atributos.
 - `entity_contract_file_path` só produz cópia com `enable_folder_src_test_java=true`.
 - `entity_contract_file_path` usa barras normais.
-- `entity_contract_file_path` é sempre um caminho `.json`: sem contrato, pare pelo Gate B de `prompt-00` §0.
+- `entity_contract_file_path` é sempre um caminho `.json`: sem contrato, pare com STOP-IN-02 pelo Gate B de `prompt-00` §0.
 
 ## 5. Flags não definidas no catálogo
 
@@ -82,7 +83,7 @@ Uma chave do contrato que não existe no catálogo é campo de negócio, não fl
 
 Se duas fontes de mesma prioridade divergirem e não houver regra que decida:
 
-1. pare;
+1. pare com STOP-DER-03;
 2. mostre as duas fontes;
 3. mostre as flags afetadas;
 4. peça decisão.

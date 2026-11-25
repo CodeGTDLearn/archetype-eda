@@ -60,13 +60,13 @@
 
 **Independent Test**: Provoke each stop and verify the code, the 10 fields, at least 2 options, the suggestion, the resume step and that no Maven command is emitted. SC-002 is verified by the final 6-message sample in T052; T019 only prepares it.
 
-- [ ] T013 [US1] Update `prompt-00` Gates A–D, §6 and §8 to cite `STOP-IN-01` to `STOP-IN-05`, `STOP-ENV-01` to `STOP-ENV-04`, `STOP-DER-03` and `STOP-RULE-01`, and replace "Ao parar, informe apenas" with the full-message instruction.
-- [ ] T014 [P] [US1] Add code references to `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` §5, `02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` §4 and `prompt-02-como-localizar-e-ler-o-archetype.md` §1/§1.4/§6.
-- [ ] T015 [P] [US1] Add code references to `02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md` §1/§2/§3 and `prompt-04-fluxo-de-execucao-e-verificacao.md` §1.2/§1.3/§1.4/§4.
-- [ ] T016 [P] [US1] Add code references to `03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` §2/§6, `regras-04-como-aplicar-precedencia-e-validacao.md` §3/§7, `regras-05-como-materializar-e-emitir-o-contrato.md` §5/§7 and `regras-06-como-relatar-proveniencia.md` §6.
-- [ ] T017 [US1] Verify every message in `prompt-00` §0.5 has the 10 fields, 2+ options, suggestion, resume, forbidden and security lines, and a dictionary reference; fix the gaps.
-- [ ] T018 [US1] Run `mvn -B test` against `src/test/archetype-post-generate/HardStopContractTest.groovy` and fix missing codes, missing labels or sites without codes in the procedure files.
-- [ ] T019 [US1] Prepare the SC-002 sample and the independent reviewer for the 6 fixed messages (`STOP-IN-01`, `STOP-ENV-03`, `STOP-DER-01`, `STOP-DER-02`, `STOP-CONF-01`, `STOP-CONF-02`); do not execute the review yet; ensure the table exists in `specs/007-hard-stop-contract/validation-report.md`.
+- [X] T013 [US1] Update `prompt-00` Gates A–D, §6 and §8 to cite `STOP-IN-01` to `STOP-IN-05`, `STOP-ENV-01` to `STOP-ENV-04`, `STOP-DER-03` and `STOP-RULE-01`, and replace "Ao parar, informe apenas" with the full-message instruction.
+- [X] T014 [P] [US1] Add code references to `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` §5, `02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` §4 and `prompt-02-como-localizar-e-ler-o-archetype.md` §1/§1.4/§6.
+- [X] T015 [P] [US1] Add code references to `02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md` §1/§2/§3 and `prompt-04-fluxo-de-execucao-e-verificacao.md` §1.2/§1.3/§1.4/§4.
+- [X] T016 [P] [US1] Add code references to `03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` §2/§6, `regras-04-como-aplicar-precedencia-e-validacao.md` §3/§7, `regras-05-como-materializar-e-emitir-o-contrato.md` §5/§7 and `regras-06-como-relatar-proveniencia.md` §6.
+- [X] T017 [US1] Verify every message in `prompt-00` §0.5 has the 10 fields, 2+ options, suggestion, resume, forbidden and security lines, and a dictionary reference; fix the gaps.
+- [X] T018 [US1] Run `mvn -B test` against `src/test/archetype-post-generate/HardStopContractTest.groovy` and fix missing codes, missing labels or sites without codes in the procedure files.
+- [X] T019 [US1] Prepare the SC-002 sample and the independent reviewer for the 6 fixed messages (`STOP-IN-01`, `STOP-ENV-03`, `STOP-DER-01`, `STOP-DER-02`, `STOP-CONF-01`, `STOP-CONF-02`); do not execute the review yet; ensure the table exists in `specs/007-hard-stop-contract/validation-report.md`.
 
 **Checkpoint**: US1 is independently testable; all stops are coded and complete.
 

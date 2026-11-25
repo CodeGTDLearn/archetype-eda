@@ -14,7 +14,7 @@ O package base nunca vem do contrato. O contrato pode ter uma chave `package`, m
 
 Antes de resolver o nome, confirme que o contrato existe e é objeto JSON.
 
-Se não for, pare pelo Gate B de `prompt-00` §0: não infira o nome pelo use-case e não use default.
+Se não for, pare com STOP-IN-02 pelo Gate B de `prompt-00` §0: não infira o nome pelo use-case e não use default.
 
 Resolva o nome nesta ordem:
 
@@ -29,11 +29,11 @@ Regras:
 - O valor explícito vence qualquer inferência.
 - O valor inferido do use-case precisa ser justificado.
 - O default só entra quando o use-case **não trouxer nenhum nome** de entidade: use-case vazio de nome, sem candidato único.
-- Se o use-case trouxer **mais de um** nome candidato, ou trouxer um nome que não permite inferir qual entidade é a principal, pare e pergunte.
+- Se o use-case trouxer **mais de um** nome candidato, ou trouxer um nome que não permite inferir qual entidade é a principal, pare com STOP-DER-01 e pergunte.
 - Nunca use `MyEntity` silenciosamente: quando o default for aplicado, registre-o na proveniência como `DEFAULT` e notifique o operador.
 - O nome final deve satisfazer `^[A-Z][a-zA-Z0-9_]+$`.
 
-Se o contrato não trouxer o nome e o use-case for ambíguo, pare e pergunte.
+Se o contrato não trouxer o nome e o use-case for ambíguo, pare com STOP-DER-01 e pergunte.
 
 ## 3. Pacote da entidade
 
@@ -163,7 +163,7 @@ Exemplo:
 Integer:codigo,String:nome,Boolean:ativo
 ```
 
-Se a lista violar a regex do catálogo, o erro é barulhento: avise, registre a rejeição e não caia em um valor plausível mas errado. O desfecho é o de `regras-04` §3: o `defaultValue` do catálogo, com nota e aviso — e o `defaultValue` desta flag (`String:name`) **não** é um valor de negócio: registre na proveniência que a lista derivada foi rejeitada e que o campo renderizado não corresponde ao contrato.
+Se a lista violar a regex do catálogo, pare com STOP-DER-02. Não use o `defaultValue` `String:name` como fallback. Registre a rejeição na proveniência e não emita a command line.
 
 ## 7. Flag de ativação
 

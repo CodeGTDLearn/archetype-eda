@@ -58,7 +58,7 @@ Crie o diretório se ele não existir.
 - `entity_contract_file_path` recebe o caminho absoluto do arquivo.
 - Emita com barras normais (`/`), nunca com barras invertidas.
 - A fonte é `CONTRACT_DERIVED`.
-- Se a materialização falhar, pare e reporte: não use `none`.
+- Se a materialização falhar, pare com STOP-DER-04 e reporte: não use `none`.
 - O caminho é parte da identidade da geração: mudar o diretório muda o caminho emitido.
 
 ## 6. Cópia no projeto gerado
@@ -87,7 +87,7 @@ Se o arquivo de origem não existir:
 - `entity_contract_file_path` deve satisfazer `^[^\r\n]*\.json$`: `none` é valor do catálogo, fora deste procedimento.
 - O caminho não pode conter quebra de linha.
 - O caminho não pode apontar para diretório.
-- O caminho precisa ser **absoluto**: um caminho relativo é recusado com aviso, mesmo que case com a regex do catálogo.
+- O caminho precisa ser **absoluto**: um caminho relativo é recusado com aviso, mesmo que case com a regex do catálogo. Pare com STOP-DER-04.
 - O arquivo precisa ser JSON válido com raiz objeto.
 - O SHA-256 do §2 é calculado sobre a forma canônica; o arquivo gravado tem esses mesmos bytes. Se os bytes do disco divergirem da forma canônica, regrave antes de emitir o caminho.
 

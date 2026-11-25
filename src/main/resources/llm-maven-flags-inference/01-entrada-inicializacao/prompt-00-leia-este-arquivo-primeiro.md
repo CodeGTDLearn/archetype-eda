@@ -34,14 +34,14 @@ Avalie sempre nesta ordem: Gate A, Gate B, Gate C, Gate D.
 
 **Gate A — use-case ausente**
 
-Pare quando o use-case não existir, estiver em branco ou não tiver marcador.
+Pare com STOP-IN-01 quando o use-case não existir, estiver em branco ou não tiver marcador.
 
 - Não leia nem avalie o contrato.
 - Não derive entidade, atributos ou flags.
 
 **Gate B — contrato ausente**
 
-Pare quando o use-case existir e o contrato:
+Pare com STOP-IN-02 quando o use-case existir e o contrato:
 
 - não existir;
 - estiver em branco;
@@ -56,7 +56,7 @@ Não emita `entity_contract_file_path=none`.
 
 **Gate C — ordem violada**
 
-Pare quando o contrato aparecer antes do use-case no spec.
+Pare com STOP-IN-03 quando o contrato aparecer antes do use-case no spec.
 
 A posição do contrato precisa ser maior que a posição da última ocorrência do marcador de use-case.
 
@@ -64,13 +64,13 @@ A posição do contrato precisa ser maior que a posição da última ocorrência
 
 Avalie depois dos Gates A, B e C.
 
-Pare e pergunte — sem derivar e sem executar — quando a pasta de destino:
+Pare com STOP-IN-04 e pergunte — sem derivar e sem executar — quando a pasta de destino:
 
 - não estiver declarada no spec (marcação `PASTA DE DESTINO` ausente);
 - for caminho relativo, contiver `~` ou sinalização de fim de arquivo;
 - estiver dentro da árvore do archetype.
 
-O destino dentro da árvore do archetype é proibido de forma **absoluta**: não existe confirmação do operador que o autorize. Ao recusar, avise e pergunte onde fica o destino. Se o operador insistir que o destino é a própria pasta do archetype, ou continuar sem informar um destino, finalize o fluxo com o relatório de parada de §0.3.
+O destino dentro da árvore do archetype é proibido de forma **absoluta**: não existe confirmação do operador que o autorize. Ao recusar, avise e pergunte onde fica o destino. Se o operador insistir que o destino é a própria pasta do archetype, ou continuar sem informar um destino, finalize o fluxo com a mensagem de STOP-IN-04 em §0.5.
 
 Nunca presuma destino: não use o diretório de trabalho corrente, a raiz do archetype, nem `src/`, `target/` ou qualquer pasta do próprio archetype. Uma sugestão de pasta temporária, fora da árvore do archetype, só pode ser aplicada após confirmação explícita do operador.
 
@@ -670,20 +670,19 @@ Não use código de motor, CLI ou script externo para redescobrir semântica.
 
 ## 6. Condições de parada
 
-Pare e reporte antes de executar quando:
+Interrompa antes de executar quando:
 
-- o JAR instalado não for encontrado;
-- um arquivo obrigatório de `llm-maven-flags-inference/` estiver ausente;
-- o catálogo consolidado estiver ausente ou ilegível;
-- o pós-processador estiver ausente;
-- os Gates A, B ou C de §0 forem acionados:
-  - Gate A: use-case ausente, em branco ou sem marcador;
-  - Gate B: contrato ausente, em branco, `{}` ou não-objeto;
-  - Gate C: contrato antes do use-case;
-- o package base estiver ausente ou ambíguo;
-- a pasta de destino estiver ausente, for inválida ou estiver dentro da árvore do archetype (Gate D);
-- uma flag derivada violar a regex e não houver default válido;
-- houver conflito que exigiria adivinhar.
+- `STOP-ENV-01`: o JAR instalado não for encontrado.
+- `STOP-ENV-02`: um arquivo obrigatório de `llm-maven-flags-inference/` ou a árvore `archetype-resources/` estiver ausente.
+- `STOP-ENV-03`: o catálogo consolidado estiver ausente ou ilegível.
+- `STOP-ENV-04`: o pós-processador estiver ausente.
+- `STOP-IN-01`: o use-case estiver ausente, em branco ou sem marcador (Gate A).
+- `STOP-IN-02`: o contrato estiver ausente, em branco, `{}` ou não-objeto (Gate B).
+- `STOP-IN-03`: o contrato vier antes do use-case (Gate C).
+- `STOP-IN-05`: o package base estiver ausente ou ambíguo.
+- `STOP-IN-04`: a pasta de destino estiver ausente, for inválida ou estiver dentro da árvore do archetype (Gate D).
+- `STOP-RULE-01`: uma flag derivada violar a regex e não houver default válido.
+- `STOP-DER-03`: houver conflito que exigiria adivinhar.
 
 ## 7. Checklist rápido
 
@@ -730,4 +729,4 @@ META-INF/archetype-post-generate.groovy
 archetype-resources/
 ```
 
-Se qualquer item obrigatório faltar, pare e reporte o JAR como incompleto.
+Se qualquer item obrigatório faltar, pare com STOP-ENV-02 e reporte o JAR como incompleto.

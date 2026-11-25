@@ -74,6 +74,8 @@ Uma proposta é descartada quando:
 - a flag não é elegível para inferência;
 - o valor não veio do contrato nem da allowlist.
 
+Uma lista de atributos inválida não é uma proposta descartada: ela para com STOP-DER-02 e não entra nesta tabela.
+
 ## 7. Resumo
 
 Termine com a linha exata:

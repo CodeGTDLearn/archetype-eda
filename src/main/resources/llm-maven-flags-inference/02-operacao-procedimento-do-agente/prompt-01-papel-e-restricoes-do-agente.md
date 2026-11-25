@@ -38,7 +38,7 @@ O catálogo é a autoridade final sobre flags, defaults e regex — e também so
 
 Se o procedimento não cobrir um caso:
 
-- pare;
+- pare com STOP-RULE-01;
 - diga qual regra falta;
 - mostre o trecho do contrato que a exigiu;
 - não improvise.
