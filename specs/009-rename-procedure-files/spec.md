@@ -15,6 +15,12 @@
 - Remover os prefixos alinha os nomes ao numeral e à numeração das subpastas, sem alterar o conteúdo normativo, a ordem de leitura ou a quantidade de arquivos.
 - O índice, os prompts, as regras, os exemplos, o README e as suítes de teste citam os nomes atuais. A demanda exige que todas essas referências sejam atualizadas, incluindo as referências internas aos 12 arquivos.
 
+## Clarifications
+
+### Session 2026-11-25
+
+- Q: As referências aos nomes antigos em specs históricas, planos/tarefas e saída gerada também devem ser atualizadas nesta feature? → A: Não; somente o corpus operacional (índice, prompts, regras, exemplos, README e suítes de teste). Specs históricas, planos/tarefas e saída gerada ficam fora.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Fase 1 — Renomear os arquivos de derivação (Priority: P1)
