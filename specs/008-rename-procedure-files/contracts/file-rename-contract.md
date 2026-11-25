@@ -4,8 +4,9 @@
 
 ## Escopo
 
-- **Dentro**: sete renomes de arquivos, dois na subpasta 01 e cinco na subpasta 02, todos sob `src/main/resources/llm-maven-flags-inference/`.
-- **Fora**: conteúdo dos arquivos; README; índice como conteúdo; fixtures; suítes de contrato; redirect em `src/main/resources/utils/`; aliases; cópias; subpastas 03 e 04; JAR instalado.
+- **Dentro**: sete renomes de arquivos, dois na subpasta 01 e cinco na subpasta 02, sob `src/main/resources/llm-maven-flags-inference/`.
+- **Fora**: conteúdo dos arquivos nas Fases 1 e 2; README; índice como conteúdo; fixtures; suítes; redirect em `src/main/resources/utils/`; aliases; cópias; renomear arquivos das subpastas 03 e 04; JAR instalado.
+- **Fase 3**: as referências são tratadas no contrato [reference-update-contract.md](./reference-update-contract.md).
 
 ## Mapa canônico dos renomes
 
@@ -23,15 +24,15 @@ Caminhos relativos à raiz do repositório.
 
 ## Invariantes
 
-- **C-001**: O procedimento mantém 19 arquivos e 4 subpastas antes e depois de qualquer fase.
+- **C-001**: O procedimento mantém 19 arquivos e 4 subpastas.
 - **C-002**: Cada rename mantém o arquivo na mesma subpasta.
-- **C-003**: O conteúdo de cada um dos 7 arquivos permanece byte a byte idêntico (mesmo SHA-256).
+- **C-003**: O conteúdo dos 7 arquivos permanece byte a byte idêntico nas Fases 1 e 2.
 - **C-004**: Nenhum nome de origem sobrevive como arquivo, alias, cópia ou redirect dentro de `llm-maven-flags-inference/`.
 - **C-005**: Após a Fase 1, a subpasta 01 tem exatamente `01-entryPoint.md` e `02-mapa-dos-arquivos-e-ordem-de-leitura.md`.
 - **C-006**: Após a Fase 2, a subpasta 02 tem exatamente cinco arquivos, nenhum com prefixo `prompt-`, numerados de 01 a 05.
-- **C-007**: As subpastas 03 e 04 mantêm exatamente os mesmos arquivos e hashes durante qualquer fase.
-- **C-008**: README, índice, fixtures, suítes e `src/main/resources/utils/` não são editados.
-- **C-009**: Nenhuma dependência, plugin, propriedade de build ou arquivo em `src/main/java` é criado ou alterado.
+- **C-007**: As subpastas 03 e 04 não são renomeadas; nenhum arquivo delas é adicionado ou removido.
+- **C-008**: README, fixture, suítes e `utils/` não são editados nas Fases 1 e 2.
+- **C-009**: Nenhuma dependência, plugin ou arquivo em `src/main/java` é criado ou alterado.
 - **C-010**: O nome `01-entryPoint.md` é literal, com `E` maiúsculo.
 
 ## Pré-condições por fase
@@ -52,17 +53,15 @@ Caminhos relativos à raiz do repositório.
 
 ### Fase 1
 
-- C-002, C-003, C-005 satisfeitos para os dois arquivos.
-- C-007 satisfeito para as subpastas 02, 03 e 04.
-- C-008 e C-009 satisfeitos.
-- As suítes que leem os caminhos antigos da subpasta 01 passam a falhar, conforme a lista do research.
+- C-002, C-003, C-005 satisfeitos.
+- C-007 e C-008 satisfeitos.
+- As suítes que leem os caminhos antigos da subpasta 01 ficam vermelhas, conforme o research.
 
 ### Fase 2
 
-- C-002, C-003, C-006 satisfeitos para os cinco arquivos.
-- C-007 satisfeito para as subpastas 01, 03 e 04.
-- C-008 e C-009 satisfeitos.
-- As suítes que leem os caminhos antigos da subpasta 02 passam a falhar, conforme a lista do research.
+- C-002, C-003, C-006 satisfeitos.
+- C-007 e C-008 satisfeitos.
+- As seis suítes ficam vermelhas, conforme o research.
 
 ## Evidências exigidas
 
@@ -70,8 +69,7 @@ Caminhos relativos à raiz do repositório.
 2. Comparação de SHA-256 por arquivo renomeado: 0 divergências.
 3. Comparação do snapshot das subpastas de controle: 0 arquivos adicionados, removidos ou alterados.
 4. Contagem total do procedimento: 19 arquivos.
-5. Registro nominal das suítes e dos checks que falham por citar os nomes antigos.
-6. Opcional: conferência de `target/classes` após `mvn -B clean process-resources`.
+5. Registro nominal das suítes que falham por citar os nomes antigos.
 
 ## Critérios de rejeição
 
@@ -79,6 +77,7 @@ Caminhos relativos à raiz do repositório.
 - Arquivo de origem ausente.
 - Hash divergente depois do rename.
 - Qualquer arquivo das subpastas de controle alterado.
-- Qualquer edição em README, suítes, fixtures, índice (conteúdo) ou redirect.
+- Qualquer edição em README, suítes, fixtures, índice (conteúdo) ou redirect nas Fases 1 e 2.
 - Criação de alias, cópia ou redirect com nome antigo.
 - Contagem diferente de 19 no procedimento.
+- Renomear arquivo das subpastas 03 ou 04.

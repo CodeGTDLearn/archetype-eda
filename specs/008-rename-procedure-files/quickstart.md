@@ -1,4 +1,4 @@
-# Quickstart: Validar a Renomeação das Subpastas 01 e 02
+# Quickstart: Validar as Três Fases
 
 **Feature**: `008-rename-procedure-files` | **Date**: 2026-11-25
 
@@ -8,7 +8,7 @@
 - Nenhuma dependência nova.
 - Não abrir os arquivos em editor durante a renomeação.
 - Não usar `git mv`, commit, push ou branch.
-- Não editar README, índice, fixtures, suítes ou o redirect em `src/main/resources/utils/`.
+- Não editar regras, textos normativos ou formatação na Fase 3.
 
 Variáveis de trabalho:
 
@@ -20,7 +20,7 @@ New-Item -ItemType Directory -Force $tmp | Out-Null
 
 ## Fase 1 — Entrada e mapa da subpasta 01
 
-### 1. Capturar o manifesto antes da fase
+### 1. Manifesto antes da fase
 
 ```powershell
 @(
@@ -46,7 +46,7 @@ New-Item -ItemType Directory -Force $tmp | Out-Null
   Set-Content "$tmp\fase1-controle-antes.json" -Encoding UTF8
 ```
 
-### 2. Conferir as pré-condições
+### 2. Pré-condições
 
 ```powershell
 Test-Path (Join-Path $root "01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md")
@@ -64,21 +64,14 @@ Rename-Item (Join-Path $root "01-entrada-inicializacao/prompt-00-leia-este-arqui
 Rename-Item (Join-Path $root "01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md") "02-mapa-dos-arquivos-e-ordem-de-leitura.md"
 ```
 
-### 4. Validar a subpasta 01
+### 4. Validar
 
 ```powershell
 Get-ChildItem (Join-Path $root "01-entrada-inicializacao") -File |
   Select-Object -ExpandProperty Name
 ```
 
-Esperado, exatamente nesta ordem alfabética:
-
-```text
-01-entryPoint.md
-02-mapa-dos-arquivos-e-ordem-de-leitura.md
-```
-
-### 5. Validar o conteúdo
+Esperado: `01-entryPoint.md` e `02-mapa-dos-arquivos-e-ordem-de-leitura.md`.
 
 ```powershell
 $antes = Get-Content "$tmp\fase1-alvos-antes.json" | ConvertFrom-Json
@@ -89,28 +82,14 @@ $depois = @(
 Compare-Object @($antes | ForEach-Object Hash) $depois
 ```
 
-Esperado: nenhuma saída (0 divergências).
-
-### 6. Validar as subpastas de controle
-
-```powershell
-$controleAntes = Get-Content "$tmp\fase1-controle-antes.json" | ConvertFrom-Json
-$controleDepois = @(
-  "02-operacao-procedimento-do-agente",
-  "03-derivacao-regras-de-formacao-do-contrato",
-  "04-referencia-templates-de-contrato"
-) |
-  ForEach-Object { Get-ChildItem (Join-Path $root $_) -Recurse -File } |
-  ForEach-Object { Get-FileHash $_.FullName -Algorithm SHA256 } |
-  Select-Object Path, Hash
-Compare-Object @($controleAntes | ForEach-Object { "$($_.Path)|$($_.Hash)" }) @($controleDepois | ForEach-Object { "$($_.Path)|$($_.Hash)" })
-```
-
 Esperado: nenhuma saída.
+
+- Conferir o snapshot das subpastas 02, 03 e 04 contra o estado atual.
+- `mvn -B test` fica vermelho; registrar as suítes esperadas e não corrigir nesta fase.
 
 ## Fase 2 — Operação do agente sem o prefixo prompt-
 
-### 1. Capturar o manifesto antes da fase
+### 1. Manifesto antes da fase
 
 ```powershell
 @(
@@ -149,66 +128,90 @@ Rename-Item (Join-Path $root "02-operacao-procedimento-do-agente/prompt-04-fluxo
 Rename-Item (Join-Path $root "02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md") "05-entregaveis-e-relatorios.md"
 ```
 
-### 3. Validar a subpasta 02
+### 3. Validar
 
 ```powershell
 Get-ChildItem (Join-Path $root "02-operacao-procedimento-do-agente") -File |
   Select-Object -ExpandProperty Name
 ```
 
-Esperado, exatamente:
+Esperado: os cinco nomes sem `prompt-`, numerados de 01 a 05.
 
-```text
-01-papel-e-restricoes-do-agente.md
-02-como-localizar-e-ler-o-archetype.md
-03-regras-obrigatorias-de-geracao.md
-04-fluxo-de-execucao-e-verificacao.md
-05-entregaveis-e-relatorios.md
-```
+- Comparar os hashes com `fase2-alvos-antes.json`.
+- Conferir o snapshot das subpastas 01, 03 e 04.
+- `mvn -B test` continua vermelho; registrar as suítes.
 
-### 4. Validar o conteúdo
+## Fase 3 — Atualização das referências operacionais
+
+### 1. Confirmar as Fases 1 e 2
 
 ```powershell
-$antes2 = Get-Content "$tmp\fase2-alvos-antes.json" | ConvertFrom-Json
-$depois2 = @(
-  "01-papel-e-restricoes-do-agente.md",
-  "02-como-localizar-e-ler-o-archetype.md",
-  "03-regras-obrigatorias-de-geracao.md",
-  "04-fluxo-de-execucao-e-verificacao.md",
-  "05-entregaveis-e-relatorios.md"
-) | ForEach-Object { (Get-FileHash (Join-Path $root "02-operacao-procedimento-do-agente/$_") -Algorithm SHA256).Hash }
-Compare-Object @($antes2 | ForEach-Object Hash) $depois2
+Get-ChildItem $root -Recurse -File | Select-Object -ExpandProperty FullName
+```
+
+Esperado: 19 arquivos, com os sete novos nomes.
+
+### 2. Inventariar as ocorrências
+
+```powershell
+$surfaces = @(
+  "README.md",
+  "src/main/resources/llm-maven-flags-inference",
+  "src/main/resources/utils",
+  "src/test/archetype-post-generate"
+)
+$files = foreach ($s in $surfaces) {
+  if (Test-Path $s -PathType Leaf) { Get-Item $s }
+  else { Get-ChildItem $s -Recurse -File }
+}
+$files | Select-String -Pattern "prompt-0[0-5]|indice-01-mapa" |
+  Group-Object Path |
+  ForEach-Object { "{0}|{1}" -f $_.Name, $_.Count }
+```
+
+Esperado: 115 ocorrências em 15 arquivos, conforme o contrato da Fase 3.
+
+### 3. Atualizar as referências
+
+- Substituir primeiro os sete nomes completos com `.md`.
+- Substituir depois os radicais `prompt-00` a `prompt-05` e `indice-01`.
+- Atualizar README, índice, entrada, os três arquivos da subpasta 02, os dois da subpasta 03, o redirect em `utils/` e as seis suítes.
+- Não alterar regras, textos normativos, formatação ou numeração interna.
+- Não renomear arquivos das subpastas 03 e 04.
+
+### 4. Validar zero tokens antigos
+
+```powershell
+$files | Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"
 ```
 
 Esperado: nenhuma saída.
 
-### 5. Validar as subpastas de controle
-
-Repetir a comparação do passo 6 da Fase 1 usando `$tmp\fase2-controle-antes.json` e as subpastas `01-entrada-inicializacao`, `03-...` e `04-...`.
-
-## Conferência do total
+### 5. Rodar o gate
 
 ```powershell
-(Get-ChildItem $root -Recurse -File).Count
+mvn -B test
 ```
 
-Esperado: `19`.
+Esperado: todas as suítes passam.
 
-## Conferência opcional em target/classes
+Paridade opcional com o CI:
 
 ```powershell
-mvn -B clean process-resources
-Get-ChildItem "target/classes/llm-maven-flags-inference/01-entrada-inicializacao" -File |
-  Select-Object -ExpandProperty Name
-Get-ChildItem "target/classes/llm-maven-flags-inference/02-operacao-procedimento-do-agente" -File |
-  Select-Object -ExpandProperty Name
+mvn -B clean install
 ```
 
-Esperado: os mesmos nomes novos das subpastas 01 e 02.
+### 6. Conferir exclusões
 
-## Falhas conhecidas (não são regressão)
+```powershell
+git status --porcelain
+```
 
-`mvn -B test` não é gate desta feature. Se executado, espera-se falha em:
+Esperado: somente README, procedimento, redirect e seis suítes. Nenhuma alteração em `specs/003` a `specs/007`, `target/` ou `graphify-out/`.
+
+## Falhas esperadas entre fases
+
+A Fase 1 deixa vermelhas cinco suítes; a Fase 2 acrescenta `CatalogSyncContractTest`. Lista completa:
 
 - `PathRenameContractTest`
 - `BuildArtifactsTest`
@@ -217,13 +220,14 @@ Esperado: os mesmos nomes novos das subpastas 01 e 02.
 - `ReadmeConsistencyTest`
 - `CatalogSyncContractTest`
 
-Motivo: essas suítes resolvem os nomes antigos e a FR-013 proíbe atualizá-las nesta feature. O JAR instalado não é validado aqui.
+A Fase 3 é a única que restaura o verde.
 
 ## Critérios de aceite
 
 - [ ] Fase 1: 2 arquivos com os nomes novos; 0 nomes antigos; hashes idênticos.
 - [ ] Fase 2: 5 arquivos sem `prompt-`; numerais 01 a 05; hashes idênticos.
-- [ ] Subpastas 03 e 04 inalteradas em ambas as fases.
-- [ ] Total de 19 arquivos no procedimento.
-- [ ] Nenhuma edição em README, índice, fixtures, suítes ou redirect.
+- [ ] Fase 3: 0 ocorrências de `prompt-0[0-5]` e `indice-01-mapa` em 15 arquivos operacionais.
+- [ ] Fase 3: `mvn -B test` verde.
+- [ ] Subpastas 03 e 04 sem arquivos renomeados.
+- [ ] Specs históricas 003–007, `target/` e `graphify-out/` inalterados.
 - [ ] Nenhum alias, cópia ou redirect com nome antigo.

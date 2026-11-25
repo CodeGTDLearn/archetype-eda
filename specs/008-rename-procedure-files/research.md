@@ -1,127 +1,149 @@
-# Research: Renomear Arquivos das Subpastas 01 e 02 em Duas Fases
+# Research: Renomear Arquivos das Subpastas 01 e 02 em Três Fases
 
 **Feature**: `008-rename-procedure-files` | **Date**: 2026-11-25 | **Spec**: [spec.md](./spec.md)
 
 ## Contexto
 
-A spec tem três lacunas registradas no contexto do Plan: critério de verificação automatizada diante das suítes que travam os nomes antigos, tratamento do redirect legado e verificação do JAR instalado. As decisões abaixo resolvem as três sem alterar o escopo da spec.
+A spec tem três fases: duas de renomeação e uma de atualização de referências. O inventário operacional encontrou 115 ocorrências dos sete nomes antigos em 15 arquivos. A Fase 3 depende das Fases 1 e 2 e é a única que restaura `mvn -B test` verde.
 
-## Decisão 1 — Aceitação por inspeção de diretório e hash, sem atualizar as suítes
+## Decisão 1 — Dependência da Fase 3
 
-**Decision**: A aceitação de cada fase usa listagem de diretório, manifesto SHA-256 e conferência das subpastas não tocadas. Nenhuma suíte, fixture ou documento operacional é editado. `mvn -B test` não é gate da feature.
+**Decision**: A Fase 3 é executada depois das Fases 1 e 2; as Fases 1 e 2 continuam independentes entre si.
 
-**Rationale**: A FR-013 proíbe atualizar referências cruzadas nas verificações existentes, e a SC-006 exige zero atualizações. A própria spec registra a defasagem das citações antigas como consequência conhecida e aceita. Atualizar as suítes Now violaria a spec e anteciparia a feature posterior de referências.
-
-**Alternatives considered**:
-- Atualizar as seis suítes para os novos nomes: viola FR-013 e SC-006; rejeitado.
-- Criar uma suíte paralela só para esta feature: aumenta escopo, não conserta o build e continua deixando as suítes antigas vermelhas; rejeitado.
-- Não verificar nada: viola SC-001 a SC-005; rejeitado.
-- Rodar `mvn -B test` e declarar falha esperada como aceite: ruidoso e não prova os critérios da fase; rejeitado como gate, mantido apenas como registro opcional.
-
-**Consequência aceita**: o build de testes fica vermelho até a feature de atualização de referências. O relatório de implementação MUST nomear as suítes e os checks afetados.
-
-## Decisão 2 — Redirect legado permanece intocado
-
-**Decision**: `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` não é editado, nem removido, nem duplicado.
-
-**Rationale**: O redirect é um documento operacional fora das subpastas 01 e 02. Atualizá-lo seria uma referência cruzada (FR-013); removê-lo seria destrutivo e fora do escopo; duplicá-lo violaria FR-012.
+**Rationale**: A Fase 3 atualiza referências aos sete novos nomes; sem os renomes, as referências apontariam para arquivos inexistentes. A FR-010 declara essa dependência.
 
 **Alternatives considered**:
-- Apontar o redirect para `01-entryPoint.md`: viola FR-013 e amplia o escopo para `utils/`; rejeitado.
-- Remover o redirect: ação destrutiva não pedida; rejeitado.
-- Manter o redirect e também criar um novo em `llm-maven-flags-inference/`: viola FR-012 e cria caminho duplicado; rejeitado.
+- Distribuir as referências entre as Fases 1 e 2: contraria a decisão da spec de criar a Fase 3; rejeitado.
+- Executar a Fase 3 antes dos renomes: deixaria o procedimento apontando para nomes inexistentes; rejeitado.
 
-**Consequência aceita**: specs antigas que seguem o redirect chegam a um caminho que não existe mais. O conserto fica para a feature posterior de referências.
+## Decisão 2 — Interpretação da FR-009 para a Fase 3
 
-## Decisão 3 — Verificação do JAR instalado fica fora do aceite
+**Decision**: A FR-009 é interpretada como proibição de renomear, adicionar ou remover arquivos nas subpastas 03 e 04. A Fase 3 pode substituir apenas linhas de referência de caminho/nome nos dois arquivos da subpasta 03 que citam `prompt-00`; nenhum arquivo da subpasta 04 contém referência antiga.
 
-**Decision**: A verificação opt-in do JAR instalado não é executada nesta feature. A conferência do conteúdo empacotado, se necessária, usa `target/classes` após `mvn -B clean process-resources`.
-
-**Rationale**: A checagem opt-in existente espera os caminhos antigos e não pode passar sem edição da suíte, o que a FR-013 proíbe. `package`/`install` executam a fase `test`, que falha pelas suítes conhecidas. `process-resources` copia `src/main/resources` sem rodar testes e prova que os novos nomes entram na árvore de classes.
+**Rationale**: A FR-014 limita a Fase 3 a referências de caminho e nome, e a SC-006 exige zero referências operacionais aos sete nomes antigos. Sem atualizar `regras-01` e `regras-04`, a SC-006 seria impossível. A subpasta 04 tem 0 ocorrências.
 
 **Alternatives considered**:
-- Editar a checagem opt-in: viola FR-013; rejeitado.
-- Rodar `mvn -B package -DskipTests`: o runner Groovy não é o surefire e não há garantia de que o plugin seja pulado; rejeitado como critério.
-- Montar um ZIP manual de `target/classes`: não é o JAR real do archetype e não prova o empacotamento; rejeitado.
+- Deixar a subpasta 03 intocada: falharia a SC-006 e o `Select-String` final; rejeitado.
+- Renomear arquivos da subpasta 03: violaria a FR-009 e o escopo; rejeitado.
 
-**Consequência aceita**: a validação do artefato instalado é adiada para a feature posterior de referências.
+**Registro**: esta interpretação MUST aparecer no relatório de implementação da Fase 3.
 
-## Decisão 4 — Mecanismo de renomeação
+## Decisão 3 — Inventário das referências operacionais
 
-**Decision**: Renomear com `Rename-Item` do PowerShell, dentro do mesmo diretório. Em POSIX, o equivalente é `mv` no mesmo diretório.
+**Decision**: A Fase 3 atua sobre 115 ocorrências em 15 arquivos, conforme a tabela.
 
-**Rationale**: Não usa comando git, não reescreve o arquivo, preserva o conteúdo e falha se o destino já existir. O git reconhece a renomeação por similaridade de conteúdo quando o working tree for analisado.
+| Arquivo | Ocorrências |
+|---|---:|
+| `README.md` | 15 |
+| `01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` | 35 |
+| `01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` | 14 |
+| `02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` | 1 |
+| `02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md` | 1 |
+| `02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` | 1 |
+| `03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` | 1 |
+| `03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md` | 2 |
+| `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` | 1 |
+| `src/test/archetype-post-generate/BuildArtifactsTest.groovy` | 8 |
+| `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` | 2 |
+| `src/test/archetype-post-generate/DestinationContractTest.groovy` | 16 |
+| `src/test/archetype-post-generate/HardStopContractTest.groovy` | 4 |
+| `src/test/archetype-post-generate/PathRenameContractTest.groovy` | 11 |
+| `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy` | 3 |
+| **Total** | **115** |
 
-**Alternatives considered**:
-- `git mv`: comando git não autorizado pelo protocolo do projeto; rejeitado.
-- Copiar e apagar: cria duplicata temporária, abre margem para edição acidental e não é atômico; rejeitado.
-- `Move-Item` com caminho completo de destino: funciona, mas aumenta a chance de erro de caminho; `Rename-Item` é mais restrito e seguro.
-- Renomear pelo IDE: risco de reescrita/formatação e de edição de conteúdo; rejeitado.
-
-## Decisão 5 — Prova de conteúdo por hash SHA-256
-
-**Decision**: Capturar um manifesto SHA-256 dos arquivos-alvo antes de cada fase, em arquivo temporário fora do repositório, e comparar os hashes depois do rename.
-
-**Rationale**: Prova que o conteúdo é byte a byte idêntico sem depender de git, de cópia de backup ou de leitura manual. O manifesto fica fora do repositório para não criar arquivo novo no projeto.
-
-**Alternatives considered**:
-- Detecção de rename pelo git: exigiria stage/index e comandos git não autorizados; rejeitado.
-- Cópia de backup dos arquivos antigos: cria cópias com nomes antigos, o que conflita com FR-012; rejeitado.
-- `Compare-Object` entre origem e destino: a origem deixa de existir após o rename; rejeitado.
-- Revisão visual: não é mensurável; rejeitado.
-
-**Formato do manifesto**: lista de objetos com caminho absoluto, hash e data de captura, em JSON no diretório temporário do harness.
-
-## Decisão 6 — Independência das fases
-
-**Decision**: Cada fase captura seu próprio manifesto imediatamente antes de executar. "Pasta não tocada" significa "inalterada durante a fase", não "igual ao estado original do repositório".
-
-**Rationale**: A FR-010 exige que cada fase seja executável e verificável isoladamente. Se a Fase 2 rodar depois da Fase 1, a subpasta 01 já estará renomeada; se rodar sozinha, estará no estado original. O manifesto local resolve os dois casos.
+**Rationale**: O número é reproduzível por `Select-String` com o padrão `prompt-0[0-5]|indice-01-mapa` nas superfícies operacionais. `src/test/resources/projects/`, `.specify/templates/`, `pom.xml` e CI têm 0 ocorrências.
 
 **Alternatives considered**:
-- Um manifesto global único capturado antes da Fase 1: obrigaria a ordem 1 → 2 e violaria a independência; rejeitado.
-- Assumir sempre a ordem 1 → 2: viola FR-010; rejeitado.
+- Inventariar apenas os caminhos completos: deixaria radicais isolados (`prompt-00 §0.4`) como referências antigas; rejeitado.
+- Incluir specs históricas: violaria a FR-016; rejeitado.
 
-## Decisão 7 — Nomes exatos e sensibilidade a maiúsculas
+## Decisão 4 — Ordem de substituição dos tokens
 
-**Decision**: Usar os nomes literalmente como na spec, incluindo `01-entryPoint.md` com `E` maiúsculo. Não há renomeação apenas de caixa.
+**Decision**: Substituir primeiro os sete nomes completos com `.md` e depois os radicais isolados, na ordem abaixo.
 
-**Rationale**: Todos os renomes mudam o nome inteiro, não apenas a caixa; por isso funcionam igualmente em Windows e POSIX. A grafia literal atende à premissa da spec.
+| Ordem | Token antigo | Token novo |
+|---:|---|---|
+| 1 | `prompt-00-leia-este-arquivo-primeiro.md` | `01-entryPoint.md` |
+| 2 | `indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` | `02-mapa-dos-arquivos-e-ordem-de-leitura.md` |
+| 3 | `prompt-01-papel-e-restricoes-do-agente.md` | `01-papel-e-restricoes-do-agente.md` |
+| 4 | `prompt-02-como-localizar-e-ler-o-archetype.md` | `02-como-localizar-e-ler-o-archetype.md` |
+| 5 | `prompt-03-regras-obrigatorias-de-geracao.md` | `03-regras-obrigatorias-de-geracao.md` |
+| 6 | `prompt-04-fluxo-de-execucao-e-verificacao.md` | `04-fluxo-de-execucao-e-verificacao.md` |
+| 7 | `prompt-05-entregaveis-e-relatorios.md` | `05-entregaveis-e-relatorios.md` |
+| 8 | `prompt-00` | `01-entryPoint` |
+| 9 | `indice-01` | `02-mapa-dos-arquivos-e-ordem-de-leitura` |
+| 10 | `prompt-01` | `01-papel-e-restricoes-do-agente` |
+| 11 | `prompt-02` | `02-como-localizar-e-ler-o-archetype` |
+| 12 | `prompt-03` | `03-regras-obrigatorias-de-geracao` |
+| 13 | `prompt-04` | `04-fluxo-de-execucao-e-verificacao` |
+| 14 | `prompt-05` | `05-entregaveis-e-relatorios` |
 
-**Alternatives considered**:
-- Normalizar para minúsculas (`01-entrypoint.md`): contraria a demanda e a premissa; rejeitado.
-- Criar variantes de caixa: violaria a unicidade e a contagem; rejeitado.
-
-## Decisão 8 — Suítes afetadas e ordem das falhas
-
-**Decision**: Registrar nominalmente as suítes que falharão; não corrigi-las nesta feature.
-
-**Suítes e motivo**:
-
-| Suíte | Dependência dos nomes antigos | Falha a partir de |
-|---|---|---|
-| `PathRenameContractTest` | Lista os 19 caminhos, o caminho canônico da entrada e o redirect | Fase 1 |
-| `BuildArtifactsTest` | Lista os 19 nomes exatos na origem e em `target/classes` | Fase 1 |
-| `HardStopContractTest` | Lê `prompt-00` para registro, mensagens e dicionário | Fase 1 |
-| `DestinationContractTest` | Lê `prompt-00`, `prompt-03`, `prompt-04` e `prompt-05` | Fase 1 (p00); Fase 2 (p03–p05) |
-| `ReadmeConsistencyTest` | Verifica o caminho `prompt-00` nos templates e lê `prompt-04` | Fase 1 (p00); Fase 2 (p04) |
-| `CatalogSyncContractTest` | Lê `prompt-03` em `target/classes` | Fase 2 |
-
-**Rationale**: A lista permite distinguir falha esperada de regressão real e alimenta o relatório de implementação e a feature posterior.
+**Rationale**: Substituir `prompt-00` antes do nome completo produziria `01-entryPoint-leia-este-arquivo-primeiro.md`. A ordem descendente por comprimento evita substituição parcial.
 
 **Alternatives considered**:
-- Corrigir só as suítes: viola FR-013 e cria inconsistência com README/redirect; rejeitado.
-- Ignorar as suítes sem registrar: impede distinguir falha esperada de regressão; rejeitado.
+- Substituição única com regex: o risco de captura parcial é o mesmo; a ordem explícita é verificável; rejeitado.
+- Renomear também identificadores de variáveis (`prompt00Path`, `prompt03`): não são referências operacionais e ampliariam o diff sem necessidade; rejeitado.
 
-## Decisão 9 — Ordem recomendada
+## Decisão 5 — Mecanismo de renomeação
 
-**Decision**: Executar Fase 1 e depois Fase 2. A ordem é recomendada, não obrigatória.
+**Decision**: Renomear com `Rename-Item` do PowerShell, dentro do mesmo diretório. Em POSIX, `mv` no mesmo diretório.
 
-**Rationale**: Mantém a leitura do procedimento na sequência planejada e simplifica a conferência manual. Como cada fase tem manifesto próprio, a ordem inversa também é válida.
+**Rationale**: Não usa comando git, não reescreve o arquivo e falha se o destino existir.
 
 **Alternatives considered**:
-- Tornar a ordem obrigatória: violaria FR-010; rejeitado.
+- `git mv`: comando git não autorizado; rejeitado.
+- Copiar e apagar: cria duplicata temporária e não é atômico; rejeitado.
+- Renomear pelo IDE: risco de reescrita de conteúdo; rejeitado.
+
+## Decisão 6 — Prova de conteúdo nas Fases 1 e 2
+
+**Decision**: Capturar SHA-256 dos arquivos-alvo antes de cada fase, em manifesto fora do repositório, e comparar depois do rename.
+
+**Rationale**: Prova conteúdo byte a byte idêntico sem backup com nome antigo e sem comando git.
+
+**Alternatives considered**:
+- Detecção de rename pelo git: exigiria stage/index; rejeitado.
+- Cópia de backup: cria cópias com nomes antigos, conflitando com a FR-012; rejeitado.
+
+## Decisão 7 — Gate de build e estado vermelho entre fases
+
+**Decision**: A Fase 1 é aceita com cinco suítes vermelhas; a Fase 2, com as seis. A Fase 3 fecha com `mvn -B test` verde.
+
+**Rationale**: As suítes leem os nomes antigos; atualizá-las antes da Fase 3 misturaria renomeação e referências e quebraria a separação das fases.
+
+**Alternatives considered**:
+- Atualizar as suítes nas Fases 1 e 2: anteciparia a Fase 3 e duplicaria trabalho; rejeitado.
+- Ignorar o build até o fim: impediria distinguir falha esperada de regressão; rejeitado.
+
+## Decisão 8 — Exclusões de escopo
+
+**Decision**: Não reescrever `specs/003` a `specs/007`, `target/` nem `graphify-out/`.
+
+**Rationale**: Specs históricas são registro; `target/` e `graphify-out/` são saídas geradas. A FR-016 e a SC-008 fixam a exclusão.
+
+**Alternatives considered**:
+- Atualizar specs históricas: reescreveria registro e ampliaria o escopo; rejeitado.
+- Atualizar `graphify-out/`: saída gerada, não fonte; rejeitado.
+
+## Decisão 9 — JAR instalado e paridade com o CI
+
+**Decision**: O gate obrigatório é `mvn -B test`; `mvn -B clean install` é paridade opcional com o CI. A checagem opt-in do JAR instalado não é requisito da spec.
+
+**Rationale**: A FR-015 exige `mvn -B test`; o CI já executa `clean install` e `integration-test`. Rodar `clean install` localmente valida o JAR e o catálogo, mas não é necessário para a aceitação da Fase 3.
+
+**Alternatives considered**:
+- Exigir `clean install` como gate: amplia o tempo e não é pedido pela spec; rejeitado.
+- Ignorar o CI: a paridade é útil para detectar problemas de empacotamento; mantida como opcional.
+
+## Decisão 10 — Dependências e paradigma
+
+**Decision**: Nenhuma dependência nova; o projeto é NÃO OOP e os princípios da seção 3 do input do Plan estão vazios.
+
+**Rationale**: A feature é documental e de testes; não há código OOP no repositório. SOLID não se aplica.
+
+**Alternatives considered**:
+- Adicionar lint de Markdown: fora do escopo e sem ferramenta no projeto; rejeitado.
 
 ## Lacunas remanescentes
 
-Nenhuma. As três lacunas do contexto do Plan foram resolvidas por decisão registrada; nenhuma exige marcação de clarificação no plano.
+Nenhuma. A única tensão da spec — FR-009 versus referências na subpasta 03 — foi resolvida pela interpretação registrada na Decisão 2.

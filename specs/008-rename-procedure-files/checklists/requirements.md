@@ -1,4 +1,4 @@
-# Specification Quality Checklist: Renomear Arquivos das Subpastas 01 e 02 em Duas Fases
+# Specification Quality Checklist: Renomear Arquivos das Subpastas 01 e 02 em Três Fases
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-11-25
@@ -32,6 +32,6 @@
 ## Notes
 
 - Validation passed on the first iteration (2026-11-25).
-- Phase structure preserved: Fase 1 (P1) and Fase 2 (P2), each independently testable.
-- Out-of-scope boundary explicitly recorded: no cross-reference updates, aliases or redirects (FR-012, FR-013).
-- Known consequence documented: existing documents and automated checks that cite the old names stay stale until a later decision.
+- Phase structure preserved: Fase 1 (P1) and Fase 2 (P2), independent; Fase 3 (P3) depends on both.
+- Reference updates are in scope as Fase 3: README, index, entry, templates, fixtures, suites and legacy redirect.
+- Known consequence: build is red after Fases 1-2 and green after Fase 3.
