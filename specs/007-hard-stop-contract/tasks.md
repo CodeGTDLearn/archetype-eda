@@ -112,13 +112,13 @@
 
 **Independent Test**: Change a default or a literal regex in the table and verify `CatalogSyncContractTest` fails naming the flag; the current state passes.
 
-- [ ] T032 [P] [US4] Escape the internal pipes in `regras-04-como-aplicar-precedencia-e-validacao.md` §3.1 (`contract_enum_definitions` and `contract_nested_type_definitions`) and ensure exactly 3 columns.
-- [ ] T033 [P] [US4] Implement `src/test/archetype-post-generate/CatalogSyncContractTest.groovy`: 3-column parsing, 9 defaults, 3 literal regexes (with placeholder normalization for `custom_entity_attributes_list`), 6 descriptive examples/tokens.
-- [ ] T034 [P] [US4] Update `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-20-entity_contract_file_path.xml` comments to say the procedure requires an absolute path; keep `defaultValue` `none` and the permissive `validationRegex`.
-- [ ] T035 [P] [US4] Update `regras-06-como-relatar-proveniencia.md` §2 with the explicit default exception for `contract_nested_type_definitions` = `none`.
-- [ ] T036 [US4] Run `mvn -B test` against `CatalogSyncContractTest.groovy`; fix table/default/regex mismatches and confirm 35 properties/18 filesets.
-- [ ] T037 [US4] Change a default and a literal regex in the table temporarily, confirm `CatalogSyncContractTest` fails naming the flag, then restore.
-- [ ] T038 [US4] Verify the catalog description in `property-20-entity_contract_file_path.xml` says "absoluto", the regex still accepts `none` and a relative `.json`, and no `defaultValue`/`validationRegex` changed in `target/classes/META-INF/maven/archetype-metadata.xml`.
+- [X] T032 [P] [US4] Escape the internal pipes in `regras-04-como-aplicar-precedencia-e-validacao.md` §3.1 (`contract_enum_definitions` and `contract_nested_type_definitions`) and ensure exactly 3 columns.
+- [X] T033 [P] [US4] Implement `src/test/archetype-post-generate/CatalogSyncContractTest.groovy`: 3-column parsing, 9 defaults, 3 literal regexes (with placeholder normalization for `custom_entity_attributes_list`), 6 descriptive examples/tokens.
+- [X] T034 [P] [US4] Update `src/main/resources/META-INF/maven/archetype_metadata_required_properties/property-20-entity_contract_file_path.xml` comments to say the procedure requires an absolute path; keep `defaultValue` `none` and the permissive `validationRegex`.
+- [X] T035 [P] [US4] Update `regras-06-como-relatar-proveniencia.md` §2 with the explicit default exception for `contract_nested_type_definitions` = `none`.
+- [X] T036 [US4] Run `mvn -B test` against `CatalogSyncContractTest.groovy`; fix table/default/regex mismatches and confirm 35 properties/18 filesets.
+- [X] T037 [US4] Change a default and a literal regex in the table temporarily, confirm `CatalogSyncContractTest` fails naming the flag, then restore.
+- [X] T038 [US4] Verify the catalog description in `property-20-entity_contract_file_path.xml` says "absoluto", the regex still accepts `none` and a relative `.json`, and no `defaultValue`/`validationRegex` changed in `target/classes/META-INF/maven/archetype-metadata.xml`.
 
 **Checkpoint**: US4 prevents silent catalog/procedure divergence.
 

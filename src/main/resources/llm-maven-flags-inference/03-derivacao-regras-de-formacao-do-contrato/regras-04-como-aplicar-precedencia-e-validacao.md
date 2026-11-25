@@ -46,8 +46,8 @@ Toda flag precisa satisfazer a `validationRegex` do catálogo.
 | `entity_package_name` | `myentity` | `^[a-z][a-z0-9_.]+$` |
 | `custom_entity_attributes_list` | `String:name` | `^(false\|Tipo:nome(,Tipo:nome)*)$` |
 | `custom_entity_attribute_imports` | `none` | FQNs separados por vírgula |
-| `contract_enum_definitions` | `none` | `Tipo:CONST|CONST` separados por `;` |
-| `contract_nested_type_definitions` | `none` | `Tipo|Campo:Tipo` separados por `;` |
+| `contract_enum_definitions` | `none` | `Tipo:CONST\|CONST` separados por `;` |
+| `contract_nested_type_definitions` | `none` | `Tipo\|Campo:Tipo` separados por `;` |
 | `entity_contract_file_path` | `none` (catálogo; não usado aqui) | `none` ou caminho `.json` |
 | `enable_custom_entity_attributes` | `false` | `true` ou `false` |
 | `enable_folder_src_test_java` | `false` | `true` ou `false` |

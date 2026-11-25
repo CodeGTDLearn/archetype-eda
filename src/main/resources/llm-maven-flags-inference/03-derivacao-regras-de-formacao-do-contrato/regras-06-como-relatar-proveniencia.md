@@ -25,6 +25,8 @@ A pasta de destino da geração não é flag: não aparece nesta tabela, não re
 
 Se uma flag rejeitada caiu no default, ela aparece com a nota da rejeição.
 
+Não omita `contract_nested_type_definitions` quando o valor for `none`: registre a linha com fonte `DEFAULT` e nota `sem objetos aninhados`.
+
 ## 3. Colunas
 
 | Coluna | Conteúdo |

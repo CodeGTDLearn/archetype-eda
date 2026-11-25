@@ -11,10 +11,10 @@
 <!--   PROMPT      : (interno - preenchido pelo agente, via procedimento para especificação) -->
 <!--   TYPE        : path -->
 <!--   DEFAULT     : none -->
-<!--   DOMAIN      : none OU caminho (absoluto ou relativo) para arquivo .json -->
+<!--   DOMAIN      : none OU caminho absoluto para arquivo .json (o procedimento exige caminho absoluto) -->
 <!--   DEPENDS_ON  : enable_folder_src_test_java = true (a pasta de contratos -->
 <!--                  existe apenas quando a arvore de testes e mantida) -->
-<!--   VALIDATION  : ^(none|[^\r\n]*\.json)$ -->
+<!--   VALIDATION  : ^(none|[^\r\n]*\.json)$ (permissiva: aceita caminho relativo; o procedimento recusa com STOP-DER-04) -->
 <requiredProperty key="entity_contract_file_path">
     <defaultValue>none</defaultValue>
     <validationRegex>^(none|[^\r\n]*\.json)$</validationRegex>
