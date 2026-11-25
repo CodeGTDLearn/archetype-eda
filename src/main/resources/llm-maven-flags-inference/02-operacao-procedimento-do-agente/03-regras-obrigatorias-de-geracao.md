@@ -65,7 +65,7 @@ Passe sempre:
 - Caminho do arquivo `.json`.
 - Use barras normais (`/`), nunca barras invertidas.
 - O caminho precisa ser absoluto; se não for ou a gravação falhar, pare com STOP-DER-04.
-- Nunca use `none`: sem contrato, pare com STOP-IN-02 pelo Gate B de `prompt-00` §0.
+- Nunca use `none`: sem contrato, pare com STOP-IN-02 pelo Gate B de `01-entryPoint` §0.
 - O pós-processador copia o arquivo apenas quando `enable_folder_src_test_java=true`.
 
 ### `enable_custom_entity_attributes`

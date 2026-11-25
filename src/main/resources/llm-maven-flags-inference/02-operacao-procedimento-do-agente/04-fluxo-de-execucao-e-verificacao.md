@@ -61,7 +61,7 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
 
 A propriedade `outputDirectory` é nativa do plugin de geração de archetype e não é flag do catálogo. Ela precisa estar presente em toda geração. O módulo nasce em `<destino>/<artifactId>`.
 
-`groupId`, `artifactId` e `version` seguem a identidade de `prompt-03` §2.1: `groupId` = package base, `artifactId` = entity name em kebab-case, `version` = `1.0.0-SNAPSHOT`.
+`groupId`, `artifactId` e `version` seguem a identidade de `03-regras-obrigatorias-de-geracao` §2.1: `groupId` = package base, `artifactId` = entity name em kebab-case, `version` = `1.0.0-SNAPSHOT`.
 
 ### 2.1 Onde executar
 

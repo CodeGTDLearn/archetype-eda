@@ -23,7 +23,7 @@ mvn archetype:generate --batch-mode -D...
 - Nunca use código de motor, CLI ou script externo como fonte de semântica.
 - Nunca exponha segredos do contrato.
 - Nunca continue quando faltar um arquivo obrigatório.
-- Nunca inicie a inferência sem use-case e contrato, nesta ordem, conforme os Gates A, B e C de `prompt-00` §0.
+- Nunca inicie a inferência sem use-case e contrato, nesta ordem, conforme os Gates A, B e C de `01-entryPoint` §0.
 
 ## 3. Fonte da verdade
 

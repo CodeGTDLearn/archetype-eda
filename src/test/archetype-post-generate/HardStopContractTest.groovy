@@ -6,7 +6,7 @@
  * prohibition, the site scan, the file counts and the opt-in installed JAR.
  */
 def procedure = new File("target/classes/llm-maven-flags-inference")
-def prompt = new File(procedure, "01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md")
+def prompt = new File(procedure, "01-entrada-inicializacao/01-entryPoint.md")
 def text = prompt.isFile() ? prompt.getText("UTF-8") : ""
 
 int failures = 0
@@ -32,8 +32,8 @@ if (rs >= 0 && re > rs) {
 }
 registry = registry.unique().sort()
 check("1.1 the registry declares 18 unique stop codes: ${registry.size()}", registry.size() == 18)
-check("1.2 every code cited in prompt-00 is registered: ${allCodes - registry}", (allCodes - registry).isEmpty())
-check("1.3 every registered code is cited in prompt-00: ${registry - allCodes}", (registry - allCodes).isEmpty())
+check("1.2 every code cited in 01-entryPoint is registered: ${allCodes - registry}", (allCodes - registry).isEmpty())
+check("1.3 every registered code is cited in 01-entryPoint: ${registry - allCodes}", (registry - allCodes).isEmpty())
 
 def blockPattern = ~/(?s)```text\r?\n---\r?\n> ## PARADA DURA — (STOP-(?:IN|ENV|DER|EXEC|RULE|CONF)-\d{2})\r?\n(.*?)\r?\n---\r?\n```/
 def blocks = [:]
@@ -129,7 +129,7 @@ if (System.getProperty("eda.verify.installed.jar") == "true") {
     check("3.1 the installed artifact exists", jar.isFile())
     if (jar.isFile()) {
         def zip = new java.util.zip.ZipFile(jar)
-        def entry = zip.getEntry("llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md")
+        def entry = zip.getEntry("llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md")
         def installed = entry == null ? "" : zip.getInputStream(entry).getText("UTF-8")
         zip.close()
         check("3.2 the installed artifact carries 18 stop codes",

@@ -121,7 +121,7 @@ Regras de redação:
 > **Como retomar:** o que corrigir e de onde o procedimento recomeça.
 > **O que não fazer:** proibições específicas do caso.
 > **Segurança:** não exponha segredos, credenciais ou o contrato completo.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -165,19 +165,19 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 | `STOP-IN-03` | contrato antes do use-case | Gate C |
 | `STOP-IN-04` | destino ausente, relativo, com `~`, com fim de arquivo ou dentro do archetype | Gate D |
 | `STOP-IN-05` | package base ausente ou ambíguo | §6 |
-| `STOP-ENV-01` | JAR instalado não encontrado | prompt-02 §1 |
+| `STOP-ENV-01` | JAR instalado não encontrado | 02-como-localizar-e-ler-o-archetype §1 |
 | `STOP-ENV-02` | arquivo ou árvore obrigatória ausente | índice §5; §8 |
-| `STOP-ENV-03` | catálogo ausente ou ilegível | §6; prompt-02 §6 |
-| `STOP-ENV-04` | pós-processador ausente | §6; prompt-02 §6 |
-| `STOP-ENV-05` | várias versões e o spec não declara qual usar | prompt-02 §1.4 |
+| `STOP-ENV-03` | catálogo ausente ou ilegível | §6; 02-como-localizar-e-ler-o-archetype §6 |
+| `STOP-ENV-04` | pós-processador ausente | §6; 02-como-localizar-e-ler-o-archetype §6 |
+| `STOP-ENV-05` | várias versões e o spec não declara qual usar | 02-como-localizar-e-ler-o-archetype §1.4 |
 | `STOP-DER-01` | nome de entidade ambíguo | regras-01 §2 |
 | `STOP-DER-02` | lista de atributos derivada inválida | regras-01 §6; regras-04 §3 |
 | `STOP-DER-03` | duas fontes de mesma prioridade divergem | regras-04 §7 |
 | `STOP-DER-04` | caminho do contrato não absoluto ou falha ao gravar | regras-05 §5/§7 |
-| `STOP-EXEC-01` | falha de catálogo ou pós-processador na geração | prompt-04 §4 |
-| `STOP-RULE-01` | o procedimento não cobre um caso | prompt-01 §4 |
-| `STOP-CONF-01` | pasta de destino ainda não existe | prompt-04 §1.3 |
-| `STOP-CONF-02` | já existe módulo com o mesmo nome | prompt-04 §1.3 |
+| `STOP-EXEC-01` | falha de catálogo ou pós-processador na geração | 04-fluxo-de-execucao-e-verificacao §4 |
+| `STOP-RULE-01` | o procedimento não cobre um caso | 01-papel-e-restricoes-do-agente §4 |
+| `STOP-CONF-01` | pasta de destino ainda não existe | 04-fluxo-de-execucao-e-verificacao §1.3 |
+| `STOP-CONF-02` | já existe módulo com o mesmo nome | 04-fluxo-de-execucao-e-verificacao §1.3 |
 
 **STOP-IN-01 — use-case ausente**
 
@@ -199,7 +199,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pelo Gate A de §0.2.
 > **O que não fazer:** não infira o nome pelo contrato; não invente um use-case.
 > **Segurança:** não coloque segredos ou credenciais no use-case.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -223,7 +223,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pelo Gate B de §0.2.
 > **O que não fazer:** não use `{}`; não use array ou texto no lugar do objeto; não infira o nome.
 > **Segurança:** não inclua segredos no contrato.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -247,7 +247,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pelo Gate C de §0.2.
 > **O que não fazer:** não reordene apenas os marcadores; não prossiga.
 > **Segurança:** não mova segredos para o use-case.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -271,7 +271,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pelo Gate D de §0.2.
 > **O que não fazer:** não use a pasta do archetype; não use `src/` nem `target/`; não presuma o diretório atual.
 > **Segurança:** não exponha caminhos de usuário em relatórios.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -295,7 +295,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pela leitura da entrada.
 > **O que não fazer:** não use `org.clinica.cliente` como base; não deixe dois candidatos.
 > **Segurança:** não inclua dados sensíveis no package.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -319,7 +319,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** volte ao início e leia o JAR instalado.
 > **O que não fazer:** não edite o JAR à mão; não use a árvore-fonte como substituta.
 > **Segurança:** não baixe JARs de fontes não confiáveis.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -343,7 +343,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** volte ao início e confira a lista de integridade de §8.
 > **O que não fazer:** não continue com um JAR parcial; não crie os arquivos à mão.
 > **Segurança:** não altere o JAR instalado.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -367,7 +367,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** volte ao início e leia o catálogo.
 > **O que não fazer:** não invente flags, defaults ou regex; não use o README como catálogo.
 > **Segurança:** não altere o catálogo à mão.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -391,7 +391,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** volte ao início e confira a lista de integridade.
 > **O que não fazer:** não gere sem o pós-processador; não edite o JAR.
 > **Segurança:** não altere o pós-processador instalado.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -415,7 +415,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pela leitura da versão.
 > **O que não fazer:** não pegue a versão mais nova em silêncio; não use o pom do projeto hospedeiro.
 > **Segurança:** não apague versões sem confirmação.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -439,7 +439,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pela derivação do nome.
 > **O que não fazer:** não use `MyEntity` em silêncio; não adivinhe.
 > **Segurança:** não inclua dados pessoais no nome.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -463,7 +463,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o contrato corrigido e comece o procedimento de novo, desde a leitura do use-case.
 > **O que não fazer:** não use "String:name"; não edite o código gerado; não rode o Maven.
 > **Segurança:** não coloque senhas, chaves ou credenciais no contrato; não exponha o contrato completo.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -487,7 +487,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o spec e recomece pela precedência.
 > **O que não fazer:** não adivinhe; não misture as fontes.
 > **Segurança:** não mostre segredos das fontes.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -511,7 +511,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** salve o contrato e recomece pela materialização.
 > **O que não fazer:** não use `none`; não use caminho relativo; não grave no archetype.
 > **Segurança:** não grave o contrato em pasta pública.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -535,7 +535,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** repita a geração do zero.
 > **O que não fazer:** não edite o código gerado; não faça patch no JAR.
 > **Segurança:** não anexe segredos à saída.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -559,7 +559,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** atualize o procedimento e recomece.
 > **O que não fazer:** não improvise; não invente uma flag.
 > **Segurança:** não inclua dados sensíveis no relato.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -583,7 +583,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** confirme a criação e o procedimento continua.
 > **O que não fazer:** não crie dentro do archetype; não presuma a pasta.
 > **Segurança:** não crie a pasta em local público.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -607,7 +607,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Como retomar:** confirme a escolha e o procedimento continua.
 > **O que não fazer:** não apague o módulo sem confirmação; não use o archetype como destino.
 > **Segurança:** não sobrescreva dados sem backup.
-> **Dicionário:** `prompt-00` §0.4.
+> **Dicionário:** `01-entryPoint` §0.4.
 ---
 ```
 
@@ -617,7 +617,7 @@ O que um gate **admite** é a correção da entrada. Um gate acionado interrompe
 
 ## 1. O que fazer agora
 
-1. Leia `llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md`.
+1. Leia `llm-maven-flags-inference/01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md`.
 2. Siga a ordem indicada no índice.
 3. Leia todos os arquivos marcados como obrigatórios antes de derivar ou executar.
 4. Só então derive a entidade, os atributos e as flags.
@@ -705,13 +705,13 @@ Interrompa antes de executar quando:
 Antes de derivar, confirme que o JAR contém:
 
 ```text
-llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
-llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md
+llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md
+llm-maven-flags-inference/01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md
+llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md
+llm-maven-flags-inference/02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md
+llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md
+llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md
+llm-maven-flags-inference/02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md
 llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md
 llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md
 llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md

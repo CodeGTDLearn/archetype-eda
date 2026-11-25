@@ -601,7 +601,7 @@ install           → install + archetype:update-local-catalog
 
 * **Composição:** [`src/main/resources/llm-maven-flags-inference/`](src/main/resources/llm-maven-flags-inference/) — 19 arquivos em 4 categorias:
   - `01-entrada-inicializacao/`:
-    - porta de entrada (`prompt-00`) e mapa de leitura (`indice-01`);
+    - porta de entrada (`01-entryPoint`) e mapa de leitura (`02-mapa-dos-arquivos-e-ordem-de-leitura`);
   - `02-operacao-procedimento-do-agente/`:
     - papel, leitura do JAR, regras obrigatórias, execução e entregáveis;
   - `03-derivacao-regras-de-formacao-do-contrato/`:
@@ -801,7 +801,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
   3. O agente lê a entrada e o índice.
   4. O agente aplica as regras e materializa o contrato.
   5. O resultado é a linha `mvn archetype:generate`.
-* **Fronteira:** o **pré-processamento** termina nessa linha. A geração Maven **começa depois** dela — e a mesma pasta governa o que vem depois: executar, validar o `package`, conferir o contrato copiado, compilar e reportar (`prompt-04` e `prompt-05`).
+* **Fronteira:** o **pré-processamento** termina nessa linha. A geração Maven **começa depois** dela — e a mesma pasta governa o que vem depois: executar, validar o `package`, conferir o contrato copiado, compilar e reportar (`04-fluxo-de-execucao-e-verificacao` e `05-entregaveis-e-relatorios`).
 
 <a id="llm-maven-flags-inference-01-entrada-inicializacao" name="llm-maven-flags-inference-01-entrada-inicializacao"></a>
 ### 01-entrada-inicializacao <a href="#indice">↑ topo</a>
@@ -842,7 +842,7 @@ Traz o schema e os exemplos de contrato. É a referência consultada para materi
 
 | Entrada | Exemplo |
 |---|---|
-| **PROCEDIMENTO** (preâmbulo, não é entrada) | `0. PROCEDIMENTO` — ponteiro para o `prompt-00` dentro do JAR |
+| **PROCEDIMENTO** (preâmbulo, não é entrada) | `0. PROCEDIMENTO` — ponteiro para o `01-entryPoint` dentro do JAR |
 | **Tipo de módulo** | `RAIZ` ou `SECUNDARIO` |
 | **Package base** | `br.com.loja` — prefixo; o archetype concatena `entity_package_name` |
 | **Use case** | *"Cadastro de clientes de uma clínica. API REST com autenticação JWT na porta 8080."* |
@@ -988,11 +988,11 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
 > ⚠️ **Três notas de ambiente** (revalidadas em 2026-11-23, Maven 3.9.16 + Windows):
 > 1. O goal `generate` do `maven-archetype-plugin` **3.4.1** (versão fixa na linha de comando e no `pluginManagement` deste `pom.xml`) declara `executePhase` (`generate-sources`) e `requiresProject=false`: rodar de uma pasta sem `pom.xml` funciona — o Maven usa o "Maven Stub Project (No POM)" (`standalone-pom`). O destino continua vindo de `-DoutputDirectory`.
 > 2. No **PowerShell**, coloque **cada `-D` entre aspas**. Sem isso, a vírgula de `custom_entity_attributes_list` é tratada como separador de array e o valor chega truncado (`com.eda-archetype` vira `com`, por exemplo).
-> 3. O `-DoutputDirectory` é emitido com **barras normais** (`C:/Temp/eda-sandbox`), mesmo no Windows: é a forma que a regra normativa exige (`prompt-03` §3).
+> 3. O `-DoutputDirectory` é emitido com **barras normais** (`C:/Temp/eda-sandbox`), mesmo no Windows: é a forma que a regra normativa exige (`03-regras-obrigatorias-de-geracao` §3).
 
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados. A propriedade é **nativa do plugin de geração de archetype** (não é uma flag do catálogo) e o valor vem da marcação **PASTA DE DESTINO** do spec. O exemplo acima é ilustração; a regra normativa está em `llm-maven-flags-inference/`.
 
-> **Onde está o detalhe de cada coluna?** Em [`src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`](src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`.
+> **Onde está o detalhe de cada coluna?** Em [`src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`](src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/): `regras-01` (entidade e atributos), `regras-02` (tipos e enums), `regras-03` (aninhados), `regras-04` (precedência e validação), `regras-05` (materialização do contrato) e `regras-06` (proveniência). O ponto de entrada é `llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md`.
 
 
 
@@ -2064,7 +2064,7 @@ if (keep_binding_properties == 'false') {
 * O procedimento completo **está empacotado no JAR** do archetype.
 * O operador entrega a **spec**(usando, por ex.: 'GitHub Spec Kit') ao agente(por ex.: OpenCode)
   * A Spec devera obrigatoriamente conter (ORDEM OBRIGATORIA):
-    * Preambulo `0. PROCEDIMENTO` — ponteiro para o `prompt-00` dentro do JAR; nao e entrada de derivacao
+    * Preambulo `0. PROCEDIMENTO` — ponteiro para o `01-entryPoint` dentro do JAR; nao e entrada de derivacao
     * Tipo de Modulo (Root/Principal ou Branch/Secundario)
     * PACKAGE BASE (sem o nome da entidade)
     * Descricao do USE-CASE desejado para o modulo (OBRIGATORIO)
@@ -2096,7 +2096,7 @@ if (keep_binding_properties == 'false') {
 > As 5 entradas continuam obrigatórias; os Gates A–D permanecem inalterados.
 >
 > Não reordene as seções, não omita o contrato, não use `none` como substituto e não presuma destino.
-> A fonte normativa é `prompt-00` §0, dentro do JAR.
+> A fonte normativa é `01-entryPoint` §0, dentro do JAR.
 
 
 <a id="exemplo-de-prompt-para-spec" name="exemplo-de-prompt-para-spec"></a>
@@ -2108,7 +2108,7 @@ if (keep_binding_properties == 'false') {
 0. PROCEDIMENTO:
 - Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
   repositório local, leia
-  llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md
   de dentro do JAR e siga-o antes de derivar.
 - Este spec pode ser executado fora da pasta do repositório do archetype.
 
@@ -2148,8 +2148,8 @@ C:\Temp\eda-sandbox
   * Sem qualquer uma delas
     * com o contrato antes do use-case
     * ou com destino dentro da árvore do archetype
-    * o procedimento para (Gates A, B, C e D de `prompt-00` §0).
-* O agente começa por `llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`
+    * o procedimento para (Gates A, B, C e D de `01-entryPoint` §0).
+* O agente começa por `llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md`
   * dentro do JAR empacotado/instalado (`com.eda-archetype:eda-archetype`).
 * O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.
   - ✅ `-Dpackage=org.clinica` → `package org.clinica.cliente;`
@@ -2204,7 +2204,7 @@ C:\Temp\eda-sandbox
 **Em ambos os casos**, o seu modelo mental é o mesmo: descrição em cima,
 JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
 fica a cargo do procedimento empacotado no JAR —
-`llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e as regras em
+`llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md` e as regras em
 `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`.
 
 
@@ -2510,7 +2510,7 @@ fica a cargo do procedimento empacotado no JAR —
 0. PROCEDIMENTO:
 - Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
   repositório local, leia
-  llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md
   de dentro do JAR e siga-o antes de derivar.
 - Este spec pode ser executado fora da pasta do repositório do archetype.
 
@@ -2564,7 +2564,7 @@ C:\Temp\eda-005-destino-a
 0. PROCEDIMENTO:
 - Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
   repositório local, leia
-  llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md
   de dentro do JAR e siga-o antes de derivar.
 - Este spec pode ser executado fora da pasta do repositório do archetype.
 
@@ -2636,7 +2636,7 @@ C:\Temp\eda-005-destino-b
 0. PROCEDIMENTO:
 - Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
   repositório local, leia
-  llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md
   de dentro do JAR e siga-o antes de derivar.
 - Este spec pode ser executado fora da pasta do repositório do archetype.
 
@@ -2701,7 +2701,7 @@ C:\Temp\eda-005-destino-c
 0. PROCEDIMENTO:
 - Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
   repositório local, leia
-  llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
+  llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md
   de dentro do JAR e siga-o antes de derivar.
 - Este spec pode ser executado fora da pasta do repositório do archetype.
 

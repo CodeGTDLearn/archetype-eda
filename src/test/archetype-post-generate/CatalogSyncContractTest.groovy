@@ -160,14 +160,14 @@ check("3.5 every descriptive example matches its catalog regex: ${descriptiveExa
         descriptiveExampleMismatch.isEmpty())
 
 def regras06 = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md").getText("UTF-8")
-def prompt03 = new File("target/classes/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md").getText("UTF-8")
+def prompt03 = new File("target/classes/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md").getText("UTF-8")
 def pathRegex = catalogRegex("entity_contract_file_path") == null ? null : java.util.regex.Pattern.compile(catalogRegex("entity_contract_file_path"))
 
 check("4.1 the provenance exception cites contract_nested_type_definitions = none",
         regras06.contains("contract_nested_type_definitions") && regras06.contains("Não omita"))
 check("4.2 regras-04 explains FR-006 in simple language",
         text.contains("FR-006") && text.contains("dicionário de 20 termos"))
-check("4.3 prompt-03 distinguishes the package from the artifact",
+check("4.3 03-regras-obrigatorias-de-geracao distinguishes the package from the artifact",
         prompt03.contains("pedidoitem") && prompt03.contains("pedido-item") && prompt03.contains("kebab-case"))
 check("4.4 the catalog describes the absolute path", catalogText.contains("absoluto"))
 check("4.5 the catalog regex still accepts none and a relative .json",

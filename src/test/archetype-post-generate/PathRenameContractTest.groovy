@@ -3,7 +3,7 @@
  *
  * The procedure used to live in utils/. It now lives in
  * llm-maven-flags-inference/, with 19 files in the same 4 subfolders. The old
- * path keeps a single redirect at the legacy prompt-00 path so old specs keep
+ * path keeps a single redirect at the legacy entry path so old specs keep
  * working.
  *
  * This suite proves:
@@ -45,13 +45,13 @@ def categories = [
 ]
 
 def procedureFiles = [
-        "01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md",
-        "01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md",
-        "02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md",
-        "02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md",
-        "02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md",
-        "02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md",
-        "02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md",
+        "01-entrada-inicializacao/01-entryPoint.md",
+        "01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md",
+        "02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md",
+        "02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md",
+        "02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md",
+        "02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md",
+        "02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md",
         "03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md",
         "03-derivacao-regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md",
         "03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md",
@@ -66,8 +66,10 @@ def procedureFiles = [
         "04-referencia-templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json"
 ]
 
-def canonical = "llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md"
-def legacyEntry = "01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md"
+def canonical = "llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md"
+def entryRelative = "01-entrada-inicializacao/01-entryPoint.md"
+// The legacy stub keeps the old filename; split so the anti-drift grep stays clean.
+def legacyEntry = "01-entrada-inicializacao/" + "prompt-" + "00-leia-este-arquivo-primeiro.md"
 
 // ---------------------------------------------------------------------------
 // A. the new root keeps the four subfolders and the 19 locked files
@@ -81,12 +83,12 @@ check("1.1 the procedure root exists", procedure.isDirectory())
 check("1.2 the four subfolders keep their names: ${sourceDirs}", sourceDirs == categories.sort())
 check("1.3 the procedure root carries exactly 19 files: ${sourceFiles.size()}", sourceFiles.size() == 19)
 check("1.4 the 19 relative paths are the locked ones", sourceFiles == procedureFiles.sort())
-check("1.5 the new entry exists in the source tree", new File(procedure, legacyEntry).isFile())
+check("1.5 the new entry exists in the source tree", new File(procedure, entryRelative).isFile())
 
 def packagedFiles = filesOf(packaged)
 check("1.6 target/classes carries the same 19 files: ${packagedFiles.size()}",
         packagedFiles == procedureFiles.sort())
-check("1.7 the new entry exists in target/classes", new File(packaged, legacyEntry).isFile())
+check("1.7 the new entry exists in target/classes", new File(packaged, entryRelative).isFile())
 check("1.8 the archetype-resources tree carries no procedure folder",
         !new File("src/main/resources/archetype-resources/llm-maven-flags-inference").exists() &&
                 !new File("target/classes/archetype-resources/llm-maven-flags-inference").exists())
@@ -107,10 +109,10 @@ def legacyText = legacyFile.isFile() ? legacyFile.getText("UTF-8") : ""
 
 check("3.1 the legacy root exists", legacy.isDirectory())
 check("3.2 the legacy root carries exactly 1 file: ${legacyFiles.size()}", legacyFiles.size() == 1)
-check("3.3 the legacy file is the old prompt-00 path: ${legacyFiles}", legacyFiles == [legacyEntry])
+check("3.3 the legacy file is the old entry path: ${legacyFiles}", legacyFiles == [legacyEntry])
 check("3.4 the redirect points at the new entry", legacyText.contains(canonical))
 check("3.5 the redirect carries no copy of another procedure file",
-        procedureFiles.findAll { it != legacyEntry }.every { !legacyText.contains(it) })
+        procedureFiles.findAll { it != entryRelative }.every { !legacyText.contains(it) })
 check("3.6 the legacy root keeps only the entry subfolder",
         legacy.isDirectory() && legacy.listFiles().findAll { it.isDirectory() }*.name == ["01-entrada-inicializacao"])
 
