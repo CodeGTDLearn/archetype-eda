@@ -189,7 +189,7 @@
 
 | Tecnologia | Por quê |
 |---|---|
-| **Markdown empacotado (`llm-maven-flags-inference/`)** | Procedimento de Inferencia: papel do agente, leitura do JAR, regras de formação do contrato e templates. Viaja dentro do JAR. Inferi flags do Maven Archtype visando maneja-lo a aprtir das flags inferidas. |
+| **Markdown empacotado (`llm-maven-flags-inference/`)** | Procedimento de Inferencia: papel do agente, leitura do JAR, regras de formação do contrato e templates. Viaja dentro do JAR. Infere flags do Maven Archetype visando operá-lo a partir das flags inferidas. |
 | **JSON** | Formato do contrato de use-case e dos templates de contrato. |
 | **SHA-256** | Nome determinístico do arquivo de contrato materializado (hash da forma canônica). |
 
@@ -794,14 +794,14 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 ## llm-maven-flags-inference 🧠 <a href="#indice">↑ topo</a>
 
 * **O que é:** a pasta é o **alvo do prompt do agente**.
-* **Pelo que responde:** ela responde pelo **pré-processamento**.
+* **Pelo que responde:** ela responde pelo **pré-processamento** e pelo **procedimento de execução e verificação** que o agente faz depois da linha de comando.
 * **A sequência didática:**
   1. O operador escreve o prompt na Spec.
   2. O prompt aponta para o archetype e para esta pasta dentro do JAR.
   3. O agente lê a entrada e o índice.
   4. O agente aplica as regras e materializa o contrato.
   5. O resultado é a linha `mvn archetype:generate`.
-* **Fronteira:** o pré-processamento **termina** nessa linha. A geração Maven **começa depois** dela.
+* **Fronteira:** o **pré-processamento** termina nessa linha. A geração Maven **começa depois** dela — e a mesma pasta governa o que vem depois: executar, validar o `package`, conferir o contrato copiado, compilar e reportar (`prompt-04` e `prompt-05`).
 
 <a id="llm-maven-flags-inference-01-entrada-inicializacao" name="llm-maven-flags-inference-01-entrada-inicializacao"></a>
 ### 01-entrada-inicializacao <a href="#indice">↑ topo</a>
@@ -811,7 +811,7 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 <a id="llm-maven-flags-inference-02-operacao-procedimento-do-agente" name="llm-maven-flags-inference-02-operacao-procedimento-do-agente"></a>
 ### 02-operacao-procedimento-do-agente <a href="#indice">↑ topo</a>
 
-Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execução e os entregáveis. É o momento em que o procedimento vira ação e produz a linha de geração.
+Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execução e os entregáveis. É o momento em que o procedimento vira ação: produz a linha de geração e, depois dela, executa, verifica e reporta.
 
 <a id="llm-maven-flags-inference-03-derivacao-regras-de-formacao-do-contrato" name="llm-maven-flags-inference-03-derivacao-regras-de-formacao-do-contrato"></a>
 ### 03-derivacao-regras-de-formacao-do-contrato <a href="#indice">↑ topo</a>
@@ -828,7 +828,7 @@ Traz o schema e os exemplos de contrato. É a referência consultada para materi
 
 * **A pergunta:** 
   * o operador entrega um **use case** (texto) + um **contrato JSON**; 
-    * o `mvn archetype:generate` precisa de **35 flags `-D`**. 
+    * o `mvn archetype:generate` resolve **35 flags `-D`** a partir do catálogo. 
       * Quem faz a ponte?
 * **A resposta:** 
   * o **agente**, seguindo os elementos (prompts + JSONs) empacotados dentro do JAR na pasta `llm-maven-flags-inference/`. 
@@ -904,13 +904,18 @@ SPEC: USE CASE + CONTRATO
         └─ contrato materializado em disco ──▶ -Dentity_contract_file_path=…/<sha256>.json
 ```
 
+> O `id` do contrato é uma exceção: ele **não** entra em `custom_entity_attributes_list`.
+> O archetype gera sempre o campo técnico `<entidade>Id` (`Long`) e o template descarta
+> qualquer atributo chamado `id` — o `id` do contrato corresponde a esse campo técnico
+> (`regras-01` §4.3).
+
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-as-tres-regras-que-mais-surpreendem" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-as-tres-regras-que-mais-surpreendem"></a>
 ### 4) As três regras que mais surpreendem <a href="#indice">↑ topo</a>
 
 | Regra | Efeito |
 |---|---|
-| **O tipo vem do valor** | ·`true`→`Boolean`<br>· inteiro que cabe em `int`→`Integer`<br>·inteiro maior→`Long`<br>·decimal→`Double`<br>·string→`String`<br>·objeto→POJO em `<pacote>.nested`<br>·array→`String` |
-| **Valor explícito vence** | ·um `type` declarado no contrato tem precedência **se** for `java.lang` ou um **tipo do projeto**(ex:`java.time.Instant`, `List<String>` etc)<br>·são rejeitados com aviso e o tipo volta a ser estimado pelo valor |
+| **O tipo vem do valor** | ·`true`→`Boolean`<br>· inteiro que cabe em `int`→`Integer`<br>·inteiro maior→`Long`<br>·decimal→`Double`<br>·string→`String`<br>·`null`→`String`<br>·objeto→POJO em `<package>.<entity_package_name>.nested`<br>·array→`String` (mas array não vazio de strings **MAIÚSCULAS**→enum, ver `regras-02` §4) |
+| **Valor explícito vence** | ·um `type` declarado no contrato tem precedência **se** for `java.lang` ou um **tipo do projeto** (ex:`br.com.clinica.convenio.Convenio`)<br>·tipos de fora desse conjunto (ex:`java.time.Instant`, `java.util.List`, `List<String>`) são **rejeitados com aviso** e o tipo volta a ser estimado pelo valor |
 | **Flag derivada em cascata** | ·`entity_package_name` vem de `entity_name`<br>·`enable_custom_entity_attributes` é forçado a `true` quando há atributos<br>·`entity_contract_file_path` só é emitido depois de gravar o contrato |
 
 **Precedência** (quem vence quando duas fontes discordam):
@@ -920,7 +925,7 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 ```
 
 * Um valor **literal** no contrato nunca é sobrescrito.
-* Um valor **inferido do use case** só entra quando o contrato silencia.
+* Um valor **inferido do use case** só entra quando o contrato silencia — e só para `entity_name`, a única flag da allowlist de inferência.
 * O **default** é o último recurso — e nunca é vazio.
 
 **O que é cada fase** (tabela de apoio):
@@ -932,6 +937,8 @@ CONTRACT  >  CONTRACT_DERIVED  >  semântica da entidade  >  INFERENCE (use case
 | ③ Semântica da entidade | O que o **próprio contrato revela** ser a entidade: nome, pacote, atributos — e o **tipo vem do valor** (`true`→`Boolean`, decimal→`Double`, objeto→POJO em `.nested`, array→`String`) | `"ativo": true` → campo `Boolean ativo` | aparece como `CONTRACT` ou `CONTRACT_DERIVED` — é um **degrau de decisão**, não uma tag do relatório |
 | ④ INFERENCE (use case) | Proposta lida do **texto narrativo** — só para flags elegíveis: `entity_name` é a única da allowlist | contrato silencia + use-case menciona "clientes" → `Cliente` | `INFERENCE` (fora da allowlist vai para "descartadas") |
 | ⑤ DEFAULT (catálogo) | Valor de fábrica da flag no catálogo | `api_port=8080`, `java_version=21`, `entity_name=MyEntity` | `DEFAULT` |
+
+> **O `id` é campo técnico, não atributo.** O archetype gera sempre o campo `<entidade>Id` (`Long`); o template descarta qualquer atributo chamado `id` ou `<entidade>Id`. O `id` do contrato corresponde a esse campo técnico — ele **não** entra em `custom_entity_attributes_list` nem é listado como atributo derivado (`regras-01` §4.3; a mesma regra está na descrição de `custom_entity_attributes_list` no catálogo).
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado"></a>
 ### 5) A Validação final 🚪 <a href="#indice">↑ topo</a>
@@ -975,12 +982,13 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
   -Denable_custom_entity_attributes=true \
   "-Dcustom_entity_attributes_list=String:nome,Boolean:ativo,String:nascimento" \
   -Dapi_port=8080 -Djava_version=21 \
-  "-DoutputDirectory=C:\Temp\eda-sandbox"
+  "-DoutputDirectory=C:/Temp/eda-sandbox"
 ```
 
-> ⚠️ **Duas notas de ambiente** (revalidadas em 2026-11-23, Maven 3.9.16 + Windows):
+> ⚠️ **Três notas de ambiente** (revalidadas em 2026-11-23, Maven 3.9.16 + Windows):
 > 1. O goal `generate` do `maven-archetype-plugin` **3.4.1** (versão fixa na linha de comando e no `pluginManagement` deste `pom.xml`) declara `executePhase` (`generate-sources`) e `requiresProject=false`: rodar de uma pasta sem `pom.xml` funciona — o Maven usa o "Maven Stub Project (No POM)" (`standalone-pom`). O destino continua vindo de `-DoutputDirectory`.
 > 2. No **PowerShell**, coloque **cada `-D` entre aspas**. Sem isso, a vírgula de `custom_entity_attributes_list` é tratada como separador de array e o valor chega truncado (`com.eda-archetype` vira `com`, por exemplo).
+> 3. O `-DoutputDirectory` é emitido com **barras normais** (`C:/Temp/eda-sandbox`), mesmo no Windows: é a forma que a regra normativa exige (`prompt-03` §3).
 
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados. A propriedade é **nativa do plugin de geração de archetype** (não é uma flag do catálogo) e o valor vem da marcação **PASTA DE DESTINO** do spec. O exemplo acima é ilustração; a regra normativa está em `llm-maven-flags-inference/`.
 
@@ -2380,7 +2388,7 @@ fica a cargo do procedimento empacotado no JAR —
   * **Ativacao derivada** (sem flag nova): o pacote `src/test/java/<entity_package>/contract/` so existe quando `enable_folder_src_test_java=true` **e** `src/test/resources/contracts/contract.json` foi persistido. Caso contrario, `snippet-20-contract_schema_test.groovy` remove o pacote.
   * **Conteudo**: um arquivo de teste por sujeito - campos simples, cada tipo aninhado e cada enum - mais os arquivos das regras transversais (id tecnico, campos excedentes, round-trip, contrato salvo, contrato malformado, normalizacao de chaves, mapeamento de tipos e reconciliacao de aninhados/enums). Apoio: classes pequenas de leitura de campos, do contrato, de normalizacao de chaves e de navegacao.
   * **Execucao**: pelo ciclo de testes da propria aplicacao (`mvnw test`), para sempre. Cada divergencia produz uma falha propria, agrupada no arquivo de regra, em ordem deterministica, com atributo, tipo esperado/encontrado, direcao (contrato->entidade ou entidade->contrato) e caminho hierarquico.
-  * **Regras espelhadas**: `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01..03` (formas, precedencia `attributes` > `fields` > topo, tipos/enums, aninhados ate 25 niveis, `id` -> `<entidade>Id`).
+  * **Regras espelhadas**: `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01..03` (formas, precedencia `attributes` > `fields` > topo, tipos/enums, aninhados ate 25 niveis) — e a regra do `id` em `regras-01` §4.3, que espelha a descrição de `custom_entity_attributes_list` no catálogo (`id` → `<entidade>Id`, campo técnico, fora de `custom_entity_attributes_list`).
   * **JSON**: Spring Boot 4 usa Jackson 3 (`tools.jackson.databind`), disponivel via `spring-boot-starter-web`; nenhuma dependencia nova entra no `pom.xml` gerado.
   * **Prova no archetype (Frente 02)**: as fixtures `entity-contract`, `custom-nested-objects` e `custom-enums-from-payload` verificam a presenca do pacote, o relatorio surefire verde da aplicacao e a matriz de sabotagem da Frente 02.
   * **Sabotagem coberta**: contrato (chave removida, folha mais profunda renomeada, JSON corrompido), entidade (campo renomeado, campos clandestinos, tipo alterado), enums de topo e aninhado, e multiplas divergencias reportadas uma por falha, em ordem deterministica - mais a paridade Lombok on/off com o mesmo veredito. O contrato da fixture cobre 6 POJOs aninhados em cadeia (7 niveis), enums de topo/aninhado, tipo de projeto sobre array e dois campos do mesmo enum.
@@ -2860,7 +2868,9 @@ C:\Temp\eda-005-destino-d
   * *Derivação:* o agente (`llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01` §2) resolve o nome
     **a partir do contrato** (campo `entityName`/`entity_name`/`entity`) e, na ausência dele,
     aceita a inferência do use-case — `entity_name` é a única flag da *allowlist* de
-    inferência (`regras-04` §6). O default do catálogo só entra como último recurso.
+    inferência (`regras-04` §6). O default do catálogo só entra como último recurso:
+    quando o use-case **não trouxer nenhum nome** de entidade. Se trouxer mais de um
+    candidato, o agente **para e pergunta** — nunca adota `MyEntity` em silêncio.
 
 * **`entity_package_name`**
   * Padrão: `myentity` (literal do catálogo — o default nunca pode ser vazio)
@@ -2882,18 +2892,19 @@ C:\Temp\eda-005-destino-d
 * **`custom_entity_attributes_list`**
   * Padrão: `String:name`
   * Efeito: cada par `Tipo:nome` gera um campo na entidade.
-  * O `id` e estrutural: o campo e `<entity_name em camelCase>Id` (ex.: `KitchenChef` -> `kitchenChefId`; `PET` -> `petId`).
+  * O `id` e estrutural: o campo e `<entity_name em camelCase>Id` (ex.: `KitchenChef` -> `kitchenChefId`; `PET` -> `petId`). O `id` do contrato corresponde a esse campo técnico e **nao** entra na lista.
   * **Depende de:** `enable_custom_entity_attributes = true`
   * *Derivação:* o agente monta a lista **a partir do contrato**, no formato estrito
     `Tipo:nome,Tipo:nome` (sem espaços, na ordem do contrato). O **tipo é estimado pelo
-    valor** do atributo (`Boolean`, `Integer`, `Long`, `Double`, `String`); um `type`
+    valor** do atributo (`Boolean`, `Integer`, `Long`, `Double`, `String`, e `null` → `String`);
+    um `type`
     declarado no contrato tem precedência quando é um tipo de `java.lang` **ou um tipo do
     projeto** (fora de `java.lang`). Um tipo do projeto é referenciado pelo nome simples e
     **nomeia o atributo pelo próprio tipo** (`EnderecoCliente` → `enderecoCliente`). Um
     `type` fora dessas duas categorias (ex.: `java.time.Instant`, `List<String>`) é
     rejeitado com **aviso** e o valor volta a ser estimado pelo valor do atributo.
     Um **objeto JSON aninhado** não cai nessa estimativa: ele é derivado como POJO em
-    `<entity_package>.nested` (ver `contract_nested_type_definitions`).
+    `<package>.<entity_package_name>.nested` (ver `contract_nested_type_definitions`).
 
 * **`custom_entity_attribute_imports`**
   * Padrão: `none`

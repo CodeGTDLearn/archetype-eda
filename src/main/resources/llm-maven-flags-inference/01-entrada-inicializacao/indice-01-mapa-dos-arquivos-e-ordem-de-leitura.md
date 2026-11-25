@@ -63,6 +63,6 @@ Nenhuma derivação ou execução deve começar antes de concluir as leituras ob
 
 ## 5. Regra de falha
 
-Arquivo obrigatório ausente → pare e reporte.
+Arquivo obrigatório ausente → pare com STOP-ENV-02 e reporte.
 
 Arquivo opcional ausente → avise e siga usando o consolidado.

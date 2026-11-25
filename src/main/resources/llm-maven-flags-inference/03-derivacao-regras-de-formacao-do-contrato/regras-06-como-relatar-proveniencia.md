@@ -21,9 +21,11 @@ Liste:
 
 Não é necessário listar todas as 35 flags do catálogo. Flags que ficaram no default e não afetam a geração podem ficar de fora da tabela principal.
 
-A pasta de destino da geração não é flag: não aparece nesta tabela, não recebe fonte de proveniência e é relatada em campo próprio, junto da command line executada.
+A pasta de destino da geração não é flag. Ela não aparece nesta tabela e não recebe fonte de proveniência. É relatada em campo próprio, junto da command line executada.
 
 Se uma flag rejeitada caiu no default, ela aparece com a nota da rejeição.
+
+Não omita `contract_nested_type_definitions` quando o valor for `none`: registre a linha com fonte `DEFAULT` e nota `sem objetos aninhados`.
 
 ## 3. Colunas
 
@@ -55,7 +57,9 @@ Inclua nota quando:
 - o valor explícito venceu uma derivação;
 - um tipo foi rejeitado;
 - um atributo foi descartado;
-- um POJO ou enum não pôde ser gerado.
+- um POJO ou enum não pôde ser gerado;
+- o atributo `id` do contrato foi mapeado no campo técnico `<entidade>Id` (ver `regras-01` §4.3). Nesse caso, a nota diz `id` → `<entidade>Id` (campo técnico) e o atributo **não** é listado como atributo derivado comum.
+- a lista de atributos derivada foi rejeitada e a parada STOP-DER-02 foi acionada.
 
 Notas devem ser curtas e factuais.
 
@@ -72,6 +76,8 @@ Uma proposta é descartada quando:
 - a flag não existe no catálogo;
 - a flag não é elegível para inferência;
 - o valor não veio do contrato nem da allowlist.
+
+Uma lista de atributos inválida não é uma proposta descartada: ela para com STOP-DER-02 e não entra nesta tabela.
 
 ## 7. Resumo
 

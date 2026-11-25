@@ -20,6 +20,8 @@ No Windows:
 %USERPROFILE%\.m2\repository\com\eda-archetype\eda-archetype\<versão>\eda-archetype-<versão>.jar
 ```
 
+Se o JAR não for encontrado, pare com STOP-ENV-01 e reporte o caminho ausente.
+
 ### Resolução de versão
 
 1. Se o spec declarar a versão, use-a.
@@ -27,7 +29,7 @@ No Windows:
    `~/.m2/repository/com/eda-archetype/eda-archetype/` (Windows:
    `%USERPROFILE%\.m2\repository\com\eda-archetype\eda-archetype\`).
 3. Se houver exatamente uma versão instalada, use-a.
-4. Se houver várias versões e o spec não apontar nenhuma, pergunte.
+4. Se houver várias versões e o spec não apontar nenhuma, pare com STOP-ENV-05 e pergunte.
 5. Fora do repositório-fonte do archetype, nunca use o `pom.xml` do projeto
    hospedeiro como fonte de versão.
 
@@ -102,7 +104,9 @@ Leia os templates relevantes:
 | `DEPENDS_ON` | dependência ou guarda |
 | `VALIDATION` | forma legível da regex |
 
-Algumas descrições ainda dizem “mecanismo de inferência LLM”, por herança histórica. Neste procedimento, quem deriva é o agente: não procure nem execute motor, CLI ou script externo por causa disso.
+Algumas descrições ainda dizem "mecanismo de inferência LLM", por herança histórica. Neste procedimento, quem deriva é o agente: não procure nem execute motor, CLI ou script externo por causa disso.
+
+Armadilha equivalente: a descrição de `custom_entity_attributes_list` no catálogo declara que o `id` é estrutural. O template o descarta e emite `<entityName>Id` como chave primária. Essa descrição é normativa e vale: o `id` do contrato não vira atributo comum (ver `regras-01` §4.3).
 
 ## 5. Separação do contrato
 
@@ -119,9 +123,9 @@ Atenção:
 ## 6. Fallback de leitura
 
 - Se os fragmentos `property-*.xml` não existirem, use o consolidado.
-- Se o consolidado existir mas não tiver `defaultValue` ou `validationRegex`, pare.
-- Se o pós-processador não existir, pare: o JAR está incompleto.
-- Se `archetype-resources/` não existir, pare: o JAR está incompleto.
+- Se o consolidado existir mas não tiver `defaultValue` ou `validationRegex`, pare com STOP-ENV-03.
+- Se o pós-processador não existir, pare com STOP-ENV-04: o JAR está incompleto.
+- Se `archetype-resources/` não existir, pare com STOP-ENV-02: o JAR está incompleto.
 
 ## 7. Repositório-fonte
 

@@ -63,10 +63,19 @@ Quando não há tipo declarado válido:
 | inteiro maior que `int` | `Long` |
 | decimal | `Double` |
 | string | `String` |
-| objeto | `String` |
+| `null` | `String` |
+| objeto | derivado como POJO por `regras-03` |
 | array/lista | `String` |
 
-Um objeto sem tipo declarado não é `String`: ele é derivado como POJO por `regras-03`.
+Um objeto sem tipo declarado **não** é `String`: ele é derivado como POJO por `regras-03`. A linha acima registra o destino final, não um `String` intermediário.
+
+### 2.1 Valor `null`
+
+`null` é aceito e vira `String`. Não existe tipo anulável no archetype:
+
+- o valor `null` no contrato é tratado como a string vazia do tipo `String`;
+- registre na proveniência que o valor observado era `null` e que o tipo estimado é `String`;
+- um `null` não invalida o atributo: ele continua sendo um atributo derivado, com valor `null` no contrato materializado.
 
 ## 3. Nome do atributo com tipo do projeto
 
