@@ -44,6 +44,13 @@ Este relatório é o registro oficial de SC-002, NFR-001 e NFR-002. Preencha dur
 **Resultado**: a mensagem exibe o segmento, o formato `Tipo:nome`, 3 opções e proíbe o Maven. A prova de 0 módulos em execução real do agente fica pendente.
 **Data**: 2026-11-24.
 
+## Negativos US3
+
+**Cenário**: remover o código `STOP-ENV-02` do site `indice-01` §5.
+**Resultado**: `HardStopContractTest` 1.12 falhou e nomeou `indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md:66`; o arquivo foi restaurado e o `git diff` ficou sem diferença.
+**Cobertura**: os demais negativos de código, mensagem, dicionário e termo são exercitados por 1.1–1.13 e 2.1–2.4; os negativos de tabela ficam para US4.
+**Data**: 2026-11-24.
+
 ## Notas
 
 - O revisor de SC-002 não pode ser a pessoa que implementou as mensagens.

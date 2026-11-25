@@ -257,7 +257,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 ---
 > ## PARADA DURA — STOP-IN-04
 >
-> **O que aconteceu:** a pasta de destino está ausente, é relativa, tem `~`, tem marca de fim de arquivo ou fica dentro do archetype.
+> **O que aconteceu:** a pasta de destino está ausente ou é relativa. Ela tem `~`, marca de fim de arquivo ou fica dentro do archetype.
 > **Onde está:** na seção "5. PASTA DE DESTINO" do spec.
 > **Por que parou:** o procedimento não pode presumir destino. Gate D.
 > **O que não foi executado:** nada foi gerado; nenhum comando do Maven foi rodado.
@@ -456,8 +456,8 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 >
 > **Opções de correção:**
 > 1. Corrija o campo no contrato para o formato "Tipo:nome" — por exemplo, troque "nome" por "String:nome".
-> 2. Remova o campo do contrato, se ele não faz parte da entidade.
-> 3. Escreva a lista completa de campos no contrato, no formato "Tipo:nome,Tipo:nome".
+> 2. Remova o campo do contrato, se ele não faz parte da entidade. Exemplo: remova o campo "cpf".
+> 3. Escreva a lista completa de campos no contrato, no formato "Tipo:nome,Tipo:nome". Exemplo: "String:nome,Integer:idade".
 >
 > **Sugestão:** use a opção 1 se o campo é necessário; use a opção 3 se você quer definir a lista inteira.
 > **Como retomar:** salve o contrato corrigido e comece o procedimento de novo, desde a leitura do use-case.

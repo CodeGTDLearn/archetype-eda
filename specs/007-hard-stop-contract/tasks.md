@@ -95,12 +95,12 @@
 
 **Independent Test**: Remove a code, add an unregistered `STOP-*`, remove a registry message or insert "informe apenas"; `mvn -B test` fails and names the file/code.
 
-- [ ] T026 [US3] Complete the registry/message/site scan in `src/test/archetype-post-generate/HardStopContractTest.groovy`: 18 unique codes, 1:1 messages, `Pare` lines and `PARADA DURA` blocks, title `PARADA DURA` + code + delimiters + bold labels, 20-word sentence limit using `contracts/hard-stop-message.md` MSG-09 (ignore inline code, paths and URLs), concrete example in each option, exact `STOP-CONF-01`/`02` options, file names and counts.
-- [ ] T027 [US3] Add dictionary/prohibition/security checks to `HardStopContractTest.groovy`: 20 terms, 0 "informe apenas", no `String:name` fallback, and a secret-pattern scan using the MSG-08 safety phrases from `contracts/hard-stop-message.md` as the allowlist. If the scan is not viable, record the manual review in `specs/007-hard-stop-contract/validation-report.md`.
-- [ ] T028 [US3] Add the opt-in installed-JAR checks to `HardStopContractTest.groovy` for `-Deda.verify.installed.jar=true`: registry, dictionary and `STOP-DER-02` in the installed artifact.
-- [ ] T029 [US3] Run `mvn -B test` and fix the suite failures; confirm all checks pass at the current state.
-- [ ] T030 [US3] Run the negative scenarios from `specs/007-hard-stop-contract/quickstart.md` §Cenário 10 and restore the files after each failure.
-- [ ] T031 [US3] Verify each negative scenario names the missing code or file; record the results in `specs/007-hard-stop-contract/validation-report.md`.
+- [X] T026 [US3] Complete the registry/message/site scan in `src/test/archetype-post-generate/HardStopContractTest.groovy`: 18 unique codes, 1:1 messages, `Pare` lines and `PARADA DURA` blocks, title `PARADA DURA` + code + delimiters + bold labels, 20-word sentence limit using `contracts/hard-stop-message.md` MSG-09 (ignore inline code, paths and URLs), concrete example in each option, exact `STOP-CONF-01`/`02` options, file names and counts.
+- [X] T027 [US3] Add dictionary/prohibition/security checks to `HardStopContractTest.groovy`: 20 terms, 0 "informe apenas", no `String:name` fallback, and a secret-pattern scan using the MSG-08 safety phrases from `contracts/hard-stop-message.md` as the allowlist. If the scan is not viable, record the manual review in `specs/007-hard-stop-contract/validation-report.md`.
+- [X] T028 [US3] Add the opt-in installed-JAR checks to `HardStopContractTest.groovy` for `-Deda.verify.installed.jar=true`: registry, dictionary and `STOP-DER-02` in the installed artifact.
+- [X] T029 [US3] Run `mvn -B test` and fix the suite failures; confirm all checks pass at the current state.
+- [X] T030 [US3] Run the negative scenarios from `specs/007-hard-stop-contract/quickstart.md` §Cenário 10 and restore the files after each failure.
+- [X] T031 [US3] Verify each negative scenario names the missing code or file; record the results in `specs/007-hard-stop-contract/validation-report.md`.
 
 **Checkpoint**: US3 protects the registry against future silent stops.
 
