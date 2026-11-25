@@ -38,7 +38,7 @@ Toda flag precisa satisfazer a `validationRegex` do catálogo.
 - Valor inválido → usa o `defaultValue` do catálogo, com nota e aviso.
 - A nota registra a rejeição: `valor '...' rejeitado pela regex; default aplicado (FR-006)`.
 - O erro é barulhento; nunca há fallback silencioso.
-- Exceção: a lista de atributos derivada inválida não usa o default; pare com STOP-DER-02 (ver `regras-01` §6).
+- Exceção: a lista de atributos derivada inválida não usa o default; pare com STOP-DER-02 (ver `01` §6).
 
 ### 3.1 Flags críticas
 

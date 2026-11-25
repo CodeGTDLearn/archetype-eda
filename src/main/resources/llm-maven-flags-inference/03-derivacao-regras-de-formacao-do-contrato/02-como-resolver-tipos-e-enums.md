@@ -64,10 +64,10 @@ Quando não há tipo declarado válido:
 | decimal | `Double` |
 | string | `String` |
 | `null` | `String` |
-| objeto | derivado como POJO por `regras-03` |
+| objeto | derivado como POJO por `03` |
 | array/lista | `String` |
 
-Um objeto sem tipo declarado **não** é `String`: ele é derivado como POJO por `regras-03`. A linha acima registra o destino final, não um `String` intermediário.
+Um objeto sem tipo declarado **não** é `String`: ele é derivado como POJO por `03`. A linha acima registra o destino final, não um `String` intermediário.
 
 ### 2.1 Valor `null`
 

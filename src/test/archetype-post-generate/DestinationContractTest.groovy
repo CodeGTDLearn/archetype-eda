@@ -37,8 +37,8 @@ def p00 = read("01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md
 def p03 = read("02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md")
 def p04 = read("02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md")
 def p05 = read("02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md")
-def r01 = read("03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md")
-def r06 = read("03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md")
+def r01 = read("03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md")
+def r06 = read("03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md")
 
 // ---------------------------------------------------------------------------
 // A. the procedure tree keeps the locked count
@@ -55,7 +55,7 @@ check("1.2 target/classes/llm-maven-flags-inference carries the same 19 files: $
 // B. the marker is declared where the rule lives
 // ---------------------------------------------------------------------------
 check("2.1 prompt-00 declares the PASTA DE DESTINO marker", p00.contains("PASTA DE DESTINO"))
-check("2.2 regras-01 declares the PASTA DE DESTINO marker", r01.contains("PASTA DE DESTINO"))
+check("2.2 01 declares the PASTA DE DESTINO marker", r01.contains("PASTA DE DESTINO"))
 check("2.3 prompt-00 lists the destination as the 5th spec entry",
         p00.contains("pasta de destino da geração"))
 check("2.4 prompt-00 declares the destination gate", p00.contains("Gate D"))
@@ -80,15 +80,15 @@ check("3.6 prompt-04 instructs displaying the destination before executing",
 // ---------------------------------------------------------------------------
 // D. the destination stays outside the contract and outside the provenance
 // ---------------------------------------------------------------------------
-check("4.1 regras-01 keeps the marker out of the contract keys",
+check("4.1 01 keeps the marker out of the contract keys",
         r01.contains("não é chave de contrato"))
 def metaKeyLine = r01.readLines().find { it.contains("meta-chaves (`entityName`") }
 def originalMetaKeys = ["entityName", "entity", "package", "description", "attributes", "fields"]
-check("4.2 regras-01 keeps exactly the six contract meta-keys",
+check("4.2 01 keeps exactly the six contract meta-keys",
         metaKeyLine != null && originalMetaKeys.every { metaKeyLine.contains(it) })
 check("4.3 the destination marker is not one of the contract meta-keys",
         metaKeyLine != null && !metaKeyLine.contains("PASTA DE DESTINO"))
-check("4.4 regras-06 keeps the destination out of the provenance table",
+check("4.4 06 keeps the destination out of the provenance table",
         r06.contains("não é flag"))
 
 // ---------------------------------------------------------------------------

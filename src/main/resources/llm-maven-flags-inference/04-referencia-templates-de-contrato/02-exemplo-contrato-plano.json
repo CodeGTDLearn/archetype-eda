@@ -1,0 +1,12 @@
+{
+  "description": "Contrato plano: os campos de negocio ficam no topo e viram atributos da entidade. As chaves do catalogo (enable_jwt_authentication, api_port) viram flags e nao atributos. O 'id' e campo tecnico de identidade: corresponde ao campo <entidade>Id gerado pelo archetype e nao vira atributo em custom_entity_attributes_list (01 §4.3).",
+  "entity_name": "Cliente",
+  "id": 1024,
+  "nome": "Maria Silva",
+  "data_nascimento": "1990-05-14",
+  "endereco": "Rua das Faias, 221",
+  "telefone": "11987654321",
+  "ativo": true,
+  "enable_jwt_authentication": true,
+  "api_port": 8080
+}

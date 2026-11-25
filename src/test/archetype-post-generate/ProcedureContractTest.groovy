@@ -9,7 +9,7 @@
  * This suite proves the CONTENT of the procedure:
  *
  *   A. the 6 JSON files of 04-referencia-templates-de-contrato/ are valid JSON;
- *   B. the 5 examples validate against template-01-schema-do-contrato.json
+ *   B. the 5 examples validate against 01-schema-do-contrato.json
  *      (a hand-rolled validator for the draft-07 subset the schema uses);
  *   C. every flag-like term the procedure mentions is a declared catalog flag;
  *   D. every path the procedure points at exists in the JAR layout;
@@ -136,7 +136,7 @@ def validateSchema(Object schema, Object instance, Object rootSchema, String pat
     return errors
 }
 
-def schemaFile = new File(contractTemplates, "template-01-schema-do-contrato.json")
+def schemaFile = new File(contractTemplates, "01-schema-do-contrato.json")
 def schema = parsed[schemaFile.name]
 def schemaErrors = [:]
 if (schema != null) {
@@ -145,7 +145,7 @@ if (schema != null) {
         if (!errors.isEmpty()) schemaErrors[f.name] = errors
     }
 }
-check("1.3 every contract example validates against template-01-schema-do-contrato.json: ${schemaErrors}",
+check("1.3 every contract example validates against 01-schema-do-contrato.json: ${schemaErrors}",
         schemaErrors.isEmpty())
 
 // ---------------------------------------------------------------------------
@@ -195,8 +195,8 @@ check("1.5 every path the procedure points at exists in the JAR layout: ${broken
 def entityTemplate = new File(resources,
         "archetype-resources/src/main/java/__entity_package_name__/__entity_name__.java")
 def rulesFile = new File(procedure,
-        "03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md")
-def exampleFile = new File(contractTemplates, "template-03-exemplo-contrato-com-objetos-aninhados.json")
+        "03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md")
+def exampleFile = new File(contractTemplates, "03-exemplo-contrato-com-objetos-aninhados.json")
 
 def templateUsesFqn = entityTemplate.getText("UTF-8").contains("\${nested_package_full}.\${attrib.type}")
 def rulesText = rulesFile.getText("UTF-8")
@@ -249,7 +249,7 @@ check("1.10 every flag NOT cited by the procedure is an explicit allowlist entry
 // become a catalog flag, and the contract meta-keys MUST stay untouched.
 // ---------------------------------------------------------------------------
 def regras01 = new File(procedure,
-        "03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md")
+        "03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md")
         .getText("UTF-8")
 
 check("1.11 the destination property outputDirectory is NOT a catalog flag",
@@ -257,7 +257,7 @@ check("1.11 the destination property outputDirectory is NOT a catalog flag",
 
 def metaKeyLine = regras01.readLines().find { it.contains("meta-chaves (`entityName`") }
 def originalMetaKeys = ["entityName", "entity", "package", "description", "attributes", "fields"]
-check("1.12 regras-01 keeps exactly the six contract meta-keys",
+check("1.12 01 keeps exactly the six contract meta-keys",
         metaKeyLine != null && originalMetaKeys.every { metaKeyLine.contains(it) })
 check("1.13 the destination marker is not one of the contract meta-keys",
         metaKeyLine != null && !metaKeyLine.contains("PASTA DE DESTINO"))

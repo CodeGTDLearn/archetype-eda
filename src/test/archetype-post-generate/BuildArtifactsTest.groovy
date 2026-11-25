@@ -93,18 +93,18 @@ def procedureFiles = [
         "02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md",
         "02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md",
         "02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md",
-        "03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md",
-        "03-derivacao-regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md",
-        "03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md",
-        "03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md",
-        "03-derivacao-regras-de-formacao-do-contrato/regras-05-como-materializar-e-emitir-o-contrato.md",
-        "03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md",
-        "04-referencia-templates-de-contrato/template-01-schema-do-contrato.json",
-        "04-referencia-templates-de-contrato/template-02-exemplo-contrato-plano.json",
-        "04-referencia-templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json",
-        "04-referencia-templates-de-contrato/template-04-exemplo-contrato-com-enums.json",
-        "04-referencia-templates-de-contrato/template-05-exemplo-contrato-com-tipos-do-projeto.json",
-        "04-referencia-templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json"
+        "03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md",
+        "03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md",
+        "03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md",
+        "03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md",
+        "03-derivacao-regras-de-formacao-do-contrato/05-como-materializar-e-emitir-o-contrato.md",
+        "03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md",
+        "04-referencia-templates-de-contrato/01-schema-do-contrato.json",
+        "04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json",
+        "04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json",
+        "04-referencia-templates-de-contrato/04-exemplo-contrato-com-enums.json",
+        "04-referencia-templates-de-contrato/05-exemplo-contrato-com-tipos-do-projeto.json",
+        "04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json"
 ]
 
 def procedureIndexText = procedureIndex.isFile() ? procedureIndex.getText("UTF-8") : ""
