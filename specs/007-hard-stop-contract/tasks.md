@@ -83,7 +83,7 @@
 - [X] T022 [P] [US2] Update `prompt-04-fluxo-de-execucao-e-verificacao.md` §1.2 and `regras-06-como-relatar-proveniencia.md` §5/§6 to reflect `STOP-DER-02` in the checklist and provenance.
 - [X] T023 [US2] Verify and adjust the `STOP-DER-02` message in `prompt-00` §0.5: invalid segment, `Tipo:nome`, 3 options, suggestion, no `String:name` fallback, no Maven.
 - [X] T024 [US2] Add the `STOP-DER-02` message checks to `src/test/archetype-post-generate/HardStopContractTest.groovy`: exactly 3 option texts (fix/remove/declare the full list), no `String:name` fallback, no Maven. Do not claim 0 modules here; run `mvn -B test`.
-- [ ] T025 [US2] Run the manual negative scenario from `specs/007-hard-stop-contract/quickstart.md` §Cenário 5 and record 0 modules/no Maven in `specs/007-hard-stop-contract/validation-report.md`; this is the manual proof that the text suite cannot provide.
+- [X] T025 [US2] Run the manual negative scenario from `specs/007-hard-stop-contract/quickstart.md` §Cenário 5 and record 0 modules/no Maven in `specs/007-hard-stop-contract/validation-report.md`; this is the manual proof that the text suite cannot provide.
 
 **Checkpoint**: US2 is independently testable; the invalid list cannot generate a module.
 
@@ -152,7 +152,7 @@
 - [X] T049 Final diff review: `README.md` unchanged, no new dependency, no `defaultValue`/`validationRegex` change, no new procedure file, no generated code or fixture change.
 - [X] T050 Run the NFR-001 timing check using the baseline recorded in T001: measure the final `(Measure-Command { mvn -B test }).TotalSeconds`, compute `(final - baseline) / baseline`, require ≤10%, and record final/delta in `specs/007-hard-stop-contract/validation-report.md`. Fail if the baseline is missing.
 - [X] T051 Run the NFR-002 offline check: `mvn -o -B test` twice, filter the `[archetype-post-generate]` lines, compare the outputs, and record the result in `specs/007-hard-stop-contract/validation-report.md`.
-- [ ] T052 After US2 (T023/T024), run the final SC-002 sample with the 6 fixed messages and the independent reviewer, record the 5 answers in `specs/007-hard-stop-contract/validation-report.md`, accept 6/6, then consolidate NFR-001/NFR-002 evidence, reviewer/date and no secrets; reject incomplete evidence.
+- [X] T052 After US2 (T023/T024), run the final SC-002 sample with the 6 fixed messages and the independent reviewer, record the 5 answers in `specs/007-hard-stop-contract/validation-report.md`, accept 6/6, then consolidate NFR-001/NFR-002 evidence, reviewer/date and no secrets; reject incomplete evidence.
 
 ---
 

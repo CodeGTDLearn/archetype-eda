@@ -1,26 +1,24 @@
 # Validation Report — Paradas Duras
 
 **Feature**: 007-hard-stop-contract | **Date**: 2026-11-24
-**Status**: Implementação concluída; SC-002 aguarda revisor independente.
+**Status**: Implementação concluída; SC-002 aprovado.
 
 Este relatório é o registro oficial de SC-002, NFR-001 e NFR-002. Preencha durante a validação; não grave resultados no `quickstart.md`.
 
 ## SC-002 — Operador iniciante
 
 **Amostra fixa**: 6 mensagens, incluindo `STOP-DER-02` e as 2 confirmações.
-**Revisor**: não participou da implementação.
+**Revisor**: Paulo (não participou da implementação).
 **Aceite**: 6/6 linhas com as 5 respostas corretas e `Resultado = OK`.
 
 | Mensagem | O que aconteceu | Onde está | Opções | Sugestão | Retomada | Resultado | Revisor | Data |
 |---|---|---|---|---|---|---|---|---|
-| `STOP-IN-01` | | | | | | | | |
-| `STOP-ENV-03` | | | | | | | | |
-| `STOP-DER-01` | | | | | | | | |
-| `STOP-DER-02` | | | | | | | | |
-| `STOP-CONF-01` | | | | | | | | |
-| `STOP-CONF-02` | | | | | | | | |
-
-**Pendência**: T052 não foi executada. Falta o revisor independente e a data; a evidência atual é incompleta e não foi aceita.
+| `STOP-IN-01` | Spec sem a seção de use-case | Antes do contrato | Criar a seção, usar o marcador ou o template | Criar a seção ou usar o template | Salvar e recomeçar pelo Gate A | OK | Paulo | 2026-11-25 |
+| `STOP-ENV-03` | Catálogo ausente ou ilegível | `META-INF/maven/archetype-metadata.xml` | Reinstalar o JAR, reconstruir ou conferir 35/18 | Reinstalar o JAR | Voltar ao início e ler o catálogo | OK | Paulo | 2026-11-25 |
+| `STOP-DER-01` | Mais de um nome de entidade possível | Use-case ou campo do nome no contrato | Declarar `entity_name`, nomear no use-case ou escolher candidato | Declarar `entity_name` | Salvar e recomeçar pela derivação | OK | Paulo | 2026-11-25 |
+| `STOP-DER-02` | Campo fora do formato `Tipo:nome` | Contrato, seção 4 | Corrigir, remover o campo ou escrever a lista completa | Corrigir ou declarar a lista completa | Salvar e recomeçar desde o use-case | OK | Paulo | 2026-11-25 |
+| `STOP-CONF-01` | Pasta de destino não existe | Seção 5. PASTA DE DESTINO | Criar, escolher outra ou cancelar | Criar a pasta | Confirmar e continuar | OK | Paulo | 2026-11-25 |
+| `STOP-CONF-02` | Módulo com o mesmo nome já existe | `<destino>/<artifactId>` | Sobrescrever, manter e encerrar ou escolher outro destino | Escolher outro destino | Confirmar e continuar | OK | Paulo | 2026-11-25 |
 
 ## NFR-001 — Tempo de build
 
@@ -43,7 +41,8 @@ Este relatório é o registro oficial de SC-002, NFR-001 e NFR-002. Preencha dur
 ## STOP-DER-02 — Prova manual
 
 **Cenário**: contrato com lista final inválida; ver `quickstart.md` §Cenário 5.
-**Resultado**: a mensagem exibe o segmento, o formato `Tipo:nome`, 3 opções e proíbe o Maven. A prova de 0 módulos em execução real do agente fica pendente.
+**Execução**: 2026-11-24, sessão independente (subagente, contexto novo), spec `t025/spec.md` e destino `C:\Users\edufi\AppData\Local\Temp\opencode\t025-destino-a2fa5ee`.
+**Resultado**: a mensagem exibiu `STOP-DER-02`, o segmento `"cpf-cliente": "123"` (lista derivada `String:cpf-cliente`), o formato `Tipo:nome`, 3 opções, sugestão e retomada. Nenhuma linha `mvn archetype:generate` apareceu. O destino ficou com 0 módulos.
 **Data**: 2026-11-24.
 
 ## Negativos US3
@@ -68,7 +67,7 @@ Este relatório é o registro oficial de SC-002, NFR-001 e NFR-002. Preencha dur
 **Cenário 2**: `mvn clean install` — `BUILD SUCCESS`; 19 arquivos, 35 propriedades e 18 filesets empacotados.
 **Cenário 3**: `mvn -B test "-Deda.verify.installed.jar=true"` — JAR instalado com 18 códigos, dicionário e `STOP-DER-02` (4/4 checks).
 **Cenário 4**: 18 mensagens, 20 termos e template de 10 campos em `prompt-00` §0.4/§0.5.
-**Cenário 5**: `STOP-DER-02` exibe segmento, formato `Tipo:nome`, 3 opções, sugestão, retomada e nenhuma linha `mvn archetype:generate`. A prova de 0 módulos em execução real continua em T025.
+**Cenário 5**: `STOP-DER-02` exibe segmento, formato `Tipo:nome`, 3 opções, sugestão, retomada e nenhuma linha `mvn archetype:generate`. A prova de 0 módulos em execução real está registrada em T025.
 **Cenário 6**: tabela com 9 linhas de flag e 3 colunas; 0 linhas com coluna errada; pipes internos escapados.
 **Cenário 7**: `property-20` diz caminho absoluto; `none` e regex permissiva intactos.
 **Cenário 8**: `regras-06` cita a exceção de `contract_nested_type_definitions = none`; `regras-04` explica `FR-006`.
