@@ -5,7 +5,7 @@
 ## Escopo
 
 - **Dentro**: sete renomes de arquivos, dois na subpasta 01 e cinco na subpasta 02, sob `src/main/resources/llm-maven-flags-inference/`.
-- **Fora**: conteúdo dos arquivos nas Fases 1 e 2; README; índice como conteúdo; fixtures; suítes; redirect em `src/main/resources/utils/`; aliases; cópias; renomear arquivos das subpastas 03 e 04; JAR instalado.
+- **Fora**: conteúdo dos arquivos nas Fases 1 e 2; README; índice como conteúdo; fixtures; suítes; redirect em `src/main/resources/utils/`; aliases; cópias; renomear ou alterar arquivos das subpastas 03 e 04; JAR instalado.
 - **Fase 3**: as referências são tratadas no contrato [reference-update-contract.md](./reference-update-contract.md).
 
 ## Mapa canônico dos renomes
@@ -30,10 +30,11 @@ Caminhos relativos à raiz do repositório.
 - **C-004**: Nenhum nome de origem sobrevive como arquivo, alias, cópia ou redirect dentro de `llm-maven-flags-inference/`.
 - **C-005**: Após a Fase 1, a subpasta 01 tem exatamente `01-entryPoint.md` e `02-mapa-dos-arquivos-e-ordem-de-leitura.md`.
 - **C-006**: Após a Fase 2, a subpasta 02 tem exatamente cinco arquivos, nenhum com prefixo `prompt-`, numerados de 01 a 05.
-- **C-007**: As subpastas 03 e 04 não são renomeadas; nenhum arquivo delas é adicionado ou removido.
-- **C-008**: README, fixture, suítes e `utils/` não são editados nas Fases 1 e 2.
+- **C-007**: As subpastas 03 e 04 não são renomeadas; nenhum arquivo delas é adicionado, removido ou alterado.
+- **C-008**: README, fixtures, suítes e `utils/` não são editados nas Fases 1 e 2.
 - **C-009**: Nenhuma dependência, plugin ou arquivo em `src/main/java` é criado ou alterado.
 - **C-010**: O nome `01-entryPoint.md` é literal, com `E` maiúsculo.
+- **C-011**: As 3 referências antigas em `regras-01` e `regras-04` permanecem após a Fase 3 e ficam para feature futura.
 
 ## Pré-condições por fase
 
@@ -70,6 +71,7 @@ Caminhos relativos à raiz do repositório.
 3. Comparação do snapshot das subpastas de controle: 0 arquivos adicionados, removidos ou alterados.
 4. Contagem total do procedimento: 19 arquivos.
 5. Registro nominal das suítes que falham por citar os nomes antigos.
+6. Snapshot das subpastas 03 e 04 antes e depois da Fase 3: 0 alterações.
 
 ## Critérios de rejeição
 
@@ -80,4 +82,4 @@ Caminhos relativos à raiz do repositório.
 - Qualquer edição em README, suítes, fixtures, índice (conteúdo) ou redirect nas Fases 1 e 2.
 - Criação de alias, cópia ou redirect com nome antigo.
 - Contagem diferente de 19 no procedimento.
-- Renomear arquivo das subpastas 03 ou 04.
+- Renomear ou alterar arquivo das subpastas 03 ou 04.

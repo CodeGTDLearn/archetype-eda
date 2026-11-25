@@ -4,7 +4,7 @@
 
 ## Contexto
 
-A spec tem três fases: duas de renomeação e uma de atualização de referências. O inventário operacional encontrou 115 ocorrências dos sete nomes antigos em 15 arquivos. A Fase 3 depende das Fases 1 e 2 e é a única que restaura `mvn -B test` verde.
+A spec tem três fases: duas de renomeação e uma de atualização de referências. As subpastas 03 e 04 ficam totalmente intactas; por isso, a Fase 3 cobre 112 ocorrências em 13 arquivos e deixa 3 ocorrências antigas em `regras-01` e `regras-04` para uma feature futura.
 
 ## Decisão 1 — Dependência da Fase 3
 
@@ -16,21 +16,21 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 - Distribuir as referências entre as Fases 1 e 2: contraria a decisão da spec de criar a Fase 3; rejeitado.
 - Executar a Fase 3 antes dos renomes: deixaria o procedimento apontando para nomes inexistentes; rejeitado.
 
-## Decisão 2 — Interpretação da FR-009 para a Fase 3
+## Decisão 2 — Subpastas 03 e 04 totalmente fora do escopo
 
-**Decision**: A FR-009 é interpretada como proibição de renomear, adicionar ou remover arquivos nas subpastas 03 e 04. A Fase 3 pode substituir apenas linhas de referência de caminho/nome nos dois arquivos da subpasta 03 que citam `prompt-00`; nenhum arquivo da subpasta 04 contém referência antiga.
+**Decision**: As subpastas 03 e 04 não são renomeadas, não têm arquivos adicionados ou removidos e não têm conteúdo alterado. As 3 referências antigas em `regras-01` e `regras-04` permanecem e ficam para uma feature futura.
 
-**Rationale**: A FR-014 limita a Fase 3 a referências de caminho e nome, e a SC-006 exige zero referências operacionais aos sete nomes antigos. Sem atualizar `regras-01` e `regras-04`, a SC-006 seria impossível. A subpasta 04 tem 0 ocorrências.
+**Rationale**: A FR-009 exige que as subpastas 03 e 04 permaneçam totalmente inalteradas, inclusive referências. A SC-006 foi limitada às superfícies da FR-013. A feature futura tratará as referências residuais com escopo próprio.
 
 **Alternatives considered**:
-- Deixar a subpasta 03 intocada: falharia a SC-006 e o `Select-String` final; rejeitado.
-- Renomear arquivos da subpasta 03: violaria a FR-009 e o escopo; rejeitado.
+- Atualizar apenas as referências em 03: violaria a FR-009; rejeitado pelo usuário.
+- Renomear arquivos de 03/04: violaria a FR-009 e o escopo; rejeitado.
 
-**Registro**: esta interpretação MUST aparecer no relatório de implementação da Fase 3.
+**Consequência aceita**: após a Fase 3, `regras-01` e `regras-04` ainda citam `prompt-00`. A verificação de 0 tokens é limitada às 13 superfícies da FR-013.
 
-## Decisão 3 — Inventário das referências operacionais
+## Decisão 3 — Inventário das referências em escopo
 
-**Decision**: A Fase 3 atua sobre 115 ocorrências em 15 arquivos, conforme a tabela.
+**Decision**: A Fase 3 atua sobre 112 ocorrências em 13 arquivos.
 
 | Arquivo | Ocorrências |
 |---|---:|
@@ -40,8 +40,6 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 | `02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` | 1 |
 | `02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md` | 1 |
 | `02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` | 1 |
-| `03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` | 1 |
-| `03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md` | 2 |
 | `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` | 1 |
 | `src/test/archetype-post-generate/BuildArtifactsTest.groovy` | 8 |
 | `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` | 2 |
@@ -49,17 +47,25 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 | `src/test/archetype-post-generate/HardStopContractTest.groovy` | 4 |
 | `src/test/archetype-post-generate/PathRenameContractTest.groovy` | 11 |
 | `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy` | 3 |
-| **Total** | **115** |
+| **Total** | **112** |
 
-**Rationale**: O número é reproduzível por `Select-String` com o padrão `prompt-0[0-5]|indice-01-mapa` nas superfícies operacionais. `src/test/resources/projects/`, `.specify/templates/`, `pom.xml` e CI têm 0 ocorrências.
+### Referências diferidas (fora do escopo)
+
+| Arquivo | Ocorrências | Destino |
+|---|---:|---|
+| `03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` | 1 | Feature futura |
+| `03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md` | 2 | Feature futura |
+| **Total** | **3** | — |
+
+**Rationale**: O inventário original tinha 115 ocorrências em 15 arquivos. Excluir as 3 ocorrências de `regras-01` e `regras-04` produz 112 em 13. `src/test/resources/projects/`, `.specify/templates/`, `pom.xml` e CI têm 0 ocorrências.
 
 **Alternatives considered**:
-- Inventariar apenas os caminhos completos: deixaria radicais isolados (`prompt-00 §0.4`) como referências antigas; rejeitado.
-- Incluir specs históricas: violaria a FR-016; rejeitado.
+- Incluir as 3 ocorrências de 03: violaria a FR-009; rejeitado.
+- Inventariar apenas caminhos completos: deixaria radicais isolados (`prompt-00 §0.4`) como referências antigas; rejeitado.
 
 ## Decisão 4 — Ordem de substituição dos tokens
 
-**Decision**: Substituir primeiro os sete nomes completos com `.md` e depois os radicais isolados, na ordem abaixo.
+**Decision**: Substituir primeiro os sete nomes completos com `.md` e depois os radicais isolados.
 
 | Ordem | Token antigo | Token novo |
 |---:|---|---|
@@ -82,7 +88,7 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 
 **Alternatives considered**:
 - Substituição única com regex: o risco de captura parcial é o mesmo; a ordem explícita é verificável; rejeitado.
-- Renomear também identificadores de variáveis (`prompt00Path`, `prompt03`): não são referências operacionais e ampliariam o diff sem necessidade; rejeitado.
+- Renomear identificadores de variáveis (`prompt00Path`, `prompt03`): não são referências operacionais; rejeitado.
 
 ## Decisão 5 — Mecanismo de renomeação
 
@@ -109,7 +115,7 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 
 **Decision**: A Fase 1 é aceita com cinco suítes vermelhas; a Fase 2, com as seis. A Fase 3 fecha com `mvn -B test` verde.
 
-**Rationale**: As suítes leem os nomes antigos; atualizá-las antes da Fase 3 misturaria renomeação e referências e quebraria a separação das fases.
+**Rationale**: As suítes leem os nomes antigos; atualizá-las antes da Fase 3 misturaria renomeação e referências. As 3 referências em 03/04 não são verificadas por nenhuma suíte do gate.
 
 **Alternatives considered**:
 - Atualizar as suítes nas Fases 1 e 2: anteciparia a Fase 3 e duplicaria trabalho; rejeitado.
@@ -117,13 +123,14 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 
 ## Decisão 8 — Exclusões de escopo
 
-**Decision**: Não reescrever `specs/003` a `specs/007`, `target/` nem `graphify-out/`.
+**Decision**: Não reescrever `specs/003` a `specs/007`, `target/` nem `graphify-out/`; não alterar as subpastas 03 e 04.
 
-**Rationale**: Specs históricas são registro; `target/` e `graphify-out/` são saídas geradas. A FR-016 e a SC-008 fixam a exclusão.
+**Rationale**: Specs históricas são registro; `target/` e `graphify-out/` são saídas geradas; 03/04 são escopo de uma feature futura. A FR-016, a SC-008 e a FR-009 fixam as exclusões.
 
 **Alternatives considered**:
 - Atualizar specs históricas: reescreveria registro e ampliaria o escopo; rejeitado.
 - Atualizar `graphify-out/`: saída gerada, não fonte; rejeitado.
+- Atualizar 03/04: violaria a FR-009; rejeitado.
 
 ## Decisão 9 — JAR instalado e paridade com o CI
 
@@ -137,7 +144,7 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 
 ## Decisão 10 — Dependências e paradigma
 
-**Decision**: Nenhuma dependência nova; o projeto é NÃO OOP e os princípios da seção 3 do input do Plan estão vazios.
+**Decision**: Nenhuma dependência nova; o projeto é NÃO OOP e a seção de princípios do input do Plan está vazia.
 
 **Rationale**: A feature é documental e de testes; não há código OOP no repositório. SOLID não se aplica.
 
@@ -146,4 +153,4 @@ A spec tem três fases: duas de renomeação e uma de atualização de referênc
 
 ## Lacunas remanescentes
 
-Nenhuma. A única tensão da spec — FR-009 versus referências na subpasta 03 — foi resolvida pela interpretação registrada na Decisão 2.
+Nenhuma. O escopo de 03/04 está resolvido na spec; as referências residuais são uma consequência aceita e diferida para uma feature futura.

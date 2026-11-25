@@ -56,15 +56,26 @@ Mapa estático dos sete renomes.
 
 ### ReferenceOccurrence
 
-Uma ocorrência de nome antigo em uma superfície operacional.
+Uma ocorrência de nome antigo em uma superfície operacional em escopo.
 
 | Campo | Tipo | Regra |
 |---|---|---|
-| `filePath` | caminho relativo | Um dos 15 arquivos do inventário |
+| `filePath` | caminho relativo | Um dos 13 arquivos do inventário |
 | `line` | inteiro | Linha da ocorrência |
 | `oldToken` | texto | Um dos 14 tokens da tabela de substituição |
 | `newToken` | texto | Token correspondente |
 | `surface` | `README` / `procedimento` / `redirect` / `suíte` | Classificação da superfície |
+
+### DeferredReference
+
+Referência antiga fora do escopo desta feature.
+
+| Campo | Tipo | Regra |
+|---|---|---|
+| `filePath` | caminho relativo | `regras-01` ou `regras-04` |
+| `occurrences` | inteiro | 1 em `regras-01`; 2 em `regras-04` |
+| `reason` | texto | Subpastas 03 e 04 totalmente intactas |
+| `futureFeature` | texto | Feature futura de referências residuais |
 
 ### ReferenceUpdate
 
@@ -73,11 +84,13 @@ Resultado da Fase 3.
 | Campo | Tipo | Regra |
 |---|---|---|
 | `phase` | 3 | Fase de referências |
-| `totalOccurrences` | 115 | Inventário inicial |
-| `totalFiles` | 15 | Arquivos operacionais |
-| `remainingOldTokens` | 0 | Após a Fase 3 |
+| `totalOccurrences` | 112 | Inventário em escopo |
+| `totalFiles` | 13 | Arquivos operacionais em escopo |
+| `deferredOccurrences` | 3 | `regras-01` e `regras-04` |
+| `deferredFiles` | 2 | Subpasta 03 |
+| `remainingOldTokens` | 0 | Nas 13 superfícies em escopo |
 | `buildStatus` | `green` / `red` | `mvn -B test` após a Fase 3 |
-| `status` | `pending` / `updated` / `verified` / `failed` | `verified` exige 0 tokens e build verde |
+| `status` | `pending` / `updated` / `verified` / `failed` | `verified` exige 0 tokens em escopo e build verde |
 
 ## Regras de validação
 
@@ -87,14 +100,15 @@ Resultado da Fase 3.
 - **V-004**: Após a Fase 2, a subpasta 02 tem exatamente 5 arquivos, 0 com prefixo `prompt-`.
 - **V-005**: As subpastas de controle mantêm arquivos e hashes do snapshot anterior à fase.
 - **V-006**: O procedimento mantém 19 arquivos.
-- **V-007**: Após a Fase 3, 0 ocorrências dos 14 tokens antigos nas 15 superfícies operacionais.
+- **V-007**: Após a Fase 3, 0 ocorrências dos 14 tokens antigos nas 13 superfícies em escopo.
 - **V-008**: A Fase 3 altera somente linhas de referência; regras e textos normativos ficam intactos.
-- **V-009**: As subpastas 03 e 04 não são renomeadas; a subpasta 04 tem 0 referências; a 03 recebe só referências.
+- **V-009**: As subpastas 03 e 04 permanecem totalmente intactas, inclusive as 3 referências antigas de `regras-01` e `regras-04`.
 - **V-010**: As seis suítes são atualizadas e `mvn -B test` fica verde.
 - **V-011**: `specs/003` a `specs/007`, `target/` e `graphify-out/` permanecem inalterados.
 - **V-012**: Nenhum alias, redirect ou cópia com nome antigo é criado.
 - **V-013**: A Fase 3 depende das Fases 1 e 2.
 - **V-014**: Identificadores de variável (`prompt00Path`, `prompt03`) não são referências operacionais e ficam fora do critério.
+- **V-015**: As 3 referências diferidas em 03 não entram no critério de 0 tokens.
 
 ## Transições de estado
 
@@ -108,7 +122,7 @@ pending → renamed (5 arquivos) → verified
                               ↘ failed (reverter renomes já feitos)
 
 Fase 3
-pending → updated (115 ocorrências) → verified (0 tokens + mvn -B test verde)
+pending → updated (112 ocorrências) → verified (0 tokens em escopo + mvn -B test verde)
                                    ↘ failed (corrigir referências restantes)
 ```
 
@@ -123,7 +137,7 @@ Regras:
 - 19 arquivos no procedimento antes e depois de qualquer fase.
 - Subpasta 01: 2 arquivos após a Fase 1.
 - Subpasta 02: 5 arquivos após a Fase 2.
-- Subpastas 03 e 04: mesmos nomes de arquivo em todas as fases.
+- Subpastas 03 e 04: mesmos arquivos, mesmos hashes e mesmas referências em todas as fases.
 - Conteúdo dos 7 arquivos renomeados: idêntico nas Fases 1 e 2.
-- Fase 3: somente referências de caminho e nome.
-- Após a Fase 3: 0 tokens antigos nas superfícies operacionais e `mvn -B test` verde.
+- Fase 3: somente referências de caminho e nome nas 13 superfícies em escopo.
+- Após a Fase 3: 0 tokens antigos nas 13 superfícies em escopo, 3 tokens diferidos em 03/04 e `mvn -B test` verde.

@@ -8,7 +8,7 @@
 - Nenhuma dependência nova.
 - Não abrir os arquivos em editor durante a renomeação.
 - Não usar `git mv`, commit, push ou branch.
-- Não editar regras, textos normativos ou formatação na Fase 3.
+- Não editar regras, textos normativos, formatação ou as subpastas 03 e 04.
 
 Variáveis de trabalho:
 
@@ -85,7 +85,7 @@ Compare-Object @($antes | ForEach-Object Hash) $depois
 Esperado: nenhuma saída.
 
 - Conferir o snapshot das subpastas 02, 03 e 04 contra o estado atual.
-- `mvn -B test` fica vermelho; registrar as suítes esperadas e não corrigir nesta fase.
+- `mvn -B test` fica vermelho; registrar as cinco suítes esperadas e não corrigir nesta fase.
 
 ## Fase 2 — Operação do agente sem o prefixo prompt-
 
@@ -139,7 +139,7 @@ Esperado: os cinco nomes sem `prompt-`, numerados de 01 a 05.
 
 - Comparar os hashes com `fase2-alvos-antes.json`.
 - Conferir o snapshot das subpastas 01, 03 e 04.
-- `mvn -B test` continua vermelho; registrar as suítes.
+- `mvn -B test` continua vermelho; registrar as seis suítes.
 
 ## Fase 3 — Atualização das referências operacionais
 
@@ -151,12 +151,13 @@ Get-ChildItem $root -Recurse -File | Select-Object -ExpandProperty FullName
 
 Esperado: 19 arquivos, com os sete novos nomes.
 
-### 2. Inventariar as ocorrências
+### 2. Inventariar as ocorrências em escopo
 
 ```powershell
 $surfaces = @(
   "README.md",
-  "src/main/resources/llm-maven-flags-inference",
+  "src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao",
+  "src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente",
   "src/main/resources/utils",
   "src/test/archetype-post-generate"
 )
@@ -169,17 +170,26 @@ $files | Select-String -Pattern "prompt-0[0-5]|indice-01-mapa" |
   ForEach-Object { "{0}|{1}" -f $_.Name, $_.Count }
 ```
 
-Esperado: 115 ocorrências em 15 arquivos, conforme o contrato da Fase 3.
+Esperado: 112 ocorrências em 13 arquivos, conforme o contrato da Fase 3.
 
-### 3. Atualizar as referências
+Conferir as referências diferidas:
+
+```powershell
+Get-ChildItem (Join-Path $root "03-derivacao-regras-de-formacao-do-contrato") -File |
+  Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"
+```
+
+Esperado: 3 ocorrências, em `regras-01` e `regras-04`; não alterar.
+
+### 3. Atualizar as referências em escopo
 
 - Substituir primeiro os sete nomes completos com `.md`.
 - Substituir depois os radicais `prompt-00` a `prompt-05` e `indice-01`.
-- Atualizar README, índice, entrada, os três arquivos da subpasta 02, os dois da subpasta 03, o redirect em `utils/` e as seis suítes.
+- Atualizar README, índice, entrada, os três arquivos da subpasta 02, o redirect em `utils/` e as seis suítes.
 - Não alterar regras, textos normativos, formatação ou numeração interna.
-- Não renomear arquivos das subpastas 03 e 04.
+- Não tocar nas subpastas 03 e 04.
 
-### 4. Validar zero tokens antigos
+### 4. Validar zero tokens nas 13 superfícies
 
 ```powershell
 $files | Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"
@@ -207,7 +217,7 @@ mvn -B clean install
 git status --porcelain
 ```
 
-Esperado: somente README, procedimento, redirect e seis suítes. Nenhuma alteração em `specs/003` a `specs/007`, `target/` ou `graphify-out/`.
+Esperado: somente README, procedimento, redirect e seis suítes. Nenhuma alteração em `specs/003` a `specs/007`, `target/`, `graphify-out/`, `regras-01` ou `regras-04`.
 
 ## Falhas esperadas entre fases
 
@@ -226,8 +236,8 @@ A Fase 3 é a única que restaura o verde.
 
 - [ ] Fase 1: 2 arquivos com os nomes novos; 0 nomes antigos; hashes idênticos.
 - [ ] Fase 2: 5 arquivos sem `prompt-`; numerais 01 a 05; hashes idênticos.
-- [ ] Fase 3: 0 ocorrências de `prompt-0[0-5]` e `indice-01-mapa` em 15 arquivos operacionais.
+- [ ] Fase 3: 0 ocorrências de `prompt-0[0-5]` e `indice-01-mapa` nas 13 superfícies em escopo.
 - [ ] Fase 3: `mvn -B test` verde.
-- [ ] Subpastas 03 e 04 sem arquivos renomeados.
+- [ ] Subpastas 03 e 04 totalmente intactas, com as 3 referências antigas preservadas.
 - [ ] Specs históricas 003–007, `target/` e `graphify-out/` inalterados.
 - [ ] Nenhum alias, cópia ou redirect com nome antigo.
