@@ -6,7 +6,7 @@
 
 ## Summary
 
-Renomear sete arquivos do procedimento empacotado nas Fases 1 e 2 e, numa terceira fase dependente, substituir 112 ocorrências dos sete nomes antigos em 13 arquivos operacionais. A Fase 3 cobre README, conteúdo do índice, conteúdo da entrada, os três arquivos da subpasta 02 que citam nomes antigos, o redirect em `utils/` e as seis suítes de contrato. As subpastas 03 e 04 permanecem totalmente intactas, inclusive as 3 referências antigas em `regras-01` e `regras-04`, que ficam para uma feature futura. As Fases 1 e 2 deixam `mvn -B test` vermelho nas suítes conhecidas; a Fase 3 as atualiza e restaura o verde. Nenhuma dependência nova e nenhum código de produção novo.
+Renomear sete arquivos do procedimento empacotado nas Fases 1 e 2 e, numa terceira fase dependente, substituir 112 ocorrências dos sete nomes antigos em 13 arquivos operacionais. A Fase 3 cobre README, conteúdo do índice, conteúdo da entrada, os três arquivos da subpasta 02 que citam nomes antigos, o redirect em `utils/` e as seis suítes de contrato. As subpastas 03 e 04 permanecem totalmente intactas, inclusive as 3 referências antigas em `regras-01` e `regras-04`, que ficam para uma feature futura. As Fases 1 e 2 deixam `mvn -B "-Dfile.encoding=UTF-8" test` vermelho nas suítes conhecidas; a Fase 3 as atualiza e restaura o verde. Nenhuma dependência nova e nenhum código de produção novo.
 
 ## Technical Context
 
@@ -16,13 +16,13 @@ Renomear sete arquivos do procedimento empacotado nas Fases 1 e 2 e, numa tercei
 
 **Storage**: Sistema de arquivos e JAR; 19 arquivos no procedimento (13 Markdown e 6 JSON) em 4 subpastas; catálogo XML com 35 propriedades e 18 filesets; sem banco de dados.
 
-**Testing**: Suítes Groovy em `src/test/archetype-post-generate/`, executadas pelo runner `src/test/groovy/run-archetype-post-generate-tests.groovy` na fase `test` via `mvn -B test`. A Fase 1 deixa vermelhas cinco suítes: `PathRenameContractTest`, `BuildArtifactsTest`, `HardStopContractTest`, `DestinationContractTest` e `ReadmeConsistencyTest`; a Fase 2 acrescenta `CatalogSyncContractTest`. A Fase 3 atualiza as seis suítes e restaura `mvn -B test` verde. A verificação de 0 tokens é limitada às 13 superfícies da FR-013; as 3 referências em `regras-01` e `regras-04` ficam fora e não são verificadas. `mvn -B clean install` é paridade opcional com o CI.
+**Testing**: Suítes Groovy em `src/test/archetype-post-generate/`, executadas pelo runner `src/test/groovy/run-archetype-post-generate-tests.groovy` na fase `test` via `mvn -B "-Dfile.encoding=UTF-8" test`. A Fase 1 deixa vermelhas cinco suítes: `PathRenameContractTest`, `BuildArtifactsTest`, `HardStopContractTest`, `DestinationContractTest` e `ReadmeConsistencyTest`; a Fase 2 acrescenta `CatalogSyncContractTest`. A Fase 3 atualiza as seis suítes e restaura `mvn -B "-Dfile.encoding=UTF-8" test` verde. A verificação de 0 tokens é limitada às 13 superfícies da FR-013; as 3 referências em `regras-01` e `regras-04` ficam fora e não são verificadas. `mvn -B "-Dfile.encoding=UTF-8" clean install` é paridade opcional com o CI.
 
 **Target Platform**: JAR consumido por agentes e operadores; Windows e POSIX; CI em `windows-latest`.
 
 **Project Type**: Maven archetype / promptware — documentação executável empacotada mais suítes de contrato.
 
-**Performance Goals**: Nenhuma meta específica nesta feature; o baseline do projeto é aumento de no máximo 10% no build de `mvn -B test` sobre a linha de base local. A feature não altera runtime nem dependências.
+**Performance Goals**: Nenhuma meta específica nesta feature; o baseline do projeto é aumento de no máximo 10% no build de `mvn -B "-Dfile.encoding=UTF-8" test` sobre a linha de base local. A feature não altera runtime nem dependências.
 
 **Constraints**: Manter 19 arquivos e 4 subpastas; renomear apenas nas subpastas 01 e 02; preservar o conteúdo nas Fases 1 e 2; na Fase 3 alterar apenas referências de caminho e nome nas superfícies da FR-013; as subpastas 03 e 04 permanecem totalmente intactas, inclusive referências; não criar aliases, redirects ou cópias; não reescrever specs históricas 003–007, `target/` nem `graphify-out/`; a Fase 3 depende das Fases 1 e 2. As 3 referências antigas em `regras-01` e `regras-04` são explicitamente diferidas para uma feature futura.
 
@@ -41,7 +41,7 @@ Renomear sete arquivos do procedimento empacotado nas Fases 1 e 2 e, numa tercei
 | III. Pacote por Funcionalidade no Código Gerado | Nenhum código Java gerado ou template de entidade é alterado | PASS |
 | IV. Binding Duplo de Configuração Externalizada | Nenhuma propriedade externalizada, variável de binding ou configuração é criada ou alterada | PASS |
 | V. Credenciais Nunca Entram no Repositório | A feature não lê nem grava credenciais; nenhum valor sensível é manipulado | PASS |
-| VI. Validar Antes de Culpar o Código | A Fase 3 fecha com `mvn -B test`; a paridade opcional `mvn -B clean install` valida o JAR e o catálogo local | PASS |
+| VI. Validar Antes de Culpar o Código | A Fase 3 fecha com `mvn -B "-Dfile.encoding=UTF-8" test`; a paridade opcional `mvn -B "-Dfile.encoding=UTF-8" clean install` valida o JAR e o catálogo local | PASS |
 | Technology Stack | Java 17, Maven 3.9.16, Spring Boot 4.0.0, plugin 3.4.1 e dependências existentes permanecem | PASS |
 
 **Reavaliação após a Fase 1**: PASS — o desenho não cria flag, artefato de extensão, dependência, estrutura de dados ou alteração no código gerado. As Fases 1 e 2 mudam apenas caminhos; a Fase 3 muda apenas referências de caminho e nome, sem tocar nas subpastas 03 e 04.
@@ -144,7 +144,7 @@ Ver [data-model.md](./data-model.md), [contracts/file-rename-contract.md](./cont
 
 ### Fase 3 — Atualização das referências operacionais (P3)
 
-**Objetivo**: substituir as 112 ocorrências dos sete nomes antigos em 13 arquivos operacionais, sem alterar regras e sem tocar nas subpastas 03 e 04, e fechar com `mvn -B test` verde.
+**Objetivo**: substituir as 112 ocorrências dos sete nomes antigos em 13 arquivos operacionais, sem alterar regras e sem tocar nas subpastas 03 e 04, e fechar com `mvn -B "-Dfile.encoding=UTF-8" test` verde.
 
 **Passos**:
 1. Confirmar que as Fases 1 e 2 estão aplicadas: os sete novos caminhos existem e os sete antigos não existem no procedimento.
@@ -153,11 +153,11 @@ Ver [data-model.md](./data-model.md), [contracts/file-rename-contract.md](./cont
 4. Atualizar, nesta ordem: README; conteúdo do índice; conteúdo da entrada; os três arquivos da subpasta 02; o redirect em `utils/`; as seis suítes.
 5. Não tocar em regras, textos normativos, formatação, estrutura ou numeração interna; cada hunk deve ser apenas a troca de nome ou caminho.
 6. Rodar `Select-String` para os tokens antigos nas 13 superfícies em escopo; exigir 0 ocorrências. Confirmar que `regras-01` e `regras-04` continuam com as 3 referências antigas e permanecem intocados.
-7. Rodar `mvn -B test`; exigir todas as suítes verdes.
-8. Opcional de paridade com o CI: `mvn -B clean install`.
+7. Rodar `mvn -B "-Dfile.encoding=UTF-8" test`; exigir todas as suítes verdes.
+8. Opcional de paridade com o CI: `mvn -B "-Dfile.encoding=UTF-8" clean install`.
 9. Conferir que as subpastas 03 e 04, as specs históricas 003–007, `target/` e `graphify-out/` não foram reescritos.
 
-**Critério de conclusão**: SC-006 (escopo da FR-013), SC-007 e SC-008; `mvn -B test` verde.
+**Critério de conclusão**: SC-006 (escopo da FR-013), SC-007 e SC-008; `mvn -B "-Dfile.encoding=UTF-8" test` verde.
 
 ### Dependências entre as fases
 
@@ -174,7 +174,7 @@ Ver [data-model.md](./data-model.md), [contracts/file-rename-contract.md](./cont
 3. **Fases 1 e 2 — pastas não tocadas**: comparar o manifesto das subpastas fora do escopo com o estado anterior à fase.
 4. **Fase 3 — inventário**: `Select-String` para os 7 nomes completos e os 6 radicais nas 13 superfícies em escopo; 0 ocorrências.
 5. **Fase 3 — escopo diferido**: confirmar 3 ocorrências antigas em `regras-01` e `regras-04`, sem alteração.
-6. **Fase 3 — build**: `mvn -B test` verde; opcional `mvn -B clean install`.
+6. **Fase 3 — build**: `mvn -B "-Dfile.encoding=UTF-8" test` verde; opcional `mvn -B "-Dfile.encoding=UTF-8" clean install`.
 7. **Fase 3 — conteúdo**: `git diff` deve mostrar somente linhas de referência; nenhuma regra alterada.
 8. **Históricos**: `git diff` sem alterações em `specs/003` a `specs/007`; `target/` e `graphify-out/` fora do commit.
 
@@ -186,7 +186,7 @@ Ver [data-model.md](./data-model.md), [contracts/file-rename-contract.md](./cont
 | Referência antiga esquecida em arquivo de 02 | Inventário de 112 ocorrências + `Select-String` final com 0 |
 | Edição acidental de regra normativa na Fase 3 | Diff por linha; só tokens de caminho/nome; revisão manual |
 | Edição acidental de `regras-01`/`regras-04` | Excluir a subpasta 03 do inventário e conferir os hashes antes/depois |
-| Suítes atualizadas mascararem regressão | `mvn -B test` verde + inspeção do diff das suítes |
+| Suítes atualizadas mascararem regressão | `mvn -B "-Dfile.encoding=UTF-8" test` verde + inspeção do diff das suítes |
 | Sobrescrita de destino já existente no rename | Pré-condição explícita de destino ausente |
 | Comando git não autorizado na implementação | Usar `Rename-Item`; nenhum `git mv`, commit, push ou branch |
 | Spec histórica ou saída gerada alterada | Excluir `specs/003..007`, `target/` e `graphify-out/` do escopo |

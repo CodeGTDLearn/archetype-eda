@@ -85,7 +85,7 @@ Compare-Object @($antes | ForEach-Object Hash) $depois
 Esperado: nenhuma saída.
 
 - Conferir o snapshot das subpastas 02, 03 e 04 contra o estado atual.
-- `mvn -B test` fica vermelho; registrar as cinco suítes esperadas e não corrigir nesta fase.
+- `mvn -B "-Dfile.encoding=UTF-8" test` fica vermelho; registrar as cinco suítes esperadas e não corrigir nesta fase.
 
 ## Fase 2 — Operação do agente sem o prefixo prompt-
 
@@ -139,7 +139,7 @@ Esperado: os cinco nomes sem `prompt-`, numerados de 01 a 05.
 
 - Comparar os hashes com `fase2-alvos-antes.json`.
 - Conferir o snapshot das subpastas 01, 03 e 04.
-- `mvn -B test` continua vermelho; registrar as seis suítes.
+- `mvn -B "-Dfile.encoding=UTF-8" test` continua vermelho; registrar as seis suítes.
 
 ## Fase 3 — Atualização das referências operacionais
 
@@ -200,7 +200,7 @@ Esperado: nenhuma saída.
 ### 5. Rodar o gate
 
 ```powershell
-mvn -B test
+mvn -B "-Dfile.encoding=UTF-8" test
 ```
 
 Esperado: todas as suítes passam.
@@ -208,7 +208,7 @@ Esperado: todas as suítes passam.
 Paridade opcional com o CI:
 
 ```powershell
-mvn -B clean install
+mvn -B "-Dfile.encoding=UTF-8" clean install
 ```
 
 ### 6. Conferir exclusões
@@ -237,7 +237,7 @@ A Fase 3 é a única que restaura o verde.
 - [ ] Fase 1: 2 arquivos com os nomes novos; 0 nomes antigos; hashes idênticos.
 - [ ] Fase 2: 5 arquivos sem `prompt-`; numerais 01 a 05; hashes idênticos.
 - [ ] Fase 3: 0 ocorrências de `prompt-0[0-5]` e `indice-01-mapa` nas 13 superfícies em escopo.
-- [ ] Fase 3: `mvn -B test` verde.
+- [ ] Fase 3: `mvn -B "-Dfile.encoding=UTF-8" test` verde.
 - [ ] Subpastas 03 e 04 totalmente intactas, com as 3 referências antigas preservadas.
 - [ ] Specs históricas 003–007, `target/` e `graphify-out/` inalterados.
 - [ ] Nenhum alias, cópia ou redirect com nome antigo.

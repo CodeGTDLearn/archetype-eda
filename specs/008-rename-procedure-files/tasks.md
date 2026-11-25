@@ -29,7 +29,7 @@
 **Purpose**: confirmar a estrutura e a linha de base antes de qualquer edição
 
 - [X] T001 Confirmar 19 arquivos e 4 subpastas em `src/main/resources/llm-maven-flags-inference/`; registrar a listagem nominal em `$env:TEMP\eda-008\baseline-listing.txt`
-- [ ] T002 Rodar `mvn -B test` no módulo raiz (`pom.xml`) e registrar a linha de base verde; se houver falha inesperada, parar e reportar
+- [X] T002 Rodar `mvn -B "-Dfile.encoding=UTF-8" test` no módulo raiz (`pom.xml`) e registrar a linha de base verde; se houver falha inesperada, parar e reportar
 - [X] T003 [P] Gravar o manifesto SHA-256 dos 19 arquivos do procedimento em `$env:TEMP\eda-008\baseline-hashes.json`
 - [X] T004 [P] Confirmar a existência de `src/test/groovy/run-archetype-post-generate-tests.groovy` e das seis suítes afetadas em `src/test/archetype-post-generate/`
 
@@ -63,7 +63,7 @@
 - [X] T011 [P] [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` para `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md` com `Rename-Item`
 - [X] T012 [P] [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` para `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md` com `Rename-Item`
 - [X] T013 [US1] Validar `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/`: exatamente 2 arquivos, nomes corretos, `targetHash` igual a `sourceHash` nos 2 `RenameOperation` e `FolderSnapshot` das subpastas 02, 03 e 04 inalterado
-- [X] T014 [US1] Rodar `mvn -B test` em `src/test/archetype-post-generate/` e registrar as cinco falhas esperadas: `PathRenameContractTest`, `BuildArtifactsTest`, `HardStopContractTest`, `DestinationContractTest` e `ReadmeConsistencyTest`; confirmar que não há falha fora dessa lista
+- [X] T014 [US1] Rodar `mvn -B "-Dfile.encoding=UTF-8" test` em `src/test/archetype-post-generate/` e registrar as cinco falhas esperadas: `PathRenameContractTest`, `BuildArtifactsTest`, `HardStopContractTest`, `DestinationContractTest` e `ReadmeConsistencyTest`; confirmar que não há falha fora dessa lista
 - [X] T015 [US1] Registrar o checkpoint da Fase 1 em `$env:TEMP\eda-008\fase1-resultado.md` com listagem, hashes e suítes vermelhas; build vermelho é esperado até a Fase 3
 
 **Checkpoint**: US1 concluída e verificável isoladamente por listagem e hash
@@ -86,7 +86,7 @@
 - [X] T021 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md`
 - [X] T022 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md`
 - [X] T023 [US2] Validar `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/`: exatamente 5 arquivos, nenhum com prefixo `prompt-`, `targetHash` igual a `sourceHash` nos 5 `RenameOperation` e `FolderSnapshot` das subpastas 01, 03 e 04 inalterado
-- [X] T024 [US2] Rodar `mvn -B test` em `src/test/archetype-post-generate/` e registrar as seis falhas esperadas, incluindo `CatalogSyncContractTest`; confirmar que não há falha fora dessa lista
+- [X] T024 [US2] Rodar `mvn -B "-Dfile.encoding=UTF-8" test` em `src/test/archetype-post-generate/` e registrar as seis falhas esperadas, incluindo `CatalogSyncContractTest`; confirmar que não há falha fora dessa lista
 - [X] T025 [US2] Registrar o checkpoint da Fase 2 em `$env:TEMP\eda-008\fase2-resultado.md` com listagem, hashes e suítes vermelhas
 
 **Checkpoint**: US2 concluída e verificável isoladamente por listagem e hash
@@ -95,9 +95,9 @@
 
 ## Phase 5: User Story 3 - Fase 3 — Atualização das referências operacionais (Priority: P3)
 
-**Goal**: substituir as 112 ocorrências dos sete nomes antigos em 13 arquivos operacionais e restaurar `mvn -B test` verde, sem tocar nas subpastas 03 e 04.
+**Goal**: substituir as 112 ocorrências dos sete nomes antigos em 13 arquivos operacionais e restaurar `mvn -B "-Dfile.encoding=UTF-8" test` verde, sem tocar nas subpastas 03 e 04.
 
-**Independent Test**: após as Fases 1 e 2, aplicar esta fase, rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 13 superfícies e obter 0 ocorrências; confirmar as 3 referências diferidas em `regras-01`/`regras-04`; rodar `mvn -B test` e obter todas as suítes verdes.
+**Independent Test**: após as Fases 1 e 2, aplicar esta fase, rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 13 superfícies e obter 0 ocorrências; confirmar as 3 referências diferidas em `regras-01`/`regras-04`; rodar `mvn -B "-Dfile.encoding=UTF-8" test` e obter todas as suítes verdes.
 
 **Dependência**: esta fase depende das Fases 1 (US1) e 2 (US2).
 
@@ -122,9 +122,9 @@
 
 - [X] T040 [US3] Rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 13 superfícies em escopo listadas em `specs/008-rename-procedure-files/contracts/reference-update-contract.md` e exigir 0 ocorrências; registrar o resultado do `ReferenceUpdate`
 - [X] T041 [US3] Confirmar que as 3 referências diferidas em `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` e `regras-04-como-aplicar-precedencia-e-validacao.md` permanecem inalteradas; não editar a subpasta 03
-- [ ] T042 [US3] Rodar `mvn -B test` no módulo raiz (`pom.xml`) e exigir todas as suítes verdes
+- [X] T042 [US3] Rodar `mvn -B "-Dfile.encoding=UTF-8" test` no módulo raiz (`pom.xml`) e exigir todas as suítes verdes
 - [X] T043 [US3] Inspecionar `git diff` e confirmar que cada hunk é apenas troca de referência; nenhuma regra alterada e nenhuma alteração em `specs/003` a `specs/007`, `target/`, `graphify-out/` ou nas subpastas 03 e 04
-- [ ] T044 [US3] Registrar o checkpoint da Fase 3 em `$env:TEMP\eda-008\fase3-resultado.md` com 0 tokens em escopo, 3 referências diferidas, `mvn -B test` verde e o `ReferenceUpdate` verificado
+- [X] T044 [US3] Registrar o checkpoint da Fase 3 em `$env:TEMP\eda-008\fase3-resultado.md` com 0 tokens em escopo, 3 referências diferidas, `mvn -B "-Dfile.encoding=UTF-8" test` verde e o `ReferenceUpdate` verificado
 
 **Checkpoint**: as três fases concluídas; as 13 superfícies em escopo não citam mais os nomes antigos e o build está verde
 
@@ -134,10 +134,10 @@
 
 **Purpose**: validação final e limpeza
 
-- [ ] T045 [P] Executar os cenários de `specs/008-rename-procedure-files/quickstart.md` e registrar os resultados
-- [ ] T046 Rodar `mvn -B clean install` no módulo raiz (`pom.xml`) como paridade opcional com o CI, após T045
-- [ ] T047 Confirmar 19 arquivos e 4 subpastas, ausência de aliases/cópias, ausência dos sete nomes antigos nas 13 superfícies em escopo e presença das 3 referências diferidas em `regras-01`/`regras-04`
-- [ ] T048 Revisar `git status --porcelain` contra `specs/008-rename-procedure-files/quickstart.md` e confirmar que apenas os 13 arquivos em escopo foram alterados; nenhum arquivo da subpasta 03 ou 04
+- [X] T045 [P] Executar os cenários de `specs/008-rename-procedure-files/quickstart.md` e registrar os resultados
+- [X] T046 Rodar `mvn -B "-Dfile.encoding=UTF-8" clean install` no módulo raiz (`pom.xml`) como paridade opcional com o CI, após T045
+- [X] T047 Confirmar 19 arquivos e 4 subpastas, ausência de aliases/cópias, ausência dos sete nomes antigos nas 13 superfícies em escopo e presença das 3 referências diferidas em `regras-01`/`regras-04`
+- [X] T048 Revisar `git status --porcelain` contra `specs/008-rename-procedure-files/quickstart.md` e confirmar que apenas os 13 arquivos em escopo foram alterados; nenhum arquivo da subpasta 03 ou 04
 
 ---
 
@@ -156,7 +156,7 @@
 
 - **US1 (Fase 1, P1)**: pode começar após o Foundational; não depende de US2 nem de US3
 - **US2 (Fase 2, P2)**: pode começar após o Foundational; não depende de US1 nem de US3
-- **US3 (Fase 3, P3)**: começa somente após US1 e US2; é a única fase que restaura `mvn -B test`
+- **US3 (Fase 3, P3)**: começa somente após US1 e US2; é a única fase que restaura `mvn -B "-Dfile.encoding=UTF-8" test`
 
 ### Within Each User Story
 
@@ -218,7 +218,7 @@ Task: "Atualizar as seis suítes"
 1. Setup + Foundational → base pronta
 2. Fase 1 → validar listagem/hash → build vermelho esperado
 3. Fase 2 → validar listagem/hash → build vermelho esperado
-4. Fase 3 → 0 tokens nas 13 superfícies → `mvn -B test` verde
+4. Fase 3 → 0 tokens nas 13 superfícies → `mvn -B "-Dfile.encoding=UTF-8" test` verde
 5. Polish → quickstart e paridade opcional com o CI
 
 ### Parallel Team Strategy
