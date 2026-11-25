@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Contrato de modulo EDA",
-  "description": "Schema permissivo do contrato. Valida a raiz objeto e a forma de attributes/fields; campos de negocio adicionais sao permitidos. O catalogo de flags continua sendo a autoridade sobre as flags. As aliases entityName e entity sao aceitas sem pattern aqui: a validacao do nome final (^[A-Z][a-zA-Z0-9_]+$) e aplicada na derivacao (regras-01 §2).",
+  "description": "Schema permissivo do contrato. Valida a raiz objeto e a forma de attributes/fields; campos de negocio adicionais sao permitidos. O catalogo de flags continua sendo a autoridade sobre as flags. As aliases entityName e entity sao aceitas sem pattern aqui: a validacao do nome final (^[A-Z][a-zA-Z0-9_]+$) e aplicada na derivacao (01 §2).",
   "type": "object",
   "additionalProperties": true,
   "properties": {

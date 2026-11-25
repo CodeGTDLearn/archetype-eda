@@ -94,22 +94,22 @@
 
 ### Tests for User Story 2
 
-- [ ] T027 [P] [US2] Update the 04 paths in `src/test/archetype-post-generate/BuildArtifactsTest.groovy` lines 102–107 to the new names.
-- [ ] T028 [P] [US2] Update the 04 paths in `src/test/archetype-post-generate/PathRenameContractTest.groovy` lines 61–66 to the new names.
-- [ ] T029 [P] [US2] Update the 04 paths and labels in `src/test/archetype-post-generate/ProcedureContractTest.groovy` lines 12, 139, 148 and 199 (`template-01`/`template-03` → `01`/`03`).
-- [ ] T030 [US2] Extend `src/test/archetype-post-generate/FileRenameContractTest.groovy` with the 04-specific and final assertions: 6 new names in 04, 0 `template-*`, 0 old references in the full operational corpus, README updated, 19/13/6/4. Depends on T005/T007.
+- [X] T027 [P] [US2] Update the 04 paths in `src/test/archetype-post-generate/BuildArtifactsTest.groovy` lines 102–107 to the new names.
+- [X] T028 [P] [US2] Update the 04 paths in `src/test/archetype-post-generate/PathRenameContractTest.groovy` lines 61–66 to the new names.
+- [X] T029 [P] [US2] Update the 04 paths and labels in `src/test/archetype-post-generate/ProcedureContractTest.groovy` lines 12, 139, 148 and 199 (`template-01`/`template-03` → `01`/`03`).
+- [X] T030 [US2] Extend `src/test/archetype-post-generate/FileRenameContractTest.groovy` with the 04-specific and final assertions: 6 new names in 04, 0 `template-*`, 0 old references in the full operational corpus, README updated, 19/13/6/4. Depends on T005/T007.
 
 ### Implementation for User Story 2
 
-- [ ] T031 [US2] Rename the 6 files in `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/` with `Rename-Item`, in numeral order, per `data-model.md` `RenamedFile.old_name`/`new_name`: `template-01-schema-do-contrato.json` → `01-schema-do-contrato.json`, `template-02-exemplo-contrato-plano.json` → `02-exemplo-contrato-plano.json`, `template-03-exemplo-contrato-com-objetos-aninhados.json` → `03-exemplo-contrato-com-objetos-aninhados.json`, `template-04-exemplo-contrato-com-enums.json` → `04-exemplo-contrato-com-enums.json`, `template-05-exemplo-contrato-com-tipos-do-projeto.json` → `05-exemplo-contrato-com-tipos-do-projeto.json`, `template-06-exemplo-contrato-com-attributes-explicito.json` → `06-exemplo-contrato-com-attributes-explicito.json`.
-- [ ] T032 [P] [US2] Update the 04 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` line 220 (`template-02-exemplo-contrato-plano.json` → `02-exemplo-contrato-plano.json`) and lines 721–726 (full 04 paths).
-- [ ] T033 [P] [US2] Update the 04 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` lines 24–29 (full 04 paths) and line 53 (`template-01` → `01`).
-- [ ] T034 [P] [US2] Update `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/01-schema-do-contrato.json` line 4 (`regras-01` → `01`) without changing keys, schema, types or examples.
-- [ ] T035 [P] [US2] Update `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json` line 2 (`regras-01` → `01`) without changing keys, schema, types or examples.
-- [ ] T036 [P] [US2] Update `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json` line 2 (`regras-01`, `regras-02` → `01`, `02`) without changing keys, schema, types or examples.
-- [ ] T037 [P] [US2] Update `README.md` lines 910, 917, 933, 941, 995, 2171–2176, 2182–2187, 2391, 2868, 2871, 2882, 2890, 2942, 2950 and 2954 to the new short and full names; keep the directory links unchanged.
-- [ ] T038 [US2] Run the final reference scan and counts from `quickstart.md` Scenarios 3–4: 0 `regras-0[1-6]`/`template-0[1-6]` in the operational corpus (excluding `specs/`, `graphify-out/`, `target/` and `FileRenameContractTest`), 19/13/6/4, index lists the 12 new paths.
-- [ ] T039 [US2] Run `mvn -B test` from the repository root (runner: `src/test/groovy/run-archetype-post-generate-tests.groovy`) and confirm all suites pass with `FileRenameContractTest.groovy` in Phase 2.
+- [X] T031 [US2] Rename the 6 files in `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/` with `Rename-Item`, in numeral order, per `data-model.md` `RenamedFile.old_name`/`new_name`: `template-01-schema-do-contrato.json` → `01-schema-do-contrato.json`, `template-02-exemplo-contrato-plano.json` → `02-exemplo-contrato-plano.json`, `template-03-exemplo-contrato-com-objetos-aninhados.json` → `03-exemplo-contrato-com-objetos-aninhados.json`, `template-04-exemplo-contrato-com-enums.json` → `04-exemplo-contrato-com-enums.json`, `template-05-exemplo-contrato-com-tipos-do-projeto.json` → `05-exemplo-contrato-com-tipos-do-projeto.json`, `template-06-exemplo-contrato-com-attributes-explicito.json` → `06-exemplo-contrato-com-attributes-explicito.json`.
+- [X] T032 [P] [US2] Update the 04 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` line 220 (`template-02-exemplo-contrato-plano.json` → `02-exemplo-contrato-plano.json`) and lines 721–726 (full 04 paths).
+- [X] T033 [P] [US2] Update the 04 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` lines 24–29 (full 04 paths) and line 53 (`template-01` → `01`).
+- [X] T034 [P] [US2] Update `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/01-schema-do-contrato.json` line 4 (`regras-01` → `01`) without changing keys, schema, types or examples.
+- [X] T035 [P] [US2] Update `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json` line 2 (`regras-01` → `01`) without changing keys, schema, types or examples.
+- [X] T036 [P] [US2] Update `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json` line 2 (`regras-01`, `regras-02` → `01`, `02`) without changing keys, schema, types or examples.
+- [X] T037 [P] [US2] Update `README.md` lines 910, 917, 933, 941, 995, 2171–2176, 2182–2187, 2391, 2868, 2871, 2882, 2890, 2942, 2950 and 2954 to the new short and full names; keep the directory links unchanged.
+- [X] T038 [US2] Run the final reference scan and counts from `quickstart.md` Scenarios 3–4: 0 `regras-0[1-6]`/`template-0[1-6]` in the operational corpus (excluding `specs/`, `graphify-out/`, `target/` and `FileRenameContractTest`), 19/13/6/4, index lists the 12 new paths.
+- [X] T039 [US2] Run `mvn -B test` from the repository root (runner: `src/test/groovy/run-archetype-post-generate-tests.groovy`) and confirm all suites pass with `FileRenameContractTest.groovy` in Phase 2.
 
 **Checkpoint**: User Stories 1 and 2 are complete. The full operational corpus uses only the new names.
 
@@ -119,12 +119,12 @@
 
 **Purpose**: Prove normative preservation and run the full validation.
 
-- [ ] T040 [P] Review the diff and hashes per `quickstart.md` Scenario 5: the 6 renamed files without references have identical hashes; the 6 with references differ only in the mapped tokens; the 5 non-renamed procedure files and `README.md` differ only in references.
-- [ ] T041 Run `mvn clean install` from the repository root (`pom.xml`) and confirm the build, the 6 updated suites and `FileRenameContractTest.groovy` pass.
-- [ ] T042 Run `mvn -B clean integration-test` from the repository root (`pom.xml`) and confirm the integration fixtures do not regress.
-- [ ] T043 Run `mvn -B test "-Deda.verify.installed.jar=true"` from the repository root (`pom.xml`) after T041 and confirm the installed JAR carries the 12 new names and no old names.
-- [ ] T044 Run the `quickstart.md` scenarios and record the results, including the negative checks that must fail when a name or reference is reintroduced.
-- [ ] T045 Run the final invariants check in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/`: 19 files (13 Markdown, 6 JSON), 4 subfolders, 6 files in 03 and 04, catalog 35/18, no new procedure files, no changes to `archetype-resources/`, `specs/` historical artifacts or `graphify-out/`.
+- [X] T040 [P] Review the diff and hashes per `quickstart.md` Scenario 5: the 6 renamed files without references have identical hashes; the 6 with references differ only in the mapped tokens; the 5 non-renamed procedure files and `README.md` differ only in references.
+- [X] T041 Run `mvn clean install` from the repository root (`pom.xml`) and confirm the build, the 6 updated suites and `FileRenameContractTest.groovy` pass.
+- [X] T042 Run `mvn -B clean integration-test` from the repository root (`pom.xml`) and confirm the integration fixtures do not regress.
+- [X] T043 Run `mvn -B test "-Deda.verify.installed.jar=true"` from the repository root (`pom.xml`) after T041 and confirm the installed JAR carries the 12 new names and no old names.
+- [X] T044 Run the `quickstart.md` scenarios and record the results, including the negative checks that must fail when a name or reference is reintroduced.
+- [X] T045 Run the final invariants check in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/`: 19 files (13 Markdown, 6 JSON), 4 subfolders, 6 files in 03 and 04, catalog 35/18, no new procedure files, no changes to `archetype-resources/`, `specs/` historical artifacts or `graphify-out/`.
 
 ---
 

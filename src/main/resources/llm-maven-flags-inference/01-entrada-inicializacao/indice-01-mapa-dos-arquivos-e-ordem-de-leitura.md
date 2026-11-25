@@ -21,12 +21,12 @@ Todos os caminhos abaixo são caminhos **dentro do JAR** do archetype, não cami
 | 11 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md` | Precedência e validação | Sim |
 | 12 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/05-como-materializar-e-emitir-o-contrato.md` | Contrato materializado | Sim |
 | 13 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md` | Proveniência | Sim |
-| 14 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/template-01-schema-do-contrato.json` | Schema permissivo do contrato | Sim |
-| 15 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/template-02-exemplo-contrato-plano.json` | Exemplo de contrato plano | Sob demanda |
-| 16 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json` | Exemplo com objetos aninhados | Sob demanda |
-| 17 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/template-04-exemplo-contrato-com-enums.json` | Exemplo com enums | Sob demanda |
-| 18 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/template-05-exemplo-contrato-com-tipos-do-projeto.json` | Exemplo com tipos do projeto | Sob demanda |
-| 19 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json` | Exemplo com `attributes` explícito | Sob demanda |
+| 14 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/01-schema-do-contrato.json` | Schema permissivo do contrato | Sim |
+| 15 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json` | Exemplo de contrato plano | Sob demanda |
+| 16 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json` | Exemplo com objetos aninhados | Sob demanda |
+| 17 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/04-exemplo-contrato-com-enums.json` | Exemplo com enums | Sob demanda |
+| 18 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/05-exemplo-contrato-com-tipos-do-projeto.json` | Exemplo com tipos do projeto | Sob demanda |
+| 19 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json` | Exemplo com `attributes` explícito | Sob demanda |
 
 ## 2. Leituras técnicas no JAR
 
@@ -50,7 +50,7 @@ Depois de ler `prompt-02`, leia também:
 7. `prompt-04`
 8. `prompt-05`
 9. `01` a `06`
-10. `template-01` e o exemplo que combinar com o contrato
+10. `01` e o exemplo que combinar com o contrato
 
 Nenhuma derivação ou execução deve começar antes de concluir as leituras obrigatórias.
 

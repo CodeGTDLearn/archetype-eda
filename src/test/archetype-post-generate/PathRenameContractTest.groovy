@@ -58,12 +58,12 @@ def procedureFiles = [
         "03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md",
         "03-derivacao-regras-de-formacao-do-contrato/05-como-materializar-e-emitir-o-contrato.md",
         "03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md",
-        "04-referencia-templates-de-contrato/template-01-schema-do-contrato.json",
-        "04-referencia-templates-de-contrato/template-02-exemplo-contrato-plano.json",
-        "04-referencia-templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json",
-        "04-referencia-templates-de-contrato/template-04-exemplo-contrato-com-enums.json",
-        "04-referencia-templates-de-contrato/template-05-exemplo-contrato-com-tipos-do-projeto.json",
-        "04-referencia-templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json"
+        "04-referencia-templates-de-contrato/01-schema-do-contrato.json",
+        "04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json",
+        "04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json",
+        "04-referencia-templates-de-contrato/04-exemplo-contrato-com-enums.json",
+        "04-referencia-templates-de-contrato/05-exemplo-contrato-com-tipos-do-projeto.json",
+        "04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json"
 ]
 
 def canonical = "llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md"
