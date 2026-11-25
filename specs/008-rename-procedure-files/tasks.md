@@ -37,15 +37,16 @@
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: registrar o mapa de tokens e o inventário que a Fase 3 usará
+**Purpose**: registrar o mapa de tokens, o inventário em escopo e as referências diferidas
 
 **⚠️ CRITICAL**: a Fase 3 não pode começar antes desta fase
 
 - [ ] T005 [P] Registrar os 14 tokens de substituição de `specs/008-rename-procedure-files/contracts/reference-update-contract.md` em `$env:TEMP\eda-008\token-map.md`
-- [ ] T006 [P] Rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas superfícies operacionais e confirmar 115 ocorrências em 15 arquivos; gravar a contagem por arquivo em `$env:TEMP\eda-008\reference-inventory.txt`
-- [ ] T007 Confirmar a ordem de execução das três fases e a dependência da Fase 3 em relação às Fases 1 e 2, conforme `specs/008-rename-procedure-files/plan.md`; nenhuma edição de produção
+- [ ] T006 [P] Rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 13 superfícies em escopo e confirmar 112 ocorrências; gravar a contagem por arquivo em `$env:TEMP\eda-008\reference-inventory.txt`
+- [ ] T007 [P] Registrar as 3 referências diferidas em `regras-01` e `regras-04` como fora do escopo em `$env:TEMP\eda-008\deferred-references.md`, usando `DeferredReference`; não editar a subpasta 03
+- [ ] T008 Confirmar a ordem Fase 1 → Fase 2 → Fase 3 e a dependência da Fase 3 em relação às Fases 1 e 2, conforme `specs/008-rename-procedure-files/plan.md`; nenhuma edição de produção
 
-**Checkpoint**: mapa e inventário prontos; as fases de renomeação podem começar
+**Checkpoint**: mapa, inventário e escopo diferido prontos; as fases de renomeação podem começar
 
 ---
 
@@ -57,13 +58,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Capturar o `PhaseManifest` da Fase 1 em `$env:TEMP\eda-008\fase1-manifest.json`: `RenameOperation` dos 2 alvos e `FolderSnapshot` das subpastas 02, 03 e 04, conforme `data-model.md`
-- [ ] T009 [US1] Verificar as pré-condições: `01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e `01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` existem; `01-entrada-inicializacao/01-entryPoint.md` e `01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md` não existem
-- [ ] T010 [P] [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` para `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md` com `Rename-Item`
-- [ ] T011 [P] [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` para `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md` com `Rename-Item`
-- [ ] T012 [US1] Validar `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/`: exatamente 2 arquivos, nomes corretos, `targetHash` igual a `sourceHash` nos 2 `RenameOperation` e `FolderSnapshot` das subpastas 02, 03 e 04 inalterado
-- [ ] T013 [US1] Rodar `mvn -B test` em `src/test/archetype-post-generate/` e registrar as cinco falhas esperadas: `PathRenameContractTest`, `BuildArtifactsTest`, `HardStopContractTest`, `DestinationContractTest` e `ReadmeConsistencyTest`; confirmar que não há falha fora dessa lista
-- [ ] T014 [US1] Registrar o checkpoint da Fase 1 em `$env:TEMP\eda-008\fase1-resultado.md` com listagem, hashes e suítes vermelhas; build vermelho é esperado até a Fase 3
+- [ ] T009 [US1] Capturar o `PhaseManifest` da Fase 1 em `$env:TEMP\eda-008\fase1-manifest.json`: `RenameOperation` dos 2 alvos e `FolderSnapshot` das subpastas 02, 03 e 04, conforme `data-model.md`
+- [ ] T010 [US1] Verificar as pré-condições: `01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e `01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` existem; `01-entrada-inicializacao/01-entryPoint.md` e `01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md` não existem
+- [ ] T011 [P] [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` para `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md` com `Rename-Item`
+- [ ] T012 [P] [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` para `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md` com `Rename-Item`
+- [ ] T013 [US1] Validar `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/`: exatamente 2 arquivos, nomes corretos, `targetHash` igual a `sourceHash` nos 2 `RenameOperation` e `FolderSnapshot` das subpastas 02, 03 e 04 inalterado
+- [ ] T014 [US1] Rodar `mvn -B test` em `src/test/archetype-post-generate/` e registrar as cinco falhas esperadas: `PathRenameContractTest`, `BuildArtifactsTest`, `HardStopContractTest`, `DestinationContractTest` e `ReadmeConsistencyTest`; confirmar que não há falha fora dessa lista
+- [ ] T015 [US1] Registrar o checkpoint da Fase 1 em `$env:TEMP\eda-008\fase1-resultado.md` com listagem, hashes e suítes vermelhas; build vermelho é esperado até a Fase 3
 
 **Checkpoint**: US1 concluída e verificável isoladamente por listagem e hash
 
@@ -77,16 +78,16 @@
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Capturar o `PhaseManifest` da Fase 2 em `$env:TEMP\eda-008\fase2-manifest.json`: `RenameOperation` dos 5 alvos e `FolderSnapshot` das subpastas 01, 03 e 04, conforme `data-model.md`
-- [ ] T016 [US2] Verificar as pré-condições: os cinco arquivos `prompt-01` a `prompt-05` existem em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/`; os cinco destinos não existem
-- [ ] T017 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md`
-- [ ] T018 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md`
-- [ ] T019 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md`
-- [ ] T020 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md`
-- [ ] T021 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md`
-- [ ] T022 [US2] Validar `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/`: exatamente 5 arquivos, nenhum com prefixo `prompt-`, `targetHash` igual a `sourceHash` nos 5 `RenameOperation` e `FolderSnapshot` das subpastas 01, 03 e 04 inalterado
-- [ ] T023 [US2] Rodar `mvn -B test` em `src/test/archetype-post-generate/` e registrar as seis falhas esperadas, incluindo `CatalogSyncContractTest`; confirmar que não há falha fora dessa lista
-- [ ] T024 [US2] Registrar o checkpoint da Fase 2 em `$env:TEMP\eda-008\fase2-resultado.md` com listagem, hashes e suítes vermelhas
+- [ ] T016 [US2] Capturar o `PhaseManifest` da Fase 2 em `$env:TEMP\eda-008\fase2-manifest.json`: `RenameOperation` dos 5 alvos e `FolderSnapshot` das subpastas 01, 03 e 04, conforme `data-model.md`
+- [ ] T017 [US2] Verificar as pré-condições: os cinco arquivos `prompt-01` a `prompt-05` existem em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/`; os cinco destinos não existem
+- [ ] T018 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md`
+- [ ] T019 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md`
+- [ ] T020 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md`
+- [ ] T021 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md`
+- [ ] T022 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md` para `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md`
+- [ ] T023 [US2] Validar `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/`: exatamente 5 arquivos, nenhum com prefixo `prompt-`, `targetHash` igual a `sourceHash` nos 5 `RenameOperation` e `FolderSnapshot` das subpastas 01, 03 e 04 inalterado
+- [ ] T024 [US2] Rodar `mvn -B test` em `src/test/archetype-post-generate/` e registrar as seis falhas esperadas, incluindo `CatalogSyncContractTest`; confirmar que não há falha fora dessa lista
+- [ ] T025 [US2] Registrar o checkpoint da Fase 2 em `$env:TEMP\eda-008\fase2-resultado.md` com listagem, hashes e suítes vermelhas
 
 **Checkpoint**: US2 concluída e verificável isoladamente por listagem e hash
 
@@ -94,42 +95,38 @@
 
 ## Phase 5: User Story 3 - Fase 3 — Atualização das referências operacionais (Priority: P3)
 
-**Goal**: substituir as 115 ocorrências dos sete nomes antigos em 15 arquivos operacionais e restaurar `mvn -B test` verde.
+**Goal**: substituir as 112 ocorrências dos sete nomes antigos em 13 arquivos operacionais e restaurar `mvn -B test` verde, sem tocar nas subpastas 03 e 04.
 
-**Independent Test**: após as Fases 1 e 2, aplicar esta fase, rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 15 superfícies e obter 0 ocorrências; rodar `mvn -B test` e obter todas as suítes verdes.
+**Independent Test**: após as Fases 1 e 2, aplicar esta fase, rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 13 superfícies e obter 0 ocorrências; confirmar as 3 referências diferidas em `regras-01`/`regras-04`; rodar `mvn -B test` e obter todas as suítes verdes.
 
 **Dependência**: esta fase depende das Fases 1 (US1) e 2 (US2).
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Confirmar que as Fases 1 e 2 estão aplicadas: os sete novos caminhos existem e os sete nomes antigos não existem em `src/main/resources/llm-maven-flags-inference/`
-- [ ] T026 [P] [US3] Atualizar as 15 referências em `README.md` com o mapa de `contracts/reference-update-contract.md`; apenas caminhos e nomes
-- [ ] T027 [P] [US3] Atualizar as 14 referências em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md`, incluindo as 7 linhas de caminho e a ordem global
-- [ ] T028 [P] [US3] Atualizar as 35 referências em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md`; preservar regras, dicionário e registro de paradas
-- [ ] T029 [P] [US3] Atualizar a referência a `prompt-00` em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md`
-- [ ] T030 [P] [US3] Atualizar a referência a `prompt-00` em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md`
-- [ ] T031 [P] [US3] Atualizar a referência a `prompt-03` em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md`
-- [ ] T032 [P] [US3] Atualizar a referência a `prompt-00` em `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md`
-- [ ] T033 [P] [US3] Atualizar as 2 referências a `prompt-00` em `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md`
-- [ ] T034 [P] [US3] Atualizar o alvo do redirect em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` para `llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md`; não renomear o stub
-
-### Test maintenance for User Story 3 (required by FR-013)
-
-- [ ] T035 [P] [US3] Atualizar as 8 referências em `src/test/archetype-post-generate/BuildArtifactsTest.groovy`
-- [ ] T036 [P] [US3] Atualizar as 2 referências em `src/test/archetype-post-generate/CatalogSyncContractTest.groovy`
-- [ ] T037 [P] [US3] Atualizar as 16 referências em `src/test/archetype-post-generate/DestinationContractTest.groovy`
-- [ ] T038 [P] [US3] Atualizar as 4 referências em `src/test/archetype-post-generate/HardStopContractTest.groovy`
-- [ ] T039 [P] [US3] Atualizar as 11 referências em `src/test/archetype-post-generate/PathRenameContractTest.groovy`
-- [ ] T040 [P] [US3] Atualizar as 3 referências em `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy`
+- [ ] T026 [US3] Confirmar que as Fases 1 e 2 estão aplicadas: os sete novos caminhos existem e os sete nomes antigos não existem em `src/main/resources/llm-maven-flags-inference/`
+- [ ] T027 [P] [US3] Atualizar as 15 referências em `README.md` com o mapa de `contracts/reference-update-contract.md`; apenas caminhos e nomes
+- [ ] T028 [P] [US3] Atualizar as 14 referências em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/02-mapa-dos-arquivos-e-ordem-de-leitura.md`, incluindo as 7 linhas de caminho e a ordem global
+- [ ] T029 [P] [US3] Atualizar as 35 referências em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md`; preservar regras, dicionário e registro de paradas
+- [ ] T030 [P] [US3] Atualizar a referência a `prompt-00` em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md`
+- [ ] T031 [P] [US3] Atualizar a referência a `prompt-00` em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md`
+- [ ] T032 [P] [US3] Atualizar a referência a `prompt-03` em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md`
+- [ ] T033 [P] [US3] Atualizar o alvo do redirect em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` para `llm-maven-flags-inference/01-entrada-inicializacao/01-entryPoint.md`; não renomear o stub
+- [ ] T034 [P] [US3] Atualizar as 8 referências em `src/test/archetype-post-generate/BuildArtifactsTest.groovy`
+- [ ] T035 [P] [US3] Atualizar as 2 referências em `src/test/archetype-post-generate/CatalogSyncContractTest.groovy`
+- [ ] T036 [P] [US3] Atualizar as 16 referências em `src/test/archetype-post-generate/DestinationContractTest.groovy`
+- [ ] T037 [P] [US3] Atualizar as 4 referências em `src/test/archetype-post-generate/HardStopContractTest.groovy`
+- [ ] T038 [P] [US3] Atualizar as 11 referências em `src/test/archetype-post-generate/PathRenameContractTest.groovy`
+- [ ] T039 [P] [US3] Atualizar as 3 referências em `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy`
 
 ### Validation for User Story 3
 
-- [ ] T041 [US3] Rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 15 superfícies operacionais listadas em `specs/008-rename-procedure-files/contracts/reference-update-contract.md` e exigir 0 ocorrências; registrar o resultado do `ReferenceUpdate`
+- [ ] T040 [US3] Rodar `Select-String -Pattern "prompt-0[0-5]|indice-01-mapa"` nas 13 superfícies em escopo listadas em `specs/008-rename-procedure-files/contracts/reference-update-contract.md` e exigir 0 ocorrências; registrar o resultado do `ReferenceUpdate`
+- [ ] T041 [US3] Confirmar que as 3 referências diferidas em `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md` e `regras-04-como-aplicar-precedencia-e-validacao.md` permanecem inalteradas; não editar a subpasta 03
 - [ ] T042 [US3] Rodar `mvn -B test` no módulo raiz (`pom.xml`) e exigir todas as suítes verdes
-- [ ] T043 [US3] Inspecionar `git diff` e confirmar que cada hunk é apenas troca de referência; nenhuma regra alterada e nenhuma alteração em `specs/003` a `specs/007`, `target/` ou `graphify-out/`
-- [ ] T044 [US3] Registrar o checkpoint da Fase 3 em `$env:TEMP\eda-008\fase3-resultado.md` com 0 tokens, `mvn -B test` verde e a interpretação da FR-009
+- [ ] T043 [US3] Inspecionar `git diff` e confirmar que cada hunk é apenas troca de referência; nenhuma regra alterada e nenhuma alteração em `specs/003` a `specs/007`, `target/`, `graphify-out/` ou nas subpastas 03 e 04
+- [ ] T044 [US3] Registrar o checkpoint da Fase 3 em `$env:TEMP\eda-008\fase3-resultado.md` com 0 tokens em escopo, 3 referências diferidas, `mvn -B test` verde e o `ReferenceUpdate` verificado
 
-**Checkpoint**: as três fases concluídas; o procedimento não cita mais os nomes antigos e o build está verde
+**Checkpoint**: as três fases concluídas; as 13 superfícies em escopo não citam mais os nomes antigos e o build está verde
 
 ---
 
@@ -139,8 +136,8 @@
 
 - [ ] T045 [P] Executar os cenários de `specs/008-rename-procedure-files/quickstart.md` e registrar os resultados
 - [ ] T046 [P] Rodar `mvn -B clean install` no módulo raiz (`pom.xml`) como paridade opcional com o CI
-- [ ] T047 Confirmar 19 arquivos e 4 subpastas, ausência de aliases/cópias e ausência dos sete nomes antigos em `src/main/resources/llm-maven-flags-inference/`
-- [ ] T048 Revisar `git status --porcelain` contra `specs/008-rename-procedure-files/quickstart.md` e confirmar que apenas README, procedimento, redirect e as seis suítes foram alterados
+- [ ] T047 Confirmar 19 arquivos e 4 subpastas, ausência de aliases/cópias, ausência dos sete nomes antigos nas 13 superfícies em escopo e presença das 3 referências diferidas em `regras-01`/`regras-04`
+- [ ] T048 Revisar `git status --porcelain` contra `specs/008-rename-procedure-files/quickstart.md` e confirmar que apenas os 13 arquivos em escopo foram alterados; nenhum arquivo da subpasta 03 ou 04
 
 ---
 
@@ -163,17 +160,17 @@
 
 ### Within Each User Story
 
-- **US1**: T008 → T009 → T010/T011 → T012 → T013 → T014
-- **US2**: T015 → T016 → T017–T021 → T022 → T023 → T024
-- **US3**: T025 → T026–T040 → T041 → T042 → T043 → T044
+- **US1**: T009 → T010 → T011/T012 → T013 → T014 → T015
+- **US2**: T016 → T017 → T018–T022 → T023 → T024 → T025
+- **US3**: T026 → T027–T039 → T040 → T041 → T042 → T043 → T044
 
 ### Parallel Opportunities
 
 - Setup: T003 e T004 em paralelo
-- Foundational: T005 e T006 em paralelo
-- US1: T010 e T011 em paralelo após T009
-- US2: T017, T018, T019, T020 e T021 em paralelo após T016
-- US3: T026 a T040 em paralelo, pois são 15 arquivos diferentes
+- Foundational: T005, T006 e T007 em paralelo
+- US1: T011 e T012 em paralelo após T010
+- US2: T018, T019, T020, T021 e T022 em paralelo após T017
+- US3: T027 a T039 em paralelo, pois são 13 arquivos diferentes
 
 ---
 
@@ -200,7 +197,8 @@ Task: "Renomear prompt-05-entregaveis-e-relatorios.md"
 Task: "Atualizar README.md"
 Task: "Atualizar o conteúdo do índice"
 Task: "Atualizar o conteúdo da entrada"
-Task: "Atualizar os arquivos de 02 e 03"
+Task: "Atualizar os três arquivos da subpasta 02"
+Task: "Atualizar o redirect em utils/"
 Task: "Atualizar as seis suítes"
 ```
 
@@ -220,14 +218,14 @@ Task: "Atualizar as seis suítes"
 1. Setup + Foundational → base pronta
 2. Fase 1 → validar listagem/hash → build vermelho esperado
 3. Fase 2 → validar listagem/hash → build vermelho esperado
-4. Fase 3 → 0 tokens antigos → `mvn -B test` verde
+4. Fase 3 → 0 tokens nas 13 superfícies → `mvn -B test` verde
 5. Polish → quickstart e paridade opcional com o CI
 
 ### Parallel Team Strategy
 
 - US1 e US2 podem rodar em paralelo após o Foundational
 - US3 só começa depois de US1 e US2
-- Dentro de US3, as 15 atualizações de arquivo podem rodar em paralelo
+- Dentro de US3, as 13 atualizações de arquivo podem rodar em paralelo
 
 ---
 
@@ -240,4 +238,5 @@ Task: "Atualizar as seis suítes"
 - As seis suítes são atualizadas apenas na Fase 3
 - Não criar suítes novas nem tarefas TDD
 - Não alterar regras, textos normativos, formatação ou numeração interna
-- Não tocar em `specs/003` a `specs/007`, `target/` ou `graphify-out/`
+- Não tocar em `specs/003` a `specs/007`, `target/`, `graphify-out/` nem nas subpastas 03 e 04
+- As 3 referências antigas em `regras-01` e `regras-04` permanecem e ficam para feature futura
