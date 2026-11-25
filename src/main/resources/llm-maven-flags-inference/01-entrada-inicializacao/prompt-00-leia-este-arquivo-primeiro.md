@@ -170,10 +170,10 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 | `STOP-ENV-03` | catálogo ausente ou ilegível | §6; prompt-02 §6 |
 | `STOP-ENV-04` | pós-processador ausente | §6; prompt-02 §6 |
 | `STOP-ENV-05` | várias versões e o spec não declara qual usar | prompt-02 §1.4 |
-| `STOP-DER-01` | nome de entidade ambíguo | regras-01 §2 |
-| `STOP-DER-02` | lista de atributos derivada inválida | regras-01 §6; regras-04 §3 |
-| `STOP-DER-03` | duas fontes de mesma prioridade divergem | regras-04 §7 |
-| `STOP-DER-04` | caminho do contrato não absoluto ou falha ao gravar | regras-05 §5/§7 |
+| `STOP-DER-01` | nome de entidade ambíguo | 01 §2 |
+| `STOP-DER-02` | lista de atributos derivada inválida | 01 §6; 04 §3 |
+| `STOP-DER-03` | duas fontes de mesma prioridade divergem | 04 §7 |
+| `STOP-DER-04` | caminho do contrato não absoluto ou falha ao gravar | 05 §5/§7 |
 | `STOP-EXEC-01` | falha de catálogo ou pós-processador na geração | prompt-04 §4 |
 | `STOP-RULE-01` | o procedimento não cobre um caso | prompt-01 §4 |
 | `STOP-CONF-01` | pasta de destino ainda não existe | prompt-04 §1.3 |
@@ -712,12 +712,12 @@ llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-loca
 llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md
 llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md
 llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md
-llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md
-llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md
-llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md
-llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md
-llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-05-como-materializar-e-emitir-o-contrato.md
-llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md
+llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md
+llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md
+llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md
+llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md
+llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/05-como-materializar-e-emitir-o-contrato.md
+llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md
 llm-maven-flags-inference/04-referencia-templates-de-contrato/template-01-schema-do-contrato.json
 llm-maven-flags-inference/04-referencia-templates-de-contrato/template-02-exemplo-contrato-plano.json
 llm-maven-flags-inference/04-referencia-templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json

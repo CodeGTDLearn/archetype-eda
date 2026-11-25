@@ -32,7 +32,7 @@ mvn archetype:generate --batch-mode -D...
 3. O pós-processador e os templates dentro do JAR.
 4. O spec, apenas para tipo de módulo, package base, use-case, contrato e pasta de destino.
 
-O catálogo é a autoridade final sobre flags, defaults e regex. Ele também é a autoridade sobre as descrições que carrega. A descrição de `custom_entity_attributes_list` declara que o `id` é estrutural, e essa regra vale (ver `regras-01` §4.3).
+O catálogo é a autoridade final sobre flags, defaults e regex. Ele também é a autoridade sobre as descrições que carrega. A descrição de `custom_entity_attributes_list` declara que o `id` é estrutural, e essa regra vale (ver `01` §4.3).
 
 ## 4. Se faltar uma regra
 

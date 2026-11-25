@@ -6,7 +6,7 @@
  * 6 descriptive examples, the 35 properties / 18 filesets and the pinned
  * catalog values that T038 must not change.
  */
-def rules = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md")
+def rules = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md")
 def catalog = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 def text = rules.isFile() ? rules.getText("UTF-8") : ""
 def catalogText = catalog.isFile() ? catalog.getText("UTF-8") : ""
@@ -159,13 +159,13 @@ def descriptiveExampleMismatch = descriptiveExamples.findAll { flag, value ->
 check("3.5 every descriptive example matches its catalog regex: ${descriptiveExampleMismatch}",
         descriptiveExampleMismatch.isEmpty())
 
-def regras06 = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md").getText("UTF-8")
+def regras06 = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md").getText("UTF-8")
 def prompt03 = new File("target/classes/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md").getText("UTF-8")
 def pathRegex = catalogRegex("entity_contract_file_path") == null ? null : java.util.regex.Pattern.compile(catalogRegex("entity_contract_file_path"))
 
 check("4.1 the provenance exception cites contract_nested_type_definitions = none",
         regras06.contains("contract_nested_type_definitions") && regras06.contains("Não omita"))
-check("4.2 regras-04 explains FR-006 in simple language",
+check("4.2 04 explains FR-006 in simple language",
         text.contains("FR-006") && text.contains("dicionário de 20 termos"))
 check("4.3 prompt-03 distinguishes the package from the artifact",
         prompt03.contains("pedidoitem") && prompt03.contains("pedido-item") && prompt03.contains("kebab-case"))

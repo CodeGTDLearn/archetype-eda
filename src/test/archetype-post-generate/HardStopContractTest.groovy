@@ -107,7 +107,7 @@ if (ds >= 0 && de > ds) {
 check("2.1 the dictionary carries 20 terms: ${dictionary.size()}", dictionary.size() == 20)
 check("2.2 every dictionary term has a translation", dictionary.every { it.translation && it.translation != "-" })
 check("2.3 the procedure carries no 'informe apenas'", !corpus.contains("informe apenas"))
-def regras01 = new File(procedure, "03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md").getText("UTF-8")
+def regras01 = new File(procedure, "03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md").getText("UTF-8")
 check("2.4 the invalid list stops with STOP-DER-02 and has no fallback",
         regras01.contains("pare com STOP-DER-02") && !regras01.contains("O desfecho é o de"))
 def secretHits = []

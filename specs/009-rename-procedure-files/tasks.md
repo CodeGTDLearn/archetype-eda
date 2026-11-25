@@ -28,10 +28,10 @@
 
 **Purpose**: Confirm the baseline, preserve the original files and prepare the rename manifest.
 
-- [ ] T001 Confirm the baseline in `src/main/resources/llm-maven-flags-inference/`: 19 files, 13 Markdown, 6 JSON, 4 subfolders, 6 files in `03-derivacao-regras-de-formacao-do-contrato` and 6 in `04-referencia-templates-de-contrato`.
-- [ ] T002 Copy the 12 files listed in `specs/009-rename-procedure-files/contracts/rename-manifest.md` to `%TEMP%\opencode\rename-009-baseline` and record their SHA-256 hashes.
-- [ ] T003 Preflight the 12 rename mappings from `specs/009-rename-procedure-files/contracts/rename-manifest.md`: confirm each old file exists, each new name does not exist and no destination collides.
-- [ ] T004 Validate that `specs/009-rename-procedure-files/contracts/rename-manifest.md` contains 12 mappings, 18 operational files and the phase assignment for each reference.
+- [X] T001 Confirm the baseline in `src/main/resources/llm-maven-flags-inference/`: 19 files, 13 Markdown, 6 JSON, 4 subfolders, 6 files in `03-derivacao-regras-de-formacao-do-contrato` and 6 in `04-referencia-templates-de-contrato`.
+- [X] T002 Copy the 12 files listed in `specs/009-rename-procedure-files/contracts/rename-manifest.md` to `%TEMP%\opencode\rename-009-baseline` and record their SHA-256 hashes.
+- [X] T003 Preflight the 12 rename mappings from `specs/009-rename-procedure-files/contracts/rename-manifest.md`: confirm each old file exists, each new name does not exist and no destination collides.
+- [X] T004 Validate that `specs/009-rename-procedure-files/contracts/rename-manifest.md` contains 12 mappings, 18 operational files and the phase assignment for each reference.
 
 ---
 
@@ -41,10 +41,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T005 Create `src/test/archetype-post-generate/FileRenameContractTest.groovy` with the phase-aware harness, the 12-entry mapping from `contracts/rename-manifest.md`, the 19/13/6/4 counts, the catalog 35/18 check and the anti-drift scan excluding `specs/`, `graphify-out/`, `target/` and the suite itself.
-- [ ] T006 Register `FileRenameContractTest.groovy` in the packaged-procedure block of `src/test/groovy/run-archetype-post-generate-tests.groovy`.
-- [ ] T007 Add the phase-aware expected maps to `FileRenameContractTest.groovy`: Phase 1 expects the 6 new names in 03 and the 6 old names in 04; Phase 2 expects the 12 new names and 0 old names. Infer the phase from the existence of `04-referencia-templates-de-contrato/01-schema-do-contrato.json`.
-- [ ] T008 Run `mvn -B test` from the repository root and confirm `FileRenameContractTest.groovy` (runner: `src/test/groovy/run-archetype-post-generate-tests.groovy`) fails on the missing 03 new names while the other suites still pass; record the expected failure.
+- [X] T005 Create `src/test/archetype-post-generate/FileRenameContractTest.groovy` with the phase-aware harness, the 12-entry mapping from `contracts/rename-manifest.md`, the 19/13/6/4 counts, the catalog 35/18 check and the anti-drift scan excluding `specs/`, `graphify-out/`, `target/` and the suite itself.
+- [X] T006 Register `FileRenameContractTest.groovy` in the packaged-procedure block of `src/test/groovy/run-archetype-post-generate-tests.groovy`.
+- [X] T007 Add the phase-aware expected maps to `FileRenameContractTest.groovy`: Phase 1 expects the 6 new names in 03 and the 6 old names in 04; Phase 2 expects the 12 new names and 0 old names. Infer the phase from the existence of `04-referencia-templates-de-contrato/01-schema-do-contrato.json`.
+- [X] T008 Run `mvn -B test` from the repository root and confirm `FileRenameContractTest.groovy` (runner: `src/test/groovy/run-archetype-post-generate-tests.groovy`) fails on the missing 03 new names while the other suites still pass; record the expected failure.
 
 **Checkpoint**: The contract suite exists, is registered and fails for the right reason. User story work can begin.
 
@@ -58,27 +58,27 @@
 
 ### Tests for User Story 1
 
-- [ ] T009 [P] [US1] Update the 03 paths in `src/test/archetype-post-generate/BuildArtifactsTest.groovy` lines 96–101 to the new names; leave the 04 paths for T027.
-- [ ] T010 [P] [US1] Update the 03 paths in `src/test/archetype-post-generate/PathRenameContractTest.groovy` lines 55–60 to the new names; leave the 04 paths for T028.
-- [ ] T011 [P] [US1] Update the 03 path and labels in `src/test/archetype-post-generate/ProcedureContractTest.groovy` lines 198, 252 and 260 (`regras-03` → `03`, `regras-01` → `01`).
-- [ ] T012 [P] [US1] Update the 03 path in `src/test/archetype-post-generate/HardStopContractTest.groovy` line 110 (`regras-01` → `01`).
-- [ ] T013 [P] [US1] Update the 03 paths and labels in `src/test/archetype-post-generate/DestinationContractTest.groovy` lines 40, 58, 83, 87 and 91 (`regras-01` → `01`; `regras-06` → `06`).
-- [ ] T014 [P] [US1] Update the 03 paths and labels in `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` lines 9, 162 and 168 (`regras-04` → `04`; `regras-06` → `06`).
-- [ ] T015 [US1] Add the 03-specific assertions to `src/test/archetype-post-generate/FileRenameContractTest.groovy`: 6 new names in 03, 0 `regras-*`, 03 references absent from 01/02/03 and the test suites, 04 and README untouched. Depends on T005/T007.
+- [X] T009 [P] [US1] Update the 03 paths in `src/test/archetype-post-generate/BuildArtifactsTest.groovy` lines 96–101 to the new names; leave the 04 paths for T027.
+- [X] T010 [P] [US1] Update the 03 paths in `src/test/archetype-post-generate/PathRenameContractTest.groovy` lines 55–60 to the new names; leave the 04 paths for T028.
+- [X] T011 [P] [US1] Update the 03 path and labels in `src/test/archetype-post-generate/ProcedureContractTest.groovy` lines 198, 252 and 260 (`regras-03` → `03`, `regras-01` → `01`).
+- [X] T012 [P] [US1] Update the 03 path in `src/test/archetype-post-generate/HardStopContractTest.groovy` line 110 (`regras-01` → `01`).
+- [X] T013 [P] [US1] Update the 03 paths and labels in `src/test/archetype-post-generate/DestinationContractTest.groovy` lines 40, 58, 83, 87 and 91 (`regras-01` → `01`; `regras-06` → `06`).
+- [X] T014 [P] [US1] Update the 03 paths and labels in `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` lines 9, 162 and 168 (`regras-04` → `04`; `regras-06` → `06`).
+- [X] T015 [US1] Add the 03-specific assertions to `src/test/archetype-post-generate/FileRenameContractTest.groovy`: 6 new names in 03, 0 `regras-*`, 03 references absent from 01/02/03 and the test suites, 04 and README untouched. Depends on T005/T007.
 
 ### Implementation for User Story 1
 
-- [ ] T016 [US1] Rename the 6 files in `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/` with `Rename-Item`, in numeral order, per `data-model.md` `RenamedFile.old_name`/`new_name`: `regras-01-como-derivar-a-entidade-do-contrato.md` → `01-como-derivar-a-entidade-do-contrato.md`, `regras-02-como-resolver-tipos-e-enums.md` → `02-como-resolver-tipos-e-enums.md`, `regras-03-como-derivar-flags-de-tipos-aninhados.md` → `03-como-derivar-flags-de-tipos-aninhados.md`, `regras-04-como-aplicar-precedencia-e-validacao.md` → `04-como-aplicar-precedencia-e-validacao.md`, `regras-05-como-materializar-e-emitir-o-contrato.md` → `05-como-materializar-e-emitir-o-contrato.md`, `regras-06-como-relatar-proveniencia.md` → `06-como-relatar-proveniencia.md`.
-- [ ] T017 [P] [US1] Update the 03 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` lines 173–176 (`regras-01`, `regras-04`, `regras-05` → `01`, `04`, `05`) and lines 715–720 (full 03 paths); leave the 04 references on line 220 and lines 721–726 for T032.
-- [ ] T018 [P] [US1] Update the 03 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` lines 18–23 (full 03 paths) and line 52 (`regras-01`..`regras-06` → `01`..`06`); leave the 04 rows 24–29 and line 53 for T033.
-- [ ] T019 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` line 35 (`regras-01` → `01`).
-- [ ] T020 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md` line 109 (`regras-01` → `01`).
-- [ ] T021 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` lines 7, 26 and 44 (`regras-06`, `regras-01`, `regras-05` → `06`, `01`, `05`).
-- [ ] T022 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md` lines 67 and 70 (`regras-03` → `03`).
-- [ ] T023 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md` line 41 (`regras-01` → `01`).
-- [ ] T024 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md` line 61 (`regras-01` → `01`).
-- [ ] T025 [US1] Validate Phase 1 per `quickstart.md` Scenarios 1–2 and `data-model.md` `FeaturePhase.scope`: 6 new names in 03, 0 `regras-*`, content normative preserved, 03 references updated in 01/02/03 and the test suites; 04 and README untouched.
-- [ ] T026 [US1] Run `mvn -B test` from the repository root (runner: `src/test/groovy/run-archetype-post-generate-tests.groovy`) and confirm all suites pass with the phase-aware `FileRenameContractTest.groovy` still in Phase 1.
+- [X] T016 [US1] Rename the 6 files in `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/` with `Rename-Item`, in numeral order, per `data-model.md` `RenamedFile.old_name`/`new_name`: `regras-01-como-derivar-a-entidade-do-contrato.md` → `01-como-derivar-a-entidade-do-contrato.md`, `regras-02-como-resolver-tipos-e-enums.md` → `02-como-resolver-tipos-e-enums.md`, `regras-03-como-derivar-flags-de-tipos-aninhados.md` → `03-como-derivar-flags-de-tipos-aninhados.md`, `regras-04-como-aplicar-precedencia-e-validacao.md` → `04-como-aplicar-precedencia-e-validacao.md`, `regras-05-como-materializar-e-emitir-o-contrato.md` → `05-como-materializar-e-emitir-o-contrato.md`, `regras-06-como-relatar-proveniencia.md` → `06-como-relatar-proveniencia.md`.
+- [X] T017 [P] [US1] Update the 03 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` lines 173–176 (`regras-01`, `regras-04`, `regras-05` → `01`, `04`, `05`) and lines 715–720 (full 03 paths); leave the 04 references on line 220 and lines 721–726 for T032.
+- [X] T018 [P] [US1] Update the 03 references in `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md` lines 18–23 (full 03 paths) and line 52 (`regras-01`..`regras-06` → `01`..`06`); leave the 04 rows 24–29 and line 53 for T033.
+- [X] T019 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md` line 35 (`regras-01` → `01`).
+- [X] T020 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md` line 109 (`regras-01` → `01`).
+- [X] T021 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md` lines 7, 26 and 44 (`regras-06`, `regras-01`, `regras-05` → `06`, `01`, `05`).
+- [X] T022 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md` lines 67 and 70 (`regras-03` → `03`).
+- [X] T023 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md` line 41 (`regras-01` → `01`).
+- [X] T024 [P] [US1] Update `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md` line 61 (`regras-01` → `01`).
+- [X] T025 [US1] Validate Phase 1 per `quickstart.md` Scenarios 1–2 and `data-model.md` `FeaturePhase.scope`: 6 new names in 03, 0 `regras-*`, content normative preserved, 03 references updated in 01/02/03 and the test suites; 04 and README untouched.
+- [X] T026 [US1] Run `mvn -B test` from the repository root (runner: `src/test/groovy/run-archetype-post-generate-tests.groovy`) and confirm all suites pass with the phase-aware `FileRenameContractTest.groovy` still in Phase 1.
 
 **Checkpoint**: User Story 1 is complete and demonstrable independently. 04 and README remain in their old state by design.
 
