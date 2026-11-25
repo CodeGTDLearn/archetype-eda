@@ -13,6 +13,7 @@
 ### Session 2026-11-25
 
 - Q: A atualização das referências aos nomes antigos entra no escopo desta feature? → A: Sim, como Fase 3, dependente das Fases 1 e 2; specs históricas e saídas geradas ficam de fora.
+- Q: A Fase 3 pode alterar referências nos arquivos das subpastas 03 e 04? → A: Não; as subpastas 03 e 04 permanecem totalmente intactas e suas referências antigas ficam para uma feature futura.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -72,6 +73,7 @@ O mantenedor atualiza todas as referências operacionais aos sete nomes antigos 
 - As Fases 1 e 2 deixam o build vermelho nas suítes que citam os nomes antigos; a Fase 3 restaura o verde.
 - A Fase 3 edita uma única vez os arquivos compartilhados (README, índice, entrada e suítes) depois que os dois renomes existem.
 - Specs históricas 003–007 e saídas geradas (`target/`, `graphify-out/`) permanecem como registro.
+- As referências antigas em `regras-01` e `regras-04` permanecem após a Fase 3; a atualização delas fica para uma feature futura.
 - Diferença de maiúsculas e minúsculas no nome `01-entryPoint.md`: o nome é adotado literalmente, com `E` maiúsculo.
 
 ## Requirements *(mandatory)*
@@ -86,12 +88,12 @@ O mantenedor atualiza todas as referências operacionais aos sete nomes antigos 
 - **FR-006**: Após a Fase 2, a subpasta 02 MUST conter exatamente cinco arquivos, nenhum começando com `prompt-`, com os numerais 01 a 05 preservados.
 - **FR-007**: Nas Fases 1 e 2, os sete renomes MUST preservar integralmente o conteúdo de cada arquivo, sem alteração de regras, textos, numeração interna ou formato; a Fase 3 MUST alterar apenas referências de caminho e nome.
 - **FR-008**: Os sete renomes MUST manter cada arquivo na mesma subpasta de origem.
-- **FR-009**: As subpastas 03 e 04 e todos os seus arquivos MUST permanecer inalterados.
+- **FR-009**: As subpastas 03 e 04 e todos os seus arquivos MUST permanecer totalmente inalterados, inclusive referências de caminho e nome.
 - **FR-010**: As Fases 1 e 2 MUST ser executáveis, testáveis e demonstráveis isoladamente; a Fase 3 MUST depender das duas e ser executada depois delas.
 - **FR-011**: A especificação MUST apresentar as três fases de forma explícita e ordenada como Fase 1, Fase 2 e Fase 3.
 - **FR-012**: Esta feature MUST NOT criar aliases, redirects ou cópias com os nomes antigos.
-- **FR-013**: A Fase 3 MUST atualizar todas as referências operacionais aos sete nomes antigos para os novos nomes em `README.md`, no conteúdo do índice, no conteúdo da entrada, nos templates de spec, nas fixtures, nas seis suítes de contrato e no redirect em `src/main/resources/utils/`.
-- **FR-014**: A Fase 3 MUST alterar apenas referências de caminho e nome; regras, textos normativos e formato dos arquivos MUST permanecer inalterados.
+- **FR-013**: A Fase 3 MUST atualizar as referências operacionais aos sete nomes antigos nas superfícies em escopo: `README.md`, conteúdo do índice, conteúdo da entrada, os arquivos da subpasta 02 que citam nomes antigos, templates de spec, fixtures, as seis suítes de contrato e o redirect em `src/main/resources/utils/`. As referências nas subpastas 03 e 04 MUST NOT ser alteradas.
+- **FR-014**: A Fase 3 MUST alterar apenas referências de caminho e nome nas superfícies da FR-013; regras, textos normativos e formato dos arquivos MUST permanecer inalterados.
 - **FR-015**: Após a Fase 3, `mvn -B test` MUST passar.
 - **FR-016**: Specs históricas 003–007, `target/` e `graphify-out/` MUST NOT ser reescritos.
 
@@ -101,7 +103,7 @@ O mantenedor atualiza todas as referências operacionais aos sete nomes antigos 
 - **Subpasta 01**: contém a porta de entrada e o mapa de leitura; alvo da Fase 1.
 - **Subpasta 02**: contém os cinco arquivos de operação do agente; alvo da Fase 2.
 - **Arquivo renomeado**: arquivo cujo caminho muda, mantendo conteúdo e localização na mesma subpasta.
-- **Referência operacional**: citação de caminho ou nome em README, índice, entrada, templates, fixtures, suítes ou redirect; alvo da Fase 3.
+- **Referência operacional**: citação de caminho ou nome em README, índice, entrada, arquivos da subpasta 02, templates, fixtures, suítes ou redirect; alvo da Fase 3 quando estiver nas superfícies da FR-013.
 
 ## Success Criteria *(mandatory)*
 
@@ -112,9 +114,9 @@ O mantenedor atualiza todas as referências operacionais aos sete nomes antigos 
 - **SC-003**: 0 arquivos das subpastas 03 e 04 são adicionados, removidos ou renomeados.
 - **SC-004**: 7 de 7 arquivos renomeados mantêm o conteúdo idêntico ao original nas Fases 1 e 2; a Fase 3 altera apenas referências de caminho.
 - **SC-005**: As Fases 1 e 2 são verificáveis isoladamente: uma inspeção da subpasta da fase confirma o resultado sem exigir a outra; a Fase 3 exige as duas.
-- **SC-006**: Após a Fase 3, 0 referências operacionais aos sete nomes antigos e 0 aliases ou cópias; `mvn -B test` passa.
-- **SC-007**: README, índice, entrada, templates, fixtures, suítes e redirect refletem os novos nomes.
-- **SC-008**: Specs históricas 003–007 e saídas geradas permanecem inalteradas.
+- **SC-006**: Após a Fase 3, 0 referências operacionais aos sete nomes antigos nas superfícies da FR-013 e 0 aliases ou cópias; `mvn -B test` passa. As referências nas subpastas 03 e 04 ficam para uma feature futura.
+- **SC-007**: README, índice, entrada, arquivos da subpasta 02, templates, fixtures, suítes e redirect refletem os novos nomes.
+- **SC-008**: Specs históricas 003–007, subpastas 03 e 04 e saídas geradas permanecem inalteradas.
 
 ## Assumptions
 
@@ -123,6 +125,6 @@ O mantenedor atualiza todas as referências operacionais aos sete nomes antigos 
 - "Renomear" significa alterar apenas o caminho do arquivo; nenhum conteúdo normativo é reescrito.
 - A numeração das subpastas (01, 02, 03, 04) é preservada; apenas nomes de arquivos mudam.
 - As Fases 1 e 2 são independentes entre si; a Fase 3 depende das duas.
-- A atualização de referências operacionais entra no escopo como Fase 3; specs históricas e saídas geradas ficam fora.
+- A atualização de referências operacionais entra no escopo como Fase 3, limitada às superfícies da FR-013; as referências nas subpastas 03 e 04 ficam para uma feature futura.
 - O build fica vermelho entre as Fases 1 e 2 e volta a verde na Fase 3.
 - A contagem total de 19 arquivos do procedimento é preservada, com a mesma distribuição pelas quatro subpastas.
