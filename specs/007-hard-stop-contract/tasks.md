@@ -78,11 +78,11 @@
 
 **Independent Test**: Use a contract whose final derived list violates the catalog format and verify `STOP-DER-02`, the invalid segment, 3 options and no `mvn` line; 0 modules is verified manually in T025.
 
-- [ ] T020 [P] [US2] Update `regras-01-como-derivar-a-entidade-do-contrato.md` §6 to validate the final list against the catalog regex and stop with `STOP-DER-02`; remove the `String:name` fallback and preserve the existing name/type warnings.
-- [ ] T021 [P] [US2] Update `regras-04-como-aplicar-precedencia-e-validacao.md` §3 with the explicit exception: invalid derived `custom_entity_attributes_list` does not apply the default; other flags keep the current fallback.
-- [ ] T022 [P] [US2] Update `prompt-04-fluxo-de-execucao-e-verificacao.md` §1.2 and `regras-06-como-relatar-proveniencia.md` §5/§6 to reflect `STOP-DER-02` in the checklist and provenance.
-- [ ] T023 [US2] Verify and adjust the `STOP-DER-02` message in `prompt-00` §0.5: invalid segment, `Tipo:nome`, 3 options, suggestion, no `String:name` fallback, no Maven.
-- [ ] T024 [US2] Add the `STOP-DER-02` message checks to `src/test/archetype-post-generate/HardStopContractTest.groovy`: exactly 3 option texts (fix/remove/declare the full list), no `String:name` fallback, no Maven. Do not claim 0 modules here; run `mvn -B test`.
+- [X] T020 [P] [US2] Update `regras-01-como-derivar-a-entidade-do-contrato.md` §6 to validate the final list against the catalog regex and stop with `STOP-DER-02`; remove the `String:name` fallback and preserve the existing name/type warnings.
+- [X] T021 [P] [US2] Update `regras-04-como-aplicar-precedencia-e-validacao.md` §3 with the explicit exception: invalid derived `custom_entity_attributes_list` does not apply the default; other flags keep the current fallback.
+- [X] T022 [P] [US2] Update `prompt-04-fluxo-de-execucao-e-verificacao.md` §1.2 and `regras-06-como-relatar-proveniencia.md` §5/§6 to reflect `STOP-DER-02` in the checklist and provenance.
+- [X] T023 [US2] Verify and adjust the `STOP-DER-02` message in `prompt-00` §0.5: invalid segment, `Tipo:nome`, 3 options, suggestion, no `String:name` fallback, no Maven.
+- [X] T024 [US2] Add the `STOP-DER-02` message checks to `src/test/archetype-post-generate/HardStopContractTest.groovy`: exactly 3 option texts (fix/remove/declare the full list), no `String:name` fallback, no Maven. Do not claim 0 modules here; run `mvn -B test`.
 - [ ] T025 [US2] Run the manual negative scenario from `specs/007-hard-stop-contract/quickstart.md` §Cenário 5 and record 0 modules/no Maven in `specs/007-hard-stop-contract/validation-report.md`; this is the manual proof that the text suite cannot provide.
 
 **Checkpoint**: US2 is independently testable; the invalid list cannot generate a module.

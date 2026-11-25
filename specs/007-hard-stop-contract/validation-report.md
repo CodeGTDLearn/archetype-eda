@@ -38,6 +38,12 @@ Este relatório é o registro oficial de SC-002, NFR-001 e NFR-002. Preencha dur
 |---|---|---|---|---|
 | | | | | |
 
+## STOP-DER-02 — Prova manual
+
+**Cenário**: contrato com lista final inválida; ver `quickstart.md` §Cenário 5.
+**Resultado**: a mensagem exibe o segmento, o formato `Tipo:nome`, 3 opções e proíbe o Maven. A prova de 0 módulos em execução real do agente fica pendente.
+**Data**: 2026-11-24.
+
 ## Notas
 
 - O revisor de SC-002 não pode ser a pessoa que implementou as mensagens.

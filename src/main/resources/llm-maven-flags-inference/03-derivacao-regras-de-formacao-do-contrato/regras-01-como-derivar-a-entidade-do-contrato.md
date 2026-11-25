@@ -163,7 +163,7 @@ Exemplo:
 Integer:codigo,String:nome,Boolean:ativo
 ```
 
-Se a lista violar a regex do catálogo, pare com STOP-DER-02. Não use o `defaultValue` `String:name` como fallback. Registre a rejeição na proveniência e não emita a command line.
+Valide a lista final contra a regex do catálogo. Se violar, pare com STOP-DER-02. Não use o `defaultValue` `String:name` como fallback. Mantenha os avisos de nome e tipo já definidos nas seções anteriores. Registre a rejeição na proveniência e não emita a command line.
 
 ## 7. Flag de ativação
 
