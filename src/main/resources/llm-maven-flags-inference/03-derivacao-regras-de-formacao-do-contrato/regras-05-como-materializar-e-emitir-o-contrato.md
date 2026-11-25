@@ -46,8 +46,8 @@ Crie o diretório se ele não existir.
 ## 4. Conteúdo do arquivo
 
 - Grave **a forma canônica de §1** no arquivo, em UTF-8.
-- O arquivo gravado é byte a byte a forma canônica: sem espaços, sem quebras de linha, com as chaves ordenadas recursivamente.
-- A forma canônica é o que vai para o disco e o que é copiado para o projeto gerado: o SHA-256 de §2 é calculado sobre exatamente estes mesmos bytes.
+- O arquivo gravado é byte a byte a forma canônica. Sem espaços, sem quebras de linha e com as chaves ordenadas recursivamente.
+- A forma canônica é o que vai para o disco e o que é copiado para o projeto gerado. O SHA-256 de §2 é calculado sobre exatamente estes mesmos bytes.
 - Não acrescente comentários, campos extras ou formatação posterior.
 - O arquivo gravado é a fonte da cópia do pós-processador.
 

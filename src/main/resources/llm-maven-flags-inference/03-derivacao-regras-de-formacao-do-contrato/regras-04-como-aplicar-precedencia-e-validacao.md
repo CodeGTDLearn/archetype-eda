@@ -32,6 +32,8 @@ A semântica da entidade pode carregar fontes diferentes:
 
 Toda flag precisa satisfazer a `validationRegex` do catálogo.
 
+- `FR-006` é o requisito que cria o dicionário de 20 termos técnicos, disponível em `prompt-00` §0.4.
+
 - Valor válido → mantém valor e fonte.
 - Valor inválido → usa o `defaultValue` do catálogo, com nota e aviso.
 - A nota registra a rejeição: `valor '...' rejeitado pela regex; default aplicado (FR-006)`.
@@ -76,7 +78,7 @@ Uma chave do contrato que não existe no catálogo é campo de negócio, não fl
 - A inferência só pode propor valores para flags elegíveis.
 - `entity_name` é a única flag elegível por allowlist.
 - Uma flag que **não** está na allowlist nunca recebe valor inferido. Se o contrato trouxer a chave dela literalmente, a fonte é `CONTRACT` — o valor literal do contrato, não uma inferência.
-- Nenhuma flag fora da allowlist pode ser preenchida a partir do use-case, ainda que a chave exista no contrato: nesse caso, a chave é tratada como literal do contrato (`CONTRACT`) e o valor do contrato vence.
+- Nenhuma flag fora da allowlist pode ser preenchida a partir do use-case. Se a chave existir no contrato, trate-a como literal do contrato (`CONTRACT`). O valor do contrato vence.
 - Proposta descartada entra na seção de descartadas do relatório.
 
 ## 7. Conflito

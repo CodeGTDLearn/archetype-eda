@@ -144,6 +144,35 @@ check("3.2 the catalog carries 18 filesets", (catalogText =~ /<fileSet /).count 
 check("3.3 no catalog default changed: ${catalogDefaultMismatch}", catalogDefaultMismatch.isEmpty())
 check("3.4 no catalog validation regex changed: ${catalogRegexMismatch}", catalogRegexMismatch.isEmpty())
 
+def descriptiveExamples = [
+        "custom_entity_attribute_imports" : "br.com.projeto.EnderecoCliente,br.com.projeto.Telefone",
+        "contract_enum_definitions"       : "Status:ATIVO|INATIVO;Tipo:UM|DOIS",
+        "contract_nested_type_definitions": "Endereco|rua:String,cidade:String",
+        "entity_contract_file_path"       : "C:/tmp/contract.json",
+        "enable_custom_entity_attributes" : "true",
+        "enable_folder_src_test_java"     : "false",
+]
+def descriptiveExampleMismatch = descriptiveExamples.findAll { flag, value ->
+    def re = catalogRegex(flag) == null ? null : java.util.regex.Pattern.compile(catalogRegex(flag))
+    re == null || !re.matcher(value).matches()
+}.collect { "${it.key}: ${it.value}" }
+check("3.5 every descriptive example matches its catalog regex: ${descriptiveExampleMismatch}",
+        descriptiveExampleMismatch.isEmpty())
+
+def regras06 = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md").getText("UTF-8")
+def prompt03 = new File("target/classes/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md").getText("UTF-8")
+def pathRegex = catalogRegex("entity_contract_file_path") == null ? null : java.util.regex.Pattern.compile(catalogRegex("entity_contract_file_path"))
+
+check("4.1 the provenance exception cites contract_nested_type_definitions = none",
+        regras06.contains("contract_nested_type_definitions") && regras06.contains("Não omita"))
+check("4.2 regras-04 explains FR-006 in simple language",
+        text.contains("FR-006") && text.contains("dicionário de 20 termos"))
+check("4.3 prompt-03 distinguishes the package from the artifact",
+        prompt03.contains("pedidoitem") && prompt03.contains("pedido-item") && prompt03.contains("kebab-case"))
+check("4.4 the catalog describes the absolute path", catalogText.contains("absoluto"))
+check("4.5 the catalog regex still accepts none and a relative .json",
+        pathRegex != null && pathRegex.matcher("none").matches() && pathRegex.matcher("./contracts/contract.json").matches())
+
 println ""
 println failures == 0 ? "ALL CHECKS PASSED" : "${failures} CHECK(S) FAILED"
 if (failures > 0) throw new RuntimeException("${failures} CHECK(S) FAILED")

@@ -83,7 +83,8 @@ Passe sempre:
 Estas propriedades não são flags do catálogo; são nativas do plugin e derivadas pelo procedimento:
 
 - `groupId` = package base do spec.
-- `artifactId` = `entity_name` em kebab-case.
+- `entity_package_name` não leva separador: `PedidoItem` → `pedidoitem`.
+- `artifactId` usa kebab-case: `PedidoItem` → `pedido-item`.
   - `Cliente` → `cliente`
   - `PedidoItem` → `pedido-item`
 - `version` = default fixo `1.0.0-SNAPSHOT`.
@@ -94,7 +95,7 @@ Estas propriedades não são flags do catálogo; são nativas do plugin e deriva
 O destino vai **sempre** na propriedade `outputDirectory` da linha de comando, com o caminho absoluto confirmado no spec. A propriedade é nativa do plugin de geração de archetype e **não** é uma flag do catálogo.
 
 - O valor precisa ser um caminho absoluto. Caminho relativo, caminho com `~` ou com sinalização de fim de arquivo é recusado com aviso. Pare com STOP-IN-04.
-- Use barras normais (`/`) no valor emitido, mesmo no Windows: o caminho do destino é normalizado para barras normais antes de comparar e de emitir.
+- Use barras normais (`/`) no valor emitido, mesmo no Windows. O caminho do destino é normalizado para barras normais antes de comparar e de emitir.
 - Sem barra final e sem quebra de linha. Normalize espaços e barra final antes de comparar e de emitir.
 - Destino dentro da árvore do archetype é proibido, sem exceção. Pare com STOP-IN-04.
 - Não use caminho absoluto de usuário ou de máquina no procedimento.

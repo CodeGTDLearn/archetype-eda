@@ -70,7 +70,7 @@ Regras:
 
 - `none` quando não houver POJO referenciado pela entidade. Esse é o valor efetivo: o `none` é o `defaultValue` do catálogo, e a flag não é emitida na command line.
 - O valor explícito do contrato sempre vence.
-- Sem tipo aninhado referenciado, a flag não é emitida na command line: registre-a na proveniência como `DEFAULT` com a nota `none`, e não a omita do relatório.
+- Sem tipo aninhado referenciado, a flag não é emitida na command line. Registre-a na proveniência como `DEFAULT` com a nota `none`, e não a omita do relatório.
 - A flag deve satisfazer a regex do catálogo.
 - Valor derivado que viola a regex cai no default com aviso e nota de proveniência.
 

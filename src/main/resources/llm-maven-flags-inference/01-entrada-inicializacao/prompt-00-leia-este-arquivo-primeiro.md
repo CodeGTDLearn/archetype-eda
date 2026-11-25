@@ -70,9 +70,9 @@ Pare com STOP-IN-04 e pergunte — sem derivar e sem executar — quando a pasta
 - for caminho relativo, contiver `~` ou sinalização de fim de arquivo;
 - estiver dentro da árvore do archetype.
 
-O destino dentro da árvore do archetype é proibido de forma **absoluta**: não existe confirmação do operador que o autorize. Ao recusar, avise e pergunte onde fica o destino. Se o operador insistir que o destino é a própria pasta do archetype, ou continuar sem informar um destino, finalize o fluxo com a mensagem de STOP-IN-04 em §0.5.
+O destino dentro da árvore do archetype é proibido de forma **absoluta**: não existe confirmação do operador que o autorize. Ao recusar, avise e pergunte onde fica o destino. Se o operador insistir que o destino é a própria pasta do archetype, finalize com STOP-IN-04. Se continuar sem informar um destino, faça o mesmo.
 
-Nunca presuma destino: não use o diretório de trabalho corrente, a raiz do archetype, nem `src/`, `target/` ou qualquer pasta do próprio archetype. Uma sugestão de pasta temporária, fora da árvore do archetype, só pode ser aplicada após confirmação explícita do operador.
+Nunca presuma destino. Não use o diretório de trabalho corrente, a raiz do archetype, `src/`, `target/` ou pasta do próprio archetype. Uma sugestão de pasta temporária, fora da árvore do archetype, só pode ser aplicada após confirmação explícita do operador.
 
 ### 0.3 Contrato de Parada Dura
 
@@ -613,7 +613,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 
 Nenhum gate admite exceção, contorno ou tentativa de prosseguir.
 
-O que um gate **admite** é a correção da entrada: um gate acionado interrompe o fluxo e reporta o que falta, e o operador pode fornecer a entrada que falta e o procedimento recomeça do começo. Isso não é exceção — é o caminho normal. O que nenhum gate admite é **prosseguir** com o defeito presente.
+O que um gate **admite** é a correção da entrada. Um gate acionado interrompe o fluxo e reporta o que falta. O operador pode fornecer a entrada que falta, e o procedimento recomeça do começo. Isso não é exceção — é o caminho normal. O que nenhum gate admite é **prosseguir** com o defeito presente.
 
 ## 1. O que fazer agora
 

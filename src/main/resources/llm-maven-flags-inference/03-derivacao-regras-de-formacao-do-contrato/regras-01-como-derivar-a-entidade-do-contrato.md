@@ -14,7 +14,7 @@ O package base nunca vem do contrato. O contrato pode ter uma chave `package`, m
 
 Antes de resolver o nome, confirme que o contrato existe e é objeto JSON.
 
-Se não for, pare com STOP-IN-02 pelo Gate B de `prompt-00` §0: não infira o nome pelo use-case e não use default.
+Se não for, pare com STOP-IN-02 pelo Gate B de `prompt-00` §0. Não infira o nome pelo use-case e não use default.
 
 Resolva o nome nesta ordem:
 
@@ -29,7 +29,7 @@ Regras:
 - O valor explícito vence qualquer inferência.
 - O valor inferido do use-case precisa ser justificado.
 - O default só entra quando o use-case **não trouxer nenhum nome** de entidade: use-case vazio de nome, sem candidato único.
-- Se o use-case trouxer **mais de um** nome candidato, ou trouxer um nome que não permite inferir qual entidade é a principal, pare com STOP-DER-01 e pergunte.
+- Se o use-case trouxer **mais de um** nome candidato, pare com STOP-DER-01 e pergunte. Faça o mesmo quando não der para inferir a entidade principal.
 - Nunca use `MyEntity` silenciosamente: quando o default for aplicado, registre-o na proveniência como `DEFAULT` e notifique o operador.
 - O nome final deve satisfazer `^[A-Z][a-zA-Z0-9_]+$`.
 
@@ -127,7 +127,7 @@ Consequências no relatório:
 - registre o mapeamento na proveniência, na nota do atributo, como `id` → `<entidade>Id` (campo técnico), e não como atributo comum;
 - a ausência de `id` no contrato não é erro: o campo técnico continua existindo na entidade.
 
-Essa regra é a mesma que a descrição da flag `custom_entity_attributes_list` no catálogo declara: o `id` é estrutural e o template o descarta.
+Essa regra é a mesma da descrição da flag `custom_entity_attributes_list` no catálogo. O `id` é estrutural e o template o descarta.
 
 ## 5. Nome do atributo
 
@@ -181,4 +181,4 @@ Se o contrato não tiver `attributes`, `fields` nem campos de negócio:
 - mantenha `custom_entity_attributes_list` no default do catálogo;
 - registre a ausência no relatório.
 
-Se o contrato trouxer **apenas** o atributo `id`, ele não é um atributo comum (ver §4.3): o contrato não tem atributos comuns, e o campo técnico `<entidade>Id` é gerado pelo archetype de qualquer forma. Mantenha `enable_custom_entity_attributes=false`.
+Se o contrato trouxer **apenas** o atributo `id`, ele não é um atributo comum (ver §4.3). O contrato não tem atributos comuns, e o campo técnico `<entidade>Id` é gerado pelo archetype de qualquer forma. Mantenha `enable_custom_entity_attributes=false`.

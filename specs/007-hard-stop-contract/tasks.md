@@ -130,10 +130,10 @@
 
 **Independent Test**: Render the table, read the FR-006 note and read the package/artifact text; all three are clear without another document.
 
-- [ ] T039 [P] [US5] Add the simple-language `FR-006` explanation to `regras-04-como-aplicar-precedencia-e-validacao.md` §3.
-- [ ] T040 [P] [US5] Add the explicit package-vs-artifact text to `prompt-03-regras-obrigatorias-de-geracao.md` §2.1: `PedidoItem` → `pedidoitem` for `entity_package_name`; `PedidoItem` → `pedido-item` for `artifactId`.
-- [ ] T041 [US5] Run `mvn -B test` against `CatalogSyncContractTest.groovy` and verify the 3-column table, FR-006 note and naming text.
-- [ ] T042 [US5] Manually read `regras-04` §3.1/§3 and `prompt-03` §2.1; record in `specs/007-hard-stop-contract/validation-report.md` that the three items are understandable without external help.
+- [X] T039 [P] [US5] Add the simple-language `FR-006` explanation to `regras-04-como-aplicar-precedencia-e-validacao.md` §3.
+- [X] T040 [P] [US5] Add the explicit package-vs-artifact text to `prompt-03-regras-obrigatorias-de-geracao.md` §2.1: `PedidoItem` → `pedidoitem` for `entity_package_name`; `PedidoItem` → `pedido-item` for `artifactId`.
+- [X] T041 [US5] Run `mvn -B test` against `CatalogSyncContractTest.groovy` and verify the 3-column table, FR-006 note and naming text.
+- [X] T042 [US5] Manually read `regras-04` §3.1/§3 and `prompt-03` §2.1; record in `specs/007-hard-stop-contract/validation-report.md` that the three items are understandable without external help.
 
 **Checkpoint**: US5 improves readability without changing behavior.
 
@@ -143,15 +143,15 @@
 
 **Purpose**: Validate the whole feature against the spec, the JAR and the quickstart.
 
-- [ ] T043 Run `mvn -B test` and fix any remaining failure in `src/test/archetype-post-generate/HardStopContractTest.groovy` or `CatalogSyncContractTest.groovy`.
-- [ ] T044 Run `mvn clean install` and fix any packaging or catalog failure in `pom.xml`, `src/main/resources/META-INF/maven/archetype-metadata.xml` or `src/main/resources/llm-maven-flags-inference/`.
-- [ ] T045 Run `mvn -B test "-Deda.verify.installed.jar=true"` and confirm `~/.m2/repository/com/eda-archetype/eda-archetype/0.0.1-SNAPSHOT/eda-archetype-0.0.1-SNAPSHOT.jar` contains the registry, dictionary and `STOP-DER-02`.
-- [ ] T046 Validate the counts in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19/13/6 and 35/18; no file added or removed.
-- [ ] T047 Run the functional scenarios 1–9 and 11 in `specs/007-hard-stop-contract/quickstart.md` and record the outcomes in `specs/007-hard-stop-contract/validation-report.md`; scenario 10 is T030/T031, scenario 12 is T052, and scenarios 13–14 are T050/T051.
-- [ ] T048 Review `src/main/resources/llm-maven-flags-inference/` for Portuguese, 20-word sentences, active voice, translated acronyms, readable section name/path, neutral tone, no secrets and no "informe apenas"; record the review in `specs/007-hard-stop-contract/validation-report.md` and fix the findings.
-- [ ] T049 Final diff review: `README.md` unchanged, no new dependency, no `defaultValue`/`validationRegex` change, no new procedure file, no generated code or fixture change.
-- [ ] T050 Run the NFR-001 timing check using the baseline recorded in T001: measure the final `(Measure-Command { mvn -B test }).TotalSeconds`, compute `(final - baseline) / baseline`, require ≤10%, and record final/delta in `specs/007-hard-stop-contract/validation-report.md`. Fail if the baseline is missing.
-- [ ] T051 Run the NFR-002 offline check: `mvn -o -B test` twice, filter the `[archetype-post-generate]` lines, compare the outputs, and record the result in `specs/007-hard-stop-contract/validation-report.md`.
+- [X] T043 Run `mvn -B test` and fix any remaining failure in `src/test/archetype-post-generate/HardStopContractTest.groovy` or `CatalogSyncContractTest.groovy`.
+- [X] T044 Run `mvn clean install` and fix any packaging or catalog failure in `pom.xml`, `src/main/resources/META-INF/maven/archetype-metadata.xml` or `src/main/resources/llm-maven-flags-inference/`.
+- [X] T045 Run `mvn -B test "-Deda.verify.installed.jar=true"` and confirm `~/.m2/repository/com/eda-archetype/eda-archetype/0.0.1-SNAPSHOT/eda-archetype-0.0.1-SNAPSHOT.jar` contains the registry, dictionary and `STOP-DER-02`.
+- [X] T046 Validate the counts in `src/main/resources/llm-maven-flags-inference/` and `src/main/resources/META-INF/maven/archetype_metadata_required_properties/`: 19/13/6 and 35/18; no file added or removed.
+- [X] T047 Run the functional scenarios 1–9 and 11 in `specs/007-hard-stop-contract/quickstart.md` and record the outcomes in `specs/007-hard-stop-contract/validation-report.md`; scenario 10 is T030/T031, scenario 12 is T052, and scenarios 13–14 are T050/T051.
+- [X] T048 Review `src/main/resources/llm-maven-flags-inference/` for Portuguese, 20-word sentences, active voice, translated acronyms, readable section name/path, neutral tone, no secrets and no "informe apenas"; record the review in `specs/007-hard-stop-contract/validation-report.md` and fix the findings.
+- [X] T049 Final diff review: `README.md` unchanged, no new dependency, no `defaultValue`/`validationRegex` change, no new procedure file, no generated code or fixture change.
+- [X] T050 Run the NFR-001 timing check using the baseline recorded in T001: measure the final `(Measure-Command { mvn -B test }).TotalSeconds`, compute `(final - baseline) / baseline`, require ≤10%, and record final/delta in `specs/007-hard-stop-contract/validation-report.md`. Fail if the baseline is missing.
+- [X] T051 Run the NFR-002 offline check: `mvn -o -B test` twice, filter the `[archetype-post-generate]` lines, compare the outputs, and record the result in `specs/007-hard-stop-contract/validation-report.md`.
 - [ ] T052 After US2 (T023/T024), run the final SC-002 sample with the 6 fixed messages and the independent reviewer, record the 5 answers in `specs/007-hard-stop-contract/validation-report.md`, accept 6/6, then consolidate NFR-001/NFR-002 evidence, reviewer/date and no secrets; reject incomplete evidence.
 
 ---

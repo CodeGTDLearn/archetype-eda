@@ -21,7 +21,7 @@ Liste:
 
 Não é necessário listar todas as 35 flags do catálogo. Flags que ficaram no default e não afetam a geração podem ficar de fora da tabela principal.
 
-A pasta de destino da geração não é flag: não aparece nesta tabela, não recebe fonte de proveniência e é relatada em campo próprio, junto da command line executada.
+A pasta de destino da geração não é flag. Ela não aparece nesta tabela e não recebe fonte de proveniência. É relatada em campo próprio, junto da command line executada.
 
 Se uma flag rejeitada caiu no default, ela aparece com a nota da rejeição.
 
