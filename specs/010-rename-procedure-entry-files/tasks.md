@@ -25,6 +25,8 @@
 | Fase 1 | Subpasta de entrada e inicialização | US1 | P1 | — | Atualizar suítes existentes; nova suíte `ProcedureEntryRenameContractTest` | Phase 3 |
 | Fase 2 | Subpasta de operação e procedimento do agente | US2 | P2 | Fase 1 (conferência final) | Atualizar suítes existentes; varredura final | Phase 4 |
 
+> A suíte `ProcedureEntryRenameContractTest` é infraestrutura compartilhada: criada na Phase 2 (Foundational) e usada pelas Phase 3 e Phase 4.
+
 ## Como executar por fase da feature
 
 - Fase 1:
@@ -51,8 +53,8 @@
 
 **⚠️ CRITICAL**: Nenhuma tarefa de user story começa antes desta fase.
 
-- [ ] T004 [P] Criar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` com verificações phase-aware: sete nomes antigos/novos, contagens 19/13/6/4, índice, redirect legado, ausência de referências antigas no corpus operacional e exceções para o redirect e asserções negativas.
-- [ ] T005 [P] Registrar `ProcedureEntryRenameContractTest.groovy` na lista de suítes de `src/test/groovy/run-archetype-post-generate-tests.groovy`.
+- [ ] T004 [P] Criar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` com verificações phase-aware: sete nomes antigos/novos, nomes das subpastas `01-entrada-inicializacao` e `02-operacao-procedimento-do-agente`, contagens 19/13/6/4, ordem de leitura e papel dos arquivos, índice, redirect legado, ausência de referências antigas no corpus operacional e exceções para o redirect e asserções negativas.
+- [ ] T005 Registrar `ProcedureEntryRenameContractTest.groovy` na lista de suítes de `src/test/groovy/run-archetype-post-generate-tests.groovy`.
 
 **Checkpoint**: suíte nova criada e registrada; as fases de user story podem começar.
 
@@ -87,7 +89,7 @@
 - [ ] T019 [P] [US1] Atualizar em `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md` as linhas 35 e 66 de `prompt-00` para `00-entry-point`.
 - [ ] T020 [P] [US1] Atualizar em `README.md` as linhas 604, 845, 995, 2067, 2099, 2111, 2151, 2152, 2207, 2513, 2567, 2639 e 2704 para o novo caminho/token da entrada e do índice.
 - [ ] T021 [P] [US1] Atualizar em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` a linha 7 para apontar para `llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md`; não renomear o redirect.
-- [ ] T022 [US1] Executar a validação da Fase 1: listar `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/` e `02-operacao-procedimento-do-agente/`, rodar a varredura em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/`, e executar `mvn -B test` em `pom.xml`.
+- [ ] T022 [US1] Executar a validação da Fase 1: listar `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/` e `02-operacao-procedimento-do-agente/`; confirmar os nomes das subpastas `01-entrada-inicializacao` e `02-operacao-procedimento-do-agente` e a ordem/papel; rodar a varredura em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/` excluindo `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, `ProcedureEntryRenameContractTest.groovy` e `PathRenameContractTest.groovy`; executar `mvn -B clean test` em `pom.xml`.
 - [ ] T023 [US1] Comparar o SHA-256 e o diff de `00-entry-point.md` e `01-mapa-dos-arquivos-e-ordem-de-leitura.md` com o baseline em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/`; confirmar que só tokens de referência mudaram.
 
 **Checkpoint**: User Story 1 funcional e testável isoladamente; 02 ainda com os cinco nomes antigos.
@@ -115,7 +117,7 @@
 - [ ] T031 [P] [US2] Atualizar em `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md` o registro de paradas (linhas 168, 170, 171, 172, 177, 178, 179 e 180) e os caminhos completos (linhas 710 a 714) para os novos nomes de 02.
 - [ ] T032 [P] [US2] Atualizar em `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md` a linha 64 de `prompt-03` para `03-regras-obrigatorias-de-geracao`.
 - [ ] T033 [P] [US2] Atualizar em `README.md` as linhas 804 e 991 para `04-fluxo-de-execucao-e-verificacao`, `05-entregaveis-e-relatorios` e `03-regras-obrigatorias-de-geracao`.
-- [ ] T034 [US2] Executar a validação da Fase 2: listar `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/`, contar 19/13/6/4, rodar a varredura em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/`, e executar `mvn -B test` em `pom.xml`.
+- [ ] T034 [US2] Executar a validação da Fase 2: listar `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/`; contar 19/13/6/4; confirmar os nomes das subpastas `01-entrada-inicializacao` e `02-operacao-procedimento-do-agente` e a ordem/papel; rodar a varredura em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/` excluindo `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md`, `ProcedureEntryRenameContractTest.groovy` e `PathRenameContractTest.groovy`; executar `mvn -B clean test` em `pom.xml`.
 - [ ] T035 [US2] Executar `mvn clean install` e `mvn -B clean integration-test` em `pom.xml`.
 - [ ] T036 [US2] Comparar o SHA-256 e o diff dos cinco arquivos de `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/` com o baseline; confirmar que só tokens de referência mudaram.
 
@@ -128,7 +130,7 @@
 **Purpose**: Validação final, documentação e verificação do artefato.
 
 - [ ] T037 [P] Executar a varredura final em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/` para `prompt-0[0-5]` e `indice-01`, excluindo o redirect legado `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e as asserções negativas; confirmar 0 ocorrências.
-- [ ] T038 [P] Confirmar que `src/main/resources/META-INF/`, `src/main/resources/archetype-resources/`, `pom.xml` e as specs históricas em `specs/` não foram alterados; revisar o diff dos arquivos planejados.
+- [ ] T038 [P] Confirmar que `src/main/resources/META-INF/`, `src/main/resources/archetype-resources/`, `pom.xml` e as specs históricas em `specs/` não foram alterados; confirmar os nomes das subpastas `01-entrada-inicializacao` e `02-operacao-procedimento-do-agente` e a ordem de leitura; revisar o diff dos arquivos planejados.
 - [ ] T039 Executar os cenários de validação de `specs/010-rename-procedure-entry-files/quickstart.md` e registrar os resultados.
 - [ ] T040 Executar `mvn -B test "-Deda.verify.installed.jar=true"` em `pom.xml`, após o `mvn clean install` da T035; confirmar o JAR instalado com os novos nomes e o redirect legado.
 - [ ] T041 Registrar o relatório final da feature no relatório de conclusão da implementação, referenciando `specs/010-rename-procedure-entry-files/quickstart.md`: 7/7 nomes, 19/13/6/4, 0 referências antigas, suítes aprovadas, verificação opt-in e riscos remanescentes.
@@ -161,7 +163,7 @@
 ### Parallel Opportunities
 
 - T002 e T003 podem rodar em paralelo com T001 (leitura).
-- T004 e T005 são arquivos diferentes; podem rodar em paralelo.
+- T005 é sequencial e depende da suíte criada em T004; não executar em paralelo.
 - T006 a T011 são suítes diferentes; podem rodar em paralelo.
 - T014 a T021 são arquivos diferentes; podem rodar em paralelo após T012 e T013.
 - T024 a T028 são suítes diferentes; podem rodar em paralelo.

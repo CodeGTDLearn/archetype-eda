@@ -86,7 +86,7 @@ Get-ChildItem $procedure, "README.md", "src/test" -Recurse -File |
 Esperado: 0 linhas. O caminho do redirect legado e as asserções negativas das suítes são exceções.
 
 ```powershell
-mvn -B test
+mvn -B clean test
 ```
 
 Esperado: 100% das suítes passam; a nova `ProcedureEntryRenameContractTest` reconhece a Fase 1 (01 nova, 02 antiga).
@@ -136,7 +136,7 @@ Get-ChildItem $procedure, "README.md", "src/test" -Recurse -File |
 Esperado: 0 linhas, exceto o caminho do redirect legado e as asserções negativas.
 
 ```powershell
-mvn -B test
+mvn -B clean test
 mvn clean install
 mvn -B clean integration-test
 ```
@@ -188,5 +188,5 @@ Compare o SHA-256 dos sete arquivos com o baseline. O conteúdo deve ser idênti
 - Índice lista os 19 arquivos com os novos nomes.
 - Redirect legado funcional no caminho antigo.
 - 0 referências antigas no corpus operacional, exceto redirect legado e asserções negativas.
-- `mvn -B test`, `mvn clean install` e `mvn -B clean integration-test` passam.
+- `mvn -B clean test`, `mvn clean install` e `mvn -B clean integration-test` passam.
 - Nenhum catálogo, template, `pom.xml` ou spec histórica alterado.

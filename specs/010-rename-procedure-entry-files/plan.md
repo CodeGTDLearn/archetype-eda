@@ -129,7 +129,7 @@ src/main/resources/archetype-resources/                        # Sem alteração
 - Atualizar as referências aos dois arquivos em todos os arquivos operacionais do procedimento, inclusive dentro dos cinco arquivos de 02 (que mantêm os nomes antigos nesta fase), nos arquivos de 03 e no README.
 - Atualizar o redirect legado em `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` para apontar para `00-entry-point.md`; não renomear nem remover o redirect.
 - Atualizar as suítes que citam a entrada e o índice: `BuildArtifactsTest`, `PathRenameContractTest`, `HardStopContractTest`, `DestinationContractTest`, `ReadmeConsistencyTest` e `FileRenameContractTest`; ajustar `PathRenameContractTest` para separar o caminho canônico novo do caminho legado do redirect.
-- Validar a Fase 1 isoladamente: 01 com exatamente dois nomes novos; 02 ainda com os cinco nomes antigos; índice listando os novos caminhos de 01 e os antigos de 02; redirect apontando para `00-entry-point.md`; 0 referências textuais aos dois nomes antigos, exceto o caminho do redirect legado e as asserções negativas das suítes; `mvn -B test` passa.
+- Validar a Fase 1 isoladamente: 01 com exatamente dois nomes novos; 02 ainda com os cinco nomes antigos; índice listando os novos caminhos de 01 e os antigos de 02; redirect apontando para `00-entry-point.md`; 0 referências textuais aos dois nomes antigos, exceto o caminho do redirect legado e as asserções negativas das suítes; `mvn -B clean test` passa.
 - Checkpoint: a Fase 1 deve ser demonstrável sem a Fase 2.
 
 ### Fase 2 — Subpasta de operação e procedimento do agente (P2)
@@ -141,13 +141,13 @@ src/main/resources/archetype-resources/                        # Sem alteração
 - Atualizar as suítes que citam os cinco arquivos: `BuildArtifactsTest`, `PathRenameContractTest`, `DestinationContractTest`, `CatalogSyncContractTest`, `ReadmeConsistencyTest` e `ProcedureEntryRenameContractTest`.
 - Concluir a varredura do corpus operacional: 0 referências textuais a `prompt-0[0-5]` e `indice-01`, exceto o caminho do redirect legado e as asserções negativas da própria suíte.
 - Atualizar o README e o índice para refletir os 19 arquivos com os novos nomes.
-- Validar a Fase 2: 02 com exatamente cinco nomes novos e nenhum `prompt-*`; 19 arquivos, 13 Markdown, 6 JSON, 4 subpastas; 0 referências antigas no corpus operacional; `mvn -B test`, `mvn clean install` e `mvn -B clean integration-test` passam.
+- Validar a Fase 2: 02 com exatamente cinco nomes novos e nenhum `prompt-*`; 19 arquivos, 13 Markdown, 6 JSON, 4 subpastas; 0 referências antigas no corpus operacional; `mvn -B clean test`, `mvn clean install` e `mvn -B clean integration-test` passam.
 - Dependência: a Fase 2 depende do estado final dos arquivos compartilhados (índice, entrada, README e testes) e da contagem de 19; a renomeação dos cinco arquivos de 02 é independente da Fase 1, mas a conferência final de zero nomes antigos depende dela.
 
 ### Polish
 
 - Revisão final do diff: os sete arquivos renomeados devem ter o conteúdo normativo idêntico ao baseline, exceto pelos tokens de referência; arquivos sem referências aos nomes antigos devem ter hash idêntico.
-- `mvn -B test`, `mvn clean install`, `mvn -B clean integration-test`.
+- `mvn -B clean test`, `mvn clean install`, `mvn -B clean integration-test`.
 - `mvn -B test "-Deda.verify.installed.jar=true"` — verificação opt-in do JAR, após `install`.
 - Executar os cenários do `quickstart.md` e registrar o resultado.
 - Não criar nem remover arquivos do procedimento; não alterar catálogo, `archetype-resources/`, `pom.xml` ou specs históricas.
@@ -175,7 +175,7 @@ Get-ChildItem README.md, $procedure, "src/test" -Recurse -File |
 Esperado: 0 linhas, exceto as asserções negativas das suítes e o caminho do redirect legado.
 
 ```powershell
-mvn -B test
+mvn -B clean test
 ```
 
 ### Fase 2
@@ -200,7 +200,7 @@ Get-ChildItem README.md, $procedure, "src/test" -Recurse -File |
 Esperado: 0 linhas, exceto as asserções negativas das suítes e o caminho do redirect legado.
 
 ```powershell
-mvn -B test
+mvn -B clean test
 mvn clean install
 mvn -B clean integration-test
 mvn -B test "-Deda.verify.installed.jar=true"
@@ -216,7 +216,7 @@ mvn -B test "-Deda.verify.installed.jar=true"
 | Referências antigas | `Select-String` no corpus operacional | 0 ocorrências, exceto redirect legado e asserções negativas |
 | Índice | Leitura do índice | 19 caminhos novos, na mesma ordem |
 | Redirect | Leitura do redirect legado | Permanece no caminho antigo e aponta para `00-entry-point.md` |
-| Suítes | `mvn -B test` | 100% das suítes passam, incluindo a nova |
+| Suítes | `mvn -B clean test` | 100% das suítes passam, incluindo a nova |
 | Artefato | `mvn clean install` e verificação opt-in | JAR instalado contém os novos nomes e o redirect legado |
 
 ### Negativo (verificações que devem falhar se a feature regredir)
@@ -243,7 +243,7 @@ mvn -B test "-Deda.verify.installed.jar=true"
 | O redirect legado ser confundido com referência quebrada | Exceção explícita no manifesto e na suíte; o nome do redirect permanece |
 | `PathRenameContractTest` misturar caminho canônico e caminho legado | Separar `entryRelative` (novo) de `legacyEntry` (redirect) e ajustar as asserções |
 | `FileRenameContractTest` apontar para o índice antigo | Atualizar o caminho do índice na Fase 1 |
-| `target/classes` ficar obsoleto | `mvn clean install` antes da verificação do artefato; `mvn -B test` após process-resources |
+| `target/classes` ficar obsoleto | `mvn clean install` antes da verificação do artefato; `mvn -B clean test` após process-resources |
 | A nova suíte não ser registrada no runner | Atualizar o runner; `CoverageRegistryTest` e `ReadmeConsistencyTest` falham se faltar |
 | Conteúdo normativo mudar junto com a referência | Baseline + revisão de diff; apenas tokens podem diferir |
 | Specs históricas, `graphify-out/` ou `target/` serem reescritos | Exclusão explícita no manifesto e na varredura |
