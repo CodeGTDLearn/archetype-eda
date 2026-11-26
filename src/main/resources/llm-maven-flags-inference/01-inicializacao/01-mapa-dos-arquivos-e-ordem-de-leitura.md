@@ -8,13 +8,13 @@ Todos os caminhos abaixo são caminhos **dentro do JAR** do archetype, não cami
 
 | Ordem | Caminho no JAR | Papel | Obrigatório |
 |---:|---|---|---|
-| 1 | `llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md` | Porta de entrada | Sim |
-| 2 | `llm-maven-flags-inference/01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` | Este índice | Sim |
-| 3 | `llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md` | Papel e restrições | Sim |
-| 4 | `llm-maven-flags-inference/02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md` | Localização e leitura do JAR | Sim |
-| 5 | `llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md` | Regras obrigatórias de geração | Sim |
-| 6 | `llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md` | Execução e verificação | Sim |
-| 7 | `llm-maven-flags-inference/02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md` | Entregáveis e relatórios | Sim |
+| 1 | `llm-maven-flags-inference/01-inicializacao/00-entry-point.md` | Porta de entrada | Sim |
+| 2 | `llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` | Este índice | Sim |
+| 3 | `llm-maven-flags-inference/02-procedimento-do-agente/01-papel-e-restricoes-do-agente.md` | Papel e restrições | Sim |
+| 4 | `llm-maven-flags-inference/02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md` | Localização e leitura do JAR | Sim |
+| 5 | `llm-maven-flags-inference/02-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md` | Regras obrigatórias de geração | Sim |
+| 6 | `llm-maven-flags-inference/02-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md` | Execução e verificação | Sim |
+| 7 | `llm-maven-flags-inference/02-procedimento-do-agente/05-entregaveis-e-relatorios.md` | Entregáveis e relatórios | Sim |
 | 8 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md` | Entidade, nome, pacote e atributos | Sim |
 | 9 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md` | Tipos Java e enums | Sim |
 | 10 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md` | Imports, enums e tipos aninhados | Sim |
@@ -30,7 +30,7 @@ Todos os caminhos abaixo são caminhos **dentro do JAR** do archetype, não cami
 
 ## 2. Leituras técnicas no JAR
 
-Depois de ler `02-como-localizar-e-ler-o-archetype`, leia também:
+Depois de ler `02-localizar-e-ler-o-archetype`, leia também:
 
 | Caminho | Papel | Obrigatório |
 |---|---|---|
@@ -44,7 +44,7 @@ Depois de ler `02-como-localizar-e-ler-o-archetype`, leia também:
 1. `00-entry-point`
 2. Este índice
 3. `01-papel-e-restricoes-do-agente`
-4. `02-como-localizar-e-ler-o-archetype`
+4. `02-localizar-e-ler-o-archetype`
 5. Leituras técnicas do JAR
 6. `03-regras-obrigatorias-de-geracao`
 7. `04-fluxo-de-execucao-e-verificacao`

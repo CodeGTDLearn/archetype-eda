@@ -165,11 +165,11 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 | `STOP-IN-03` | contrato antes do use-case | Gate C |
 | `STOP-IN-04` | destino ausente, relativo, com `~`, com fim de arquivo ou dentro do archetype | Gate D |
 | `STOP-IN-05` | package base ausente ou ambíguo | §6 |
-| `STOP-ENV-01` | JAR instalado não encontrado | 02-como-localizar-e-ler-o-archetype §1 |
+| `STOP-ENV-01` | JAR instalado não encontrado | 02-localizar-e-ler-o-archetype §1 |
 | `STOP-ENV-02` | arquivo ou árvore obrigatória ausente | índice §5; §8 |
-| `STOP-ENV-03` | catálogo ausente ou ilegível | §6; 02-como-localizar-e-ler-o-archetype §6 |
-| `STOP-ENV-04` | pós-processador ausente | §6; 02-como-localizar-e-ler-o-archetype §6 |
-| `STOP-ENV-05` | várias versões e o spec não declara qual usar | 02-como-localizar-e-ler-o-archetype §1.4 |
+| `STOP-ENV-03` | catálogo ausente ou ilegível | §6; 02-localizar-e-ler-o-archetype §6 |
+| `STOP-ENV-04` | pós-processador ausente | §6; 02-localizar-e-ler-o-archetype §6 |
+| `STOP-ENV-05` | várias versões e o spec não declara qual usar | 02-localizar-e-ler-o-archetype §1.4 |
 | `STOP-DER-01` | nome de entidade ambíguo | 01 §2 |
 | `STOP-DER-02` | lista de atributos derivada inválida | 01 §6; 04 §3 |
 | `STOP-DER-03` | duas fontes de mesma prioridade divergem | 04 §7 |
@@ -617,7 +617,7 @@ O que um gate **admite** é a correção da entrada. Um gate acionado interrompe
 
 ## 1. O que fazer agora
 
-1. Leia `llm-maven-flags-inference/01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md`.
+1. Leia `llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md`.
 2. Siga a ordem indicada no índice.
 3. Leia todos os arquivos marcados como obrigatórios antes de derivar ou executar.
 4. Só então derive a entidade, os atributos e as flags.
@@ -705,13 +705,13 @@ Interrompa antes de executar quando:
 Antes de derivar, confirme que o JAR contém:
 
 ```text
-llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md
-llm-maven-flags-inference/01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md
-llm-maven-flags-inference/02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md
+llm-maven-flags-inference/01-inicializacao/00-entry-point.md
+llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md
+llm-maven-flags-inference/02-procedimento-do-agente/01-papel-e-restricoes-do-agente.md
+llm-maven-flags-inference/02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md
+llm-maven-flags-inference/02-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md
+llm-maven-flags-inference/02-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md
+llm-maven-flags-inference/02-procedimento-do-agente/05-entregaveis-e-relatorios.md
 llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md
 llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md
 llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md

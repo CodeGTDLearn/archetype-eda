@@ -76,23 +76,23 @@ check("4.5 surefire is restricted to **/*Test.java", pomText.contains("**/*Test.
 def procedureSource = new File("src/main/resources/llm-maven-flags-inference")
 def procedureClasses = new File("target/classes/llm-maven-flags-inference")
 def procedureIndex = new File(procedureSource,
-        "01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md")
+        "01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md")
 
 def procedureCategories = [
-        "01-entrada-inicializacao",
-        "02-operacao-procedimento-do-agente",
+        "01-inicializacao",
+        "02-procedimento-do-agente",
         "03-derivacao-regras-de-formacao-do-contrato",
         "04-referencia-templates-de-contrato"
 ]
 
 def procedureFiles = [
-        "01-entrada-inicializacao/00-entry-point.md",
-        "01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md",
-        "02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md",
-        "02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md",
-        "02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md",
-        "02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md",
-        "02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md",
+        "01-inicializacao/00-entry-point.md",
+        "01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md",
+        "02-procedimento-do-agente/01-papel-e-restricoes-do-agente.md",
+        "02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md",
+        "02-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md",
+        "02-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md",
+        "02-procedimento-do-agente/05-entregaveis-e-relatorios.md",
         "03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md",
         "03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md",
         "03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md",
