@@ -32,7 +32,7 @@ A semântica da entidade pode carregar fontes diferentes:
 
 Toda flag precisa satisfazer a `validationRegex` do catálogo.
 
-- `FR-006` é o requisito que cria o dicionário de 20 termos técnicos, disponível em `prompt-00` §0.4.
+- `FR-006` é o requisito que cria o dicionário de 20 termos técnicos, disponível em `00-entry-point` §0.4.
 
 - Valor válido → mantém valor e fonte.
 - Valor inválido → usa o `defaultValue` do catálogo, com nota e aviso.
@@ -63,7 +63,7 @@ O catálogo é a autoridade final. As regex acima são um resumo; em caso de div
 - `custom_entity_attribute_imports`, `contract_enum_definitions` e `contract_nested_type_definitions` são derivados apenas quando há atributos.
 - `entity_contract_file_path` só produz cópia com `enable_folder_src_test_java=true`.
 - `entity_contract_file_path` usa barras normais.
-- `entity_contract_file_path` é sempre um caminho `.json`: sem contrato, pare com STOP-IN-02 pelo Gate B de `prompt-00` §0.
+- `entity_contract_file_path` é sempre um caminho `.json`: sem contrato, pare com STOP-IN-02 pelo Gate B de `00-entry-point` §0.
 
 ## 5. Flags não definidas no catálogo
 

@@ -154,12 +154,12 @@ specSections.each { String name, String body ->
 check("3.5.1 every spec template carries the 0. PROCEDIMENTO preamble: ${missingPreamble}",
         missingPreamble.isEmpty())
 
-def prompt00Path = "llm-maven-flags-inference/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md"
+def prompt00Path = "llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md"
 def missingPromptPath = []
 specSections.each { String name, String body ->
     if (!body.contains(prompt00Path)) missingPromptPath << name
 }
-check("3.5.2 every spec template points at the packaged prompt-00: ${missingPromptPath}",
+check("3.5.2 every spec template points at the packaged 00-entry-point: ${missingPromptPath}",
         missingPromptPath.isEmpty())
 
 def expectedArchetype = "com.eda-archetype:eda-archetype:${archetypeVersion}"
@@ -234,7 +234,7 @@ check("3.5.10 scenario D publishes the three-level nested chain",
 def pluginVersionMatcher = pomText =~ /(?s)<artifactId>maven-archetype-plugin<\/artifactId>\s*<version>([^<]+)<\/version>/
 def pluginVersion = pluginVersionMatcher.find() ? pluginVersionMatcher.group(1).trim() : ""
 def pluginCoordinate = "maven-archetype-plugin:${pluginVersion}"
-def prompt04 = new File("src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md")
+def prompt04 = new File("src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md")
 def prompt04Text = prompt04.isFile() ? prompt04.getText("UTF-8") : ""
 check("3.6.1 the pom pins the archetype plugin: ${pluginVersion}",
         pluginVersion.length() > 0)
