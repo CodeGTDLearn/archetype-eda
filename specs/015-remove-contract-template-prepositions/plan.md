@@ -165,7 +165,7 @@ Nenhuma violação da constitution; não há complexidade a justificar.
   - A checagem “the schema keeps its name” passa a usar `expected[0]`.
 - `FileRenameContractTest.groovy` recebe o mesmo estado final:
   - `p3New` com os seis nomes finais e `p3RenamedCurrent` com os cinco nomes que deixam de existir.
-  - `expected04`, as checagens 2.2/2.4, o índice 3.2/3.4, o corpus 4.2 e o README 6.1 passam a considerar o estado final.
+  - `expected04`, as checagens 2.2/2.4, o índice 3.2/3.4, o corpus 4.2 e o README 6.1 compõem os estados 1, 2 e final a partir de `schemaRenamed` e `othersRenamed`.
   - O histórico (`p2LegacyOld`, `p2Current`, `p2New`) permanece para provar que as gerações anteriores não voltaram.
 - As suítes de lista fixa (`BuildArtifactsTest`, `PathRenameContractTest`, `ContractRuleRenameContractTest`, `ProcedureContractTest`) trocam apenas os tokens dos cinco nomes; nenhuma asserção negativa é removida.
 

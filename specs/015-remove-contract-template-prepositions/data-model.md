@@ -16,7 +16,7 @@ A feature é documental: não há banco de dados, API ou modelo em memória em r
 | `targetName` | string | Nome depois da feature | Igual a `currentName` quando não há preposição-alvo |
 | `role` | string | Papel na tabela do índice | Imutável |
 | `contentHash` | string (SHA-256) | Hash do conteúdo antes da feature | Deve permanecer idêntico |
-| `phase` | inteiro 0–2 | Estado da renomeação | 0 = nenhum; 1 = schema; 2 = schema + arquivos 3 a 6 |
+| `renamed` | booleano | Indica se o arquivo já usa o `targetName` | `false` no estado 0; `true` após a fase que renomeia o arquivo |
 
 **Instâncias**
 
@@ -146,7 +146,7 @@ Estado final (ambas as fases aplicadas)
   06-contrato-attributes-explicito.json
 ```
 
-As suítes phase-aware reconhecem os estados 0, 1, 2 e final por presença de arquivo, sem depender da ordem de aplicação.
+As suítes phase-aware reconhecem os estados 0, 1, 2 e final por presença de arquivo, sem depender da ordem de aplicação. O estado global é o par (`schemaRenamed`, `othersRenamed`).
 
 ## 4. Dados fora do modelo
 

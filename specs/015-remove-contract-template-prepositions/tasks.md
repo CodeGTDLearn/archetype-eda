@@ -38,8 +38,8 @@
 
 **⚠️ CRITICAL**: Nenhuma user story pode começar até esta fase estar completa.
 
-- [ ] T004 Estender `src/test/archetype-post-generate/ContractTemplateRenameContractTest.groovy` com `p3New` e detecção independente de `schemaRenamed` (presença de `01-schema-contrato.json`) e `othersRenamed` (presença de `03-contrato-objetos-aninhados.json`); compor `expected` para os quatro estados; trocar a checagem 2.3 para usar `expected[0]`; manter as asserções negativas e o anti-drift das gerações anteriores
-- [ ] T005 Estender `src/test/archetype-post-generate/FileRenameContractTest.groovy` com `p3New` e `p3RenamedCurrent`, a mesma detecção de dois estados, e aplicar o estado final em `expected04`, nas checagens 2.2/2.4, no índice 3.2/3.4, no corpus 4.2 e no README 6.1; preservar `p2LegacyOld`, `p2Current` e `p2New`
+- [ ] T004 Estender `src/test/archetype-post-generate/ContractTemplateRenameContractTest.groovy` com `p3New` e `p3RenamedCurrent` (`01-schema-do-contrato.json` e os quatro `0X-contrato-com-...`), detecção independente de `schemaRenamed` (presença de `01-schema-contrato.json`) e `othersRenamed` (presença de `03-contrato-objetos-aninhados.json`); compor `expected` para os quatro estados; trocar a checagem 2.3 para usar `expected[0]`; aplicar `p3RenamedCurrent` nas checagens 2.4 e 7.1; manter as asserções negativas e o anti-drift das gerações anteriores
+- [ ] T005 Estender `src/test/archetype-post-generate/FileRenameContractTest.groovy` com `p3New` e `p3RenamedCurrent`, a mesma detecção de dois estados, e compor `expected04` para os quatro estados: estado 1 = schema novo + arquivos 3 a 6 antigos; estado 2 = schema antigo + arquivos 3 a 6 novos; estado final = `p3New`; aplicar a composição em `expected04`, nas checagens 2.2/2.4, no índice 3.2/3.4, no corpus 4.2 e no README 6.1; preservar `p2LegacyOld`, `p2Current` e `p2New`
 - [ ] T006 Rodar `mvn -B clean test` a partir de `pom.xml` na raiz e confirmar que as suítes de `src/test/archetype-post-generate/` permanecem verdes no estado 0 (baseline), sem renomeações aplicadas
 
 **Checkpoint**: as suítes aceitam os estados 0, 1, 2 e final; a linha de base está verde.

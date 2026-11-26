@@ -128,7 +128,7 @@ Como mantenedor do procedimento, quando removo a preposição `com` do corpo do 
 - **SC-005**: 100% das referências operacionais aos nomes antigos atualizadas; 0 referências quebradas no mapa dos arquivos, na porta de entrada, no README e nas suítes de verificação.
 - **SC-006**: O mapa dos arquivos lista 19 de 19 arquivos com os caminhos novos, nas mesmas posições e com os mesmos papéis.
 - **SC-007**: Os conteúdos dos seis arquivos permanecem idênticos ao anterior; 0 mudanças em regras, definições, chaves, tipos, valores de exemplo ou formato.
-- **SC-008**: 0 mudanças nas subpastas 01, 02 e 03 e no nome da subpasta 04.
+- **SC-008**: 0 mudanças nos nomes e nos arquivos das subpastas 01, 02 e 03, e 0 mudanças no nome da subpasta 04; as referências textuais dentro delas seguem FR-017.
 - **SC-009**: As suítes de verificação existentes passam após a atualização das expectativas de nome.
 - **SC-010**: 100% dos links e âncoras do README que citam os arquivos renomeados permanecem funcionais.
 - **SC-011**: Se o procedimento for empacotado novamente, o artefato expõe os nomes novos e 0 nomes antigos; a verificação no artefato instalado não é gate desta feature.
