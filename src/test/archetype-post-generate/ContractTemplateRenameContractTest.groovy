@@ -46,6 +46,17 @@ def p2New = [
         "05-contrato-com-tipos-do-projeto.json",
         "06-contrato-com-attributes-explicito.json"
 ]
+def p3New = [
+        "01-schema-contrato.json",
+        "02-contrato-plano.json",
+        "03-contrato-objetos-aninhados.json",
+        "04-contrato-enums.json",
+        "05-contrato-tipos-do-projeto.json",
+        "06-contrato-attributes-explicito.json"
+]
+def p3RenamedSchema = [p2New[0]]
+def p3RenamedOthers = p2New[2..5]
+def p3RenamedCurrent = p3RenamedSchema + p3RenamedOthers
 def renamedCurrent = p2Current[1..5]
 def renamedNew = p2New[1..5]
 
@@ -54,7 +65,19 @@ def templatePhase = folderPhase == 0 ? 0 :
         (new File(new File(procedure, folderNew), p2New[1]).isFile() ? 2 : 1)
 def folderName = templatePhase == 0 ? folderOld : folderNew
 def folder = new File(procedure, folderName)
-def expected = templatePhase == 2 ? p2New : p2Current
+def schemaRenamed = templatePhase == 2 && new File(folder, p3New[0]).isFile()
+def othersRenamed = templatePhase == 2 && new File(folder, p3New[2]).isFile()
+def rejectedP3 = (schemaRenamed && othersRenamed) ? p3RenamedCurrent :
+        ((schemaRenamed ? p3RenamedSchema : []) + (othersRenamed ? p3RenamedOthers : []))
+def expected = templatePhase == 0 ? p2Current :
+        (templatePhase == 1 ? p2Current : [
+                schemaRenamed ? p3New[0] : p2New[0],
+                p2New[1],
+                othersRenamed ? p3New[2] : p2New[2],
+                othersRenamed ? p3New[3] : p2New[3],
+                othersRenamed ? p3New[4] : p2New[4],
+                othersRenamed ? p3New[5] : p2New[5]
+        ])
 println "INFO: ContractTemplateRenameContractTest templatePhase=${templatePhase}"
 
 def allSource = filesOf(procedure)
@@ -85,9 +108,10 @@ check("2.1 folder 04 carries the expected names",
         filesOf(folder).collect { it.name }.sort() == expected.sort())
 check("2.2 every name keeps the numeral and the .json extension",
         filesOf(folder).every { it.name ==~ /^0[1-6]-[a-z0-9-]+\.json$/ })
-check("2.3 the schema keeps its name", new File(folder, "01-schema-do-contrato.json").isFile())
+check("2.3 the schema keeps its name", new File(folder, expected[0]).isFile())
 if (templatePhase == 2) {
-    check("2.4 no current (exemplo) name remains", renamedCurrent.every { !new File(folder, it).exists() })
+    def rejectedNames = renamedCurrent + rejectedP3
+    check("2.4 no old name remains: ${rejectedNames}", rejectedNames.every { !new File(folder, it).exists() })
 } else {
     check("2.4 no target (contrato) name exists yet", renamedNew.every { !new File(folder, it).exists() })
 }
@@ -165,7 +189,7 @@ def docHits = []
 docFiles.each { File f ->
     String body = f.getText("UTF-8")
     if (templatePhase >= 1 && body.contains(folderOld)) docHits << "${f.name}: folder"
-    if (templatePhase == 2) renamedCurrent.each { if (body.contains(it)) docHits << "${f.name}: ${it}" }
+    if (templatePhase == 2) (renamedCurrent + rejectedP3).each { if (body.contains(it)) docHits << "${f.name}: ${it}" }
 }
 check("7.1 no old 04 names in the operational documents: ${docHits}", docHits.isEmpty())
 
