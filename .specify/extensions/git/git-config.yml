@@ -22,8 +22,10 @@ init_commit_message: "[Spec Kit] Initial commit"
 # "conventional" - ask the agent to inspect the diff and generate a
 #                  Conventional Commit message (e.g. "feat: add OAuth spec")
 #                  instead of using the messages configured below.
-# "snapshot"     - rollback snapshot taken by before_* hooks: the script
-#                  classifies the frozen phase from the staged diff and
+# "snapshot"     - snapshot taken by the commit hooks: an after_* hook states
+#                  the phase that just finished (authoritative); a before_*
+#                  hook freezes the state left by the previous phase. The
+#                  script classifies the phase from the staged diff and
 #                  builds title + body (synopsis, "Concluído", next phase,
 #                  --stat). Title format:
 #                  "📸 <fase>: "<assunto>" (<detalhes>)", where <assunto>
@@ -31,9 +33,11 @@ init_commit_message: "[Spec Kit] Initial commit"
 #                  per-phase default) and <detalhes> are automatic metrics
 #                  (Implement: "N arquivos - T012–T015"; Tasks: "N tarefas
 #                  em M fases"; Plan: "N artefatos de design"; Checklist:
-#                  "N listas"; Specify/Snapshot: omitted). The agent may
-#                  refine the synopsis via -SynopsisFile. The static
-#                  messages below are ignored.
+#                  "N listas"; Clarify: "N sessões"; Analyze: "analysis.md";
+#                  Constitution: "constitution.md"; Converge/Task2Issues/
+#                  Specify/Snapshot: omitted). The agent may refine the
+#                  synopsis via -SynopsisFile. The static messages below are
+#                  ignored.
 commit_style: snapshot
 
 # Prefixo do título dos snapshots (📸). Fora do script de propósito:

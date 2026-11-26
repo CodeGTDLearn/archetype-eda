@@ -14,7 +14,7 @@ O package base nunca vem do contrato. O contrato pode ter uma chave `package`, m
 
 Antes de resolver o nome, confirme que o contrato existe e é objeto JSON.
 
-Se não for, pare com STOP-IN-02 pelo Gate B de `prompt-00` §0. Não infira o nome pelo use-case e não use default.
+Se não for, pare com STOP-IN-02 pelo Gate B de `00-entry-point` §0. Não infira o nome pelo use-case e não use default.
 
 Resolva o nome nesta ordem:
 
