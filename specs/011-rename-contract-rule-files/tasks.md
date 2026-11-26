@@ -61,7 +61,7 @@
 
 **⚠️ CRITICAL**: Nenhuma fase de user story começa antes desta fase.
 
-- [ ] T005 Criar `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` phase-aware para a pasta 03, os seis nomes, as contagens 19/13/6/4, o índice, o README, as fixtures, o redirect legado e o anti-drift; usar `FolderRename.new_name` e `FileRename.new_name` de `specs/011-rename-contract-rule-files/data-model.md`.
+- [ ] T005 Criar `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` phase-aware para a pasta 03, os seis nomes, as contagens 19/13/6/4, o índice (os 19 caminhos na mesma ordem, com papel e como fonte única da ordem global; inclusive a ordem e o papel dos seis arquivos), o README, as fixtures, o redirect legado e o anti-drift; usar `FolderRename.new_name` e `FileRename.new_name` de `specs/011-rename-contract-rule-files/data-model.md`.
 - [ ] T006 Registrar `ContractRuleRenameContractTest.groovy` no bloco `packaged procedure` de `src/test/groovy/run-archetype-post-generate-tests.groovy`.
 - [ ] T007 Refatorar `src/test/archetype-post-generate/FileRenameContractTest.groovy` linhas 32–45 para `p1LegacyOld`, `p1Current` e `p1New`, e adicionar a detecção `rulePhase` descrita em `specs/011-rename-contract-rule-files/contracts/rename-manifest.md`.
 - [ ] T008 [P] Confirmar que o redirect legado `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` permanece no caminho antigo e aponta para `llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md`.
@@ -103,7 +103,7 @@
 ### Validation for User Story 1
 
 - [ ] T025 [US1] Executar `mvn -B clean test` a partir da raiz (`pom.xml`) e corrigir falhas da Fase 1.
-- [ ] T026 [US1] Executar a varredura da Fase 1 em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/`, excluindo `specs/`, `graphify-out/`, `target/` e as asserções negativas, e confirmar 0 referências à pasta antiga.
+- [ ] T026 [US1] Executar a varredura da Fase 1 em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/`, excluindo `specs/`, `graphify-out/`, `target/` e as asserções negativas, confirmar 0 referências à pasta antiga e confirmar que o índice mantém os 19 caminhos na mesma ordem, com papel, e como fonte única da ordem global.
 
 **Checkpoint**: Fase 1 demonstrável sem a Fase 2; os seis arquivos ainda têm os nomes atuais.
 
@@ -135,7 +135,7 @@
 ### Validation for User Story 2
 
 - [ ] T038 [US2] Executar `mvn -B clean test` a partir da raiz (`pom.xml`) e corrigir falhas da Fase 2.
-- [ ] T039 [US2] Executar a varredura dos três nomes antigos (`01`–`03`) em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/` e confirmar 0 referências, exceto asserções negativas.
+- [ ] T039 [US2] Executar a varredura dos três nomes antigos (`01`–`03`) em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/`, confirmar 0 referências, exceto asserções negativas, e confirmar que o índice mantém os 19 caminhos na mesma ordem, com papel, e como fonte única da ordem global.
 
 **Checkpoint**: Fase 2 demonstrável; `04`–`06` permanecem com os nomes atuais.
 
@@ -166,7 +166,7 @@
 ### Validation for User Story 3
 
 - [ ] T050 [US3] Executar `mvn -B clean test` a partir da raiz (`pom.xml`) e corrigir falhas da Fase 3.
-- [ ] T051 [US3] Executar a varredura final em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/`: 0 referências à pasta antiga e aos seis nomes antigos, exceto o redirect legado e as asserções negativas.
+- [ ] T051 [US3] Executar a varredura final em `README.md`, `src/main/resources/llm-maven-flags-inference/` e `src/test/`: 0 referências à pasta antiga e aos seis nomes antigos, exceto o redirect legado e as asserções negativas, e confirmar que o índice mantém os 19 caminhos na mesma ordem, com papel, e como fonte única da ordem global.
 - [ ] T052 [US3] Comparar SHA-256/diff dos seis arquivos de `src/main/resources/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/` com o baseline e confirmar que só tokens de referência mudaram.
 - [ ] T053 [US3] Executar `mvn clean install` a partir da raiz (`pom.xml`) e confirmar o artefato instalado.
 - [ ] T054 [US3] Executar `mvn -B clean integration-test` a partir da raiz (`pom.xml`).

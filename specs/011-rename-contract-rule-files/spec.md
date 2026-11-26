@@ -103,7 +103,7 @@ Como mantenedor do procedimento, quando removo `como-` dos nomes dos arquivos `0
 - **FR-002**: Os seis arquivos da subpasta 03 MUST ser renomeados exatamente para `01-derivar-a-entidade-do-contrato.md`, `02-resolver-tipos-e-enums.md`, `03-derivar-flags-de-tipos-aninhados.md`, `04-aplicar-precedencia-e-validacao.md`, `05-materializar-e-emitir-o-contrato.md` e `06-relatar-proveniencia.md`.
 - **FR-003**: Nenhum dos seis nomes antigos MUST permanecer como nome de arquivo na subpasta 03, e o nome antigo da pasta MUST NOT permanecer como nome de pasta.
 - **FR-004**: O conteúdo normativo dos seis arquivos MUST permanecer inalterado; apenas as referências textuais aos nomes antigos podem ser atualizadas.
-- **FR-005**: Nenhum arquivo MUST ser criado, removido ou movido; o procedimento MUST manter 19 arquivos, 13 Markdown e 6 JSON, em quatro subpastas, com seis arquivos na subpasta 03.
+- **FR-005**: Nenhum arquivo do procedimento MUST ser criado, removido ou movido; o procedimento MUST manter 19 arquivos, 13 Markdown e 6 JSON, em quatro subpastas, com seis arquivos na subpasta 03.
 - **FR-006**: Os nomes das subpastas `01-entrada-inicializacao`, `02-operacao-procedimento-do-agente` e `04-referencia-templates-de-contrato` MUST permanecer inalterados.
 - **FR-007**: A ordem de leitura e o papel de cada um dos seis arquivos no procedimento MUST permanecer inalterados.
 - **FR-008**: Todas as referências operacionais ao nome antigo da pasta e aos seis nomes antigos MUST ser atualizadas, incluindo o índice, a porta de entrada, as regras do procedimento, o README, os comentários das fixtures e as suítes de verificação, inclusive formas curtas.
@@ -149,6 +149,7 @@ Como mantenedor do procedimento, quando removo `como-` dos nomes dos arquivos `0
 - O sistema de arquivos preserva o resultado exato dos nomes, inclusive em caso de insensibilidade a maiúsculas e minúsculas.
 - O redirect legado é o único arquivo que mantém um caminho antigo, por compatibilidade com specs anteriores.
 - Specs históricas, planos, tarefas, saída gerada em `target/` e artefato instalado não são corpus operacional e permanecem fora da atualização.
+- A suíte `ContractRuleRenameContractTest.groovy` é um artefato de teste em `src/test/archetype-post-generate/`, fora do procedimento; ela não conta nas invariantes de 19 arquivos.
 - A renomeação é nominal; o conteúdo normativo dos seis arquivos não muda, exceto pelas referências textuais aos nomes antigos.
 - A ordem de leitura e o papel de cada arquivo permanecem os mesmos.
 - A verificação no artefato empacotado não está definida como gate; se o artefato for reconstruído, espera-se que reflita os novos nomes.
