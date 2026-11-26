@@ -9,7 +9,8 @@
  * operational corpus and the catalog invariants (35 properties / 18 filesets).
  */
 def procedure = new File("src/main/resources/llm-maven-flags-inference")
-def r03 = new File(procedure, "03-derivacao-regras-de-formacao-do-contrato")
+def r03Old = new File(procedure, "03-derivacao-regras-de-formacao-do-contrato")
+def r03New = new File(procedure, "03-regras-de-formacao-do-contrato")
 def r04 = new File(procedure, "04-referencia-templates-de-contrato")
 def packaged = new File("target/classes/llm-maven-flags-inference")
 def readme = new File("README.md")
@@ -28,7 +29,7 @@ def filesOf = { File root ->
     out
 }
 
-def p1Old = [
+def p1LegacyOld = [
         "regras-01-como-derivar-a-entidade-do-contrato.md",
         "regras-02-como-resolver-tipos-e-enums.md",
         "regras-03-como-derivar-flags-de-tipos-aninhados.md",
@@ -36,7 +37,7 @@ def p1Old = [
         "regras-05-como-materializar-e-emitir-o-contrato.md",
         "regras-06-como-relatar-proveniencia.md"
 ]
-def p1New = [
+def p1Current = [
         "01-como-derivar-a-entidade-do-contrato.md",
         "02-como-resolver-tipos-e-enums.md",
         "03-como-derivar-flags-de-tipos-aninhados.md",
@@ -44,6 +45,20 @@ def p1New = [
         "05-como-materializar-e-emitir-o-contrato.md",
         "06-como-relatar-proveniencia.md"
 ]
+def p1New = [
+        "01-derivar-a-entidade-do-contrato.md",
+        "02-resolver-tipos-e-enums.md",
+        "03-derivar-flags-de-tipos-aninhados.md",
+        "04-aplicar-precedencia-e-validacao.md",
+        "05-materializar-e-emitir-o-contrato.md",
+        "06-relatar-proveniencia.md"
+]
+def rulePhase = !r03New.isDirectory() ? 0 :
+        (p1New.every { new File(r03New, it).isFile() } ? 3 :
+                (p1New[0..2].every { new File(r03New, it).isFile() } ? 2 : 1))
+def r03 = rulePhase == 0 ? r03Old : r03New
+def expected03 = rulePhase <= 1 ? p1Current : (rulePhase == 2 ? p1New[0..2] + p1Current[3..5] : p1New)
+def rejected03 = p1LegacyOld + (rulePhase >= 2 ? p1Current[0..2] : []) + (rulePhase == 3 ? p1Current[3..5] : [])
 def p2Old = [
         "template-01-schema-do-contrato.json",
         "template-02-exemplo-contrato-plano.json",
@@ -85,18 +100,18 @@ check("1.7 target/classes carries 13 Markdown and 6 JSON",
 // 2. Names
 // ---------------------------------------------------------------------------
 def expected04 = phase2 ? p2New : p2Old
-check("2.1 03 carries exactly the 6 new names",
-        filesOf(r03).collect { it.name }.sort() == p1New.sort())
+check("2.1 03 carries exactly the expected names",
+        filesOf(r03).collect { it.name }.sort() == expected03.sort())
 check("2.2 04 carries exactly the 6 ${phase2 ? 'new' : 'old'} names",
         filesOf(r04).collect { it.name }.sort() == expected04.sort())
-check("2.3 no old 03 names remain", p1Old.every { !new File(r03, it).exists() })
+check("2.3 no old 03 names remain", rejected03.every { !new File(r03, it).exists() })
 if (phase2) {
     check("2.4 no old 04 names remain", p2Old.every { !new File(r04, it).exists() })
 } else {
     check("2.4 04 still carries the old names in Phase 1", p2Old.every { new File(r04, it).isFile() })
 }
 check("2.5 target/classes mirrors the 03 names",
-        filesOf(new File(packaged, "03-derivacao-regras-de-formacao-do-contrato")).collect { it.name }.sort() == p1New.sort())
+        filesOf(new File(packaged, r03.name)).collect { it.name }.sort() == expected03.sort())
 check("2.6 target/classes mirrors the 04 names",
         filesOf(new File(packaged, "04-referencia-templates-de-contrato")).collect { it.name }.sort() == expected04.sort())
 
@@ -104,12 +119,12 @@ check("2.6 target/classes mirrors the 04 names",
 // 3. Index
 // ---------------------------------------------------------------------------
 def indexText = index.isFile() ? index.getText("UTF-8") : ""
-def idx03 = p1New.collect { "llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/${it}" }
+def idx03 = expected03.collect { "llm-maven-flags-inference/${r03.name}/${it}" }
 def idx04 = expected04.collect { "llm-maven-flags-inference/04-referencia-templates-de-contrato/${it}" }
 check("3.1 index lists the 6 new 03 paths", idx03.every { indexText.contains(it) })
 check("3.2 index lists the 6 ${phase2 ? 'new' : 'old'} 04 paths", idx04.every { indexText.contains(it) })
 check("3.3 index does not list old 03 paths",
-        p1Old.every { !indexText.contains("llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/${it}") })
+        rejected03.every { !indexText.contains("llm-maven-flags-inference/${r03.name}/${it}") })
 if (phase2) {
     check("3.4 index does not list old 04 paths",
             p2Old.every { !indexText.contains("llm-maven-flags-inference/04-referencia-templates-de-contrato/${it}") })
@@ -122,7 +137,7 @@ if (phase2) {
 // 4. Anti-drift in the operational corpus
 // ---------------------------------------------------------------------------
 def corpus = []
-["01-entrada-inicializacao", "02-operacao-procedimento-do-agente", "03-derivacao-regras-de-formacao-do-contrato"].each { String dir ->
+["01-entrada-inicializacao", "02-operacao-procedimento-do-agente", r03.name].each { String dir ->
     corpus.addAll(filesOf(new File(procedure, dir)))
 }
 if (phase2) {
@@ -130,13 +145,15 @@ if (phase2) {
     if (readme.isFile()) corpus << readme
 }
 suitesDir.eachFileRecurse { File f ->
-    if (f.isFile() && f.name.endsWith(".groovy") && f.canonicalPath != self.canonicalPath) corpus << f
+    if (f.isFile() && f.name.endsWith(".groovy") && f.canonicalPath != self.canonicalPath &&
+            f.name != "ContractRuleRenameContractTest.groovy") corpus << f
 }
 def hits = []
 corpus.each { File f ->
     String body = f.getText("UTF-8")
     if ((body =~ /regras-0[1-6]/).find()) hits << "${f.name}: regras"
     if (phase2 && (body =~ /template-0[1-6]/).find()) hits << "${f.name}: template"
+    rejected03.each { String oldName -> if (body.contains(oldName)) hits << "${f.name}: ${oldName}" }
 }
 check("4.1 no old references in the ${phase2 ? 'operational corpus' : 'Phase 1 corpus'}: ${hits}", hits.isEmpty())
 

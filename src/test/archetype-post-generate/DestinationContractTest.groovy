@@ -37,8 +37,8 @@ def p00 = read("01-entrada-inicializacao/00-entry-point.md")
 def p03 = read("02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md")
 def p04 = read("02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md")
 def p05 = read("02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md")
-def r01 = read("03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md")
-def r06 = read("03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md")
+def r01 = read("03-regras-de-formacao-do-contrato/01-derivar-a-entidade-do-contrato.md")
+def r06 = read("03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md")
 
 // ---------------------------------------------------------------------------
 // A. the procedure tree keeps the locked count

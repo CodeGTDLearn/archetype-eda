@@ -40,7 +40,7 @@ def filesOf = { File root ->
 def categories = [
         "01-entrada-inicializacao",
         "02-operacao-procedimento-do-agente",
-        "03-derivacao-regras-de-formacao-do-contrato",
+        "03-regras-de-formacao-do-contrato",
         "04-referencia-templates-de-contrato"
 ]
 
@@ -52,12 +52,12 @@ def procedureFiles = [
         "02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md",
         "02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md",
         "02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md",
-        "03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md",
-        "03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md",
-        "03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md",
-        "03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md",
-        "03-derivacao-regras-de-formacao-do-contrato/05-como-materializar-e-emitir-o-contrato.md",
-        "03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md",
+        "03-regras-de-formacao-do-contrato/01-derivar-a-entidade-do-contrato.md",
+        "03-regras-de-formacao-do-contrato/02-resolver-tipos-e-enums.md",
+        "03-regras-de-formacao-do-contrato/03-derivar-flags-de-tipos-aninhados.md",
+        "03-regras-de-formacao-do-contrato/04-aplicar-precedencia-e-validacao.md",
+        "03-regras-de-formacao-do-contrato/05-materializar-e-emitir-o-contrato.md",
+        "03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md",
         "04-referencia-templates-de-contrato/01-schema-do-contrato.json",
         "04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json",
         "04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json",

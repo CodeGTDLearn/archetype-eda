@@ -6,6 +6,18 @@
 
 Este manifesto é a fonte única do mapa `old → new`, do inventário de referências por arquivo/linha/fase, das exceções e das verificações. A implementação consome este arquivo; `ContractRuleRenameContractTest.groovy` valida o resultado.
 
+## Baseline (Fase 0)
+
+- Contagens: 19 arquivos, 13 Markdown, 6 JSON, 4 subpastas, 6 arquivos em 03.
+- Destinos ausentes: `03-regras-de-formacao-do-contrato/` e os seis nomes novos.
+- SHA-256 dos seis arquivos:
+  - `01-como-derivar-a-entidade-do-contrato.md`: `086B6C7685DA36FB8A33BF905677649F3E2D4B446DF8E6AF50CC7FDAE958250B`
+  - `02-como-resolver-tipos-e-enums.md`: `C61D421AD3C9461DA40559DCA573E1FD284C78FF576C9234279F3CB67CA04CD1`
+  - `03-como-derivar-flags-de-tipos-aninhados.md`: `52A6976F03D6113552AA5805A56F770D6074B1024CC624FEFD77B72D8312A8FA`
+  - `04-como-aplicar-precedencia-e-validacao.md`: `9C7F3986CDB566F4C086B32480C1368F3DCF2D5EB0FD7115D07CF4B9CB09A894`
+  - `05-como-materializar-e-emitir-o-contrato.md`: `90C070120A09100D5553790F432AFC57C38BDADC80A7BCF68869BCFC298DE2F5`
+  - `06-como-relatar-proveniencia.md`: `E908BC67A589F76FCB0974D636B2C5F1AAD0282C135DA0F70531F2BAF78FFD08`
+
 ## Mapa old → new
 
 ### Pasta

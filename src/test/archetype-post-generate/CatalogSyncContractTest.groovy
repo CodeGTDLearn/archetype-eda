@@ -6,7 +6,7 @@
  * 6 descriptive examples, the 35 properties / 18 filesets and the pinned
  * catalog values that T038 must not change.
  */
-def rules = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md")
+def rules = new File("target/classes/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/04-aplicar-precedencia-e-validacao.md")
 def catalog = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 def text = rules.isFile() ? rules.getText("UTF-8") : ""
 def catalogText = catalog.isFile() ? catalog.getText("UTF-8") : ""
@@ -159,7 +159,7 @@ def descriptiveExampleMismatch = descriptiveExamples.findAll { flag, value ->
 check("3.5 every descriptive example matches its catalog regex: ${descriptiveExampleMismatch}",
         descriptiveExampleMismatch.isEmpty())
 
-def regras06 = new File("target/classes/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md").getText("UTF-8")
+def regras06 = new File("target/classes/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md").getText("UTF-8")
 def prompt03 = new File("target/classes/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md").getText("UTF-8")
 def pathRegex = catalogRegex("entity_contract_file_path") == null ? null : java.util.regex.Pattern.compile(catalogRegex("entity_contract_file_path"))
 
