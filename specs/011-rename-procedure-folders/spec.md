@@ -16,6 +16,14 @@
 - O índice, a porta de entrada, o README, o redirect legado e as suítes de verificação citam os nomes atuais; todas as referências operacionais precisam acompanhar a renomeação.
 - O redirect legado da porta de entrada é uma exceção de compatibilidade: ele permanece no caminho atual e passa a apontar para a porta de entrada no caminho novo.
 
+## Clarifications
+
+### Session 2026-11-26
+
+- Q: Quando a demanda diz "todos os itens do projeto", as specs históricas, planos e tarefas de features anteriores também devem ser reescritos com os nomes novos? → A: Não; somente o corpus operacional (README, índice, porta de entrada, redirect legado e suítes de verificação). Specs históricas, planos e tarefas ficam fora.
+- Q: Qual deve ser o nome final exato do arquivo 02 da segunda subpasta? → A: `02-localizar-e-ler-o-archetype.md`, com numeral, hífen e extensão `.md`.
+- Q: A pasta de redirect legado `utils/01-entrada-inicializacao` também deve ser renomeada para `01-inicializacao`? → A: Não; a pasta permanece no caminho atual e apenas o ponteiro para a porta de entrada é atualizado para `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Fase 1 — Subpasta de inicialização (Priority: P1)
@@ -109,7 +117,7 @@ Como mantenedor do procedimento, quando renomeio o arquivo 02 da segunda subpast
 - **FR-011**: O redirect legado MUST permanecer em `utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` e MUST apontar para `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`.
 - **FR-012**: A subpasta de redirect legado `utils/01-entrada-inicializacao` MUST NOT ser renomeada.
 - **FR-013**: As subpastas 03 e 04 MUST permanecer com os nomes atuais.
-- **FR-014**: Specs históricas, planos, tarefas e saída gerada MUST NOT ser reescritos por esta feature.
+- **FR-014**: Specs históricas, planos, tarefas e saída gerada MUST NOT ser reescritos por esta feature; a atualização MUST ficar restrita ao corpus operacional (README, índice, porta de entrada, redirect legado e suítes de verificação).
 - **FR-015**: As suítes de verificação MUST ser atualizadas para os novos nomes e MUST passar após as renomeações.
 - **FR-016**: O artefato reconstruído MUST expor os nomes novos e nenhum nome antigo, exceto o caminho do redirect legado; a verificação no artefato instalado MUST NOT ser gate desta feature.
 - **FR-017**: O nome final do arquivo MUST ser `02-localizar-e-ler-o-archetype.md`, com hífen e extensão, tratando os espaços e o numeral isolado da demanda como descrição legível e `archtype` como erro de digitação.
@@ -147,9 +155,9 @@ Como mantenedor do procedimento, quando renomeio o arquivo 02 da segunda subpast
 
 ## Assumptions
 
-- O nome final do arquivo é `02-localizar-e-ler-o-archetype.md`; os espaços e o numeral isolado na demanda são descrição legível, e `archtype` é um erro de digitação.
+- O nome final do arquivo é `02-localizar-e-ler-o-archetype.md`, confirmado na clarificação; os espaços e o numeral isolado na demanda são descrição legível, e `archtype` é um erro de digitação.
 - O separador dos nomes é hífen e a extensão do arquivo é Markdown, como nos demais arquivos do procedimento.
-- A renomeação da primeira subpasta se aplica à subpasta do procedimento empacotado `llm-maven-flags-inference/`; a pasta `utils/01-entrada-inicializacao` é o redirect legado, mantém o nome e apenas o destino é atualizado.
+- A renomeação da primeira subpasta se aplica à subpasta do procedimento empacotado `llm-maven-flags-inference/`; a pasta `utils/01-entrada-inicializacao` é o redirect legado, mantém o nome e apenas o destino é atualizado, confirmado na clarificação.
 - Os novos nomes não colidem com nomes existentes e podem ser aplicados no sistema de arquivos em uso.
 - O sistema de arquivos preserva o resultado exato dos nomes, inclusive em caso de insensibilidade a maiúsculas e minúsculas.
 - O arquivo 02 é o único com o nome antigo na segunda subpasta.
