@@ -13,7 +13,7 @@ def r03 = new File(procedure, "03-derivacao-regras-de-formacao-do-contrato")
 def r04 = new File(procedure, "04-referencia-templates-de-contrato")
 def packaged = new File("target/classes/llm-maven-flags-inference")
 def readme = new File("README.md")
-def index = new File(procedure, "01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md")
+def index = new File(procedure, "01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md")
 def catalog = new File("target/classes/META-INF/maven/archetype-metadata.xml")
 def suitesDir = new File("src/test/archetype-post-generate")
 def self = new File(suitesDir, "FileRenameContractTest.groovy")
@@ -122,7 +122,7 @@ if (phase2) {
 // 4. Anti-drift in the operational corpus
 // ---------------------------------------------------------------------------
 def corpus = []
-["01-entrada-inicializacao", "02-operacao-procedimento-do-agente", "03-derivacao-regras-de-formacao-do-contrato"].each { String dir ->
+["01-inicializacao", "02-procedimento-do-agente", "03-derivacao-regras-de-formacao-do-contrato"].each { String dir ->
     corpus.addAll(filesOf(new File(procedure, dir)))
 }
 if (phase2) {

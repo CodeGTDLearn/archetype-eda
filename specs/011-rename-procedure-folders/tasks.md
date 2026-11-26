@@ -52,10 +52,10 @@ description: "Task list for 011-rename-procedure-folders"
 
 **Purpose**: Confirmar o ambiente, a linha de base e a ausência de colisões antes de qualquer renomeação.
 
-- [ ] T001 Confirmar a raiz do repositório, o JDK 21, o Maven e a ausência de alterações não commitadas; confirmar a presença de `specs/011-rename-procedure-folders/plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/rename-manifest.md` e `quickstart.md`.
-- [ ] T002 [P] Confirmar a linha de base em `src/main/resources/llm-maven-flags-inference/`: 19 arquivos, 13 Markdown, 6 JSON, 4 subpastas, 2 arquivos em `01-entrada-inicializacao` e 5 em `02-operacao-procedimento-do-agente`.
-- [ ] T003 [P] Registrar SHA-256 dos 19 arquivos de `src/main/resources/llm-maven-flags-inference/` com `Get-FileHash` em um diretório temporário fora do repositório.
-- [ ] T004 [P] Confirmar que `src/main/resources/llm-maven-flags-inference/01-inicializacao`, `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente` e `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md` não existem.
+- [X] T001 Confirmar a raiz do repositório, o JDK 21, o Maven e a ausência de alterações não commitadas; confirmar a presença de `specs/011-rename-procedure-folders/plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/rename-manifest.md` e `quickstart.md`.
+- [X] T002 [P] Confirmar a linha de base em `src/main/resources/llm-maven-flags-inference/`: 19 arquivos, 13 Markdown, 6 JSON, 4 subpastas, 2 arquivos em `01-entrada-inicializacao` e 5 em `02-operacao-procedimento-do-agente`.
+- [X] T003 [P] Registrar SHA-256 dos 19 arquivos de `src/main/resources/llm-maven-flags-inference/` com `Get-FileHash` em um diretório temporário fora do repositório.
+- [X] T004 [P] Confirmar que `src/main/resources/llm-maven-flags-inference/01-inicializacao`, `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente` e `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md` não existem.
 
 ---
 
@@ -65,9 +65,9 @@ description: "Task list for 011-rename-procedure-folders"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T005 [P] Revisar `specs/011-rename-procedure-folders/contracts/rename-manifest.md` e `specs/011-rename-procedure-folders/data-model.md`; confirmar o mapa `old → new`, as invariantes I1-I9 e as exceções (redirect legado e asserções negativas).
-- [ ] T006 [P] Confirmar as 8 suítes existentes no runner `src/test/groovy/run-archetype-post-generate-tests.groovy`: `BuildArtifactsTest`, `CatalogSyncContractTest`, `DestinationContractTest`, `FileRenameContractTest`, `HardStopContractTest`, `PathRenameContractTest`, `ProcedureEntryRenameContractTest` e `ReadmeConsistencyTest`; nenhuma suíte nova.
-- [ ] T007 [P] Executar `mvn -B test` na raiz (`pom.xml`) e registrar o resultado da linha de base.
+- [X] T005 [P] Revisar `specs/011-rename-procedure-folders/contracts/rename-manifest.md` e `specs/011-rename-procedure-folders/data-model.md`; confirmar o mapa `old → new`, as invariantes I1-I9 e as exceções (redirect legado e asserções negativas).
+- [X] T006 [P] Confirmar as 8 suítes existentes no runner `src/test/groovy/run-archetype-post-generate-tests.groovy`: `BuildArtifactsTest`, `CatalogSyncContractTest`, `DestinationContractTest`, `FileRenameContractTest`, `HardStopContractTest`, `PathRenameContractTest`, `ProcedureEntryRenameContractTest` e `ReadmeConsistencyTest`; nenhuma suíte nova.
+- [X] T007 [P] Executar `mvn -B test` na raiz (`pom.xml`) e registrar o resultado da linha de base.
 
 **Checkpoint**: Fundação pronta; as três fases de user story podem começar.
 
@@ -81,20 +81,20 @@ description: "Task list for 011-rename-procedure-folders"
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao` para `src/main/resources/llm-maven-flags-inference/01-inicializacao`, após confirmar que o destino não existe.
-- [ ] T009 [P] [US1] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` linhas 11 e 12 para `llm-maven-flags-inference/01-inicializacao/...`.
-- [ ] T010 [P] [US1] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` linhas 620 e 708-709 para o caminho `01-inicializacao`.
-- [ ] T011 [P] [US1] Atualizar `README.md` linhas 52, 603, 652 (parte 01), 806, 807, 995, 2111, 2152, 2207, 2513, 2567, 2639 e 2704, incluindo `href`, `id`, `name` e texto das âncoras da subpasta 01.
-- [ ] T012 [P] [US1] Atualizar `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` linha 7 para apontar para `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; não renomear o redirect.
-- [ ] T013 [P] [US1] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` linhas 79, 82, 89 e 90 para a subpasta `01-inicializacao`.
-- [ ] T014 [P] [US1] Atualizar `src/test/archetype-post-generate/PathRenameContractTest.groovy` linhas 41, 48, 49, 69 e 70 para a subpasta `01-inicializacao`; manter as linhas 71 e 116 (redirect legado).
-- [ ] T015 [P] [US1] Atualizar `src/test/archetype-post-generate/HardStopContractTest.groovy` linhas 9 e 132 para a subpasta `01-inicializacao`.
-- [ ] T016 [P] [US1] Atualizar `src/test/archetype-post-generate/DestinationContractTest.groovy` linhas 36 e 134 para a subpasta `01-inicializacao`.
-- [ ] T017 [P] [US1] Atualizar `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy` linha 157 para a subpasta `01-inicializacao`.
-- [ ] T018 [P] [US1] Atualizar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para as expectativas phase-aware da subpasta `01-inicializacao` (p01, lista de pastas, caminho empacotado e caminhos do índice); manter o caminho legado da linha 16 e a checagem da linha 136.
-- [ ] T019 [P] [US1] Atualizar `src/test/archetype-post-generate/FileRenameContractTest.groovy` linha 16 e a lista de pastas da linha 125 para `01-inicializacao`.
-- [ ] T020 [US1] Executar `mvn -B test` na raiz (`pom.xml`) e corrigir qualquer falha da Fase 1.
-- [ ] T021 [US1] Validar a Fase 1 em `src/main/resources/llm-maven-flags-inference/`: 2 arquivos em `01-inicializacao`, ausência de `01-entrada-inicializacao`, 19/13/6/4, redirect correto e 0 referências operacionais à subpasta 01 antiga.
+- [X] T008 [US1] Renomear `src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao` para `src/main/resources/llm-maven-flags-inference/01-inicializacao`, após confirmar que o destino não existe.
+- [X] T009 [P] [US1] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` linhas 11 e 12 para `llm-maven-flags-inference/01-inicializacao/...`.
+- [X] T010 [P] [US1] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` linhas 620 e 708-709 para o caminho `01-inicializacao`.
+- [X] T011 [P] [US1] Atualizar `README.md` linhas 52, 603, 652 (parte 01), 806, 807, 995, 2111, 2152, 2207, 2513, 2567, 2639 e 2704, incluindo `href`, `id`, `name` e texto das âncoras da subpasta 01.
+- [X] T012 [P] [US1] Atualizar `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` linha 7 para apontar para `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; não renomear o redirect.
+- [X] T013 [P] [US1] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` linhas 79, 82, 89 e 90 para a subpasta `01-inicializacao`.
+- [X] T014 [P] [US1] Atualizar `src/test/archetype-post-generate/PathRenameContractTest.groovy` linhas 41, 48, 49, 69 e 70 para a subpasta `01-inicializacao`; manter as linhas 71 e 116 (redirect legado).
+- [X] T015 [P] [US1] Atualizar `src/test/archetype-post-generate/HardStopContractTest.groovy` linhas 9 e 132 para a subpasta `01-inicializacao`.
+- [X] T016 [P] [US1] Atualizar `src/test/archetype-post-generate/DestinationContractTest.groovy` linhas 36 e 134 para a subpasta `01-inicializacao`.
+- [X] T017 [P] [US1] Atualizar `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy` linha 157 para a subpasta `01-inicializacao`.
+- [X] T018 [P] [US1] Atualizar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para as expectativas phase-aware da subpasta `01-inicializacao` (p01, lista de pastas, caminho empacotado e caminhos do índice); manter o caminho legado da linha 16 e a checagem da linha 136.
+- [X] T019 [P] [US1] Atualizar `src/test/archetype-post-generate/FileRenameContractTest.groovy` linha 16 e a lista de pastas da linha 125 para `01-inicializacao`.
+- [X] T020 [US1] Executar `mvn -B test` na raiz (`pom.xml`) e corrigir qualquer falha da Fase 1.
+- [X] T021 [US1] Validar a Fase 1 em `src/main/resources/llm-maven-flags-inference/`: 2 arquivos em `01-inicializacao`, ausência de `01-entrada-inicializacao`, 19/13/6/4, redirect correto e 0 referências operacionais à subpasta 01 antiga.
 
 **Checkpoint**: User Story 1 testável isoladamente; a subpasta 02 e o arquivo 02 permanecem intactos.
 
@@ -108,19 +108,19 @@ description: "Task list for 011-rename-procedure-folders"
 
 ### Implementation for User Story 2
 
-- [ ] T022 [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente` para `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente`, após confirmar que o destino não existe.
-- [ ] T023 [P] [US2] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` linhas 13-17 para `llm-maven-flags-inference/02-procedimento-do-agente/...`; na linha 14, alterar somente a pasta, mantendo o nome antigo do arquivo para a Fase 3.
-- [ ] T024 [P] [US2] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` linhas 710, 712, 713 e 714 para o caminho `02-procedimento-do-agente`; na linha 711, alterar somente a pasta.
-- [ ] T025 [P] [US2] Atualizar `README.md` linhas 53, 605, 652 (parte 02), 811 e 812, incluindo `href`, `id`, `name` e texto das âncoras da subpasta 02.
-- [ ] T026 [P] [US2] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` linhas 83 e 91-95 para a subpasta `02-procedimento-do-agente`.
-- [ ] T027 [P] [US2] Atualizar `src/test/archetype-post-generate/PathRenameContractTest.groovy` linhas 42 e 50-54 para a subpasta `02-procedimento-do-agente`; manter o arquivo 02 com o nome antigo nesta fase.
-- [ ] T028 [P] [US2] Atualizar `src/test/archetype-post-generate/DestinationContractTest.groovy` linhas 37-39 para a subpasta `02-procedimento-do-agente`.
-- [ ] T029 [P] [US2] Atualizar `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` linha 163 para a subpasta `02-procedimento-do-agente`.
-- [ ] T030 [P] [US2] Atualizar `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy` linha 237 para a subpasta `02-procedimento-do-agente`.
-- [ ] T031 [P] [US2] Atualizar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para as expectativas phase-aware da subpasta `02-procedimento-do-agente`; manter o arquivo 02 com o nome antigo nesta fase.
-- [ ] T032 [P] [US2] Atualizar `src/test/archetype-post-generate/FileRenameContractTest.groovy` linha 125 (parte 02) para `02-procedimento-do-agente`.
-- [ ] T033 [US2] Executar `mvn -B test` na raiz (`pom.xml`) e corrigir qualquer falha da Fase 2.
-- [ ] T034 [US2] Validar a Fase 2 em `src/main/resources/llm-maven-flags-inference/`: 5 arquivos em `02-procedimento-do-agente`, ausência de `02-operacao-procedimento-do-agente`, 19/13/6/4, ordem do índice e 0 referências operacionais à subpasta 02 antiga.
+- [X] T022 [US2] Renomear `src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente` para `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente`, após confirmar que o destino não existe.
+- [X] T023 [P] [US2] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` linhas 13-17 para `llm-maven-flags-inference/02-procedimento-do-agente/...`; na linha 14, alterar somente a pasta, mantendo o nome antigo do arquivo para a Fase 3.
+- [X] T024 [P] [US2] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` linhas 710, 712, 713 e 714 para o caminho `02-procedimento-do-agente`; na linha 711, alterar somente a pasta.
+- [X] T025 [P] [US2] Atualizar `README.md` linhas 53, 605, 652 (parte 02), 811 e 812, incluindo `href`, `id`, `name` e texto das âncoras da subpasta 02.
+- [X] T026 [P] [US2] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` linhas 83 e 91-95 para a subpasta `02-procedimento-do-agente`.
+- [X] T027 [P] [US2] Atualizar `src/test/archetype-post-generate/PathRenameContractTest.groovy` linhas 42 e 50-54 para a subpasta `02-procedimento-do-agente`; manter o arquivo 02 com o nome antigo nesta fase.
+- [X] T028 [P] [US2] Atualizar `src/test/archetype-post-generate/DestinationContractTest.groovy` linhas 37-39 para a subpasta `02-procedimento-do-agente`.
+- [X] T029 [P] [US2] Atualizar `src/test/archetype-post-generate/CatalogSyncContractTest.groovy` linha 163 para a subpasta `02-procedimento-do-agente`.
+- [X] T030 [P] [US2] Atualizar `src/test/archetype-post-generate/ReadmeConsistencyTest.groovy` linha 237 para a subpasta `02-procedimento-do-agente`.
+- [X] T031 [P] [US2] Atualizar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para as expectativas phase-aware da subpasta `02-procedimento-do-agente`; manter o arquivo 02 com o nome antigo nesta fase.
+- [X] T032 [P] [US2] Atualizar `src/test/archetype-post-generate/FileRenameContractTest.groovy` linha 125 (parte 02) para `02-procedimento-do-agente`.
+- [X] T033 [US2] Executar `mvn -B test` na raiz (`pom.xml`) e corrigir qualquer falha da Fase 2.
+- [X] T034 [US2] Validar a Fase 2 em `src/main/resources/llm-maven-flags-inference/`: 5 arquivos em `02-procedimento-do-agente`, ausência de `02-operacao-procedimento-do-agente`, 19/13/6/4, ordem do índice e 0 referências operacionais à subpasta 02 antiga.
 
 **Checkpoint**: User Stories 1 e 2 testáveis; o arquivo 02 ainda tem o nome antigo.
 
@@ -134,15 +134,15 @@ description: "Task list for 011-rename-procedure-folders"
 
 ### Implementation for User Story 3
 
-- [ ] T035 [US3] Renomear `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md` para `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md`, após confirmar que o destino não existe.
-- [ ] T036 [P] [US3] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` linha 14 (nome do arquivo), 33 e 47 para `02-localizar-e-ler-o-archetype`.
-- [ ] T037 [P] [US3] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` linhas 168, 170, 171, 172 e 711 para `02-localizar-e-ler-o-archetype`.
-- [ ] T038 [P] [US3] Atualizar `src/test/archetype-post-generate/PathRenameContractTest.groovy` linha 51 para `02-localizar-e-ler-o-archetype.md`.
-- [ ] T039 [P] [US3] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` linha 92 para `02-localizar-e-ler-o-archetype.md`.
-- [ ] T040 [P] [US3] Atualizar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para as expectativas do arquivo `02-localizar-e-ler-o-archetype.md`, incluindo `p02Old`/`p02New` e asserções de ausência.
-- [ ] T041 [P] [US3] Confirmar que `src/test/archetype-post-generate/DestinationContractTest.groovy` não referencia o arquivo 02; nenhuma alteração necessária.
-- [ ] T042 [US3] Executar `mvn -B test` na raiz (`pom.xml`) e corrigir qualquer falha da Fase 3.
-- [ ] T043 [US3] Validar a Fase 3 em `src/main/resources/llm-maven-flags-inference/`: arquivo novo presente, arquivo antigo ausente, 5 arquivos, 19/13/6/4, índice na posição 4 e 0 referências operacionais ao nome antigo.
+- [X] T035 [US3] Renomear `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md` para `src/main/resources/llm-maven-flags-inference/02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md`, após confirmar que o destino não existe.
+- [X] T036 [P] [US3] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` linha 14 (nome do arquivo), 33 e 47 para `02-localizar-e-ler-o-archetype`.
+- [X] T037 [P] [US3] Atualizar `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` linhas 168, 170, 171, 172 e 711 para `02-localizar-e-ler-o-archetype`.
+- [X] T038 [P] [US3] Atualizar `src/test/archetype-post-generate/PathRenameContractTest.groovy` linha 51 para `02-localizar-e-ler-o-archetype.md`.
+- [X] T039 [P] [US3] Atualizar `src/test/archetype-post-generate/BuildArtifactsTest.groovy` linha 92 para `02-localizar-e-ler-o-archetype.md`.
+- [X] T040 [P] [US3] Atualizar `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para as expectativas do arquivo `02-localizar-e-ler-o-archetype.md`, incluindo `p02Old`/`p02New` e asserções de ausência.
+- [X] T041 [P] [US3] Confirmar que `src/test/archetype-post-generate/DestinationContractTest.groovy` não referencia o arquivo 02; nenhuma alteração necessária.
+- [X] T042 [US3] Executar `mvn -B test` na raiz (`pom.xml`) e corrigir qualquer falha da Fase 3.
+- [X] T043 [US3] Validar a Fase 3 em `src/main/resources/llm-maven-flags-inference/`: arquivo novo presente, arquivo antigo ausente, 5 arquivos, 19/13/6/4, índice na posição 4 e 0 referências operacionais ao nome antigo.
 
 **Checkpoint**: As três user stories estão concluídas; o procedimento usa apenas os nomes novos, exceto o redirect legado.
 
@@ -152,14 +152,14 @@ description: "Task list for 011-rename-procedure-folders"
 
 **Purpose**: Varredura final, verificação de integridade e validação do artefato.
 
-- [ ] T044 [P] Varrer `README.md` e `src/main/resources/llm-maven-flags-inference/` para os três nomes antigos; permitir apenas o caminho do redirect legado e as asserções negativas das suítes.
-- [ ] T045 [P] Confirmar que `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` permanece no caminho antigo e aponta para `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; confirmar 0 redirects adicionais.
-- [ ] T046 [P] Comparar o diff e os hashes dos arquivos renomeados com a linha de base de `specs/011-rename-procedure-folders/research.md`; confirmar que apenas tokens de referência mudaram.
-- [ ] T047 [P] Confirmar que `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`, `src/main/resources/META-INF/`, `src/main/resources/archetype-resources/` e `pom.xml` não foram alterados.
-- [ ] T048 Executar `mvn -B clean install` na raiz (`pom.xml`) e corrigir qualquer falha.
-- [ ] T049 Executar `mvn -B clean integration-test` na raiz (`pom.xml`) e corrigir qualquer falha.
-- [ ] T050 Executar a verificação opt-in do JAR instalado na raiz (`pom.xml`) com `mvn -B clean install "-Deda.verify.installed.jar=true"`.
-- [ ] T051 Executar o roteiro de `specs/011-rename-procedure-folders/quickstart.md` e registrar os resultados no relatório de implementação.
+- [X] T044 [P] Varrer `README.md` e `src/main/resources/llm-maven-flags-inference/` para os três nomes antigos; permitir apenas o caminho do redirect legado e as asserções negativas das suítes.
+- [X] T045 [P] Confirmar que `src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md` permanece no caminho antigo e aponta para `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; confirmar 0 redirects adicionais.
+- [X] T046 [P] Comparar o diff e os hashes dos arquivos renomeados com a linha de base de `specs/011-rename-procedure-folders/research.md`; confirmar que apenas tokens de referência mudaram.
+- [X] T047 [P] Confirmar que `src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`, `src/main/resources/META-INF/`, `src/main/resources/archetype-resources/` e `pom.xml` não foram alterados.
+- [X] T048 Executar `mvn -B clean install` na raiz (`pom.xml`) e corrigir qualquer falha.
+- [X] T049 Executar `mvn -B clean integration-test` na raiz (`pom.xml`) e corrigir qualquer falha.
+- [X] T050 Executar a verificação opt-in do JAR instalado na raiz (`pom.xml`) com `mvn -B clean install "-Deda.verify.installed.jar=true"`.
+- [X] T051 Executar o roteiro de `specs/011-rename-procedure-folders/quickstart.md` e registrar os resultados no relatório de implementação.
 
 ---
 
