@@ -35,7 +35,12 @@ param(
     # Optional agent-authored free-text title (used when commit_style: snapshot is configured).
     # One line; read and deleted before `git add .`, same transport-only pattern.
     [Parameter(Mandatory = $false)]
-    [string]$TitleFile = ""
+    [string]$TitleFile = "",
+
+    # Optional agent-authored phase items (used when commit_style: snapshot is configured).
+    # One item per line; read and deleted before `git add .`, same transport-only pattern.
+    [Parameter(Mandatory = $false)]
+    [string]$ItemsFile = ""
 )
 $ErrorActionPreference = 'Stop'
 
@@ -92,6 +97,29 @@ if ($TitleFile) {
         }
     } finally {
         Remove-Item -Path $TitleFile -Force -ErrorAction SilentlyContinue
+    }
+}
+
+# Snapshot mode: agent-authored phase items (transport-only artifact).
+# One item per line, emitted verbatim under the phase section. Must be read
+# and deleted BEFORE any `git add .` so the file itself is never staged.
+$itemLines = @()
+if ($ItemsFile) {
+    if (-not (Test-Path $ItemsFile -PathType Leaf)) {
+        Write-Warning "[specify] Warning: items file '$ItemsFile' not found"
+    } else {
+        $rawItems = (Get-Content -Path $ItemsFile -Raw -Encoding UTF8)
+        if ($rawItems) {
+            $parsedItems = @($rawItems -split "`r?`n" | ForEach-Object {
+                ($_ -replace '^\s*-\s*', '').TrimEnd()
+            })
+            $firstItem = 0
+            while ($firstItem -lt $parsedItems.Count -and -not $parsedItems[$firstItem].Trim()) { $firstItem++ }
+            $lastItem = $parsedItems.Count - 1
+            while ($lastItem -ge $firstItem -and -not $parsedItems[$lastItem].Trim()) { $lastItem-- }
+            if ($lastItem -ge $firstItem) { $itemLines = @($parsedItems[$firstItem..$lastItem]) }
+        }
+        Remove-Item -Path $ItemsFile -Force -ErrorAction SilentlyContinue
     }
 }
 
@@ -258,12 +286,12 @@ if ($d1 -eq 0 -and $d2 -eq 0 -and -not $untracked) {
 # ---------------------------------------------------------------------------
 # Snapshot mode (commit_style: snapshot)
 #
-# A rollback snapshot taken BEFORE the next phase runs: it freezes the state
+# A rollback snapshot taken BEFORE the next command runs: it freezes the state
 # left by the previous phase. The title classifies the frozen phase from the
 # staged diff (never from hook order, since /analyze and /checklist may run
 # in either order). The body carries the synopsis (inherited from the previous
 # snapshot, or supplied via -SynopsisFile), a "Concluído" ledger for the frozen
-# phase, the next phase, and the staged --stat.
+# phase, the next command, and the staged --stat.
 # ---------------------------------------------------------------------------
 if ($commitStyle -eq 'snapshot') {
 
@@ -271,6 +299,62 @@ if ($commitStyle -eq 'snapshot') {
         param([string[]]$Paths, [string]$Pattern)
         foreach ($p in $Paths) { if ($p -match $Pattern) { return $true } }
         return $false
+    }
+
+    # Emoji kept out of the literal script text (non-BMP code points).
+    $emBullet  = [char]::ConvertFromUtf32(0x1F4CB)   # clipboard
+    $emCheck   = [char]0x2705                        # check mark
+    $emPin     = [char]::ConvertFromUtf32(0x1F4CC)   # pushpin
+    $emFolder  = [char]::ConvertFromUtf32(0x1F4C2)   # open folder
+    $emDash    = [char]0x2014                        # em dash
+    $emArrow   = [char]0x27A1                        # arrow
+    $emArrowVs = "$([char]0x27A1)$([char]0xFE0F)"    # arrow + VS16
+    $flowArrow = [char]0x2192                        # flow separator
+
+    # Shorten a task/requirement text to a 2-3 word summary. Deterministic:
+    # drops cited file paths and code ticks and leading modal verbs, cuts at
+    # the first separator, then caps the result at 48 characters.
+    function Compress-ItemText {
+        param([string]$Text)
+        $hadPath = $Text -match '`[^`]+`'
+        $t = $Text -replace '`[^`]+`', ' '
+        $t = $t -replace '`', ''
+        $t = $t -replace '^(System|The system|O sistema)\s+(MUST|DEVE|deve)\s+', ''
+        foreach ($sep in @(' — ', ' – ', ': ', '. ', ' (')) {
+            $i = $t.IndexOf($sep)
+            if ($i -gt 0) { $t = $t.Substring(0, $i) }
+        }
+        $t = ($t -replace '\s+', ' ').Trim()
+        if ($hadPath) {
+            $t = ($t -creplace '\s+(em|no|na|de|do|da|para|com|in|at|to|from|using)$', '').Trim()
+        }
+        $t = $t.TrimEnd(',', ';', '.', ':')
+        if ($t) { $t = $t.Substring(0, 1).ToUpperInvariant() + $t.Substring(1) }
+        if ($t.Length -gt 48) {
+            $t = $t.Substring(0, 48)
+            $sp = $t.LastIndexOf(' ')
+            if ($sp -gt 20) { $t = $t.Substring(0, $sp) }
+            $t = $t.TrimEnd(',', ';', '.', ':') + [char]0x2026
+        }
+        if (-not $t) { return [char]0x2B1C }
+        return $t
+    }
+
+    # Flow line: canonical order up to the next mandatory command.
+    function Get-FlowText {
+        param([string]$Phase)
+        $flow = @('constitution', 'specify', 'clarify', 'plan', 'checklist', 'tasks', 'analyze', 'implement', 'converge')
+        $stop = 8
+        switch ($Phase) {
+            'Constitution' { $stop = 1 }
+            'Specify'      { $stop = 3 }
+            'Clarify'      { $stop = 3 }
+            'Plan'         { $stop = 5 }
+            'Checklist'    { $stop = 5 }
+            'Tasks'        { $stop = 7 }
+            'Analyze'      { $stop = 7 }
+        }
+        return (($flow[0..$stop]) -join " $flowArrow ")
     }
 
     # --- stage everything so the diffs below are authoritative -------------
@@ -293,7 +377,12 @@ if ($commitStyle -eq 'snapshot') {
     }
 
     # --- feature directory (specs/<branch>, fallback: newest specs/*) -------
-    $branch = (git rev-parse --abbrev-ref HEAD 2>$null)
+    # `git rev-parse` fails on an unborn HEAD (fresh repository); keep the
+    # warning from becoming a terminating error.
+    $branch = $null
+    $savedEapBranch = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try { $branch = (git rev-parse --abbrev-ref HEAD 2>$null) } finally { $ErrorActionPreference = $savedEapBranch }
     $featureDir = $null
     if ($branch) {
         $candidate = Join-Path $repoRoot ("specs/" + $branch)
@@ -408,10 +497,17 @@ if ($commitStyle -eq 'snapshot') {
     $tasksPath = $null
     if ($tasksRel) { $tasksPath = Join-Path $repoRoot "$tasksRel" }
 
+    # The ledger counts every task of the feature, not only the staged ones.
+    $tasksCountPath = $tasksPath
+    if (-not $tasksCountPath -and $featureDir) {
+        $candidateTasks = Join-Path $featureDir 'tasks.md'
+        if (Test-Path $candidateTasks) { $tasksCountPath = $candidateTasks }
+    }
+
     $taskCount = 0
     $phaseCount = 0
-    if ($tasksPath -and (Test-Path $tasksPath)) {
-        foreach ($l in (Get-Content $tasksPath -Encoding UTF8)) {
+    if ($tasksCountPath -and (Test-Path $tasksCountPath)) {
+        foreach ($l in (Get-Content $tasksCountPath -Encoding UTF8)) {
             if ($l -match '^- \[[ Xx]\] T\d+') { $taskCount++ }
             elseif ($l -match '^## Phase \d+') { $phaseCount++ }
         }
@@ -429,7 +525,7 @@ if ($commitStyle -eq 'snapshot') {
             $planCount = @($staged | Where-Object {
                 $_ -match '(^|/)(plan|research|data-model|quickstart)\.md$' -or $_ -match '(^|/)contracts/'
             }).Count
-            $summary = "$planCount artefatos de design"
+            $summary = "$planCount artefatos planejados"
         }
         'Tasks'     { $summary = "$taskCount tarefas em $phaseCount fases" }
         'Implement' { $summary = "$($staged.Count) arquivos" }
@@ -450,69 +546,187 @@ if ($commitStyle -eq 'snapshot') {
         default     { $summary = "$($staged.Count) arquivos" }
     }
 
-    # --- Implement bullets: tasks flipped [X] in the staged tasks.md diff ----
+    # --- phase items: agent-supplied, or derived from the staged artifacts ---
     $taskIds = @()
-    $taskBullets = @()
-    if ($frozenPhase -eq 'Implement' -and $tasksPath -and (Test-Path $tasksPath)) {
-        # full path -> status letter, plus basename -> paths for tasks that
-        # reference a file by name only (e.g. `__entity_name__ContractTest.java`).
-        $statusMap = @{}
-        $byName = @{}
-        foreach ($l in (git diff --cached --name-status 2>$null)) {
-            if ($l -match '^([AMD])\s+(.+)$') {
-                $changedPath = $matches[2]
-                $statusMap[$changedPath] = $matches[1]
-                $changedName = ($changedPath -split '/')[-1]
-                if (-not $byName.ContainsKey($changedName)) { $byName[$changedName] = @() }
-                $byName[$changedName] += $changedPath
-            }
-        }
-        foreach ($l in (git diff --cached -U0 -- $tasksPath 2>$null)) {
-            if ($l -match '^\+- \[X\] (T\d+)\s+(.+)$') {
-                $taskId = $matches[1]
-                # Drop leading [P] / [USn] markers: they are scheduling hints,
-                # not part of the task description.
-                $taskText = (($matches[2] -replace '^(?:\[(?:P|US\d+)\]\s*)+', '') -replace '\s+', ' ').Trim()
-                # A task that names a staged file yields "<status> <basename>";
-                # a unique basename match covers tasks that omit the directory.
-                $letter = ''
-                $fileName = ''
-                foreach ($mp in [regex]::Matches($taskText, '\x60([^\x60]+)\x60')) {
-                    $cand = $mp.Groups[1].Value
-                    $found = $null
-                    if ($statusMap.ContainsKey($cand)) {
-                        $found = $cand
-                    } elseif ($byName.ContainsKey($cand) -and $byName[$cand].Count -eq 1) {
-                        $found = $byName[$cand][0]
+    $phaseItems = @()
+    if ($itemLines.Count -gt 0) {
+        $phaseItems = @($itemLines)
+    }
+    if ($featureDir -and ($itemLines.Count -eq 0 -or $frozenPhase -eq 'Implement')) {
+        switch ($frozenPhase) {
+            'Specify' {
+                $specPath = Join-Path $featureDir 'spec.md'
+                if (Test-Path $specPath) {
+                    $usLines = @()
+                    $frLines = @()
+                    foreach ($l in (Get-Content $specPath -Encoding UTF8)) {
+                        if ($l -match '^### User Story\s+(\d+)\s*[-\u2013\u2014]\s*(.+?)\s*(?:\(Priority:.*\))?$') {
+                            $usLines += "$emCheck US$($matches[1]): $($matches[2])"
+                        } elseif ($l -match '^- \*\*(FR-\d+)\*\*:\s*(.+)$') {
+                            $frLines += "$emCheck $($matches[1]): $(Compress-ItemText $matches[2])"
+                        }
                     }
-                    if ($found) {
-                        $letter = $statusMap[$found]
-                        $fileName = ($found -split '/')[-1]
-                        break
+                    if ($usLines.Count -gt 0) {
+                        $phaseItems += '* US — User Stories'
+                        $phaseItems += $usLines
+                    }
+                    if ($frLines.Count -gt 0) {
+                        if ($phaseItems.Count -gt 0) { $phaseItems += '' }
+                        $phaseItems += '* FR — Functional Requirements'
+                        $phaseItems += $frLines
                     }
                 }
-                if ($fileName) {
-                    $bullet = "- ${taskId}: $letter $fileName"
-                } else {
-                    # No resolvable file: keep the task's own wording up to the
-                    # first colon (the rest is usually acceptance detail).
-                    $head = $taskText
-                    $colonIdx = $taskText.IndexOf(':')
-                    if ($colonIdx -gt 0) { $head = $taskText.Substring(0, $colonIdx) }
-                    $head = (($head -replace '\x60', '') -replace '\s+', ' ').Trim()
-                    $bullet = "- ${taskId}: $head"
-                }
-                $taskBullets += $bullet
-                $taskIds += [int]$taskId.Substring(1)
             }
-        }
-        $taskIds = @($taskIds | Sort-Object -Unique)
-        if ($taskBullets.Count -gt 10) {
-            $extra = $taskBullets.Count - 10
-            $taskBullets = @($taskBullets | Select-Object -First 10)
-            $taskBullets += "- (+$extra tarefas)"
+            'Clarify' {
+                $specPath = Join-Path $featureDir 'spec.md'
+                if (Test-Path $specPath) {
+                    $specLines = @(Get-Content $specPath -Encoding UTF8)
+                    for ($i = 0; $i -lt $specLines.Count; $i++) {
+                        if ($specLines[$i] -match '^### Session\s+(\d{4}-\d{2}-\d{2})') {
+                            $sessionDate = $matches[1]
+                            $sessionText = ''
+                            for ($j = $i + 1; $j -lt $specLines.Count; $j++) {
+                                $candidate = $specLines[$j].Trim()
+                                if ($candidate -match '^#{1,3}\s') { break }
+                                if ($candidate) { $sessionText = $candidate; break }
+                            }
+                            $sessionText = $sessionText -replace '^[-*]\s+', ''
+                            $sessionText = $sessionText -replace '^(\*\*)?[Qq](\*\*)?:(\*\*)?\s*', ''
+                            if ($sessionText) {
+                                $phaseItems += "$emCheck ${sessionDate}: $(Compress-ItemText $sessionText)"
+                            } else {
+                                $phaseItems += "$emCheck ${sessionDate}"
+                            }
+                        }
+                    }
+                }
+            }
+            'Plan' {
+                $planPaths = @($staged | Where-Object {
+                    $_ -match '(^|/)(plan|research|data-model|quickstart)\.md$' -or $_ -match '(^|/)contracts/'
+                } | Sort-Object)
+                foreach ($p in $planPaths) {
+                    $rel = $p -replace '\\', '/'
+                    $prefix = ($featureDir -replace '\\', '/').TrimEnd('/') + '/'
+                    if ($rel.StartsWith($prefix)) { $rel = $rel.Substring($prefix.Length) }
+                    $phaseItems += "$emCheck $rel"
+                }
+            }
+            'Tasks' {
+                if ($tasksPath -and (Test-Path $tasksPath)) {
+                    foreach ($l in (Get-Content $tasksPath -Encoding UTF8)) {
+                        if ($l -match '^- \[[ Xx]\] (T\d+)\s+(.+)$') {
+                            $tId = $matches[1]
+                            $tText = (($matches[2] -replace '^(?:\[(?:P|US\d+)\]\s*)+', '') -replace '\s+', ' ')
+                            $phaseItems += "$emCheck ${tId}: $(Compress-ItemText $tText)"
+                        }
+                    }
+                }
+            }
+            'Converge' {
+                if ($tasksPath -and (Test-Path $tasksPath)) {
+                    $inConvergence = $false
+                    foreach ($l in (Get-Content $tasksPath -Encoding UTF8)) {
+                        if ($l -match '^## Phase \d+: Convergence\b') { $inConvergence = $true; continue }
+                        if ($l -match '^## ') { $inConvergence = $false; continue }
+                        if ($inConvergence -and $l -match '^- \[[ Xx]\] (T\d+)\s+(.+)$') {
+                            $tId = $matches[1]
+                            $tText = (($matches[2] -replace '^(?:\[(?:P|US\d+)\]\s*)+', '') -replace '\s+', ' ')
+                            $phaseItems += "$emCheck ${tId}: $(Compress-ItemText $tText)"
+                        }
+                    }
+                }
+            }
+            'Checklist' {
+                $checkPrefix = ($featureDir -replace '\\', '/').TrimEnd('/') + '/'
+                $checkPaths = @($staged | Where-Object { $_ -match '(^|/)checklists/' } | Sort-Object)
+                foreach ($p in $checkPaths) {
+                    $rel = $p -replace '\\', '/'
+                    if ($rel.StartsWith($checkPrefix)) { $rel = $rel.Substring($checkPrefix.Length) }
+                    $phaseItems += "$emCheck $rel"
+                }
+                if ($phaseItems.Count -eq 0) {
+                    $checkDir = Join-Path $featureDir 'checklists'
+                    if (Test-Path $checkDir) {
+                        foreach ($f in @(Get-ChildItem $checkDir -File -ErrorAction SilentlyContinue | Sort-Object Name)) {
+                            $phaseItems += "$emCheck checklists/$($f.Name)"
+                        }
+                    }
+                }
+            }
+            'Analyze' {
+                $analysisPath = Join-Path $featureDir 'analysis.md'
+                if (Test-Path $analysisPath) {
+                    foreach ($l in (Get-Content $analysisPath -Encoding UTF8)) {
+                        if ($l -match '^\|\s*([A-Z][0-9]+)\s*\|') {
+                            $findingId = $matches[1]
+                            $cells = @($l.Trim().Trim('|') -split '\|')
+                            $findingSummary = ''
+                            if ($cells.Count -ge 5) { $findingSummary = $cells[4].Trim() }
+                            if (-not $findingSummary -and $cells.Count -ge 4) { $findingSummary = $cells[3].Trim() }
+                            if ($findingSummary) {
+                                $phaseItems += "$emCheck ${findingId}: $(Compress-ItemText $findingSummary)"
+                            } else {
+                                $phaseItems += "$emCheck $findingId"
+                            }
+                        }
+                    }
+                    if ($phaseItems.Count -eq 0) { $phaseItems += "$emCheck analysis.md" }
+                }
+            }
+            'Implement' {
+                if ($tasksPath -and (Test-Path $tasksPath)) {
+                    # full path -> status letter, plus basename -> paths for tasks
+                    # that reference a file by name only.
+                    $statusMap = @{}
+                    $byName = @{}
+                    foreach ($l in (git diff --cached --name-status 2>$null)) {
+                        if ($l -match '^([AMD])\s+(.+)$') {
+                            $changedPath = $matches[2]
+                            $statusMap[$changedPath] = $matches[1]
+                            $changedName = ($changedPath -split '/')[-1]
+                            if (-not $byName.ContainsKey($changedName)) { $byName[$changedName] = @() }
+                            $byName[$changedName] += $changedPath
+                        }
+                    }
+                    foreach ($l in (git diff --cached -U0 -- $tasksPath 2>$null)) {
+                        if ($l -match '^\+- \[X\] (T\d+)\s+(.+)$') {
+                            $tId = $matches[1]
+                            # Drop leading [P] / [USn] markers: they are scheduling
+                            # hints, not part of the task description.
+                            $tText = (($matches[2] -replace '^(?:\[(?:P|US\d+)\]\s*)+', '') -replace '\s+', ' ').Trim()
+                            $letter = ''
+                            $fullPath = ''
+                            foreach ($mp in [regex]::Matches($tText, '\x60([^\x60]+)\x60')) {
+                                $cand = $mp.Groups[1].Value
+                                $found = $null
+                                if ($statusMap.ContainsKey($cand)) {
+                                    $found = $cand
+                                } elseif ($byName.ContainsKey($cand) -and $byName[$cand].Count -eq 1) {
+                                    $found = $byName[$cand][0]
+                                }
+                                if ($found) {
+                                    $letter = $statusMap[$found]
+                                    $fullPath = $found
+                                    break
+                                }
+                            }
+                            $tSummary = Compress-ItemText $tText
+                            if ($itemLines.Count -eq 0) {
+                                if ($fullPath) {
+                                    $phaseItems += "$emCheck ${tId}: $tSummary $emDash $letter $fullPath"
+                                } else {
+                                    $phaseItems += "$emCheck ${tId}: $tSummary"
+                                }
+                            }
+                            $taskIds += [int]$tId.Substring(1)
+                        }
+                    }
+                }
+            }
         }
     }
+    $taskIds = @($taskIds | Sort-Object -Unique)
 
     # contiguous range for the title (en dash built from a code point)
     $rangeText = ''
@@ -605,10 +819,13 @@ if ($commitStyle -eq 'snapshot') {
         try { $prevBody = @(git log -1 --format=%B 2>$null) } finally { $ErrorActionPreference = $savedEAP }
         $inSynopsis = $false
         foreach ($l in $prevBody) {
-            if ($l -match '^Sinopse\s*$') { $inSynopsis = $true; continue }
+            if ($l -match '^Sinopse:?\s*$') { $inSynopsis = $true; continue }
             if ($inSynopsis) {
-                if ($l -match '^Conclu' -or ($l -notmatch '^\s*-\s' -and $l -match '\S')) { break }
-                if ($l -match '^\s*-\s*(.+)$') { $synopsis += $matches[1].Trim() }
+                if ($l -match '^(Entregas|Conclu)' -or ($l -notmatch '^\s*-\s' -and $l -match '\S')) { break }
+                if ($l -match '^\s*-\s*(.+)$') {
+                    $synLine = $matches[1] -replace ('^' + [regex]::Escape($emBullet) + '\s*'), ''
+                    if ($synLine.Trim()) { $synopsis += $synLine.Trim() }
+                }
             }
         }
     }
@@ -626,13 +843,14 @@ if ($commitStyle -eq 'snapshot') {
     if ($featureDir) {
         $specPath = Join-Path $featureDir 'spec.md'
         if (Test-Path $specPath) {
-            $storyCount = 0; $sessionCount = 0; $hasClarifications = $false
+            $storyCount = 0; $sessionCount = 0; $frCount = 0; $hasClarifications = $false
             foreach ($l in (Get-Content $specPath -Encoding UTF8)) {
                 if ($l -match '^### User Story') { $storyCount++ }
                 elseif ($l -match '^### Session ') { $sessionCount++ }
+                elseif ($l -match '^- \*\*FR-\d+\*\*') { $frCount++ }
                 elseif ($l -match '^## Clarifications') { $hasClarifications = $true }
             }
-            $doneLines += "Specify: $storyCount histórias"
+            $doneLines += "Specify: $storyCount histórias / $frCount Requirements"
             if ($hasClarifications) { $doneLines += "Clarify: $sessionCount sessões" }
         }
         $artCount = 0
@@ -643,53 +861,101 @@ if ($commitStyle -eq 'snapshot') {
         if (Test-Path $contractsDir) {
             $artCount += @(Get-ChildItem $contractsDir -File -ErrorAction SilentlyContinue).Count
         }
-        if ($artCount -gt 0) { $doneLines += "Plan: $artCount artefatos de design" }
+        if ($artCount -gt 0) { $doneLines += "Plan: $artCount artefatos planejados" }
         if ($taskCount -gt 0 -or (Test-Path (Join-Path $featureDir 'tasks.md'))) {
             $doneLines += "Tasks: $taskCount tarefas / $phaseCount fases"
         }
-        if (Test-Path (Join-Path $featureDir 'analysis.md')) {
-            $doneLines += "Analyze: relatório presente"
+        $analysisPath = Join-Path $featureDir 'analysis.md'
+        if (Test-Path $analysisPath) {
+            $findingCount = 0
+            foreach ($l in (Get-Content $analysisPath -Encoding UTF8)) {
+                if ($l -match '^\|\s*[A-Z][0-9]+\s*\|') { $findingCount++ }
+            }
+            if ($findingCount -gt 0) {
+                $doneLines += "Analyze: $findingCount achados"
+            } else {
+                $doneLines += "Analyze: relatório presente"
+            }
         }
-        $implCount = @($staged | Where-Object { $_ -match '^src/' }).Count
-        if ($implCount -gt 0) { $doneLines += "Implement: $implCount arquivos" }
+        $implSrc = @($staged | Where-Object { $_ -match '^src/' }).Count
+        if ($implSrc -gt 0) { $doneLines += "Implement: $($staged.Count) arquivos" }
         $checkDir = Join-Path $featureDir 'checklists'
         if (Test-Path $checkDir) {
             $checkTotal = @(Get-ChildItem $checkDir -File -ErrorAction SilentlyContinue).Count
             if ($checkTotal -gt 0) { $doneLines += "Checklist: $checkTotal listas" }
         }
     }
+    $currentPrefix = "$frozenPhase" + ':'
+    for ($i = 0; $i -lt $doneLines.Count; $i++) {
+        if ($doneLines[$i].StartsWith($currentPrefix)) { $doneLines[$i] = "$($doneLines[$i]) (Current)" }
+    }
 
-    # --- next phase, from the hook event name --------------------------------
-    # Only before_* hooks announce the phase that is about to run; after_*
-    # hooks record the phase just completed, so the body omits "A seguir".
-    $nextPhase = ''
-    if ($EventName -match '^before_(.+)$') { $nextPhase = $matches[1] }
-    if ($nextPhase) {
-        $nextPhase = $nextPhase.Substring(0, 1).ToUpper() + $nextPhase.Substring(1)
+    # --- next command, from the hook event name -----------------------------
+    # Use the event, not the detected phase: after_* records the phase that
+    # just finished; before_* announces the command that is about to run.
+    $nextMandatory = ''
+    $nextOptional = ''
+    $nextSpecial = @()
+    switch ($EventName) {
+        'after_constitution' { $nextMandatory = '/speckit.specify' }
+        'after_specify' { $nextMandatory = '/speckit.plan'; $nextOptional = '/speckit.clarify' }
+        'after_clarify' { $nextMandatory = '/speckit.plan' }
+        'after_plan' { $nextMandatory = '/speckit.tasks'; $nextOptional = '/speckit.checklist' }
+        'after_checklist' { $nextMandatory = '/speckit.tasks' }
+        'after_tasks' { $nextMandatory = '/speckit.implement'; $nextOptional = '/speckit.analyze' }
+        'after_analyze' { $nextMandatory = '/speckit.implement' }
+        'after_implement' { $nextMandatory = '/speckit.converge' }
+        'after_converge' { $nextSpecial = @('Se convergiu: revisar/abrir PR', 'Se adicionou tarefas: /speckit.implement e /speckit.converge') }
+        default {
+            if ($EventName -match '^before_(.+)$') { $nextMandatory = "/speckit.$($matches[1])" }
+        }
     }
 
     # --- assemble body -------------------------------------------------------
     $bodyParts = @()
     if ($synFinal.Count -gt 0) {
-        $bodyParts += 'Sinopse'
-        foreach ($s in $synFinal) { $bodyParts += "- $s" }
+        $bodyParts += 'Sinopse:'
+        foreach ($s in $synFinal) { $bodyParts += "$emBullet $s" }
         $bodyParts += ''
     }
-    if ($taskBullets.Count -gt 0) {
-        foreach ($b in $taskBullets) { $bodyParts += $b }
-        $bodyParts += ''
+    if ($phaseItems.Count -gt 0) {
+        $sectionHeader = ''
+        switch ($frozenPhase) {
+            'Specify'   { $sectionHeader = 'Especificacoes Criadas:' }
+            'Clarify'   { $sectionHeader = 'Clarificacoes Feitas:' }
+            'Plan'      { $sectionHeader = 'Artefatos Planejados:' }
+            'Tasks'     { $sectionHeader = 'Tasks Criadas:' }
+            'Implement' { $sectionHeader = 'Implement:' }
+            'Converge'  { $sectionHeader = 'Convergencia Aplicada:' }
+            'Checklist' { $sectionHeader = 'Checklists Criadas:' }
+            'Analyze'   { $sectionHeader = 'Achados:' }
+        }
+        if ($sectionHeader) {
+            $bodyParts += $sectionHeader
+            foreach ($it in $phaseItems) { $bodyParts += $it }
+            $bodyParts += ''
+        }
     }
     if ($doneLines.Count -gt 0) {
-        $bodyParts += 'Concluído'
-        foreach ($d in $doneLines) { $bodyParts += "- $d" }
+        $bodyParts += 'Entregas Concluidas:'
+        foreach ($d in $doneLines) { $bodyParts += "$emPin $d" }
         $bodyParts += ''
     }
-    if ($nextPhase) {
-        $bodyParts += "A seguir: $nextPhase"
+    if ($nextMandatory -or $nextOptional -or $nextSpecial.Count -gt 0) {
+        $bodyParts += 'Próximo Comando:'
+        $bodyParts += "$emArrow Fluxo: $(Get-FlowText $frozenPhase)"
+        if ($nextMandatory) { $bodyParts += "$emArrowVs Obrigatório: $nextMandatory" }
+        if ($nextOptional) { $bodyParts += "$emArrowVs Opcional: $nextOptional" }
+        foreach ($s in $nextSpecial) { $bodyParts += "$emArrowVs $s" }
         $bodyParts += ''
     }
     $stat = (git diff --cached --stat 2>$null | Out-String).Trim()
-    if ($stat) { $bodyParts += $stat }
+    if ($stat) {
+        $bodyParts += 'Local:'
+        foreach ($sl in ($stat -split "`r?`n")) {
+            if ($sl.Trim()) { $bodyParts += "$emFolder $($sl.Trim())" }
+        }
+    }
     $body = (($bodyParts -join "`n")).TrimEnd()
 
     # --- commit the snapshot --------------------------------------------------

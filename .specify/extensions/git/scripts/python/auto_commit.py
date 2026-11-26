@@ -7,10 +7,13 @@ Python port of ``auto-commit.sh`` / ``auto-commit.ps1``.
 Checks per-command config keys in git-config.yml before committing.
 
 Usage: auto_commit.py <event_name> [--synopsis-file <path>] [--title-file <path>]
+       [--items-file <path>]
   e.g.: auto_commit.py after_specify
   e.g.: auto_commit.py before_implement --synopsis-file /tmp/synopsis.txt
         (commit_style: snapshot)
   e.g.: auto_commit.py before_implement --title-file /tmp/title.txt
+        (commit_style: snapshot)
+  e.g.: auto_commit.py after_implement --items-file /tmp/items.txt
         (commit_style: snapshot)
 """
 
@@ -99,7 +102,7 @@ def _parse_auto_commit_config(
     for record in content.splitlines(keepends=True):
         if not record.endswith("\n"):
             break
-        line = record[:-1]
+        line = record[:-1].rstrip("\r")
         if line.startswith("auto_commit:"):
             in_auto_commit = True
             in_event = False
@@ -187,18 +190,84 @@ def _frozen_phase_candidates(event_name: str) -> list[str]:
     return []
 
 
+_EM_BULLET = "\U0001F4CB"
+_EM_CHECK = "\u2705"
+_EM_PIN = "\U0001F4CC"
+_EM_FOLDER = "\U0001F4C2"
+_EM_DASH = "\u2014"
+_EM_ARROW = "\u27A1"
+_EM_ARROW_VS = "\u27A1\uFE0F"
+
+_FLOW = [
+    "constitution",
+    "specify",
+    "clarify",
+    "plan",
+    "checklist",
+    "tasks",
+    "analyze",
+    "implement",
+    "converge",
+]
+_FLOW_STOP = {
+    "Constitution": 1,
+    "Specify": 3,
+    "Clarify": 3,
+    "Plan": 5,
+    "Checklist": 5,
+    "Tasks": 7,
+    "Analyze": 7,
+}
+
+
+def _compress_item(text: str) -> str:
+    """Shorten a task/requirement text to a 2-3 word summary."""
+    had_path = re.search(r"`[^`]+`", text) is not None
+    value = re.sub(r"`[^`]+`", " ", text)
+    value = value.replace("`", "")
+    value = re.sub(r"^(System|The system|O sistema)\s+(MUST|DEVE|deve)\s+", "", value)
+    for separator in (" \u2014 ", " \u2013 ", ": ", ". ", " ("):
+        index = value.find(separator)
+        if index > 0:
+            value = value[:index]
+    value = re.sub(r"\s+", " ", value).strip()
+    value = value.rstrip(",;.:").rstrip()
+    if had_path:
+        value = re.sub(
+            r"\s+(em|no|na|de|do|da|para|com|in|at|to|from|using)$", "", value
+        )
+    if value:
+        value = value[:1].upper() + value[1:]
+    if len(value) > 48:
+        value = value[:48]
+        space = value.rfind(" ")
+        if space > 20:
+            value = value[:space]
+        value = value.rstrip(",;.:") + "\u2026"
+    if not value:
+        return "\u2B1C"
+    return value
+
+
+def _flow_text(phase: str) -> str:
+    """Canonical flow up to the next mandatory command."""
+    stop = _FLOW_STOP.get(phase, 8)
+    return " \u2192 ".join(_FLOW[: stop + 1])
+
+
 def _snapshot(
     repo_root: Path,
     event_name: str,
     synopsis_lines: list[str],
     title_text: str,
     snap_prefix: str,
+    item_lines: list[str],
 ) -> int:
     """Commit a rollback snapshot of the state left by the previous phase.
 
     Mirrors auto-commit.ps1: stage first, classify the frozen phase from the
     staged diff, then build title + body (inherited synopsis, "Concluído",
-    next phase, --stat).
+    next command, --stat).
     """
     added = _git(repo_root, "add", ".")
     if added.returncode != 0:
@@ -307,10 +376,16 @@ def _snapshot(
         (path for path in staged if re.search(r"(^|/)tasks\.md$", path)), ""
     )
     tasks_path = repo_root / tasks_rel if tasks_rel else None
+    # The ledger counts every task of the feature, not only the staged ones.
+    tasks_count_path = tasks_path
+    if tasks_count_path is None and feature_dir is not None:
+        candidate_tasks = feature_dir / "tasks.md"
+        if candidate_tasks.is_file():
+            tasks_count_path = candidate_tasks
     task_count = 0
     phase_count = 0
-    if tasks_path is not None and tasks_path.is_file():
-        for line in tasks_path.read_text(encoding="utf-8").splitlines():
+    if tasks_count_path is not None and tasks_count_path.is_file():
+        for line in tasks_count_path.read_text(encoding="utf-8").splitlines():
             if re.match(r"^- \[[ Xx]\] T\d+", line):
                 task_count += 1
             elif re.match(r"^## Phase \d+", line):
@@ -330,7 +405,7 @@ def _snapshot(
             if re.search(r"(^|/)(plan|research|data-model|quickstart)\.md$", path)
             or re.search(r"(^|/)contracts/", path)
         )
-        summary = f"{plan_count} artefatos de design"
+        summary = f"{plan_count} artefatos planejados"
     elif frozen == "Tasks":
         summary = f"{task_count} tarefas em {phase_count} fases"
     elif frozen == "Checklist":
@@ -351,9 +426,9 @@ def _snapshot(
     else:
         summary = f"{len(staged)} arquivos"
 
-    # Implement bullets: tasks flipped [X] in the staged tasks.md diff.
+    # Phase items: agent-supplied, or derived from the staged artifacts.
     task_ids: list[int] = []
-    task_bullets: list[str] = []
+    phase_items: list[str] = list(item_lines)
     if frozen == "Implement" and tasks_path is not None and tasks_path.is_file():
         status_map: dict[str, str] = {}
         by_name: dict[str, list[str]] = {}
@@ -374,7 +449,7 @@ def _snapshot(
             text = re.sub(r"\s+", " ", text).strip()
 
             letter = ""
-            file_name = ""
+            full_path = ""
             for candidate_path in re.findall(r"`([^`]+)`", text):
                 found = ""
                 if candidate_path in status_map:
@@ -383,21 +458,150 @@ def _snapshot(
                     found = by_name[candidate_path][0]
                 if found:
                     letter = status_map[found]
-                    file_name = Path(found).name
+                    full_path = found
                     break
 
-            if file_name:
-                task_bullets.append(f"- {task_id}: {letter} {file_name}")
-            else:
-                head = text.split(":", 1)[0]
-                head = re.sub(r"\s+", " ", head.replace("`", "")).strip()
-                task_bullets.append(f"- {task_id}: {head}")
+            if not item_lines:
+                item_summary = _compress_item(text)
+                if full_path:
+                    phase_items.append(
+                        f"{_EM_CHECK} {task_id}: {item_summary} {_EM_DASH} {letter} {full_path}"
+                    )
+                else:
+                    phase_items.append(f"{_EM_CHECK} {task_id}: {item_summary}")
             task_ids.append(int(task_id[1:]))
 
         task_ids = sorted(set(task_ids))
-        if len(task_bullets) > 10:
-            extra = len(task_bullets) - 10
-            task_bullets = task_bullets[:10] + [f"- (+{extra} tarefas)"]
+    elif not phase_items and feature_dir is not None:
+        if frozen == "Specify":
+            spec_path = feature_dir / "spec.md"
+            if spec_path.is_file():
+                us_lines: list[str] = []
+                fr_lines: list[str] = []
+                for line in spec_path.read_text(encoding="utf-8").splitlines():
+                    match = re.match(
+                        r"^### User Story\s+(\d+)\s*[-\u2013\u2014]\s*"
+                        r"(.+?)\s*(?:\(Priority:.*\))?$",
+                        line,
+                    )
+                    if match:
+                        us_lines.append(f"{_EM_CHECK} US{match.group(1)}: {match.group(2)}")
+                        continue
+                    match = re.match(r"^- \*\*(FR-\d+)\*\*:\s*(.+)$", line)
+                    if match:
+                        fr_lines.append(
+                            f"{_EM_CHECK} {match.group(1)}: "
+                            f"{_compress_item(match.group(2))}"
+                        )
+                if us_lines:
+                    phase_items.append("* US \u2014 User Stories")
+                    phase_items.extend(us_lines)
+                if fr_lines:
+                    if phase_items:
+                        phase_items.append("")
+                    phase_items.append("* FR \u2014 Functional Requirements")
+                    phase_items.extend(fr_lines)
+        elif frozen == "Clarify":
+            spec_path = feature_dir / "spec.md"
+            if spec_path.is_file():
+                lines = spec_path.read_text(encoding="utf-8").splitlines()
+                for index, line in enumerate(lines):
+                    match = re.match(r"^### Session\s+(\d{4}-\d{2}-\d{2})", line)
+                    if not match:
+                        continue
+                    session_summary = ""
+                    for following in lines[index + 1:]:
+                        candidate = following.strip()
+                        if re.match(r"^#{1,3}\s", candidate):
+                            break
+                        if candidate:
+                            session_summary = candidate
+                            break
+                    session_summary = re.sub(r"^[-*]\s+", "", session_summary)
+                    session_summary = re.sub(r"^(\*\*)?[Qq](\*\*)?:(\*\*)?\s*", "", session_summary)
+                    if session_summary:
+                        phase_items.append(
+                            f"{_EM_CHECK} {match.group(1)}: {_compress_item(session_summary)}"
+                        )
+                    else:
+                        phase_items.append(f"{_EM_CHECK} {match.group(1)}")
+        elif frozen == "Plan":
+            feature_prefix = str(feature_dir).replace("\\", "/").rstrip("/") + "/"
+            plan_paths = sorted(
+                path
+                for path in staged
+                if re.search(r"(^|/)(plan|research|data-model|quickstart)\.md$", path)
+                or re.search(r"(^|/)contracts/", path)
+            )
+            for path in plan_paths:
+                relative = path.replace("\\", "/")
+                if relative.startswith(feature_prefix):
+                    relative = relative[len(feature_prefix):]
+                phase_items.append(f"{_EM_CHECK} {relative}")
+        elif frozen == "Tasks" and tasks_path is not None and tasks_path.is_file():
+            for line in tasks_path.read_text(encoding="utf-8").splitlines():
+                match = re.match(r"^- \[[ Xx]\] (T\d+)\s+(.+)$", line)
+                if not match:
+                    continue
+                text = re.sub(r"^(?:\[(?:P|US\d+)\]\s*)+", "", match.group(2))
+                text = re.sub(r"\s+", " ", text)
+                phase_items.append(
+                    f"{_EM_CHECK} {match.group(1)}: {_compress_item(text)}"
+                )
+        elif frozen == "Converge":
+            if tasks_path is not None and tasks_path.is_file():
+                inside_convergence = False
+                for line in tasks_path.read_text(encoding="utf-8").splitlines():
+                    if re.match(r"^## Phase \d+: Convergence\b", line):
+                        inside_convergence = True
+                        continue
+                    if line.startswith("## "):
+                        inside_convergence = False
+                        continue
+                    if not inside_convergence:
+                        continue
+                    match = re.match(r"^- \[[ Xx]\] (T\d+)\s+(.+)$", line)
+                    if not match:
+                        continue
+                    text = re.sub(r"^(?:\[(?:P|US\d+)\]\s*)+", "", match.group(2))
+                    text = re.sub(r"\s+", " ", text)
+                    phase_items.append(
+                        f"{_EM_CHECK} {match.group(1)}: {_compress_item(text)}"
+                    )
+        elif frozen == "Checklist":
+            feature_prefix = str(feature_dir).replace("\\", "/").rstrip("/") + "/"
+            for path in sorted(
+                path for path in staged if re.search(r"(^|/)checklists/", path)
+            ):
+                relative = path.replace("\\", "/")
+                if relative.startswith(feature_prefix):
+                    relative = relative[len(feature_prefix):]
+                phase_items.append(f"{_EM_CHECK} {relative}")
+            if not phase_items:
+                check_dir = feature_dir / "checklists"
+                if check_dir.is_dir():
+                    for entry in sorted(check_dir.iterdir()):
+                        if entry.is_file():
+                            phase_items.append(f"{_EM_CHECK} checklists/{entry.name}")
+        elif frozen == "Analyze":
+            analysis_path = feature_dir / "analysis.md"
+            if analysis_path.is_file():
+                for line in analysis_path.read_text(encoding="utf-8").splitlines():
+                    if not re.match(r"^\|\s*[A-Z][0-9]+\s*\|", line):
+                        continue
+                    cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+                    finding_id = cells[0]
+                    finding_summary = cells[4] if len(cells) >= 5 else ""
+                    if not finding_summary and len(cells) >= 4:
+                        finding_summary = cells[3]
+                    if finding_summary:
+                        phase_items.append(
+                            f"{_EM_CHECK} {finding_id}: {_compress_item(finding_summary)}"
+                        )
+                    else:
+                        phase_items.append(f"{_EM_CHECK} {finding_id}")
+                if not phase_items:
+                    phase_items.append(f"{_EM_CHECK} analysis.md")
 
     # Contiguous range for the title.
     range_text = ""
@@ -466,18 +670,18 @@ def _snapshot(
         synopsis = []
         in_synopsis = False
         for line in previous:
-            if re.match(r"^Sinopse\s*$", line):
+            if re.match(r"^Sinopse:?\s*$", line):
                 in_synopsis = True
                 continue
             if not in_synopsis:
                 continue
-            if line.startswith("Conclu") or (
+            if re.match(r"^(Entregas|Conclu)", line) or (
                 not re.match(r"^\s*-\s", line) and line.strip()
             ):
                 break
             bullet = re.match(r"^\s*-\s*(.+)$", line)
             if bullet:
-                synopsis.append(bullet.group(1).strip())
+                synopsis.append(bullet.group(1).replace(_EM_BULLET, "").strip())
 
     deduped: list[str] = []
     seen: set[str] = set()
@@ -502,7 +706,12 @@ def _snapshot(
             sessions = sum(
                 1 for line in spec_text.splitlines() if line.startswith("### Session ")
             )
-            done.append(f"Specify: {stories} histórias")
+            requirements = sum(
+                1
+                for line in spec_text.splitlines()
+                if re.match(r"^- \*\*FR-\d+\*\*", line)
+            )
+            done.append(f"Specify: {stories} histórias / {requirements} Requirements")
             if re.search(r"^## Clarifications", spec_text, re.MULTILINE):
                 done.append(f"Clarify: {sessions} sessões")
         artifacts = sum(
@@ -514,48 +723,103 @@ def _snapshot(
         if contracts.is_dir():
             artifacts += sum(1 for entry in contracts.iterdir() if entry.is_file())
         if artifacts:
-            done.append(f"Plan: {artifacts} artefatos de design")
+            done.append(f"Plan: {artifacts} artefatos planejados")
         if task_count or (feature_dir / "tasks.md").is_file():
             done.append(f"Tasks: {task_count} tarefas / {phase_count} fases")
-        if (feature_dir / "analysis.md").is_file():
-            done.append("Analyze: relatório presente")
+        analysis_path = feature_dir / "analysis.md"
+        if analysis_path.is_file():
+            findings = sum(
+                1
+                for line in analysis_path.read_text(encoding="utf-8").splitlines()
+                if re.match(r"^\|\s*[A-Z][0-9]+\s*\|", line)
+            )
+            if findings:
+                done.append(f"Analyze: {findings} achados")
+            else:
+                done.append("Analyze: relatório presente")
         implemented = sum(1 for path in staged if path.startswith("src/"))
         if implemented:
-            done.append(f"Implement: {implemented} arquivos")
+            done.append(f"Implement: {len(staged)} arquivos")
         check_dir = feature_dir / "checklists"
         if check_dir.is_dir():
             total = sum(1 for entry in check_dir.iterdir() if entry.is_file())
             if total:
                 done.append(f"Checklist: {total} listas")
 
-    # Next phase, from the hook event name. Only before_* hooks announce the
-    # phase that is about to run; after_* hooks record the phase just completed,
-    # so the body omits "A seguir".
-    next_phase = ""
-    if event_name.startswith("before_"):
-        next_phase = event_name[len("before_"):]
-    if next_phase:
-        next_phase = next_phase[:1].upper() + next_phase[1:]
+    current_prefix = f"{frozen}:"
+    done = [
+        f"{item} (Current)" if item.startswith(current_prefix) else item
+        for item in done
+    ]
+
+    # Next command, from the hook event name. Use the event, not the detected
+    # phase: after_* records the phase that just finished; before_* announces
+    # the command that is about to run.
+    mapping = {
+        "after_constitution": ("/speckit.specify", ""),
+        "after_specify": ("/speckit.plan", "/speckit.clarify"),
+        "after_clarify": ("/speckit.plan", ""),
+        "after_plan": ("/speckit.tasks", "/speckit.checklist"),
+        "after_checklist": ("/speckit.tasks", ""),
+        "after_tasks": ("/speckit.implement", "/speckit.analyze"),
+        "after_analyze": ("/speckit.implement", ""),
+        "after_implement": ("/speckit.converge", ""),
+    }
+    next_mandatory = ""
+    next_optional = ""
+    next_special: list[str] = []
+    if event_name in mapping:
+        next_mandatory, next_optional = mapping[event_name]
+    elif event_name == "after_converge":
+        next_special = [
+            "Se convergiu: revisar/abrir PR",
+            "Se adicionou tarefas: /speckit.implement e /speckit.converge",
+        ]
+    elif event_name.startswith("before_"):
+        next_mandatory = f"/speckit.{event_name[len('before_'):]}"
 
     # Assemble body.
     parts: list[str] = []
     if synopsis:
-        parts.append("Sinopse")
-        parts.extend(f"- {item}" for item in synopsis)
+        parts.append("Sinopse:")
+        parts.extend(f"{_EM_BULLET} {item}" for item in synopsis)
         parts.append("")
-    if task_bullets:
-        parts.extend(task_bullets)
-        parts.append("")
+    if phase_items:
+        section_header = {
+            "Specify": "Especificacoes Criadas:",
+            "Clarify": "Clarificacoes Feitas:",
+            "Plan": "Artefatos Planejados:",
+            "Tasks": "Tasks Criadas:",
+            "Implement": "Implement:",
+            "Converge": "Convergencia Aplicada:",
+            "Checklist": "Checklists Criadas:",
+            "Analyze": "Achados:",
+        }.get(frozen, "")
+        if section_header:
+            parts.append(section_header)
+            parts.extend(phase_items)
+            parts.append("")
     if done:
-        parts.append("Concluído")
-        parts.extend(f"- {item}" for item in done)
+        parts.append("Entregas Concluidas:")
+        parts.extend(f"{_EM_PIN} {item}" for item in done)
         parts.append("")
-    if next_phase:
-        parts.append(f"A seguir: {next_phase}")
+    if next_mandatory or next_optional or next_special:
+        parts.append("Próximo Comando:")
+        parts.append(f"{_EM_ARROW} Fluxo: {_flow_text(frozen)}")
+        if next_mandatory:
+            parts.append(f"{_EM_ARROW_VS} Obrigatório: {next_mandatory}")
+        if next_optional:
+            parts.append(f"{_EM_ARROW_VS} Opcional: {next_optional}")
+        parts.extend(f"{_EM_ARROW_VS} {item}" for item in next_special)
         parts.append("")
     stat = _git(repo_root, "diff", "--cached", "--stat").stdout.strip()
     if stat:
-        parts.append(stat)
+        parts.append("Local:")
+        parts.extend(
+            f"{_EM_FOLDER} {line.strip()}"
+            for line in stat.splitlines()
+            if line.strip()
+        )
     body = "\n".join(parts).rstrip()
 
     committed = _git(repo_root, "commit", "-q", "-m", title, "-m", body)
@@ -573,13 +837,14 @@ def main(argv: list[str]) -> int:
     if not event_name:
         print(
             f"Usage: {Path(sys.argv[0]).name} <event_name> "
-            "[--synopsis-file <path>] [--title-file <path>]",
+            "[--synopsis-file <path>] [--title-file <path>] [--items-file <path>]",
             file=sys.stderr,
         )
         return 1
 
     synopsis_file = ""
     title_file = ""
+    items_file = ""
     index = 1
     while index < len(argv):
         if argv[index] == "--synopsis-file":
@@ -599,6 +864,15 @@ def main(argv: list[str]) -> int:
                 )
                 return 1
             title_file = argv[index + 1]
+            index += 2
+        elif argv[index] == "--items-file":
+            if index + 1 >= len(argv):
+                print(
+                    "[specify] Error: --items-file requires a path argument",
+                    file=sys.stderr,
+                )
+                return 1
+            items_file = argv[index + 1]
             index += 2
         else:
             index += 1
@@ -666,6 +940,41 @@ def main(argv: list[str]) -> int:
             except OSError:
                 pass
 
+    # Snapshot mode: agent-authored phase items (transport-only artifact).
+    # One item per line, emitted verbatim under the phase section.
+    item_lines: list[str] = []
+    if items_file:
+        items_path = Path(items_file)
+        if not items_path.is_file():
+            print(
+                f"[specify] Warning: items file '{items_file}' not found",
+                file=sys.stderr,
+            )
+        else:
+            try:
+                raw_items = items_path.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError) as exc:
+                print(
+                    f"[specify] Warning: could not read items file "
+                    f"'{items_file}': {exc}",
+                    file=sys.stderr,
+                )
+            else:
+                parsed_items = [
+                    re.sub(r"^\s*-\s*", "", line).rstrip()
+                    for line in raw_items.splitlines()
+                ]
+                while parsed_items and not parsed_items[0].strip():
+                    parsed_items.pop(0)
+                while parsed_items and not parsed_items[-1].strip():
+                    parsed_items.pop()
+                item_lines = parsed_items
+            finally:
+                try:
+                    items_path.unlink()
+                except OSError:
+                    pass
+
     script_dir = Path(__file__).resolve().parent
     repo_root = _find_project_root(script_dir) or Path.cwd()
 
@@ -730,7 +1039,9 @@ def main(argv: list[str]) -> int:
         return 0
 
     if commit_style == "snapshot":
-        return _snapshot(repo_root, event_name, synopsis_lines, title_text, snap_prefix)
+        return _snapshot(
+            repo_root, event_name, synopsis_lines, title_text, snap_prefix, item_lines
+        )
 
     # Derive a human-readable command name from the event
     # e.g., after_specify -> specify, before_plan -> plan

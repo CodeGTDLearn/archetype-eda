@@ -8,10 +8,12 @@
 #        auto-commit.sh <event_name> --message-file <path>
 #        auto-commit.sh <event_name> --synopsis-file <path>   (commit_style: snapshot)
 #        auto-commit.sh <event_name> --title-file <path>      (commit_style: snapshot)
+#        auto-commit.sh <event_name> --items-file <path>      (commit_style: snapshot)
 #   e.g.: auto-commit.sh after_specify
 #   e.g.: auto-commit.sh after_specify --message-file /tmp/commit-msg.txt  (commit_style: conventional)
 #   e.g.: auto-commit.sh before_implement --synopsis-file /tmp/synopsis.txt (commit_style: snapshot)
 #   e.g.: auto-commit.sh before_implement --title-file /tmp/title.txt (commit_style: snapshot)
+#   e.g.: auto-commit.sh after_implement --items-file /tmp/items.txt (commit_style: snapshot)
 #
 # --message-file is the preferred way to supply an agent-generated commit
 # message: it reads the message from a file instead of a shell argument,
@@ -33,6 +35,7 @@ shift || true
 GENERATED_MESSAGE=""
 SYNOPSIS_LINES=""
 TITLE_TEXT=""
+ITEM_LINES=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --synopsis-file)
@@ -65,6 +68,29 @@ while [ $# -gt 0 ]; do
                 echo "[specify] Warning: title file '$_title_file' not found" >&2
             fi
             rm -f "$_title_file"
+            shift 2
+            ;;
+        --items-file)
+            _items_file="${2:-}"
+            if [ -z "$_items_file" ]; then
+                echo "[specify] Error: --items-file requires a path argument" >&2
+                exit 1
+            fi
+            if [ -f "$_items_file" ]; then
+                # Transport-only artifact: read, then delete BEFORE `git add .`
+                # so it is never staged into the snapshot it describes.
+                ITEM_LINES=$(awk '
+                    { sub(/^[[:space:]]*-[[:space:]]*/, ""); sub(/[[:space:]]+$/, ""); lines[NR] = $0 }
+                    END {
+                        first = 1; last = NR
+                        while (first <= last && lines[first] ~ /^[[:space:]]*$/) first++
+                        while (last >= first && lines[last] ~ /^[[:space:]]*$/) last--
+                        for (i = first; i <= last; i++) print lines[i]
+                    }' "$_items_file")
+                rm -f "$_items_file"
+            else
+                echo "[specify] Warning: items file '$_items_file' not found" >&2
+            fi
             shift 2
             ;;
         --message-file)
@@ -235,11 +261,66 @@ fi
 # ---------------------------------------------------------------------------
 # Snapshot mode (commit_style: snapshot)
 #
-# Mirrors auto-commit.ps1: a rollback snapshot taken BEFORE the next phase
+# Mirrors auto-commit.ps1: a rollback snapshot taken BEFORE the next command
 # runs. Stage first, classify the frozen phase from the staged diff, then
-# build title + body (inherited synopsis, "Concluído", next phase, --stat).
+# build title + body (inherited synopsis, "Concluído", next command, --stat).
 # ---------------------------------------------------------------------------
 if [ "$_commit_style" = "snapshot" ]; then
+
+    # Shorten a task/requirement text to a 2-3 word summary. Deterministic:
+    # drops cited file paths and code ticks and leading modal verbs, cuts at
+    # the first separator, then caps the result at 48 characters.
+    _compress_item() {
+        printf '%s' "$1" | awk '
+            {
+                t = $0
+                had = (t ~ /`[^`]+`/)
+                gsub(/`[^`]+`/, " ", t)
+                gsub(/`/, "", t)
+                sub(/^(System|The system|O sistema)[[:space:]]+(MUST|DEVE|deve)[[:space:]]+/, "", t)
+                p = index(t, " — "); if (p == 0) p = index(t, " – "); if (p > 0) { t = substr(t, 1, p - 1) }
+                p = index(t, ": "); if (p > 0) { t = substr(t, 1, p - 1) }
+                p = index(t, ". "); if (p > 0) { t = substr(t, 1, p - 1) }
+                p = index(t, " ("); if (p > 0) { t = substr(t, 1, p - 1) }
+                gsub(/[[:space:]]+/, " ", t)
+                sub(/^[[:space:]]+/, "", t)
+                sub(/[[:space:]]+$/, "", t)
+                sub(/[,;.:]+$/, "", t)
+                sub(/[[:space:]]+$/, "", t)
+                if (had) sub(/[[:space:]]+(em|no|na|de|do|da|para|com|in|at|to|from|using)$/, "", t)
+                if (t != "") { t = toupper(substr(t, 1, 1)) substr(t, 2) }
+                if (length(t) > 48) {
+                    cut = 0
+                    for (i = 1; i <= length(t); i++) {
+                        if (substr(t, i, 1) == " " && i <= 48) cut = i
+                    }
+                    if (cut > 20) { t = substr(t, 1, cut - 1) }
+                    sub(/[,;.:]+$/, "", t)
+                    t = t "…"
+                }
+                if (t == "") t = "⬜"
+                print t
+            }'
+    }
+
+    # Flow line: canonical order up to the next mandatory command.
+    _flow_text() {
+        case "$1" in
+            Constitution)          _stop=1 ;;
+            Specify|Clarify)       _stop=3 ;;
+            Plan|Checklist)        _stop=5 ;;
+            Tasks|Analyze)         _stop=7 ;;
+            *)                     _stop=8 ;;
+        esac
+        _i=0
+        _flow=""
+        for _p in constitution specify clarify plan checklist tasks analyze implement converge; do
+            if [ -z "$_flow" ]; then _flow="$_p"; else _flow="$_flow → $_p"; fi
+            [ "$_i" -ge "$_stop" ] && break
+            _i=$((_i + 1))
+        done
+        printf '%s' "$_flow"
+    }
 
     _git_out=$(git add . 2>&1) || { echo "[specify] Error: git add failed: $_git_out" >&2; exit 1; }
 
@@ -374,11 +455,15 @@ if [ "$_commit_style" = "snapshot" ]; then
     if [ -n "$_tasks_rel" ]; then
         _tasks_path="$REPO_ROOT/$_tasks_rel"
     fi
+    _tasks_count_path="$_tasks_path"
+    if [ -z "$_tasks_count_path" ] && [ -n "$_feature_dir" ] && [ -f "$_feature_dir/tasks.md" ]; then
+        _tasks_count_path="$_feature_dir/tasks.md"
+    fi
     _task_count=0
     _phase_count=0
-    if [ -n "$_tasks_path" ] && [ -f "$_tasks_path" ]; then
-        _task_count=$(grep -cE '^- \[[ Xx]\] T[0-9]+' "$_tasks_path" || true)
-        _phase_count=$(grep -cE '^## Phase [0-9]+' "$_tasks_path" || true)
+    if [ -n "$_tasks_count_path" ] && [ -f "$_tasks_count_path" ]; then
+        _task_count=$(grep -cE '^- \[[ Xx]\] T[0-9]+' "$_tasks_count_path" || true)
+        _phase_count=$(grep -cE '^## Phase [0-9]+' "$_tasks_count_path" || true)
     fi
 
     # per-phase title summary
@@ -389,7 +474,7 @@ if [ "$_commit_style" = "snapshot" ]; then
             _summary="$_sessions sessões" ;;
         Plan)
             _plan_count=$(printf '%s\n' "$_staged" | grep -cE '(^|/)(plan|research|data-model|quickstart)\.md$|(^|/)contracts/' || true)
-            _summary="$_plan_count artefatos de design" ;;
+            _summary="$_plan_count artefatos planejados" ;;
         Tasks)
             _summary="$_task_count tarefas em $_phase_count fases" ;;
         Implement)
@@ -412,66 +497,188 @@ if [ "$_commit_style" = "snapshot" ]; then
             _summary="$_staged_count arquivos" ;;
     esac
 
-    # Implement bullets: tasks flipped [X] in the staged tasks.md diff.
-    # A task that names a staged file (full path, or a unique basename) yields
-    # "<status> <basename>"; otherwise the text before the first colon.
+    # phase items: agent-supplied, or derived from the staged artifacts
     _task_ids=""
-    _task_bullets=""
-    if [ "$_frozen" = "Implement" ] && [ -n "$_tasks_path" ] && [ -f "$_tasks_path" ]; then
-        _status_lines=$(git diff --cached --name-status 2>/dev/null)
-        while IFS= read -r _diff_line; do
-            [[ "$_diff_line" =~ ^\+-\ \[X\]\ (T[0-9]+)[[:space:]]+(.*)$ ]] || continue
-            _task_id="${BASH_REMATCH[1]}"
-            _task_text="${BASH_REMATCH[2]}"
-            _task_text=$(printf '%s' "$_task_text" | sed -E 's/^(\[(P|US[0-9]+)\][[:space:]]*)+//' | sed -E 's/[[:space:]]+/ /g' | sed -E 's/^ //; s/ $//')
+    _phase_items=""
+    if [ -n "$ITEM_LINES" ]; then
+        _phase_items="$ITEM_LINES"
+    fi
+    if [ -n "$_feature_dir" ] && { [ -z "$ITEM_LINES" ] || [ "$_frozen" = "Implement" ]; }; then
+        case "$_frozen" in
+            Specify)
+                if [ -f "$_feature_dir/spec.md" ]; then
+                    _us_lines=$(sed -nE 's/^### User Story[[:space:]]+([0-9]+)[[:space:]]*[^[:alnum:][:space:]]+[[:space:]]*(.*)$/\1\t\2/p' "$_feature_dir/spec.md" | sed -E 's/[[:space:]]+\(Priority:.*\)$//' | awk -F '\t' '{ printf "✅ US%s: %s\n", $1, $2 }')
+                    _fr_lines=$( { sed -nE 's/^- \*\*(FR-[0-9]+)\*\*:[[:space:]]*(.*)$/\1\t\2/p' "$_feature_dir/spec.md"; echo; } | while IFS="$(printf '\t')" read -r _fid _ftext; do [ -n "$_fid" ] || continue; printf '✅ %s: %s\n' "$_fid" "$(_compress_item "$_ftext")"; done)
+                    if [ -n "$_us_lines" ]; then
+                        _phase_items="* US — User Stories
+$_us_lines"
+                    fi
+                    if [ -n "$_fr_lines" ]; then
+                        if [ -n "$_phase_items" ]; then
+                            _phase_items="$_phase_items
 
-            _letter=""
-            _fname=""
-            _cands=$(printf '%s\n' "$_task_text" | grep -oE '`[^`]+`' | tr -d '`' || true)
-            while IFS= read -r _cand; do
-                [ -n "$_cand" ] || continue
-                _found=$(printf '%s\n' "$_status_lines" | awk -F '\t' -v p="$_cand" '$2 == p { print $2; exit }')
-                if [ -z "$_found" ]; then
-                    _base="${_cand##*/}"
-                    _matches=$(printf '%s\n' "$_status_lines" | awk -F '\t' -v b="$_base" '{ n = split($2, a, "/"); if (a[n] == b) print $2 }')
-                    _mcount=$(printf '%s\n' "$_matches" | grep -c . || true)
-                    if [ "$_mcount" -eq 1 ]; then
-                        _found="$_matches"
+* FR — Functional Requirements
+$_fr_lines"
+                        else
+                            _phase_items="* FR — Functional Requirements
+$_fr_lines"
+                        fi
                     fi
                 fi
-                if [ -n "$_found" ]; then
-                    _letter=$(printf '%s\n' "$_status_lines" | awk -F '\t' -v p="$_found" '$2 == p { print $1; exit }')
-                    _fname="${_found##*/}"
-                    break
+                ;;
+            Clarify)
+                if [ -f "$_feature_dir/spec.md" ]; then
+                    _phase_items=$(awk '
+                        /^### Session [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/ {
+                            date = $3; grab = 1; next
+                        }
+                        grab {
+                            if ($0 ~ /^#{1,3}[[:space:]]/) { grab = 0; next }
+                            line = $0
+                            gsub(/^[[:space:]]+/, "", line)
+                            gsub(/[[:space:]]+$/, "", line)
+                            if (line == "") next
+                            sub(/^[-*][[:space:]]+/, "", line)
+                            sub(/^(\*\*)?[Qq](\*\*)?:(\*\*)?[[:space:]]*/, "", line)
+                            print date "\t" line
+                            grab = 0
+                        }' "$_feature_dir/spec.md" | while IFS="$(printf '\t')" read -r _d _l; do printf '✅ %s: %s\n' "$_d" "$(_compress_item "$_l")"; done)
                 fi
-            done <<EOF
+                ;;
+            Plan)
+                _plan_paths=$(printf '%s\n' "$_staged" | grep -E '(^|/)(plan|research|data-model|quickstart)\.md$|(^|/)contracts/' | sort || true)
+                _feature_prefix="${_feature_dir%/}/"
+                while IFS= read -r _p; do
+                    [ -n "$_p" ] || continue
+                    _rel="$_p"
+                    case "$_rel" in
+                        "$_feature_prefix"*) _rel="${_rel#$_feature_prefix}" ;;
+                    esac
+                    _phase_items="${_phase_items}✅ $_rel
+"
+                done <<EOF
+$_plan_paths
+EOF
+                _phase_items=$(printf '%s' "$_phase_items" | grep -v '^$' || true)
+                ;;
+            Tasks)
+                if [ -n "$_tasks_path" ] && [ -f "$_tasks_path" ]; then
+                    _phase_items=$( { sed -nE 's/^- \[[ Xx]\][[:space:]]+(T[0-9]+)[[:space:]]+(.*)$/\1\t\2/p' "$_tasks_path"; echo; } | while IFS="$(printf '\t')" read -r _tid _ttext; do
+                        [ -n "$_tid" ] || continue
+                        _ttext=$(printf '%s' "$_ttext" | sed -E 's/^(\[(P|US[0-9]+)\][[:space:]]*)+//' | sed -E 's/[[:space:]]+/ /g' | sed -E 's/^ //; s/ $//')
+                        printf '✅ %s: %s\n' "$_tid" "$(_compress_item "$_ttext")"
+                    done)
+                fi
+                ;;
+            Converge)
+                if [ -n "$_tasks_path" ] && [ -f "$_tasks_path" ]; then
+                    _phase_items=$(awk '
+                        /^## Phase [0-9]+: Convergence/ { inside = 1; next }
+                        /^## / { inside = 0 }
+                        inside && /^- \[[ Xx]\] T[0-9]+[[:space:]]/ {
+                            line = $0
+                            sub(/^- \[[ Xx]\][[:space:]]+/, "", line)
+                            print line
+                        }' "$_tasks_path" | while read -r _tid _ttext; do
+                            _ttext=$(printf '%s' "$_ttext" | sed -E 's/^(\[(P|US[0-9]+)\][[:space:]]*)+//' | sed -E 's/[[:space:]]+/ /g' | sed -E 's/^ //; s/ $//')
+                            printf '✅ %s: %s\n' "$_tid" "$(_compress_item "$_ttext")"
+                        done)
+                fi
+                ;;
+            Checklist)
+                _check_prefix="${_feature_dir%/}/"
+                _check_paths=$(printf '%s\n' "$_staged" | grep -E '(^|/)checklists/' | sort || true)
+                while IFS= read -r _p; do
+                    [ -n "$_p" ] || continue
+                    _rel="$_p"
+                    case "$_rel" in
+                        "$_check_prefix"*) _rel="${_rel#$_check_prefix}" ;;
+                    esac
+                    _phase_items="${_phase_items}✅ $_rel
+"
+                done <<EOF
+$_check_paths
+EOF
+                if [ -z "$_phase_items" ] && [ -d "$_feature_dir/checklists" ]; then
+                    _check_files=$(find "$_feature_dir/checklists" -maxdepth 1 -type f 2>/dev/null | sort || true)
+                    while IFS= read -r _f; do
+                        [ -n "$_f" ] || continue
+                        _phase_items="${_phase_items}✅ checklists/${_f##*/}
+"
+                    done <<EOF
+$_check_files
+EOF
+                fi
+                ;;
+            Analyze)
+                if [ -f "$_feature_dir/analysis.md" ]; then
+                    _phase_items=$(awk -F '|' '
+                        /^[[:space:]]*\|[[:space:]]*[A-Z][0-9]+[[:space:]]*\|/ {
+                            id = $2; gsub(/^[[:space:]]+|[[:space:]]+$/, "", id)
+                            summary = $6; gsub(/^[[:space:]]+|[[:space:]]+$/, "", summary)
+                            if (summary == "") { summary = $5; gsub(/^[[:space:]]+|[[:space:]]+$/, "", summary) }
+                            print id "\t" summary
+                        }' "$_feature_dir/analysis.md" | while IFS="$(printf '\t')" read -r _aid _asum; do
+                            if [ -n "$_asum" ]; then
+                                printf '✅ %s: %s\n' "$_aid" "$(_compress_item "$_asum")"
+                            else
+                                printf '✅ %s\n' "$_aid"
+                            fi
+                        done)
+                    if [ -z "$_phase_items" ]; then _phase_items="✅ analysis.md"; fi
+                fi
+                ;;
+            Implement)
+                if [ -n "$_tasks_path" ] && [ -f "$_tasks_path" ]; then
+                    _status_lines=$(git diff --cached --name-status 2>/dev/null)
+                    while IFS= read -r _diff_line; do
+                        [[ "$_diff_line" =~ ^\+-\ \[X\]\ (T[0-9]+)[[:space:]]+(.*)$ ]] || continue
+                        _task_id="${BASH_REMATCH[1]}"
+                        _task_text="${BASH_REMATCH[2]}"
+                        _task_text=$(printf '%s' "$_task_text" | sed -E 's/^(\[(P|US[0-9]+)\][[:space:]]*)+//' | sed -E 's/[[:space:]]+/ /g' | sed -E 's/^ //; s/ $//')
+
+                        _letter=""
+                        _full=""
+                        _cands=$(printf '%s\n' "$_task_text" | grep -oE '`[^`]+`' | tr -d '`' || true)
+                        while IFS= read -r _cand; do
+                            [ -n "$_cand" ] || continue
+                            _found=$(printf '%s\n' "$_status_lines" | awk -F '\t' -v p="$_cand" '$2 == p { print $2; exit }')
+                            if [ -z "$_found" ]; then
+                                _base="${_cand##*/}"
+                                _matches=$(printf '%s\n' "$_status_lines" | awk -F '\t' -v b="$_base" '{ n = split($2, a, "/"); if (a[n] == b) print $2 }')
+                                _mcount=$(printf '%s\n' "$_matches" | grep -c . || true)
+                                if [ "$_mcount" -eq 1 ]; then
+                                    _found="$_matches"
+                                fi
+                            fi
+                            if [ -n "$_found" ]; then
+                                _letter=$(printf '%s\n' "$_status_lines" | awk -F '\t' -v p="$_found" '$2 == p { print $1; exit }')
+                                _full="$_found"
+                                break
+                            fi
+                        done <<EOF
 $_cands
 EOF
 
-            if [ -n "$_fname" ]; then
-                _bullet="- $_task_id: $_letter $_fname"
-            else
-                _head="$_task_text"
-                case "$_head" in
-                    *:*) _head="${_head%%:*}" ;;
-                esac
-                _head=$(printf '%s' "$_head" | tr -d '`' | sed -E 's/[[:space:]]+/ /g' | sed -E 's/^ //; s/ $//')
-                _bullet="- $_task_id: $_head"
-            fi
-            _task_bullets="${_task_bullets}${_bullet}
+                        _item_summary=$(_compress_item "$_task_text")
+                        if [ -z "$ITEM_LINES" ]; then
+                            if [ -n "$_full" ]; then
+                                _phase_items="${_phase_items}✅ ${_task_id}: ${_item_summary} — ${_letter} ${_full}
 "
-            _task_ids="${_task_ids}${_task_id}
+                            else
+                                _phase_items="${_phase_items}✅ ${_task_id}: ${_item_summary}
 "
-        done < <(git diff --cached -U0 -- "$_tasks_path" 2>/dev/null || true)
-
-        _task_bullets=$(printf '%s' "$_task_bullets" | grep -v '^$' || true)
-        _bcount=$(printf '%s\n' "$_task_bullets" | grep -c . || true)
-        if [ "$_bcount" -gt 10 ]; then
-            _extra=$((_bcount - 10))
-            _task_bullets=$(printf '%s\n' "$_task_bullets" | head -n 10)
-            _task_bullets="${_task_bullets}
-- (+$_extra tarefas)"
-        fi
+                            fi
+                        fi
+                        _task_ids="${_task_ids}${_task_id}
+"
+                    done < <(git diff --cached -U0 -- "$_tasks_path" 2>/dev/null || true)
+                    if [ -z "$ITEM_LINES" ]; then
+                        _phase_items=$(printf '%s' "$_phase_items" | grep -v '^$' || true)
+                    fi
+                fi
+                ;;
+        esac
     fi
 
     # contiguous range for the title
@@ -565,11 +772,12 @@ EOF
     else
         _prev_body=$(git log -1 --format=%B 2>/dev/null || true)
         _syn_final=$(printf '%s\n' "$_prev_body" | awk '
-            /^Sinopse[[:space:]]*$/ { in_s = 1; next }
+            /^Sinopse:?[[:space:]]*$/ { in_s = 1; next }
             in_s {
-                if ($0 ~ /^Conclu/ || ($0 !~ /^[[:space:]]*-[[:space:]]/ && $0 ~ /[^[:space:]]/)) exit
+                if ($0 ~ /^(Entregas|Conclu)/ || ($0 !~ /^[[:space:]]*-[[:space:]]/ && $0 ~ /[^[:space:]]/)) exit
                 if ($0 ~ /^[[:space:]]*-[[:space:]]/) {
                     sub(/^[[:space:]]*-[[:space:]]*/, "", $0)
+                    sub(/^📋[[:space:]]*/, "", $0)
                     print
                 }
             }')
@@ -584,7 +792,8 @@ EOF
         if [ -f "$_feature_dir/spec.md" ]; then
             _stories=$(grep -c '^### User Story' "$_feature_dir/spec.md" || true)
             _sessions=$(grep -c '^### Session ' "$_feature_dir/spec.md" || true)
-            _done_lines+=("Specify: $_stories histórias")
+            _fr=$(grep -cE '^- \*\*FR-[0-9]+\*\*' "$_feature_dir/spec.md" || true)
+            _done_lines+=("Specify: $_stories histórias / $_fr Requirements")
             if grep -q '^## Clarifications' "$_feature_dir/spec.md"; then
                 _done_lines+=("Clarify: $_sessions sessões")
             fi
@@ -598,17 +807,22 @@ EOF
             _art=$((_art + _c))
         fi
         if [ "$_art" -gt 0 ]; then
-            _done_lines+=("Plan: $_art artefatos de design")
+            _done_lines+=("Plan: $_art artefatos planejados")
         fi
         if [ "$_task_count" -gt 0 ] || [ -f "$_feature_dir/tasks.md" ]; then
             _done_lines+=("Tasks: $_task_count tarefas / $_phase_count fases")
         fi
         if [ -f "$_feature_dir/analysis.md" ]; then
-            _done_lines+=("Analyze: relatório presente")
+            _findings=$(grep -cE '^\|[[:space:]]*[A-Z][0-9]+[[:space:]]*\|' "$_feature_dir/analysis.md" || true)
+            if [ "$_findings" -gt 0 ]; then
+                _done_lines+=("Analyze: $_findings achados")
+            else
+                _done_lines+=("Analyze: relatório presente")
+            fi
         fi
         _impl=$(printf '%s\n' "$_staged" | grep -c '^src/' || true)
         if [ "$_impl" -gt 0 ]; then
-            _done_lines+=("Implement: $_impl arquivos")
+            _done_lines+=("Implement: $_staged_count arquivos")
         fi
         if [ -d "$_feature_dir/checklists" ]; then
             _check_total=$(find "$_feature_dir/checklists" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d '[:space:]')
@@ -617,44 +831,95 @@ EOF
             fi
         fi
     fi
+    for _i in "${!_done_lines[@]}"; do
+        case "${_done_lines[$_i]}" in
+            "$_frozen:"*) _done_lines[$_i]="${_done_lines[$_i]} (Current)" ;;
+        esac
+    done
 
-    # next phase, from the hook event name. Only before_* hooks announce the
-    # phase that is about to run; after_* hooks record the phase just completed,
-    # so the body omits "A seguir".
-    _next=""
+    # next command, from the hook event name. Use the event, not the detected
+    # phase: after_* records the phase that just finished; before_* announces
+    # the command that is about to run.
+    _next_mandatory=""
+    _next_optional=""
+    _next_special=""
     case "$EVENT_NAME" in
-        before_*) _next="${EVENT_NAME#before_}" ;;
+        after_constitution) _next_mandatory="/speckit.specify" ;;
+        after_specify) _next_mandatory="/speckit.plan"; _next_optional="/speckit.clarify" ;;
+        after_clarify) _next_mandatory="/speckit.plan" ;;
+        after_plan) _next_mandatory="/speckit.tasks"; _next_optional="/speckit.checklist" ;;
+        after_checklist) _next_mandatory="/speckit.tasks" ;;
+        after_tasks) _next_mandatory="/speckit.implement"; _next_optional="/speckit.analyze" ;;
+        after_analyze) _next_mandatory="/speckit.implement" ;;
+        after_implement) _next_mandatory="/speckit.converge" ;;
+        after_converge) _next_special="- Se convergiu: revisar/abrir PR
+- Se adicionou tarefas: /speckit.implement e /speckit.converge" ;;
+        before_*) _next_mandatory="/speckit.${EVENT_NAME#before_}" ;;
     esac
-    if [ -n "$_next" ]; then
-        _next="$(printf '%s' "$_next" | cut -c1 | tr '[:lower:]' '[:upper:]')$(printf '%s' "$_next" | cut -c2-)"
-    fi
 
     # assemble body
     _body=""
     if [ -n "$_syn_final" ]; then
-        _body="Sinopse
-$(printf '%s\n' "$_syn_final" | sed 's/^/- /')
+        _body="Sinopse:
+$(printf '%s\n' "$_syn_final" | sed 's/^/📋 /')
+"
+        _body="${_body}
 "
     fi
-    if [ -n "$_task_bullets" ]; then
-        _body="${_body}${_task_bullets}
+    if [ -n "$_phase_items" ]; then
+        _section_header=""
+        case "$_frozen" in
+            Specify)   _section_header="Especificacoes Criadas:" ;;
+            Clarify)   _section_header="Clarificacoes Feitas:" ;;
+            Plan)      _section_header="Artefatos Planejados:" ;;
+            Tasks)     _section_header="Tasks Criadas:" ;;
+            Implement) _section_header="Implement:" ;;
+            Converge)  _section_header="Convergencia Aplicada:" ;;
+            Checklist) _section_header="Checklists Criadas:" ;;
+            Analyze)   _section_header="Achados:" ;;
+        esac
+        if [ -n "$_section_header" ]; then
+            _body="${_body}${_section_header}
+${_phase_items}
 "
+            _body="${_body}
+"
+        fi
     fi
     if [ "${#_done_lines[@]}" -gt 0 ]; then
-        _body="${_body}Concluído
+        _body="${_body}Entregas Concluidas:
 "
         for _d in "${_done_lines[@]}"; do
-            _body="${_body}- $_d
+            _body="${_body}📌 $_d
 "
         done
+        _body="${_body}
+"
     fi
-    if [ -n "$_next" ]; then
-        _body="${_body}A seguir: $_next
+    if [ -n "$_next_mandatory" ] || [ -n "$_next_optional" ] || [ -n "$_next_special" ]; then
+        _body="${_body}Próximo Comando:
+➡ Fluxo: $(_flow_text "$_frozen")
+"
+        if [ -n "$_next_mandatory" ]; then
+            _body="${_body}➡️ Obrigatório: $_next_mandatory
+"
+        fi
+        if [ -n "$_next_optional" ]; then
+            _body="${_body}➡️ Opcional: $_next_optional
+"
+        fi
+        if [ -n "$_next_special" ]; then
+            _body="${_body}$(printf '%s\n' "$_next_special" | sed -E 's/^- //; s/^/➡️ /')
+"
+        fi
+        _body="${_body}
 "
     fi
     _stat=$(git diff --cached --stat 2>/dev/null || true)
     if [ -n "$_stat" ]; then
-        _body="${_body}${_stat}"
+        _body="${_body}Local:
+$(printf '%s\n' "$_stat" | sed -E 's/^[[:space:]]*//' | sed '/^$/d' | sed 's/^/📂 /')
+"
     fi
 
     _git_out=$(git commit -q -m "$_title" -m "$_body" 2>&1) || { echo "[specify] Error: git commit failed: $_git_out" >&2; exit 1; }
