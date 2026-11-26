@@ -117,12 +117,12 @@ Pré-requisitos: Phase 1 (Setup), Phase 2 (Foundational), Phase 5 (Polish).
 
 **Purpose**: Provar os invariantes, reconstruir o artefato e fechar a validação.
 
-- [ ] T028 Confirmar `sha256_after` igual ao `sha256_before` dos seis JSON, comparando `C:\Users\edufi\AppData\Local\Temp\opencode\012-hashes-antes.txt` com o hash recalculado (diferenças apenas de caminho; nenhuma de hash), conforme `data-model.md` INV-06
-- [ ] T029 Rodar `mvn clean install` e confirmar que `target/classes/llm-maven-flags-inference/` passa a expor os 19 arquivos com a pasta e os nomes novos
-- [ ] T030 [P] Rodar `mvn -B clean integration-test` e confirmar as fixtures de integração verdes
-- [ ] T031 [P] Rodar `mvn -B clean install "-Deda.verify.installed.jar=true"` (opt-in, não é gate) e confirmar o JAR instalado com os nomes novos
-- [ ] T032 Validar os cenários de `specs/014-rename-contract-templates/quickstart.md` de ponta a ponta, incluindo as 19 linhas do mapa e a âncora `llm-maven-flags-inference-04-templates-de-contrato` do README
-- [ ] T033 Confirmar as contagens finais (19 arquivos, 13 `.md`, 6 `.json`, 4 subpastas, 6 na subpasta 04) e a ausência de nomes antigos fora das exceções permitidas (`data-model.md` INV-07, INV-09, INV-11), comparar as listagens de `01-inicializacao`, `02-procedimento-do-agente` e `03-regras-de-formacao-do-contrato` com `012-listas-01-03-antes.txt` (0 diferenças; FR-021/SC-008) e confirmar `01-schema-do-contrato.json` com o nome atual
+- [x] T028 Confirmar `sha256_after` igual ao `sha256_before` dos seis JSON, comparando `C:\Users\edufi\AppData\Local\Temp\opencode\012-hashes-antes.txt` com o hash recalculado (diferenças apenas de caminho; nenhuma de hash), conforme `data-model.md` INV-06
+- [x] T029 Rodar `mvn clean install` e confirmar que `target/classes/llm-maven-flags-inference/` passa a expor os 19 arquivos com a pasta e os nomes novos
+- [x] T030 [P] Rodar `mvn -B clean integration-test` e confirmar as fixtures de integração verdes
+- [x] T031 [P] Rodar `mvn -B clean install "-Deda.verify.installed.jar=true"` (opt-in, não é gate) e confirmar o JAR instalado com os nomes novos
+- [x] T032 Validar os cenários de `specs/014-rename-contract-templates/quickstart.md` de ponta a ponta, incluindo as 19 linhas do mapa e a âncora `llm-maven-flags-inference-04-templates-de-contrato` do README
+- [x] T033 Confirmar as contagens finais (19 arquivos, 13 `.md`, 6 `.json`, 4 subpastas, 6 na subpasta 04) e a ausência de nomes antigos fora das exceções permitidas (`data-model.md` INV-07, INV-09, INV-11), comparar as listagens de `01-inicializacao`, `02-procedimento-do-agente` e `03-regras-de-formacao-do-contrato` com `012-listas-01-03-antes.txt` (0 diferenças; FR-021/SC-008) e confirmar `01-schema-do-contrato.json` com o nome atual
 
 ---
 
