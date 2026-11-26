@@ -6,7 +6,7 @@
  * prohibition, the site scan, the file counts and the opt-in installed JAR.
  */
 def procedure = new File("target/classes/llm-maven-flags-inference")
-def prompt = new File(procedure, "01-entrada-inicializacao/00-entry-point.md")
+def prompt = new File(procedure, "01-inicializacao/00-entry-point.md")
 def text = prompt.isFile() ? prompt.getText("UTF-8") : ""
 
 int failures = 0
@@ -129,7 +129,7 @@ if (System.getProperty("eda.verify.installed.jar") == "true") {
     check("3.1 the installed artifact exists", jar.isFile())
     if (jar.isFile()) {
         def zip = new java.util.zip.ZipFile(jar)
-        def entry = zip.getEntry("llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md")
+        def entry = zip.getEntry("llm-maven-flags-inference/01-inicializacao/00-entry-point.md")
         def installed = entry == null ? "" : zip.getInputStream(entry).getText("UTF-8")
         zip.close()
         check("3.2 the installed artifact carries 18 stop codes",

@@ -33,10 +33,10 @@ def read = { String relative ->
     new File(packaged, relative).getText("UTF-8")
 }
 
-def p00 = read("01-entrada-inicializacao/00-entry-point.md")
-def p03 = read("02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md")
-def p04 = read("02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md")
-def p05 = read("02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md")
+def p00 = read("01-inicializacao/00-entry-point.md")
+def p03 = read("02-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md")
+def p04 = read("02-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md")
+def p05 = read("02-procedimento-do-agente/05-entregaveis-e-relatorios.md")
 def r01 = read("03-regras-de-formacao-do-contrato/01-derivar-a-entidade-do-contrato.md")
 def r06 = read("03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md")
 
@@ -131,7 +131,7 @@ if (System.getProperty("eda.verify.installed.jar") == "true") {
     check("7.1 the installed artifact exists", jar.isFile())
     if (jar.isFile()) {
         def zip = new java.util.zip.ZipFile(jar)
-        def entry = zip.getEntry("llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md")
+        def entry = zip.getEntry("llm-maven-flags-inference/01-inicializacao/00-entry-point.md")
         def installed = entry == null ? "" : zip.getInputStream(entry).getText("UTF-8")
         zip.close()
         check("7.2 the installed artifact carries the destination rule",

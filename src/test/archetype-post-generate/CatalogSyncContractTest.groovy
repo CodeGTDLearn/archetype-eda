@@ -160,7 +160,7 @@ check("3.5 every descriptive example matches its catalog regex: ${descriptiveExa
         descriptiveExampleMismatch.isEmpty())
 
 def regras06 = new File("target/classes/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md").getText("UTF-8")
-def prompt03 = new File("target/classes/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md").getText("UTF-8")
+def prompt03 = new File("target/classes/llm-maven-flags-inference/02-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md").getText("UTF-8")
 def pathRegex = catalogRegex("entity_contract_file_path") == null ? null : java.util.regex.Pattern.compile(catalogRegex("entity_contract_file_path"))
 
 check("4.1 the provenance exception cites contract_nested_type_definitions = none",

@@ -69,7 +69,7 @@ println "INFO: ContractRuleRenameContractTest phase=${rulePhase}"
 def p01 = ["00-entry-point.md", "01-mapa-dos-arquivos-e-ordem-de-leitura.md"]
 def p02 = [
         "01-papel-e-restricoes-do-agente.md",
-        "02-como-localizar-e-ler-o-archetype.md",
+        "02-localizar-e-ler-o-archetype.md",
         "03-regras-obrigatorias-de-geracao.md",
         "04-fluxo-de-execucao-e-verificacao.md",
         "05-entregaveis-e-relatorios.md"
@@ -83,8 +83,8 @@ def p04 = [
         "06-exemplo-contrato-com-attributes-explicito.json"
 ]
 def expectedPaths =
-        p01.collect { "llm-maven-flags-inference/01-entrada-inicializacao/${it}" } +
-                p02.collect { "llm-maven-flags-inference/02-operacao-procedimento-do-agente/${it}" } +
+        p01.collect { "llm-maven-flags-inference/01-inicializacao/${it}" } +
+                p02.collect { "llm-maven-flags-inference/02-procedimento-do-agente/${it}" } +
                 expected03.collect { "llm-maven-flags-inference/${folderName}/${it}" } +
                 p04.collect { "llm-maven-flags-inference/04-referencia-templates-de-contrato/${it}" }
 def roles = [
@@ -108,7 +108,7 @@ def roles = [
         "Exemplo com tipos do projeto",
         "Exemplo com `attributes` explícito"
 ]
-def index = new File(procedure, "01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md")
+def index = new File(procedure, "01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md")
 def indexText = index.isFile() ? index.getText("UTF-8") : ""
 def readmeText = readme.isFile() ? readme.getText("UTF-8") : ""
 def legacyText = legacy.isFile() ? legacy.getText("UTF-8") : ""
@@ -193,7 +193,7 @@ if (rulePhase >= 1) {
 // ---------------------------------------------------------------------------
 check("7.1 the legacy redirect exists", legacy.isFile())
 check("7.2 the legacy redirect points at 00-entry-point.md",
-        legacyText.contains("llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md"))
+        legacyText.contains("llm-maven-flags-inference/01-inicializacao/00-entry-point.md"))
 check("7.3 the legacy redirect keeps no old entry path",
         !legacyText.contains("prompt-00-leia-este-arquivo-primeiro.md"))
 

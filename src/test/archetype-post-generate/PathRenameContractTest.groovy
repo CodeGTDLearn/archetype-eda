@@ -38,20 +38,20 @@ def filesOf = { File root ->
 }
 
 def categories = [
-        "01-entrada-inicializacao",
-        "02-operacao-procedimento-do-agente",
+        "01-inicializacao",
+        "02-procedimento-do-agente",
         "03-regras-de-formacao-do-contrato",
         "04-referencia-templates-de-contrato"
 ]
 
 def procedureFiles = [
-        "01-entrada-inicializacao/00-entry-point.md",
-        "01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md",
-        "02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md",
-        "02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md",
-        "02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md",
-        "02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md",
-        "02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md",
+        "01-inicializacao/00-entry-point.md",
+        "01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md",
+        "02-procedimento-do-agente/01-papel-e-restricoes-do-agente.md",
+        "02-procedimento-do-agente/02-localizar-e-ler-o-archetype.md",
+        "02-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md",
+        "02-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md",
+        "02-procedimento-do-agente/05-entregaveis-e-relatorios.md",
         "03-regras-de-formacao-do-contrato/01-derivar-a-entidade-do-contrato.md",
         "03-regras-de-formacao-do-contrato/02-resolver-tipos-e-enums.md",
         "03-regras-de-formacao-do-contrato/03-derivar-flags-de-tipos-aninhados.md",
@@ -66,8 +66,8 @@ def procedureFiles = [
         "04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json"
 ]
 
-def canonical = "llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md"
-def entryRelative = "01-entrada-inicializacao/00-entry-point.md"
+def canonical = "llm-maven-flags-inference/01-inicializacao/00-entry-point.md"
+def entryRelative = "01-inicializacao/00-entry-point.md"
 def legacyEntry = "01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md"
 
 // ---------------------------------------------------------------------------
