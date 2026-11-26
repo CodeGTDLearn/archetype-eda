@@ -205,3 +205,11 @@ Task: "Atualizar listas de nomes nas suítes BuildArtifactsTest, PathRenameContr
 - Não editar `target/`, `graphify-out/`, specs históricas nem o redirect legado.
 - Não alterar o conteúdo dos seis JSON: `data-model.md` INV-06.
 - Cada fase termina com `mvn -B test` verde; a fase seguinte só começa depois.
+
+---
+
+## Phase 6: Convergence
+
+- [ ] T034 Atualizar o inventário do procedimento para 13 linhas, incluindo `01-inicializacao/00-entry-point.md:220`, em `specs/014-rename-contract-templates/contracts/rename-manifest.md:48` e `specs/014-rename-contract-templates/research.md:33` per plan: fundação compartilhada (partial)
+- [ ] T035 Acrescentar a referência `01-inicializacao/00-entry-point.md:220` na tabela E3 de `specs/014-rename-contract-templates/data-model.md:57` per plan: fundação compartilhada (partial)
+- [ ] T036 Substituir a comparação por `012-hashes-antes.txt` em `specs/014-rename-contract-templates/quickstart.md:81-83` pela verificação por blob do git per plan: validação da Fase 2 (partial)
