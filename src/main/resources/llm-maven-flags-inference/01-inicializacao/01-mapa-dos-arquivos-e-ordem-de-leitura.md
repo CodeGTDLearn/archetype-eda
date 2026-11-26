@@ -15,12 +15,12 @@ Todos os caminhos abaixo são caminhos **dentro do JAR** do archetype, não cami
 | 5 | `llm-maven-flags-inference/02-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md` | Regras obrigatórias de geração | Sim |
 | 6 | `llm-maven-flags-inference/02-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md` | Execução e verificação | Sim |
 | 7 | `llm-maven-flags-inference/02-procedimento-do-agente/05-entregaveis-e-relatorios.md` | Entregáveis e relatórios | Sim |
-| 8 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md` | Entidade, nome, pacote e atributos | Sim |
-| 9 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md` | Tipos Java e enums | Sim |
-| 10 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md` | Imports, enums e tipos aninhados | Sim |
-| 11 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md` | Precedência e validação | Sim |
-| 12 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/05-como-materializar-e-emitir-o-contrato.md` | Contrato materializado | Sim |
-| 13 | `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md` | Proveniência | Sim |
+| 8 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/01-derivar-a-entidade-do-contrato.md` | Entidade, nome, pacote e atributos | Sim |
+| 9 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/02-resolver-tipos-e-enums.md` | Tipos Java e enums | Sim |
+| 10 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/03-derivar-flags-de-tipos-aninhados.md` | Imports, enums e tipos aninhados | Sim |
+| 11 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/04-aplicar-precedencia-e-validacao.md` | Precedência e validação | Sim |
+| 12 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/05-materializar-e-emitir-o-contrato.md` | Contrato materializado | Sim |
+| 13 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md` | Proveniência | Sim |
 | 14 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/01-schema-do-contrato.json` | Schema permissivo do contrato | Sim |
 | 15 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json` | Exemplo de contrato plano | Sob demanda |
 | 16 | `llm-maven-flags-inference/04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json` | Exemplo com objetos aninhados | Sob demanda |

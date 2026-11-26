@@ -138,5 +138,5 @@ Use o repositório-fonte apenas quando o usuário pedir explicitamente. O caminh
 Não use código de motor, CLI ou script externo para redescobrir semântica de flags. As regras estão em:
 
 ```text
-llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/
+llm-maven-flags-inference/03-regras-de-formacao-do-contrato/
 ```

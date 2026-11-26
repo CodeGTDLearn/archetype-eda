@@ -51,7 +51,7 @@
 - <a href="#llm-maven-flags-inference">llm-maven-flags-inference 🧠</a>
   - <a href="#llm-maven-flags-inference-01-inicializacao">01-inicializacao</a>
   - <a href="#llm-maven-flags-inference-02-procedimento-do-agente">02-procedimento-do-agente</a>
-  - <a href="#llm-maven-flags-inference-03-derivacao-regras-de-formacao-do-contrato">03-derivacao-regras-de-formacao-do-contrato</a>
+  - <a href="#llm-maven-flags-inference-03-regras-de-formacao-do-contrato">03-regras-de-formacao-do-contrato</a>
   - <a href="#llm-maven-flags-inference-04-referencia-templates-de-contrato">04-referencia-templates-de-contrato</a>
 
 - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli">Inferência de Contrato e Use-Case: do 'Prompt 
@@ -604,7 +604,7 @@ install           → install + archetype:update-local-catalog
     - porta de entrada (`00-entry-point`) e mapa de leitura (`01-mapa-dos-arquivos-e-ordem-de-leitura`);
   - `02-procedimento-do-agente/`:
     - papel, leitura do JAR, regras obrigatórias, execução e entregáveis;
-  - `03-derivacao-regras-de-formacao-do-contrato/`:
+  - `03-regras-de-formacao-do-contrato/`:
     - derivação da entidade, tipos, tipos aninhados, precedência, 
       materialização e proveniência;
   - `04-referencia-templates-de-contrato/`:
@@ -649,7 +649,7 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 | Artefato | Local | Papel |
 |----------|-------|-------|
 | Templates de Criacao do Modulo | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
-| 'Diretivas Agenticas de Inferencia' | `src/main/resources/llm-maven-flags-inference/` | 19 arquivos em 4 categorias (`01-inicializacao/`, `02-procedimento-do-agente/`, `03-derivacao-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
+| 'Diretivas Agenticas de Inferencia' | `src/main/resources/llm-maven-flags-inference/` | 19 arquivos em 4 categorias (`01-inicializacao/`, `02-procedimento-do-agente/`, `03-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
 | Fixtures de integração | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um validado com `mvn clean verify` |
 
 * **Montagem do catálogo:** 
@@ -813,8 +813,8 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execução e os entregáveis. É o momento em que o procedimento vira ação: produz a linha de geração e, depois dela, executa, verifica e reporta.
 
-<a id="llm-maven-flags-inference-03-derivacao-regras-de-formacao-do-contrato" name="llm-maven-flags-inference-03-derivacao-regras-de-formacao-do-contrato"></a>
-### 03-derivacao-regras-de-formacao-do-contrato <a href="#indice">↑ topo</a>
+<a id="llm-maven-flags-inference-03-regras-de-formacao-do-contrato" name="llm-maven-flags-inference-03-regras-de-formacao-do-contrato"></a>
+### 03-regras-de-formacao-do-contrato <a href="#indice">↑ topo</a>
 
 Reúne as regras normativas de derivação. É o momento em que o use-case e o JSON de entrada se transformam no contrato.
 
@@ -992,7 +992,7 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
 
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados. A propriedade é **nativa do plugin de geração de archetype** (não é uma flag do catálogo) e o valor vem da marcação **PASTA DE DESTINO** do spec. O exemplo acima é ilustração; a regra normativa está em `llm-maven-flags-inference/`.
 
-> **Onde está o detalhe de cada coluna?** Em [`src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`](src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/): `01` (entidade e atributos), `02` (tipos e enums), `03` (aninhados), `04` (precedência e validação), `05` (materialização do contrato) e `06` (proveniência). O ponto de entrada é `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`.
+> **Onde está o detalhe de cada coluna?** Em [`src/main/resources/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`](src/main/resources/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/): `01` (entidade e atributos), `02` (tipos e enums), `03` (aninhados), `04` (precedência e validação), `05` (materialização do contrato) e `06` (proveniência). O ponto de entrada é `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`.
 
 
 
@@ -2164,16 +2164,16 @@ C:\Temp\eda-sandbox
 * O detalhamento do procedimento não vive mais no README. 
 * Ele está empacotado no JAR, em `llm-maven-flags-inference/`, e é lido pelo Agente(ex.: Opencode) antes de qualquer derivação.
 
-**Regras de formação do contrato** (`llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`):
+**Regras de formação do contrato** (`llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`):
 
 | Arquivo | Papel |
 |---|---|
-| `01-como-derivar-a-entidade-do-contrato.md` | nome da entidade, pacote da entidade, extração e sanitização dos atributos |
-| `02-como-resolver-tipos-e-enums.md` | tipos `java.lang` × tipos do projeto × enums |
-| `03-como-derivar-flags-de-tipos-aninhados.md` | POJOs aninhados, imports, enums e tipos aninhados |
-| `04-como-aplicar-precedencia-e-validacao.md` | precedência das fontes e validação contra o catálogo |
-| `05-como-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
-| `06-como-relatar-proveniencia.md` | tabela de proveniência e resumo |
+| `01-derivar-a-entidade-do-contrato.md` | nome da entidade, pacote da entidade, extração e sanitização dos atributos |
+| `02-resolver-tipos-e-enums.md` | tipos `java.lang` × tipos do projeto × enums |
+| `03-derivar-flags-de-tipos-aninhados.md` | POJOs aninhados, imports, enums e tipos aninhados |
+| `04-aplicar-precedencia-e-validacao.md` | precedência das fontes e validação contra o catálogo |
+| `05-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
+| `06-relatar-proveniencia.md` | tabela de proveniência e resumo |
 
 **Templates de contrato** (`llm-maven-flags-inference/04-referencia-templates-de-contrato/`):
 
@@ -2205,7 +2205,7 @@ C:\Temp\eda-sandbox
 JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
 fica a cargo do procedimento empacotado no JAR —
 `llm-maven-flags-inference/01-inicializacao/00-entry-point.md` e as regras em
-`llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/`.
+`llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`.
 
 
 
@@ -2388,7 +2388,7 @@ fica a cargo do procedimento empacotado no JAR —
   * **Ativacao derivada** (sem flag nova): o pacote `src/test/java/<entity_package>/contract/` so existe quando `enable_folder_src_test_java=true` **e** `src/test/resources/contracts/contract.json` foi persistido. Caso contrario, `snippet-20-contract_schema_test.groovy` remove o pacote.
   * **Conteudo**: um arquivo de teste por sujeito - campos simples, cada tipo aninhado e cada enum - mais os arquivos das regras transversais (id tecnico, campos excedentes, round-trip, contrato salvo, contrato malformado, normalizacao de chaves, mapeamento de tipos e reconciliacao de aninhados/enums). Apoio: classes pequenas de leitura de campos, do contrato, de normalizacao de chaves e de navegacao.
   * **Execucao**: pelo ciclo de testes da propria aplicacao (`mvnw test`), para sempre. Cada divergencia produz uma falha propria, agrupada no arquivo de regra, em ordem deterministica, com atributo, tipo esperado/encontrado, direcao (contrato->entidade ou entidade->contrato) e caminho hierarquico.
-  * **Regras espelhadas**: `llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/01..03` (formas, precedencia `attributes` > `fields` > topo, tipos/enums, aninhados ate 25 niveis) — e a regra do `id` em `01` §4.3, que espelha a descrição de `custom_entity_attributes_list` no catálogo (`id` → `<entidade>Id`, campo técnico, fora de `custom_entity_attributes_list`).
+  * **Regras espelhadas**: `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/01..03` (formas, precedencia `attributes` > `fields` > topo, tipos/enums, aninhados ate 25 niveis) — e a regra do `id` em `01` §4.3, que espelha a descrição de `custom_entity_attributes_list` no catálogo (`id` → `<entidade>Id`, campo técnico, fora de `custom_entity_attributes_list`).
   * **JSON**: Spring Boot 4 usa Jackson 3 (`tools.jackson.databind`), disponivel via `spring-boot-starter-web`; nenhuma dependencia nova entra no `pom.xml` gerado.
   * **Prova no archetype (Frente 02)**: as fixtures `entity-contract`, `custom-nested-objects` e `custom-enums-from-payload` verificam a presenca do pacote, o relatorio surefire verde da aplicacao e a matriz de sabotagem da Frente 02.
   * **Sabotagem coberta**: contrato (chave removida, folha mais profunda renomeada, JSON corrompido), entidade (campo renomeado, campos clandestinos, tipo alterado), enums de topo e aninhado, e multiplas divergencias reportadas uma por falha, em ordem deterministica - mais a paridade Lombok on/off com o mesmo veredito. O contrato da fixture cobre 6 POJOs aninhados em cadeia (7 niveis), enums de topo/aninhado, tipo de projeto sobre array e dois campos do mesmo enum.
@@ -2865,7 +2865,7 @@ C:\Temp\eda-005-destino-d
   * Padrão: `MyEntity`
   * Efeito: nomeia as **classes** da entidade em `src/main/java/<package>/<entity_package_name>/` — `<entity_name>.java`, `<entity_name>Controller.java`, `<entity_name>Service.java` e `<entity_name>Repository.java`. A **pasta** é `entity_package_name`, **não** `entity_name`. Validação `^[A-Z][a-zA-Z0-9_]+$`.
   * Sem dependência.
-  * *Derivação:* o agente (`llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/01` §2) resolve o nome
+  * *Derivação:* o agente (`llm-maven-flags-inference/03-regras-de-formacao-do-contrato/01` §2) resolve o nome
     **a partir do contrato** (campo `entityName`/`entity_name`/`entity`) e, na ausência dele,
     aceita a inferência do use-case — `entity_name` é a única flag da *allowlist* de
     inferência (`04` §6). O default do catálogo só entra como último recurso:

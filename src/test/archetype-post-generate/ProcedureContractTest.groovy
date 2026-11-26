@@ -195,7 +195,7 @@ check("1.5 every path the procedure points at exists in the JAR layout: ${broken
 def entityTemplate = new File(resources,
         "archetype-resources/src/main/java/__entity_package_name__/__entity_name__.java")
 def rulesFile = new File(procedure,
-        "03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md")
+        "03-regras-de-formacao-do-contrato/03-derivar-flags-de-tipos-aninhados.md")
 def exampleFile = new File(contractTemplates, "03-exemplo-contrato-com-objetos-aninhados.json")
 
 def templateUsesFqn = entityTemplate.getText("UTF-8").contains("\${nested_package_full}.\${attrib.type}")
@@ -249,7 +249,7 @@ check("1.10 every flag NOT cited by the procedure is an explicit allowlist entry
 // become a catalog flag, and the contract meta-keys MUST stay untouched.
 // ---------------------------------------------------------------------------
 def regras01 = new File(procedure,
-        "03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md")
+        "03-regras-de-formacao-do-contrato/01-derivar-a-entidade-do-contrato.md")
         .getText("UTF-8")
 
 check("1.11 the destination property outputDirectory is NOT a catalog flag",
