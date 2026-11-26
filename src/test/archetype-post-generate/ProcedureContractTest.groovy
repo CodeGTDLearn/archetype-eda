@@ -8,7 +8,7 @@
  *
  * This suite proves the CONTENT of the procedure:
  *
- *   A. the 6 JSON files of 04-referencia-templates-de-contrato/ are valid JSON;
+ *   A. the 6 JSON files of 04-templates-de-contrato/ are valid JSON;
  *   B. the 5 examples validate against 01-schema-do-contrato.json
  *      (a hand-rolled validator for the draft-07 subset the schema uses);
  *   C. every flag-like term the procedure mentions is a declared catalog flag;
@@ -46,7 +46,7 @@ def slurper = new JsonSlurper()
 // ---------------------------------------------------------------------------
 // A. the JSON files of the procedure are valid JSON
 // ---------------------------------------------------------------------------
-def contractTemplates = new File(procedure, "04-referencia-templates-de-contrato")
+def contractTemplates = new File(procedure, "04-templates-de-contrato")
 def jsonFiles = contractTemplates.listFiles().findAll { it.isFile() && it.name.endsWith(".json") }.sort { it.name }
 def invalidJson = []
 def parsed = [:]
@@ -57,7 +57,7 @@ jsonFiles.each { File f ->
         invalidJson << "${f.name}: ${t.message}"
     }
 }
-check("1.1 every JSON file of 04-referencia-templates-de-contrato/ is valid JSON: ${invalidJson}", invalidJson.isEmpty())
+check("1.1 every JSON file of 04-templates-de-contrato/ is valid JSON: ${invalidJson}", invalidJson.isEmpty())
 check("1.2 the procedure carries the 6 contract templates", jsonFiles.size() == 6)
 
 // ---------------------------------------------------------------------------
@@ -196,7 +196,7 @@ def entityTemplate = new File(resources,
         "archetype-resources/src/main/java/__entity_package_name__/__entity_name__.java")
 def rulesFile = new File(procedure,
         "03-regras-de-formacao-do-contrato/03-derivar-flags-de-tipos-aninhados.md")
-def exampleFile = new File(contractTemplates, "03-exemplo-contrato-com-objetos-aninhados.json")
+def exampleFile = new File(contractTemplates, "03-contrato-com-objetos-aninhados.json")
 
 def templateUsesFqn = entityTemplate.getText("UTF-8").contains("\${nested_package_full}.\${attrib.type}")
 def rulesText = rulesFile.getText("UTF-8")

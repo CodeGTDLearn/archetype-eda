@@ -52,7 +52,7 @@
   - <a href="#llm-maven-flags-inference-01-inicializacao">01-inicializacao</a>
   - <a href="#llm-maven-flags-inference-02-procedimento-do-agente">02-procedimento-do-agente</a>
   - <a href="#llm-maven-flags-inference-03-regras-de-formacao-do-contrato">03-regras-de-formacao-do-contrato</a>
-  - <a href="#llm-maven-flags-inference-04-referencia-templates-de-contrato">04-referencia-templates-de-contrato</a>
+  - <a href="#llm-maven-flags-inference-04-templates-de-contrato">04-templates-de-contrato</a>
 
 - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli">Inferência de Contrato e Use-Case: do 'Prompt 
   no Agente' ao 'Maven Archetype Generate' 🧠</a>
@@ -607,7 +607,7 @@ install           → install + archetype:update-local-catalog
   - `03-regras-de-formacao-do-contrato/`:
     - derivação da entidade, tipos, tipos aninhados, precedência, 
       materialização e proveniência;
-  - `04-referencia-templates-de-contrato/`:
+  - `04-templates-de-contrato/`:
     - schema e exemplos.
 
 * **Entrada/Saída:** 
@@ -649,7 +649,7 @@ Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts G
 | Artefato | Local | Papel |
 |----------|-------|-------|
 | Templates de Criacao do Modulo | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
-| 'Diretivas Agenticas de Inferencia' | `src/main/resources/llm-maven-flags-inference/` | 19 arquivos em 4 categorias (`01-inicializacao/`, `02-procedimento-do-agente/`, `03-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
+| 'Diretivas Agenticas de Inferencia' | `src/main/resources/llm-maven-flags-inference/` | 19 arquivos em 4 categorias (`01-inicializacao/`, `02-procedimento-do-agente/`, `03-regras-de-formacao-do-contrato/`, `04-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
 | Fixtures de integração | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um validado com `mvn clean verify` |
 
 * **Montagem do catálogo:** 
@@ -818,8 +818,8 @@ Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execu�
 
 Reúne as regras normativas de derivação. É o momento em que o use-case e o JSON de entrada se transformam no contrato.
 
-<a id="llm-maven-flags-inference-04-referencia-templates-de-contrato" name="llm-maven-flags-inference-04-referencia-templates-de-contrato"></a>
-### 04-referencia-templates-de-contrato <a href="#indice">↑ topo</a>
+<a id="llm-maven-flags-inference-04-templates-de-contrato" name="llm-maven-flags-inference-04-templates-de-contrato"></a>
+### 04-templates-de-contrato <a href="#indice">↑ topo</a>
 
 Traz o schema e os exemplos de contrato. É a referência consultada para materializar o contrato no formato esperado.
 
@@ -2175,16 +2175,16 @@ C:\Temp\eda-sandbox
 | `05-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
 | `06-relatar-proveniencia.md` | tabela de proveniência e resumo |
 
-**Templates de contrato** (`llm-maven-flags-inference/04-referencia-templates-de-contrato/`):
+**Templates de contrato** (`llm-maven-flags-inference/04-templates-de-contrato/`):
 
 | Arquivo | Papel |
 |---|---|
 | `01-schema-do-contrato.json` | schema permissivo do contrato |
-| `02-exemplo-contrato-plano.json` | exemplo com campos de negócio no topo |
-| `03-exemplo-contrato-com-objetos-aninhados.json` | exemplo com objetos aninhados |
-| `04-exemplo-contrato-com-enums.json` | exemplo com enums |
-| `05-exemplo-contrato-com-tipos-do-projeto.json` | exemplo com tipos do projeto |
-| `06-exemplo-contrato-com-attributes-explicito.json` | exemplo com `attributes` explícito |
+| `02-contrato-plano.json` | exemplo com campos de negócio no topo |
+| `03-contrato-com-objetos-aninhados.json` | exemplo com objetos aninhados |
+| `04-contrato-com-enums.json` | exemplo com enums |
+| `05-contrato-com-tipos-do-projeto.json` | exemplo com tipos do projeto |
+| `06-contrato-com-attributes-explicito.json` | exemplo com `attributes` explícito |
 
 * Campos de negócio viram atributos da entidade; chaves do catálogo viram flags `-D`.
 * O contrato pode trazer a coleção `attributes` explícita, que tem precedência sobre os campos avulsos.

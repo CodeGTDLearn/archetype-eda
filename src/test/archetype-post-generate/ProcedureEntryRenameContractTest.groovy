@@ -78,7 +78,7 @@ check("1.2 source procedure carries 13 Markdown and 6 JSON",
 check("1.3 source procedure has exactly the four subfolders",
         procedure.listFiles().findAll { it.isDirectory() }*.name.sort() ==
                 ["01-inicializacao", "02-procedimento-do-agente",
-                 "03-regras-de-formacao-do-contrato", "04-referencia-templates-de-contrato"].sort())
+                 "03-regras-de-formacao-do-contrato", "04-templates-de-contrato"].sort())
 check("1.4 subfolder 01 carries exactly 2 files: ${filesOf(p01).size()}", filesOf(p01).size() == 2)
 check("1.5 subfolder 02 carries exactly 5 files: ${filesOf(p02).size()}", filesOf(p02).size() == 5)
 check("1.6 target/classes carries 19 files: ${target.size()}", target.size() == 19)

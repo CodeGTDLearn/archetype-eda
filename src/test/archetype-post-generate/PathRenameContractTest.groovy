@@ -41,7 +41,7 @@ def categories = [
         "01-inicializacao",
         "02-procedimento-do-agente",
         "03-regras-de-formacao-do-contrato",
-        "04-referencia-templates-de-contrato"
+        "04-templates-de-contrato"
 ]
 
 def procedureFiles = [
@@ -58,12 +58,12 @@ def procedureFiles = [
         "03-regras-de-formacao-do-contrato/04-aplicar-precedencia-e-validacao.md",
         "03-regras-de-formacao-do-contrato/05-materializar-e-emitir-o-contrato.md",
         "03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md",
-        "04-referencia-templates-de-contrato/01-schema-do-contrato.json",
-        "04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json",
-        "04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json",
-        "04-referencia-templates-de-contrato/04-exemplo-contrato-com-enums.json",
-        "04-referencia-templates-de-contrato/05-exemplo-contrato-com-tipos-do-projeto.json",
-        "04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json"
+        "04-templates-de-contrato/01-schema-do-contrato.json",
+        "04-templates-de-contrato/02-contrato-plano.json",
+        "04-templates-de-contrato/03-contrato-com-objetos-aninhados.json",
+        "04-templates-de-contrato/04-contrato-com-enums.json",
+        "04-templates-de-contrato/05-contrato-com-tipos-do-projeto.json",
+        "04-templates-de-contrato/06-contrato-com-attributes-explicito.json"
 ]
 
 def canonical = "llm-maven-flags-inference/01-inicializacao/00-entry-point.md"
