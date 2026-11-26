@@ -1,6 +1,6 @@
-# Contract — Manifesto de Renomeação: 012-rename-contract-templates
+# Contract — Manifesto de Renomeação: 014-rename-contract-templates
 
-**Feature**: 012-rename-contract-templates | **Date**: 2026-11-26 | **Spec**: [../spec.md](../spec.md)
+**Feature**: 014-rename-contract-templates | **Date**: 2026-11-26 | **Spec**: [../spec.md](../spec.md)
 
 Este manifesto é a fonte única do mapa `old → new`, do mapa de tokens, do inventário de referências por fase, das exceções e das verificações. A implementação consome este contrato; a suíte `ContractTemplateRenameContractTest.groovy` valida o resultado.
 

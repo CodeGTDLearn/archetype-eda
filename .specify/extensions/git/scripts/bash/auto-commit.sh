@@ -314,8 +314,8 @@ if [ "$_commit_style" = "snapshot" ]; then
         esac
         _i=0
         _flow=""
-        for _p in constitution specify clarify plan checklist tasks analyze implement converge; do
-            if [ -z "$_flow" ]; then _flow="$_p"; else _flow="$_flow → $_p"; fi
+        for _p in Constitution Specify Clarify Plan Checklist Tasks Analyze Implement Converge; do
+            if [ -z "$_flow" ]; then _flow="$_p"; else _flow="$_flow ➡  $_p"; fi
             [ "$_i" -ge "$_stop" ] && break
             _i=$((_i + 1))
         done
@@ -898,18 +898,18 @@ ${_phase_items}
     fi
     if [ -n "$_next_mandatory" ] || [ -n "$_next_optional" ] || [ -n "$_next_special" ]; then
         _body="${_body}Próximo Comando:
-➡ Fluxo: $(_flow_text "$_frozen")
+👉 Fluxo: $(_flow_text "$_frozen")
 "
         if [ -n "$_next_mandatory" ]; then
-            _body="${_body}➡️ Obrigatório: $_next_mandatory
+            _body="${_body}👉 Obrigatório: $_next_mandatory
 "
         fi
         if [ -n "$_next_optional" ]; then
-            _body="${_body}➡️ Opcional: $_next_optional
+            _body="${_body}👉 Opcional: $_next_optional
 "
         fi
         if [ -n "$_next_special" ]; then
-            _body="${_body}$(printf '%s\n' "$_next_special" | sed -E 's/^- //; s/^/➡️ /')
+            _body="${_body}$(printf '%s\n' "$_next_special" | sed -E 's/^- //; s/^/👉 /')
 "
         fi
         _body="${_body}

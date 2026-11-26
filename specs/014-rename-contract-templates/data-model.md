@@ -1,6 +1,6 @@
-# Phase 1 — Data Model: 012-rename-contract-templates
+# Phase 1 — Data Model: 014-rename-contract-templates
 
-**Feature**: 012-rename-contract-templates | **Date**: 2026-11-26 | **Spec**: [spec.md](./spec.md)
+**Feature**: 014-rename-contract-templates | **Date**: 2026-11-26 | **Spec**: [spec.md](./spec.md)
 
 Este documento descreve as entidades nominais da renomeação, os invariantes que o conteúdo e a contagem preservam e as transições entre as duas fases. Não há banco de dados, schema novo ou estrutura de código: as entidades são artefatos do procedimento empacotado e as referências textuais a eles.
 

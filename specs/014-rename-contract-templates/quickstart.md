@@ -1,6 +1,6 @@
-# Quickstart — Validação: 012-rename-contract-templates
+# Quickstart — Validação: 014-rename-contract-templates
 
-**Feature**: 012-rename-contract-templates | **Date**: 2026-11-26 | **Spec**: [spec.md](./spec.md)
+**Feature**: 014-rename-contract-templates | **Date**: 2026-11-26 | **Spec**: [spec.md](./spec.md)
 
 Roteiro executável para provar cada fase da renomeação. As regras de nome estão em [contracts/rename-manifest.md](./contracts/rename-manifest.md); as entidades e invariantes estão em [data-model.md](./data-model.md). Este documento não repete o mapa `old → new` além do necessário para os comandos.
 

@@ -2,7 +2,7 @@
 
 **Branch**: `014-rename-contract-templates` | **Date**: 2026-11-26 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/012-rename-contract-templates/spec.md`
+**Input**: Feature specification from `/specs/014-rename-contract-templates/spec.md`
 
 ## Summary
 
@@ -30,7 +30,7 @@ Renomear a subpasta `04-referencia-templates-de-contrato` para `04-templates-de-
 
 **Paradigm**: NÃO OOP — a feature é procedural/documental; o projeto é um archetype com scripts Groovy, XML/Markdown e templates Java, sem modelagem OOP no escopo. SOLID não se aplica.
 
-**Sources**: `.specify/memory/constitution.md`; `specs/011-rename-contract-rule-files/plan.md`; `specs/011-rename-contract-rule-files/research.md`; `specs/012-rename-contract-templates/spec.md`; `README.md`; `pom.xml`; `.github/workflows/ci.yml`; `src/test/groovy/run-archetype-post-generate-tests.groovy`; `src/test/archetype-post-generate/` (BuildArtifactsTest, PathRenameContractTest, FileRenameContractTest, ProcedureContractTest, ContractRuleRenameContractTest, ProcedureEntryRenameContractTest); `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md`.
+**Sources**: `.specify/memory/constitution.md`; `specs/011-rename-contract-rule-files/plan.md`; `specs/011-rename-contract-rule-files/research.md`; `specs/014-rename-contract-templates/spec.md`; `README.md`; `pom.xml`; `.github/workflows/ci.yml`; `src/test/groovy/run-archetype-post-generate-tests.groovy`; `src/test/archetype-post-generate/` (BuildArtifactsTest, PathRenameContractTest, FileRenameContractTest, ProcedureContractTest, ContractRuleRenameContractTest, ProcedureEntryRenameContractTest); `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md`.
 
 ## Constitution Check
 
@@ -53,7 +53,7 @@ Renomear a subpasta `04-referencia-templates-de-contrato` para `04-templates-de-
 ### Documentation (this feature)
 
 ```text
-specs/012-rename-contract-templates/
+specs/014-rename-contract-templates/
 ├── plan.md                         # Este arquivo
 ├── research.md                     # Fase 0: decisões e inventário
 ├── data-model.md                   # Fase 1: entidades, invariantes e transições

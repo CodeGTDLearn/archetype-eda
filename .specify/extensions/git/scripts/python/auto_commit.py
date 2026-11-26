@@ -195,19 +195,18 @@ _EM_CHECK = "\u2705"
 _EM_PIN = "\U0001F4CC"
 _EM_FOLDER = "\U0001F4C2"
 _EM_DASH = "\u2014"
-_EM_ARROW = "\u27A1"
-_EM_ARROW_VS = "\u27A1\uFE0F"
+_EM_POINT = "\U0001F449"
 
 _FLOW = [
-    "constitution",
-    "specify",
-    "clarify",
-    "plan",
-    "checklist",
-    "tasks",
-    "analyze",
-    "implement",
-    "converge",
+    "Constitution",
+    "Specify",
+    "Clarify",
+    "Plan",
+    "Checklist",
+    "Tasks",
+    "Analyze",
+    "Implement",
+    "Converge",
 ]
 _FLOW_STOP = {
     "Constitution": 1,
@@ -252,7 +251,7 @@ def _compress_item(text: str) -> str:
 def _flow_text(phase: str) -> str:
     """Canonical flow up to the next mandatory command."""
     stop = _FLOW_STOP.get(phase, 8)
-    return " \u2192 ".join(_FLOW[: stop + 1])
+    return " \u27A1  ".join(_FLOW[: stop + 1])
 
 
 def _snapshot(
@@ -805,12 +804,12 @@ def _snapshot(
         parts.append("")
     if next_mandatory or next_optional or next_special:
         parts.append("Próximo Comando:")
-        parts.append(f"{_EM_ARROW} Fluxo: {_flow_text(frozen)}")
+        parts.append(f"{_EM_POINT} Fluxo: {_flow_text(frozen)}")
         if next_mandatory:
-            parts.append(f"{_EM_ARROW_VS} Obrigatório: {next_mandatory}")
+            parts.append(f"{_EM_POINT} Obrigatório: {next_mandatory}")
         if next_optional:
-            parts.append(f"{_EM_ARROW_VS} Opcional: {next_optional}")
-        parts.extend(f"{_EM_ARROW_VS} {item}" for item in next_special)
+            parts.append(f"{_EM_POINT} Opcional: {next_optional}")
+        parts.extend(f"{_EM_POINT} {item}" for item in next_special)
         parts.append("")
     stat = _git(repo_root, "diff", "--cached", "--stat").stdout.strip()
     if stat:

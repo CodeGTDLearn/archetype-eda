@@ -1,6 +1,6 @@
-# Phase 0 — Research: 012-rename-contract-templates
+# Phase 0 — Research: 014-rename-contract-templates
 
-**Feature**: 012-rename-contract-templates | **Date**: 2026-11-26
+**Feature**: 014-rename-contract-templates | **Date**: 2026-11-26
 
 ## Objetivo da pesquisa
 
@@ -83,4 +83,4 @@ Fechar as decisões que a spec não fixa: como renomear a subpasta 04 e os cinco
 
 ## Fontes
 
-`.specify/memory/constitution.md`; `specs/011-rename-contract-rule-files/plan.md`; `specs/011-rename-contract-rule-files/research.md`; `specs/012-rename-contract-templates/spec.md`; `README.md` (linhas 46 a 67, 600 a 659, 812 a 851 e 2120 a 2209); `pom.xml`; `.github/workflows/ci.yml`; `src/test/groovy/run-archetype-post-generate-tests.groovy`; `src/test/archetype-post-generate/BuildArtifactsTest.groovy`; `PathRenameContractTest.groovy`; `FileRenameContractTest.groovy`; `ProcedureContractTest.groovy`; `ContractRuleRenameContractTest.groovy`; `ProcedureEntryRenameContractTest.groovy`; `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md`.
+`.specify/memory/constitution.md`; `specs/011-rename-contract-rule-files/plan.md`; `specs/011-rename-contract-rule-files/research.md`; `specs/014-rename-contract-templates/spec.md`; `README.md` (linhas 46 a 67, 600 a 659, 812 a 851 e 2120 a 2209); `pom.xml`; `.github/workflows/ci.yml`; `src/test/groovy/run-archetype-post-generate-tests.groovy`; `src/test/archetype-post-generate/BuildArtifactsTest.groovy`; `PathRenameContractTest.groovy`; `FileRenameContractTest.groovy`; `ProcedureContractTest.groovy`; `ContractRuleRenameContractTest.groovy`; `ProcedureEntryRenameContractTest.groovy`; `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md`; `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md`.

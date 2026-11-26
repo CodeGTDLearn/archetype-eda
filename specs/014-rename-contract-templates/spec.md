@@ -141,6 +141,7 @@ Como mantenedor do procedimento, quando removo a palavra `exemplo` do corpo do n
 - O nome final da subpasta é `04-templates-de-contrato`, com hífens e numeral, seguindo a convenção vigente das subpastas 01 a 04; a forma "04 templates de contrato" da demanda é descrição legível.
 - O separador dos nomes é hífen e a extensão dos seis arquivos é JSON, como nos nomes atuais.
 - As referências operacionais aos nomes antigos acompanham a renomeação para não deixar caminhos quebrados; o escopo da atualização fica restrito ao mapa dos arquivos, à porta de entrada, ao README e às suítes de verificação.
+- As seis suítes de verificação que citam a subpasta 04 são: `BuildArtifactsTest.groovy`, `PathRenameContractTest.groovy`, `FileRenameContractTest.groovy`, `ProcedureContractTest.groovy`, `ContractRuleRenameContractTest.groovy` e `ProcedureEntryRenameContractTest.groovy`.
 - A palavra `exemplo` aparece como token isolado no nome dos arquivos 2 a 6 e sua remoção não altera o restante do nome nem a ordem por numeral.
 - Os novos nomes não colidem com nomes existentes e podem ser aplicados no sistema de arquivos em uso, inclusive em caso de insensibilidade a maiúsculas e minúsculas.
 - O redirect legado da porta de entrada permanece no caminho atual e apenas aponta para a porta de entrada.

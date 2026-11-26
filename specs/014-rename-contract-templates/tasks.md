@@ -1,6 +1,6 @@
 # Tasks: Renomear a Subpasta 04 e os Nomes dos Arquivos de Templates de Contrato
 
-**Input**: Design documents from `/specs/012-rename-contract-templates/`
+**Input**: Design documents from `/specs/014-rename-contract-templates/`
 
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/, quickstart.md
 
@@ -44,7 +44,7 @@ Pré-requisitos: Phase 1 (Setup), Phase 2 (Foundational), Phase 5 (Polish).
 
 **Purpose**: Confirmar a linha de base e as pré-condições da renomeação, sem alterar arquivos.
 
-- [ ] T001 Confirmar a linha de base do procedimento em `src/main/resources/llm-maven-flags-inference/`: 4 subpastas (`01-inicializacao`, `02-procedimento-do-agente`, `03-regras-de-formacao-do-contrato`, `04-referencia-templates-de-contrato`), 19 arquivos, 13 `.md`, 6 `.json` e 6 arquivos na subpasta 04
+- [ ] T001 Confirmar a linha de base do procedimento em `src/main/resources/llm-maven-flags-inference/`: 4 subpastas (`01-inicializacao`, `02-procedimento-do-agente`, `03-regras-de-formacao-do-contrato`, `04-referencia-templates-de-contrato`), 19 arquivos, 13 `.md`, 6 `.json` e 6 arquivos na subpasta 04; registrar as listagens por arquivo de `src/main/resources/llm-maven-flags-inference/01-inicializacao`, `02-procedimento-do-agente` e `03-regras-de-formacao-do-contrato` em `C:\Users\edufi\AppData\Local\Temp\opencode\012-listas-01-03-antes.txt`
 - [ ] T002 [P] Registrar `sha256_before` dos seis JSON de `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/` em `C:\Users\edufi\AppData\Local\Temp\opencode\012-hashes-antes.txt` (fora do repositório), conforme `data-model.md` E2.sha256_before
 - [ ] T003 [P] Confirmar que o destino não existe: `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato` e os cinco nomes finais (`02-contrato-plano.json`, `03-contrato-com-objetos-aninhados.json`, `04-contrato-com-enums.json`, `05-contrato-com-tipos-do-projeto.json`, `06-contrato-com-attributes-explicito.json`), conforme `data-model.md` E1.new_name e E2.new_name
 
@@ -121,8 +121,8 @@ Pré-requisitos: Phase 1 (Setup), Phase 2 (Foundational), Phase 5 (Polish).
 - [ ] T029 Rodar `mvn clean install` e confirmar que `target/classes/llm-maven-flags-inference/` passa a expor os 19 arquivos com a pasta e os nomes novos
 - [ ] T030 [P] Rodar `mvn -B clean integration-test` e confirmar as fixtures de integração verdes
 - [ ] T031 [P] Rodar `mvn -B clean install "-Deda.verify.installed.jar=true"` (opt-in, não é gate) e confirmar o JAR instalado com os nomes novos
-- [ ] T032 Validar os cenários de `specs/012-rename-contract-templates/quickstart.md` de ponta a ponta, incluindo as 19 linhas do mapa e a âncora `llm-maven-flags-inference-04-templates-de-contrato` do README
-- [ ] T033 Confirmar as contagens finais (19 arquivos, 13 `.md`, 6 `.json`, 4 subpastas, 6 na subpasta 04) e a ausência de nomes antigos fora das exceções permitidas (`data-model.md` INV-07, INV-09, INV-11)
+- [ ] T032 Validar os cenários de `specs/014-rename-contract-templates/quickstart.md` de ponta a ponta, incluindo as 19 linhas do mapa e a âncora `llm-maven-flags-inference-04-templates-de-contrato` do README
+- [ ] T033 Confirmar as contagens finais (19 arquivos, 13 `.md`, 6 `.json`, 4 subpastas, 6 na subpasta 04) e a ausência de nomes antigos fora das exceções permitidas (`data-model.md` INV-07, INV-09, INV-11), comparar as listagens de `01-inicializacao`, `02-procedimento-do-agente` e `03-regras-de-formacao-do-contrato` com `012-listas-01-03-antes.txt` (0 diferenças; FR-021/SC-008) e confirmar `01-schema-do-contrato.json` com o nome atual
 
 ---
 

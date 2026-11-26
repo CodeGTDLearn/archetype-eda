@@ -307,9 +307,8 @@ if ($commitStyle -eq 'snapshot') {
     $emPin     = [char]::ConvertFromUtf32(0x1F4CC)   # pushpin
     $emFolder  = [char]::ConvertFromUtf32(0x1F4C2)   # open folder
     $emDash    = [char]0x2014                        # em dash
-    $emArrow   = [char]0x27A1                        # arrow
-    $emArrowVs = "$([char]0x27A1)$([char]0xFE0F)"    # arrow + VS16
-    $flowArrow = [char]0x2192                        # flow separator
+    $emPoint   = [char]::ConvertFromUtf32(0x1F449)   # pointing hand
+    $flowArrow = [char]0x27A1                        # flow separator
 
     # Shorten a task/requirement text to a 2-3 word summary. Deterministic:
     # drops cited file paths and code ticks and leading modal verbs, cuts at
@@ -343,7 +342,7 @@ if ($commitStyle -eq 'snapshot') {
     # Flow line: canonical order up to the next mandatory command.
     function Get-FlowText {
         param([string]$Phase)
-        $flow = @('constitution', 'specify', 'clarify', 'plan', 'checklist', 'tasks', 'analyze', 'implement', 'converge')
+        $flow = @('Constitution', 'Specify', 'Clarify', 'Plan', 'Checklist', 'Tasks', 'Analyze', 'Implement', 'Converge')
         $stop = 8
         switch ($Phase) {
             'Constitution' { $stop = 1 }
@@ -354,7 +353,7 @@ if ($commitStyle -eq 'snapshot') {
             'Tasks'        { $stop = 7 }
             'Analyze'      { $stop = 7 }
         }
-        return (($flow[0..$stop]) -join " $flowArrow ")
+        return (($flow[0..$stop]) -join " $flowArrow  ")
     }
 
     # --- stage everything so the diffs below are authoritative -------------
@@ -943,10 +942,10 @@ if ($commitStyle -eq 'snapshot') {
     }
     if ($nextMandatory -or $nextOptional -or $nextSpecial.Count -gt 0) {
         $bodyParts += 'Próximo Comando:'
-        $bodyParts += "$emArrow Fluxo: $(Get-FlowText $frozenPhase)"
-        if ($nextMandatory) { $bodyParts += "$emArrowVs Obrigatório: $nextMandatory" }
-        if ($nextOptional) { $bodyParts += "$emArrowVs Opcional: $nextOptional" }
-        foreach ($s in $nextSpecial) { $bodyParts += "$emArrowVs $s" }
+        $bodyParts += "$emPoint Fluxo: $(Get-FlowText $frozenPhase)"
+        if ($nextMandatory) { $bodyParts += "$emPoint Obrigatório: $nextMandatory" }
+        if ($nextOptional) { $bodyParts += "$emPoint Opcional: $nextOptional" }
+        foreach ($s in $nextSpecial) { $bodyParts += "$emPoint $s" }
         $bodyParts += ''
     }
     $stat = (git diff --cached --stat 2>$null | Out-String).Trim()
