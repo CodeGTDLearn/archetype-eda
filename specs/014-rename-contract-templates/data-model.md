@@ -54,7 +54,7 @@ Referências por artefato:
 | `README.md` | 2178 | pasta (cabeçalho da seção de templates) | 1 |
 | `README.md` | 2183 a 2187 | cinco nomes de arquivo (tabela) | 2 |
 | `01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` | 24 a 29 | pasta e cinco nomes (seis caminhos) | 1 e 2 |
-| `01-inicializacao/00-entry-point.md` | 721 a 726 | pasta e cinco nomes (seis caminhos) | 1 e 2 |
+| `01-inicializacao/00-entry-point.md` | 721 a 726 e 220 | pasta, cinco nomes (seis caminhos) e um nome curto | 1 e 2 |
 | `BuildArtifactsTest.groovy` | 85, 102 a 107 | pasta e cinco nomes | 1 e 2 |
 | `PathRenameContractTest.groovy` | 44, 61 a 66 | pasta e cinco nomes | 1 e 2 |
 | `FileRenameContractTest.groovy` | 14, 62 a 77, 79 a 80, 102 a 116, 123 a 134, 173 a 179 | pasta e nomes (três gerações) | 1 e 2 |

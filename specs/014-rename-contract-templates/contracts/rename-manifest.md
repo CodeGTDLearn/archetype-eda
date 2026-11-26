@@ -64,7 +64,7 @@ Só o token do nome é substituído. O restante da linha, da célula, do link e 
 | Artefato | Linhas | Ocorrências |
 |---|---|---|
 | `01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` | 25 a 29 | 5 caminhos com os nomes antigos |
-| `01-inicializacao/00-entry-point.md` | 722 a 726 | 5 caminhos com os nomes antigos |
+| `01-inicializacao/00-entry-point.md` | 722 a 726 e 220 | 5 caminhos com os nomes antigos e 1 nome curto |
 | `README.md` | 2183 a 2187 | 5 linhas da tabela de templates |
 | `BuildArtifactsTest.groovy` | 102 a 107 | 5 caminhos na lista `procedureFiles` |
 | `PathRenameContractTest.groovy` | 61 a 66 | 5 caminhos na lista `procedureFiles` |

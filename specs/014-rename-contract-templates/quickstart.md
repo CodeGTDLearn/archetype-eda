@@ -78,12 +78,12 @@ Esperado:
 Comparação de conteúdo:
 
 ```powershell
-Compare-Object `
-    (Get-Content "C:\Users\edufi\AppData\Local\Temp\opencode\012-hashes-antes.txt") `
-    (Get-Content "C:\Users\edufi\AppData\Local\Temp\opencode\012-hashes-depois.txt")
+$newDir = "src/main/resources/llm-maven-flags-inference/04-templates-de-contrato"
+git log --follow --diff-filter=R --summary -- "$newDir/02-contrato-plano.json"
+# repita para os cinco arquivos renomeados e para 01-schema-do-contrato.json
 ```
 
-Esperado: diferenças apenas no caminho dos arquivos renomeados; nenhuma diferença de `Hash`. Se houver diferença de hash, a feature falha (INV-06).
+Esperado: cada arquivo aparece como renomeação com `similarity index 100%` (mesmo blob), provando que o conteúdo não mudou (INV-06). Se o arquivo de linha de base `012-hashes-antes.txt` existir, a comparação por SHA-256 também é válida; quando ele não existir, a prova por blob do git é a alternativa aceita.
 
 ## Índice e README
 
