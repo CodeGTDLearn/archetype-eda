@@ -72,10 +72,10 @@
     "semantic_hash": "7240479b2e76e0c2700f73777b9a9b0e"
   },
   "pom.xml": {
-    "mtime": 1795104477.385707,
-    "seen": 1795452962.9643216,
-    "ast_hash": "a2115cfc1e5c78ec96b4f68de302c9c0",
-    "semantic_hash": "a2115cfc1e5c78ec96b4f68de302c9c0"
+    "mtime": 1795477735.4903352,
+    "seen": 1795714396.1754327,
+    "ast_hash": "47f4768abbdffa8a230c29ed5bdd05ac",
+    "semantic_hash": "47f4768abbdffa8a230c29ed5bdd05ac"
   },
   "src/main/resources/archetype-resources/mvnw": {
     "mtime": 1790175132.6316235,
@@ -210,10 +210,10 @@
     "semantic_hash": "72ea3415ed69205d44fc47dc50a98b0d"
   },
   ".specify/extensions.yml": {
-    "mtime": 1795104477.3816967,
-    "seen": 1795452962.9626694,
-    "ast_hash": "2418adae608e6f7d45874330a456aa13",
-    "semantic_hash": "2418adae608e6f7d45874330a456aa13"
+    "mtime": 1795478307.654248,
+    "seen": 1795714396.1726246,
+    "ast_hash": "13a152320106e84564d5b1adec682d14",
+    "semantic_hash": "13a152320106e84564d5b1adec682d14"
   },
   ".specify/extensions/assess/README.md": {
     "mtime": 1790188603.7205453,
@@ -306,22 +306,22 @@
     "semantic_hash": "dcefb6b60e7cb3db2e966977b6f02f18"
   },
   ".specify/templates/plan-template.md": {
-    "mtime": 1791841436.6361005,
-    "seen": 1791931641.0061805,
-    "ast_hash": "fa9911dcd07e6b95844bc1affdca41d0",
-    "semantic_hash": "fa9911dcd07e6b95844bc1affdca41d0"
+    "mtime": 1795477735.4823346,
+    "seen": 1795714396.1981928,
+    "ast_hash": "31501080541f954488f7083db9b63116",
+    "semantic_hash": "31501080541f954488f7083db9b63116"
   },
   ".specify/templates/spec-template.md": {
-    "mtime": 1791841426.9171405,
-    "seen": 1791931641.0061815,
-    "ast_hash": "0b09c0c1a19923cb76cf8d0761b8085d",
-    "semantic_hash": "0b09c0c1a19923cb76cf8d0761b8085d"
+    "mtime": 1795477735.4853337,
+    "seen": 1795714396.1981943,
+    "ast_hash": "2d8186606e3c6dcefbddf07127c84d1d",
+    "semantic_hash": "2d8186606e3c6dcefbddf07127c84d1d"
   },
   ".specify/templates/tasks-template.md": {
-    "mtime": 1791841443.233991,
-    "seen": 1791931641.0061822,
-    "ast_hash": "91e3350bd958f450a1750f12331ed3ad",
-    "semantic_hash": "91e3350bd958f450a1750f12331ed3ad"
+    "mtime": 1795477735.4863372,
+    "seen": 1795714396.198196,
+    "ast_hash": "55e3a833165d213f10f5983799cf3313",
+    "semantic_hash": "55e3a833165d213f10f5983799cf3313"
   },
   ".specify/workflows/speckit/workflow.yml": {
     "mtime": 1790188603.7048907,
@@ -330,10 +330,10 @@
     "semantic_hash": "e85bd795c8a1bad1168a223eec732604"
   },
   "README.md": {
-    "mtime": 1794521572.285,
-    "seen": 1794521661.3656328,
-    "ast_hash": "f00c3c3903d436dc1e7c48dfb39f6b89",
-    "semantic_hash": ""
+    "mtime": 1795655288.114429,
+    "seen": 1795714396.1981976,
+    "ast_hash": "b2fe51582015624b5d21e5d5cbccbfcb",
+    "semantic_hash": "b2fe51582015624b5d21e5d5cbccbfcb"
   },
   "src/main/resources/archetype-resources/ELK/logstash_config/logstash.yml": {
     "mtime": 1790175132.6056218,
@@ -690,10 +690,10 @@
     "semantic_hash": "f3f436803b7b3265980fcd55950eaba6"
   },
   ".specify/extensions/git/scripts/bash/auto-commit.sh": {
-    "mtime": 1795133613.4642427,
-    "seen": 1795452962.9631207,
-    "ast_hash": "370baeae948ddca70c0a67252fd2751f",
-    "semantic_hash": "370baeae948ddca70c0a67252fd2751f"
+    "mtime": 1795478302.8403053,
+    "seen": 1795714396.1729722,
+    "ast_hash": "31ce0582481ba1bd2cb3b81b14e21ef9",
+    "semantic_hash": "31ce0582481ba1bd2cb3b81b14e21ef9"
   },
   ".specify/extensions/git/scripts/bash/create-new-feature-branch.sh": {
     "mtime": 1790188603.7048907,
@@ -714,10 +714,10 @@
     "semantic_hash": "2648bad590233e7fd71388269a092e6b"
   },
   ".specify/extensions/git/scripts/powershell/auto-commit.ps1": {
-    "mtime": 1795134300.5084567,
-    "seen": 1795452962.9631283,
-    "ast_hash": "9285db07a74816a8656333eabe1abd4e",
-    "semantic_hash": "9285db07a74816a8656333eabe1abd4e"
+    "mtime": 1795478279.898824,
+    "seen": 1795714396.173469,
+    "ast_hash": "a242bc5987490c10be6b1ee1718aa8c2",
+    "semantic_hash": "a242bc5987490c10be6b1ee1718aa8c2"
   },
   ".specify/extensions/git/scripts/powershell/create-new-feature-branch.ps1": {
     "mtime": 1790188603.7205453,
@@ -738,10 +738,10 @@
     "semantic_hash": "3ff30d0a7ab42f30caf40725e7666800"
   },
   ".specify/extensions/git/scripts/python/auto_commit.py": {
-    "mtime": 1795133613.4642427,
-    "seen": 1795452962.963135,
-    "ast_hash": "035a26e03d267561de481c9f7e0d193a",
-    "semantic_hash": "035a26e03d267561de481c9f7e0d193a"
+    "mtime": 1795478265.4208653,
+    "seen": 1795714396.1739712,
+    "ast_hash": "65c6cd37f4d8926639f185c9d90affdd",
+    "semantic_hash": "65c6cd37f4d8926639f185c9d90affdd"
   },
   ".specify/extensions/git/scripts/python/create_new_feature_branch.py": {
     "mtime": 1790188603.7205453,
@@ -786,10 +786,10 @@
     "semantic_hash": "d694419211c1d863017e448c000d7905"
   },
   ".opencode/commands/speckit.git.commit.md": {
-    "mtime": 1795133657.3644483,
-    "seen": 1795452962.9655693,
-    "ast_hash": "6733d9c2da65fe8e862fde66ba5ec092",
-    "semantic_hash": "6733d9c2da65fe8e862fde66ba5ec092"
+    "mtime": 1795655288.112429,
+    "seen": 1795714396.198188,
+    "ast_hash": "9759264406fc702e6174f80e188c16f0",
+    "semantic_hash": "9759264406fc702e6174f80e188c16f0"
   },
   ".opencode/commands/speckit.git.feature.md": {
     "mtime": 1793304631.016219,
@@ -852,16 +852,16 @@
     "semantic_hash": "6a524e1c163f53d0faa5d88af8ab7add"
   },
   ".specify/extensions/git/README.md": {
-    "mtime": 1795133639.9847147,
-    "seen": 1795452962.9656007,
-    "ast_hash": "e4f0988d82a24162dce544f11b9c6fe0",
-    "semantic_hash": "e4f0988d82a24162dce544f11b9c6fe0"
+    "mtime": 1795479246.728538,
+    "seen": 1795714396.1981897,
+    "ast_hash": "270cce330c25c9788bf44f163ce6a310",
+    "semantic_hash": "270cce330c25c9788bf44f163ce6a310"
   },
   ".specify/extensions/git/commands/speckit.git.commit.md": {
-    "mtime": 1795133657.3644483,
-    "seen": 1795452962.9656017,
-    "ast_hash": "2c45b8c294e44ece2666e7e16559449f",
-    "semantic_hash": "2c45b8c294e44ece2666e7e16559449f"
+    "mtime": 1795479252.9831896,
+    "seen": 1795714396.1981914,
+    "ast_hash": "03ab832cb001e58df39351e47ba1c93a",
+    "semantic_hash": "03ab832cb001e58df39351e47ba1c93a"
   },
   ".specify/extensions/git/commands/speckit.git.feature.md": {
     "mtime": 1790188603.7048907,
@@ -888,10 +888,10 @@
     "semantic_hash": "16e0e699f777a00e3eab34031501af52"
   },
   ".specify/extensions/git/config-template.yml": {
-    "mtime": 1795133639.9786558,
-    "seen": 1795452962.963115,
-    "ast_hash": "aef547d5957418acfcfc27ebdc793083",
-    "semantic_hash": "aef547d5957418acfcfc27ebdc793083"
+    "mtime": 1795479262.997292,
+    "seen": 1795714396.1728706,
+    "ast_hash": "9b6db8461b8999ffc203bb0dfeb5b23e",
+    "semantic_hash": "9b6db8461b8999ffc203bb0dfeb5b23e"
   },
   ".specify/extensions/git/extension.yml": {
     "mtime": 1790188603.7048907,
@@ -900,10 +900,10 @@
     "semantic_hash": "be745a4262834605ca088d44cfdefe8e"
   },
   ".specify/extensions/git/git-config.yml": {
-    "mtime": 1795133639.9786558,
-    "seen": 1795452962.9631186,
-    "ast_hash": "324634f01ec8f262d11d392905f35c19",
-    "semantic_hash": "324634f01ec8f262d11d392905f35c19"
+    "mtime": 1795655288.113429,
+    "seen": 1795714396.1729705,
+    "ast_hash": "2d5d04d2948cba829fe8f05ff4af0edc",
+    "semantic_hash": "2d5d04d2948cba829fe8f05ff4af0edc"
   },
   "src/test/resources/projects/custom-attributes/goal.txt": {
     "mtime": 1793808627.182156,
@@ -930,10 +930,10 @@
     "semantic_hash": "30c30b52eab253033d94b585d72f8747"
   },
   "src/test/groovy/run-archetype-post-generate-tests.groovy": {
-    "mtime": 1795131447.2270408,
-    "seen": 1795452962.9655323,
-    "ast_hash": "67936eab7f058e9804820d582bf0710d",
-    "semantic_hash": "67936eab7f058e9804820d582bf0710d"
+    "mtime": 1795655288.1524968,
+    "seen": 1795714396.1956923,
+    "ast_hash": "9d8431e4d41b9db6330a4baefb1528b0",
+    "semantic_hash": "9d8431e4d41b9db6330a4baefb1528b0"
   },
   "src/test/archetype-post-generate/BodyFunctionsTest.groovy": {
     "mtime": 1794439482.5206654,
@@ -948,10 +948,10 @@
     "semantic_hash": "629471248d505e5bbe3798f8f3fa87f3"
   },
   "src/test/archetype-post-generate/BuildArtifactsTest.groovy": {
-    "mtime": 1795104477.4099324,
-    "seen": 1795452962.9654772,
-    "ast_hash": "827cb6def85bf8f7c634e49e62d6390c",
-    "semantic_hash": "827cb6def85bf8f7c634e49e62d6390c"
+    "mtime": 1795655288.1484964,
+    "seen": 1795714396.192467,
+    "ast_hash": "dbe8a9fe1c46e7c726dc8eab5fb8523d",
+    "semantic_hash": "dbe8a9fe1c46e7c726dc8eab5fb8523d"
   },
   "src/test/archetype-post-generate/ComposerTest.groovy": {
     "mtime": 1794439494.3780992,
@@ -1854,16 +1854,16 @@
     "semantic_hash": "552b2edd70d42f070aa368671bc12212"
   },
   "src/test/archetype-post-generate/ProcedureContractTest.groovy": {
-    "mtime": 1795131447.2260418,
-    "seen": 1795452962.9654987,
-    "ast_hash": "6f7b9d9fe836a9bfdb6a6e7ddd6c15dc",
-    "semantic_hash": "6f7b9d9fe836a9bfdb6a6e7ddd6c15dc"
+    "mtime": 1795647192.6689563,
+    "seen": 1795714396.1936672,
+    "ast_hash": "62f90ab37d5d8cbf93ef312d45554f72",
+    "semantic_hash": "62f90ab37d5d8cbf93ef312d45554f72"
   },
   "src/test/archetype-post-generate/ReadmeConsistencyTest.groovy": {
-    "mtime": 1795131447.2260418,
-    "seen": 1795452962.9654999,
-    "ast_hash": "74fe3a1cce52f275f559dbde1022cba9",
-    "semantic_hash": "74fe3a1cce52f275f559dbde1022cba9"
+    "mtime": 1795655288.1524968,
+    "seen": 1795714396.1936698,
+    "ast_hash": "34831b2c7b5136f2eefc856fc518ee8a",
+    "semantic_hash": "34831b2c7b5136f2eefc856fc518ee8a"
   },
   "src/test/archetype-post-generate/SnippetAbsentPropertyTest.groovy": {
     "mtime": 1795104477.4139323,
@@ -2105,42 +2105,6 @@
     "ast_hash": "e78d899029c9c10f8f0693ae14ba5742",
     "semantic_hash": "e78d899029c9c10f8f0693ae14ba5742"
   },
-  "src/main/resources/utils/04-referencia-templates-de-contrato/template-01-schema-do-contrato.json": {
-    "mtime": 1795104477.4063745,
-    "seen": 1795452962.9654682,
-    "ast_hash": "7729f68fe7f2ddc261d9027a145d959f",
-    "semantic_hash": "7729f68fe7f2ddc261d9027a145d959f"
-  },
-  "src/main/resources/utils/04-referencia-templates-de-contrato/template-02-exemplo-contrato-plano.json": {
-    "mtime": 1795104477.4079275,
-    "seen": 1795452962.9654691,
-    "ast_hash": "2d99aa9ae85e1795b23b9e46e325aedd",
-    "semantic_hash": "2d99aa9ae85e1795b23b9e46e325aedd"
-  },
-  "src/main/resources/utils/04-referencia-templates-de-contrato/template-03-exemplo-contrato-com-objetos-aninhados.json": {
-    "mtime": 1795104477.4079275,
-    "seen": 1795452962.9654703,
-    "ast_hash": "d732dd254888fb647d30828e66f735f0",
-    "semantic_hash": "d732dd254888fb647d30828e66f735f0"
-  },
-  "src/main/resources/utils/04-referencia-templates-de-contrato/template-04-exemplo-contrato-com-enums.json": {
-    "mtime": 1795104477.4079275,
-    "seen": 1795452962.9654713,
-    "ast_hash": "7ab137cda6cdae96859a52b4784bd8be",
-    "semantic_hash": "7ab137cda6cdae96859a52b4784bd8be"
-  },
-  "src/main/resources/utils/04-referencia-templates-de-contrato/template-05-exemplo-contrato-com-tipos-do-projeto.json": {
-    "mtime": 1795104477.4089322,
-    "seen": 1795452962.9654722,
-    "ast_hash": "3b9e916a3b686870a95376c0be0268bb",
-    "semantic_hash": "3b9e916a3b686870a95376c0be0268bb"
-  },
-  "src/main/resources/utils/04-referencia-templates-de-contrato/template-06-exemplo-contrato-com-attributes-explicito.json": {
-    "mtime": 1795104477.4089322,
-    "seen": 1795452962.965473,
-    "ast_hash": "20cb4d520ea9ead6dc5759b8ba8b84ba",
-    "semantic_hash": "20cb4d520ea9ead6dc5759b8ba8b84ba"
-  },
   "src/test/archetype-post-generate/ContractSchemaTestGeneratorTest.groovy": {
     "mtime": 1795104477.4099324,
     "seen": 1795452962.9654863,
@@ -2154,10 +2118,10 @@
     "semantic_hash": "ed694ba3abb7d3f1b9a4a0de0683ef9f"
   },
   "src/test/archetype-post-generate/DestinationContractTest.groovy": {
-    "mtime": 1795131447.2250407,
-    "seen": 1795452962.9654896,
-    "ast_hash": "f012bec9bdc57a4f55e829611f09b26e",
-    "semantic_hash": "f012bec9bdc57a4f55e829611f09b26e"
+    "mtime": 1795655288.1494968,
+    "seen": 1795714396.1931162,
+    "ast_hash": "94bcbd11059f1df6968851bddff2b0af",
+    "semantic_hash": "94bcbd11059f1df6968851bddff2b0af"
   },
   "src/test/archetype-post-generate/EntityContractLombokParityTest.groovy": {
     "mtime": 1795104477.4119325,
@@ -2250,22 +2214,22 @@
     "semantic_hash": "7944b7495bdde0c1441ac89ab164d1fc"
   },
   "specs/005-output-directory-contract/plan.md": {
-    "mtime": 1795131447.2190375,
-    "seen": 1795452962.965635,
-    "ast_hash": "5600d977ba5f63828765063aa6b57b62",
-    "semantic_hash": "5600d977ba5f63828765063aa6b57b62"
+    "mtime": 1795479656.0303757,
+    "seen": 1795714396.1981993,
+    "ast_hash": "c16b54dd7f08633ef75447503ce779ce",
+    "semantic_hash": "c16b54dd7f08633ef75447503ce779ce"
   },
   "specs/005-output-directory-contract/quickstart.md": {
-    "mtime": 1795131447.2190375,
-    "seen": 1795452962.9656358,
-    "ast_hash": "ba14247c2870c9643b5c2d1ad8df3c3d",
-    "semantic_hash": "ba14247c2870c9643b5c2d1ad8df3c3d"
+    "mtime": 1795479535.8401108,
+    "seen": 1795714396.1982005,
+    "ast_hash": "63543c94dce01641e053baed4a005afe",
+    "semantic_hash": "63543c94dce01641e053baed4a005afe"
   },
   "specs/005-output-directory-contract/research.md": {
-    "mtime": 1795131447.2200377,
-    "seen": 1795452962.9656365,
-    "ast_hash": "384c950995bc944902c5178ee4a14822",
-    "semantic_hash": "384c950995bc944902c5178ee4a14822"
+    "mtime": 1795479656.0303757,
+    "seen": 1795714396.1982021,
+    "ast_hash": "1bcd199a4517db24ea484af2cb10f1e5",
+    "semantic_hash": "1bcd199a4517db24ea484af2cb10f1e5"
   },
   "specs/005-output-directory-contract/spec.md": {
     "mtime": 1795131447.2210374,
@@ -2274,93 +2238,441 @@
     "semantic_hash": "f4d6175af3012d9448add9fe4edb3203"
   },
   "specs/005-output-directory-contract/tasks.md": {
-    "mtime": 1795131447.2210374,
-    "seen": 1795452962.9656384,
-    "ast_hash": "31b2461959e8674fab21417c3e1967b6",
-    "semantic_hash": "31b2461959e8674fab21417c3e1967b6"
-  },
-  "src/main/resources/utils/01-entrada-inicializacao/indice-01-mapa-dos-arquivos-e-ordem-de-leitura.md": {
-    "mtime": 1795104477.3997526,
-    "seen": 1795452962.9656518,
-    "ast_hash": "ada1fc5f6edec95d61f389a4f2f88ec8",
-    "semantic_hash": "ada1fc5f6edec95d61f389a4f2f88ec8"
+    "mtime": 1795479740.3974955,
+    "seen": 1795714396.1982033,
+    "ast_hash": "52a3daa7330a1a271c7c0836c0d6aee4",
+    "semantic_hash": "52a3daa7330a1a271c7c0836c0d6aee4"
   },
   "src/main/resources/utils/01-entrada-inicializacao/prompt-00-leia-este-arquivo-primeiro.md": {
-    "mtime": 1795131447.2220376,
-    "seen": 1795452962.9656525,
-    "ast_hash": "5bd89cdf753ff360754db68f04028b1e",
-    "semantic_hash": "5bd89cdf753ff360754db68f04028b1e"
-  },
-  "src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-01-papel-e-restricoes-do-agente.md": {
-    "mtime": 1795104477.4012978,
-    "seen": 1795452962.9656532,
-    "ast_hash": "2430501b2da253b49001fa159138c0fe",
-    "semantic_hash": "2430501b2da253b49001fa159138c0fe"
-  },
-  "src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-02-como-localizar-e-ler-o-archetype.md": {
-    "mtime": 1795104477.4023015,
-    "seen": 1795452962.9656546,
-    "ast_hash": "c2619cdb1066140ea49face7cd0d2c46",
-    "semantic_hash": "c2619cdb1066140ea49face7cd0d2c46"
-  },
-  "src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-03-regras-obrigatorias-de-geracao.md": {
-    "mtime": 1795131447.2230375,
-    "seen": 1795452962.9656553,
-    "ast_hash": "04b27e9c7be7ff4530160dfb3e0b7da3",
-    "semantic_hash": "04b27e9c7be7ff4530160dfb3e0b7da3"
-  },
-  "src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-04-fluxo-de-execucao-e-verificacao.md": {
-    "mtime": 1795131447.2230375,
-    "seen": 1795452962.965656,
-    "ast_hash": "3d63a4986df8695f962f0553533c52e4",
-    "semantic_hash": "3d63a4986df8695f962f0553533c52e4"
-  },
-  "src/main/resources/utils/02-operacao-procedimento-do-agente/prompt-05-entregaveis-e-relatorios.md": {
-    "mtime": 1795131447.2240376,
-    "seen": 1795452962.965657,
-    "ast_hash": "9dbabd127a7a8c887ca6dcc8ae0e6d40",
-    "semantic_hash": "9dbabd127a7a8c887ca6dcc8ae0e6d40"
-  },
-  "src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/regras-01-como-derivar-a-entidade-do-contrato.md": {
-    "mtime": 1795131447.2240376,
-    "seen": 1795452962.965658,
-    "ast_hash": "4d4b1a083707ecf39b74f8e653834580",
-    "semantic_hash": "4d4b1a083707ecf39b74f8e653834580"
-  },
-  "src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/regras-02-como-resolver-tipos-e-enums.md": {
-    "mtime": 1795104477.4043756,
-    "seen": 1795452962.9656587,
-    "ast_hash": "e2883092d098751059f1eb2ab37621e7",
-    "semantic_hash": "e2883092d098751059f1eb2ab37621e7"
-  },
-  "src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/regras-03-como-derivar-flags-de-tipos-aninhados.md": {
-    "mtime": 1795104477.4053743,
-    "seen": 1795452962.9656596,
-    "ast_hash": "cd7592e75a9c2e450ff828e280df65a2",
-    "semantic_hash": "cd7592e75a9c2e450ff828e280df65a2"
-  },
-  "src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/regras-04-como-aplicar-precedencia-e-validacao.md": {
-    "mtime": 1795104477.4053743,
-    "seen": 1795452962.9656603,
-    "ast_hash": "ce427533ed4fc6c5562c01ff1cbe9f25",
-    "semantic_hash": "ce427533ed4fc6c5562c01ff1cbe9f25"
-  },
-  "src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/regras-05-como-materializar-e-emitir-o-contrato.md": {
-    "mtime": 1795104477.4053743,
-    "seen": 1795452962.9656613,
-    "ast_hash": "8ab6f644e6da67466f89dee3313840e1",
-    "semantic_hash": "8ab6f644e6da67466f89dee3313840e1"
-  },
-  "src/main/resources/utils/03-derivacao-regras-de-formacao-do-contrato/regras-06-como-relatar-proveniencia.md": {
-    "mtime": 1795131447.2250407,
-    "seen": 1795452962.9656622,
-    "ast_hash": "b54db697a764561e479b005b2488a871",
-    "semantic_hash": "b54db697a764561e479b005b2488a871"
+    "mtime": 1795655288.1474967,
+    "seen": 1795714396.198267,
+    "ast_hash": "04030a96370d9432e6d91127b245237c",
+    "semantic_hash": "04030a96370d9432e6d91127b245237c"
   },
   "src/test/resources/projects/entity-contract/expected/divergences.txt": {
     "mtime": 1795104477.42396,
     "seen": 1795452962.9656768,
     "ast_hash": "53ee8f8cb2fae9f8e9722cfe198b6e2b",
     "semantic_hash": "53ee8f8cb2fae9f8e9722cfe198b6e2b"
+  },
+  "src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/01-schema-do-contrato.json": {
+    "mtime": 1795647192.6619568,
+    "seen": 1795714396.1922746,
+    "ast_hash": "ac994cebc1da228a847de47f02f77e74",
+    "semantic_hash": "ac994cebc1da228a847de47f02f77e74"
+  },
+  "src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json": {
+    "mtime": 1795647192.6619568,
+    "seen": 1795714396.1922765,
+    "ast_hash": "c7e422ba5b1704141f5f17d31a974815",
+    "semantic_hash": "c7e422ba5b1704141f5f17d31a974815"
+  },
+  "src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json": {
+    "mtime": 1795647192.6629562,
+    "seen": 1795714396.1922777,
+    "ast_hash": "d732dd254888fb647d30828e66f735f0",
+    "semantic_hash": "d732dd254888fb647d30828e66f735f0"
+  },
+  "src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/04-exemplo-contrato-com-enums.json": {
+    "mtime": 1795647192.6639557,
+    "seen": 1795714396.192279,
+    "ast_hash": "7ab137cda6cdae96859a52b4784bd8be",
+    "semantic_hash": "7ab137cda6cdae96859a52b4784bd8be"
+  },
+  "src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/05-exemplo-contrato-com-tipos-do-projeto.json": {
+    "mtime": 1795647192.6639557,
+    "seen": 1795714396.1922803,
+    "ast_hash": "3b9e916a3b686870a95376c0be0268bb",
+    "semantic_hash": "3b9e916a3b686870a95376c0be0268bb"
+  },
+  "src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json": {
+    "mtime": 1795647192.664956,
+    "seen": 1795714396.192281,
+    "ast_hash": "44695adb3b0a1d0e83d2a684aa8ade40",
+    "semantic_hash": "44695adb3b0a1d0e83d2a684aa8ade40"
+  },
+  "src/test/archetype-post-generate/CatalogSyncContractTest.groovy": {
+    "mtime": 1795655288.1484964,
+    "seen": 1795714396.1925585,
+    "ast_hash": "51c9b69b214371fd03fb40f69079af00",
+    "semantic_hash": "51c9b69b214371fd03fb40f69079af00"
+  },
+  "src/test/archetype-post-generate/FileRenameContractTest.groovy": {
+    "mtime": 1795655288.1494968,
+    "seen": 1795714396.1932073,
+    "ast_hash": "b6996a2f2954a638dee1c718a9976b93",
+    "semantic_hash": "b6996a2f2954a638dee1c718a9976b93"
+  },
+  "src/test/archetype-post-generate/HardStopContractTest.groovy": {
+    "mtime": 1795655288.1504965,
+    "seen": 1795714396.1933956,
+    "ast_hash": "bb0b10c9c98aad708b80b0ea623a819b",
+    "semantic_hash": "bb0b10c9c98aad708b80b0ea623a819b"
+  },
+  "src/test/archetype-post-generate/PathRenameContractTest.groovy": {
+    "mtime": 1795655288.1514966,
+    "seen": 1795714396.1934884,
+    "ast_hash": "c76bb70644dcaca98ba1ed337d10032b",
+    "semantic_hash": "c76bb70644dcaca98ba1ed337d10032b"
+  },
+  "src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy": {
+    "mtime": 1795655288.1514966,
+    "seen": 1795714396.1936686,
+    "ast_hash": "54b0376441e5a671fa065198cd7ebcf6",
+    "semantic_hash": "54b0376441e5a671fa065198cd7ebcf6"
+  },
+  ".opencode/commands/speckit-generate-specify.md": {
+    "mtime": 1795655288.1114292,
+    "seen": 1795714396.198186,
+    "ast_hash": "8c0a3cc4a3700b66c8e9460305d07600",
+    "semantic_hash": "8c0a3cc4a3700b66c8e9460305d07600"
+  },
+  "specs/006-llm-maven-flags-inference/checklists/requirements.md": {
+    "mtime": 1795477735.4923387,
+    "seen": 1795714396.198205,
+    "ast_hash": "d4a0da3a2067c7da27c7c09a9bae6cac",
+    "semantic_hash": "d4a0da3a2067c7da27c7c09a9bae6cac"
+  },
+  "specs/006-llm-maven-flags-inference/contracts/documentation-contract.md": {
+    "mtime": 1795479381.8874774,
+    "seen": 1795714396.198206,
+    "ast_hash": "142e9c8e57367d99338db188332ab8ab",
+    "semantic_hash": "142e9c8e57367d99338db188332ab8ab"
+  },
+  "specs/006-llm-maven-flags-inference/contracts/procedure-path.md": {
+    "mtime": 1795477735.4953377,
+    "seen": 1795714396.198207,
+    "ast_hash": "6be3b149f21b856540f76398f82eed6b",
+    "semantic_hash": "6be3b149f21b856540f76398f82eed6b"
+  },
+  "specs/006-llm-maven-flags-inference/data-model.md": {
+    "mtime": 1795477735.5013368,
+    "seen": 1795714396.1982083,
+    "ast_hash": "4f683c446b6b27479f73dbd26a871e8d",
+    "semantic_hash": "4f683c446b6b27479f73dbd26a871e8d"
+  },
+  "specs/006-llm-maven-flags-inference/plan.md": {
+    "mtime": 1795477735.5013368,
+    "seen": 1795714396.1982093,
+    "ast_hash": "c860856596a7cb4132143d7dca8aaecd",
+    "semantic_hash": "c860856596a7cb4132143d7dca8aaecd"
+  },
+  "specs/006-llm-maven-flags-inference/quickstart.md": {
+    "mtime": 1795477735.5043378,
+    "seen": 1795714396.1982102,
+    "ast_hash": "cd454ad10405c788f5ec61e348ad98b4",
+    "semantic_hash": "cd454ad10405c788f5ec61e348ad98b4"
+  },
+  "specs/006-llm-maven-flags-inference/research.md": {
+    "mtime": 1795477735.5083387,
+    "seen": 1795714396.1982114,
+    "ast_hash": "3b43fcb4136e69bce6dce88111d86a80",
+    "semantic_hash": "3b43fcb4136e69bce6dce88111d86a80"
+  },
+  "specs/006-llm-maven-flags-inference/spec.md": {
+    "mtime": 1795477735.5113342,
+    "seen": 1795714396.1982124,
+    "ast_hash": "4bd2ace87231d73cf51f667bff275f45",
+    "semantic_hash": "4bd2ace87231d73cf51f667bff275f45"
+  },
+  "specs/006-llm-maven-flags-inference/tasks.md": {
+    "mtime": 1795477735.5123396,
+    "seen": 1795714396.1982136,
+    "ast_hash": "dc5ac74b44c3a5198c3a3a5a65d26e52",
+    "semantic_hash": "dc5ac74b44c3a5198c3a3a5a65d26e52"
+  },
+  "specs/007-hard-stop-contract/checklists/hard-stop.md": {
+    "mtime": 1795615300.985288,
+    "seen": 1795714396.1982143,
+    "ast_hash": "bfce46b443d17407b6bccc52e11756a6",
+    "semantic_hash": "bfce46b443d17407b6bccc52e11756a6"
+  },
+  "specs/007-hard-stop-contract/checklists/requirements.md": {
+    "mtime": 1795615300.985288,
+    "seen": 1795714396.1982155,
+    "ast_hash": "705b4752abf90f90e6bc165c55940eaa",
+    "semantic_hash": "705b4752abf90f90e6bc165c55940eaa"
+  },
+  "specs/007-hard-stop-contract/contracts/catalog-sync.md": {
+    "mtime": 1795615300.9862888,
+    "seen": 1795714396.1982167,
+    "ast_hash": "bc4db373a35cdc0054d4fe289c57260b",
+    "semantic_hash": "bc4db373a35cdc0054d4fe289c57260b"
+  },
+  "specs/007-hard-stop-contract/contracts/hard-stop-message.md": {
+    "mtime": 1795615300.9872887,
+    "seen": 1795714396.1982176,
+    "ast_hash": "e732fb8d9c5293c03049f225aa1e6dbe",
+    "semantic_hash": "e732fb8d9c5293c03049f225aa1e6dbe"
+  },
+  "specs/007-hard-stop-contract/contracts/stop-registry.md": {
+    "mtime": 1795615300.9872887,
+    "seen": 1795714396.1982188,
+    "ast_hash": "3404eb111b5b3c57660ba3e90ba86de7",
+    "semantic_hash": "3404eb111b5b3c57660ba3e90ba86de7"
+  },
+  "specs/007-hard-stop-contract/contracts/verification.md": {
+    "mtime": 1795615300.9882886,
+    "seen": 1795714396.1982198,
+    "ast_hash": "f5d6e31d60f32616691d663aa644cb91",
+    "semantic_hash": "f5d6e31d60f32616691d663aa644cb91"
+  },
+  "specs/007-hard-stop-contract/data-model.md": {
+    "mtime": 1795615300.9882886,
+    "seen": 1795714396.1982207,
+    "ast_hash": "4c33eb37f6189174b55dd5265daebe85",
+    "semantic_hash": "4c33eb37f6189174b55dd5265daebe85"
+  },
+  "specs/007-hard-stop-contract/plan.md": {
+    "mtime": 1795615300.9897933,
+    "seen": 1795714396.1982222,
+    "ast_hash": "20cb246d0ecfc68f06328eb886d6bbd9",
+    "semantic_hash": "20cb246d0ecfc68f06328eb886d6bbd9"
+  },
+  "specs/007-hard-stop-contract/quickstart.md": {
+    "mtime": 1795615300.9897933,
+    "seen": 1795714396.198223,
+    "ast_hash": "87f6e03f95bb51a14b34aa8dfc5d348b",
+    "semantic_hash": "87f6e03f95bb51a14b34aa8dfc5d348b"
+  },
+  "specs/007-hard-stop-contract/research.md": {
+    "mtime": 1795615300.9897933,
+    "seen": 1795714396.198224,
+    "ast_hash": "b3aee5ba5ce8e1b10fe3d23b42e2bf3f",
+    "semantic_hash": "b3aee5ba5ce8e1b10fe3d23b42e2bf3f"
+  },
+  "specs/007-hard-stop-contract/spec.md": {
+    "mtime": 1795615300.9913478,
+    "seen": 1795714396.1982253,
+    "ast_hash": "9bccce36e8819b5278eeaa77c6eaa157",
+    "semantic_hash": "9bccce36e8819b5278eeaa77c6eaa157"
+  },
+  "specs/007-hard-stop-contract/tasks.md": {
+    "mtime": 1795615300.9913478,
+    "seen": 1795714396.1982265,
+    "ast_hash": "35828ba4e4e74c5d77fc6f26a26ad260",
+    "semantic_hash": "35828ba4e4e74c5d77fc6f26a26ad260"
+  },
+  "specs/007-hard-stop-contract/validation-report.md": {
+    "mtime": 1795615300.9923532,
+    "seen": 1795714396.1982274,
+    "ast_hash": "4bafa3c7a7be8d55dd2b10d877aa322a",
+    "semantic_hash": "4bafa3c7a7be8d55dd2b10d877aa322a"
+  },
+  "specs/008-rename-procedure-files/checklists/requirements.md": {
+    "mtime": 1795647192.6459436,
+    "seen": 1795714396.1982286,
+    "ast_hash": "d88d63ac08d17108357c7944b983f277",
+    "semantic_hash": "d88d63ac08d17108357c7944b983f277"
+  },
+  "specs/008-rename-procedure-files/contracts/rename-manifest.md": {
+    "mtime": 1795647192.6459436,
+    "seen": 1795714396.1982298,
+    "ast_hash": "7d747d76453ad397f8a9e278581eb6ad",
+    "semantic_hash": "7d747d76453ad397f8a9e278581eb6ad"
+  },
+  "specs/008-rename-procedure-files/data-model.md": {
+    "mtime": 1795647192.646947,
+    "seen": 1795714396.1982305,
+    "ast_hash": "0d8a7f48c0cf165f8b52908e42673207",
+    "semantic_hash": "0d8a7f48c0cf165f8b52908e42673207"
+  },
+  "specs/008-rename-procedure-files/plan.md": {
+    "mtime": 1795647192.646947,
+    "seen": 1795714396.1982317,
+    "ast_hash": "3e382303684b3752c594cfa4910d1163",
+    "semantic_hash": "3e382303684b3752c594cfa4910d1163"
+  },
+  "specs/008-rename-procedure-files/quickstart.md": {
+    "mtime": 1795647192.647955,
+    "seen": 1795714396.1982327,
+    "ast_hash": "4dd2592e0537a5a305734d1c60bdee7a",
+    "semantic_hash": "4dd2592e0537a5a305734d1c60bdee7a"
+  },
+  "specs/008-rename-procedure-files/research.md": {
+    "mtime": 1795647192.647955,
+    "seen": 1795714396.1982338,
+    "ast_hash": "717f7a2c247439454029249dae1bd861",
+    "semantic_hash": "717f7a2c247439454029249dae1bd861"
+  },
+  "specs/008-rename-procedure-files/spec.md": {
+    "mtime": 1795647192.6489544,
+    "seen": 1795714396.198235,
+    "ast_hash": "9df909f56dca59c792ef370052a6e4b1",
+    "semantic_hash": "9df909f56dca59c792ef370052a6e4b1"
+  },
+  "specs/009-rename-procedure-files/checklists/requirements.md": {
+    "mtime": 1795647192.6499548,
+    "seen": 1795714396.1982365,
+    "ast_hash": "1702f559d4964d64ff54a0658e4fe323",
+    "semantic_hash": "1702f559d4964d64ff54a0658e4fe323"
+  },
+  "specs/009-rename-procedure-files/contracts/rename-manifest.md": {
+    "mtime": 1795647192.6499548,
+    "seen": 1795714396.1982374,
+    "ast_hash": "68a8caeddd6e17c2952e14197bd5582c",
+    "semantic_hash": "68a8caeddd6e17c2952e14197bd5582c"
+  },
+  "specs/009-rename-procedure-files/data-model.md": {
+    "mtime": 1795647192.6509523,
+    "seen": 1795714396.198239,
+    "ast_hash": "7f0edc312b5c866bff60a1540fb20c36",
+    "semantic_hash": "7f0edc312b5c866bff60a1540fb20c36"
+  },
+  "specs/009-rename-procedure-files/plan.md": {
+    "mtime": 1795647192.6519523,
+    "seen": 1795714396.19824,
+    "ast_hash": "c259af3f86c5c74ddfb4cbc5e26da58c",
+    "semantic_hash": "c259af3f86c5c74ddfb4cbc5e26da58c"
+  },
+  "specs/009-rename-procedure-files/quickstart.md": {
+    "mtime": 1795647192.6519523,
+    "seen": 1795714396.198241,
+    "ast_hash": "93ef88c985e7b2bcfe640c78fd020560",
+    "semantic_hash": "93ef88c985e7b2bcfe640c78fd020560"
+  },
+  "specs/009-rename-procedure-files/research.md": {
+    "mtime": 1795647192.6529522,
+    "seen": 1795714396.1982417,
+    "ast_hash": "28c02c67028f3b45a5ab31b37cd477ea",
+    "semantic_hash": "28c02c67028f3b45a5ab31b37cd477ea"
+  },
+  "specs/009-rename-procedure-files/spec.md": {
+    "mtime": 1795647192.6529522,
+    "seen": 1795714396.1982431,
+    "ast_hash": "89538989f93699fd175bd89e03e74531",
+    "semantic_hash": "89538989f93699fd175bd89e03e74531"
+  },
+  "specs/009-rename-procedure-files/tasks.md": {
+    "mtime": 1795647192.6539516,
+    "seen": 1795714396.198244,
+    "ast_hash": "ca53b7c1e656b7d7c18c93309d597b8d",
+    "semantic_hash": "ca53b7c1e656b7d7c18c93309d597b8d"
+  },
+  "specs/010-rename-procedure-entry-files/checklists/requirements.md": {
+    "mtime": 1795655288.1369495,
+    "seen": 1795714396.198245,
+    "ast_hash": "186ac86b97f17be7cb0b1e2249ba96ed",
+    "semantic_hash": "186ac86b97f17be7cb0b1e2249ba96ed"
+  },
+  "specs/010-rename-procedure-entry-files/contracts/rename-manifest.md": {
+    "mtime": 1795655288.1379495,
+    "seen": 1795714396.1982465,
+    "ast_hash": "9da3d04bb601d8b370d7ccc7e4b8766c",
+    "semantic_hash": "9da3d04bb601d8b370d7ccc7e4b8766c"
+  },
+  "specs/010-rename-procedure-entry-files/data-model.md": {
+    "mtime": 1795655288.138949,
+    "seen": 1795714396.1982474,
+    "ast_hash": "ab5aea702a4eeacecf55cd5d0ad47b4b",
+    "semantic_hash": "ab5aea702a4eeacecf55cd5d0ad47b4b"
+  },
+  "specs/010-rename-procedure-entry-files/plan.md": {
+    "mtime": 1795655288.138949,
+    "seen": 1795714396.1982484,
+    "ast_hash": "b3d1e47380f8c986009d6443d951fcea",
+    "semantic_hash": "b3d1e47380f8c986009d6443d951fcea"
+  },
+  "specs/010-rename-procedure-entry-files/quickstart.md": {
+    "mtime": 1795655288.139949,
+    "seen": 1795714396.1982496,
+    "ast_hash": "c5e76c9dd6994d577bb41ccd7b6a2e3b",
+    "semantic_hash": "c5e76c9dd6994d577bb41ccd7b6a2e3b"
+  },
+  "specs/010-rename-procedure-entry-files/research.md": {
+    "mtime": 1795655288.139949,
+    "seen": 1795714396.1982503,
+    "ast_hash": "1335e4d7d45ad458ebc0f8a76885148f",
+    "semantic_hash": "1335e4d7d45ad458ebc0f8a76885148f"
+  },
+  "specs/010-rename-procedure-entry-files/spec.md": {
+    "mtime": 1795655288.140949,
+    "seen": 1795714396.1982512,
+    "ast_hash": "b90405d23ba3628b41bf1b3b4350bfac",
+    "semantic_hash": "b90405d23ba3628b41bf1b3b4350bfac"
+  },
+  "specs/010-rename-procedure-entry-files/tasks.md": {
+    "mtime": 1795655288.140949,
+    "seen": 1795714396.1982522,
+    "ast_hash": "ff7fc738b078af3ca57b07ef84a42700",
+    "semantic_hash": "ff7fc738b078af3ca57b07ef84a42700"
+  },
+  "src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/00-entry-point.md": {
+    "mtime": 1795655288.1424518,
+    "seen": 1795714396.1982534,
+    "ast_hash": "221808a426a7e77762b5d4e17dfaffda",
+    "semantic_hash": "221808a426a7e77762b5d4e17dfaffda"
+  },
+  "src/main/resources/llm-maven-flags-inference/01-entrada-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md": {
+    "mtime": 1795655288.1424518,
+    "seen": 1795714396.1982546,
+    "ast_hash": "ec268b38b9234e586a49a3610a502cbd",
+    "semantic_hash": "ec268b38b9234e586a49a3610a502cbd"
+  },
+  "src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/01-papel-e-restricoes-do-agente.md": {
+    "mtime": 1795655288.1424518,
+    "seen": 1795714396.1982555,
+    "ast_hash": "e59f45e31b57918967277937b3ad0d03",
+    "semantic_hash": "e59f45e31b57918967277937b3ad0d03"
+  },
+  "src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/02-como-localizar-e-ler-o-archetype.md": {
+    "mtime": 1795655288.1439624,
+    "seen": 1795714396.1982567,
+    "ast_hash": "86105e43e301db4fee6e6a1ad30457ec",
+    "semantic_hash": "86105e43e301db4fee6e6a1ad30457ec"
+  },
+  "src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/03-regras-obrigatorias-de-geracao.md": {
+    "mtime": 1795655288.1439624,
+    "seen": 1795714396.1982577,
+    "ast_hash": "bae2a114434a5e5a6bb307a32004a5be",
+    "semantic_hash": "bae2a114434a5e5a6bb307a32004a5be"
+  },
+  "src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/04-fluxo-de-execucao-e-verificacao.md": {
+    "mtime": 1795655288.1439624,
+    "seen": 1795714396.1982584,
+    "ast_hash": "06b1471edc42357dc5fd1bcf0d00e794",
+    "semantic_hash": "06b1471edc42357dc5fd1bcf0d00e794"
+  },
+  "src/main/resources/llm-maven-flags-inference/02-operacao-procedimento-do-agente/05-entregaveis-e-relatorios.md": {
+    "mtime": 1795655288.1454906,
+    "seen": 1795714396.1982594,
+    "ast_hash": "9dbabd127a7a8c887ca6dcc8ae0e6d40",
+    "semantic_hash": "9dbabd127a7a8c887ca6dcc8ae0e6d40"
+  },
+  "src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/01-como-derivar-a-entidade-do-contrato.md": {
+    "mtime": 1795655288.1464968,
+    "seen": 1795714396.1982605,
+    "ast_hash": "4245273846323cbf26416d358406b1a5",
+    "semantic_hash": "4245273846323cbf26416d358406b1a5"
+  },
+  "src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/02-como-resolver-tipos-e-enums.md": {
+    "mtime": 1795647192.6589599,
+    "seen": 1795714396.1982615,
+    "ast_hash": "e62da533a5d95f459e46d15613f72357",
+    "semantic_hash": "e62da533a5d95f459e46d15613f72357"
+  },
+  "src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/03-como-derivar-flags-de-tipos-aninhados.md": {
+    "mtime": 1795647192.6589599,
+    "seen": 1795714396.1982622,
+    "ast_hash": "0233368b0365c58ac76292d727a75ad6",
+    "semantic_hash": "0233368b0365c58ac76292d727a75ad6"
+  },
+  "src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/04-como-aplicar-precedencia-e-validacao.md": {
+    "mtime": 1795655288.1464968,
+    "seen": 1795714396.1982634,
+    "ast_hash": "a6c2fb65763819f3c53ad7ca773008e0",
+    "semantic_hash": "a6c2fb65763819f3c53ad7ca773008e0"
+  },
+  "src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/05-como-materializar-e-emitir-o-contrato.md": {
+    "mtime": 1795647192.6599572,
+    "seen": 1795714396.1982644,
+    "ast_hash": "25fde0bbef19d9835ca6ec09a10be133",
+    "semantic_hash": "25fde0bbef19d9835ca6ec09a10be133"
+  },
+  "src/main/resources/llm-maven-flags-inference/03-derivacao-regras-de-formacao-do-contrato/06-como-relatar-proveniencia.md": {
+    "mtime": 1795647192.6609578,
+    "seen": 1795714396.1982653,
+    "ast_hash": "33ca659509dce1836e589d4b299c4875",
+    "semantic_hash": "33ca659509dce1836e589d4b299c4875"
   }
 }
