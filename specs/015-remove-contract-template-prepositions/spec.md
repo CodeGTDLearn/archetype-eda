@@ -15,6 +15,13 @@
 - A preposição não acrescenta papel ao nome: o numeral define a ordem e o restante do nome descreve o conteúdo. Mantê-la deixa os nomes mais longos do que o necessário e fora do padrão enxuto já aplicado aos demais arquivos da subpasta.
 - O mapa dos arquivos e ordem de leitura, a porta de entrada, o README e as suítes de verificação citam os cinco nomes com preposição; as referências operacionais precisam acompanhar a renomeação para não deixar caminhos quebrados.
 
+## Clarifications
+
+### Session 2026-11-26
+
+- Q: No arquivo `05-contrato-com-tipos-do-projeto.json`, devo remover apenas `com` ou também o `do` de `tipos-do-projeto`? → A: Apenas `com`, resultando em `05-contrato-tipos-do-projeto.json`; o `do` de `tipos-do-projeto` permanece.
+- Q: Além de renomear os cinco arquivos, devo atualizar as referências operacionais aos nomes antigos no mapa dos arquivos, na porta de entrada, no README e nas suítes de verificação? → A: Sim, atualizar as referências operacionais nesses quatro destinos.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Fase 1 — Remover "do" do nome do schema (Priority: P1)
