@@ -35,6 +35,7 @@ List<String> suites = [
         "src/test/archetype-post-generate/FileRenameContractTest.groovy",
         "src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy",
         "src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy",
+        "src/test/archetype-post-generate/ContractTemplateRenameContractTest.groovy",
         // catalog fragments
         "src/test/archetype-post-generate/CatalogFragmentContractTest.groovy",
         // absent / malformed flag values

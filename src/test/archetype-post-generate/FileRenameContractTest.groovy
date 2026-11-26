@@ -2,8 +2,11 @@
  * Contract test for the RENAMED PROCEDURE (feature 009).
  *
  * The suite is phase-aware:
- *   - Phase 1: 03 carries the 6 new names; 04 still carries the 6 old names.
- *   - Phase 2: all 12 files carry the new names.
+ *   - rulePhase 0..3: the six rules of folder 03 (feature 011).
+ *   - templatePhase 0..2: folder 04 and its six files (feature 012):
+ *       Phase 0 = 04-referencia-templates-de-contrato + 0X-exemplo-...;
+ *       Phase 1 = 04-templates-de-contrato + 0X-exemplo-...;
+ *       Phase 2 = 04-templates-de-contrato + 0X-contrato-....
  *
  * It proves names, counts, the index, the absence of old references in the
  * operational corpus and the catalog invariants (35 properties / 18 filesets).
@@ -11,7 +14,8 @@
 def procedure = new File("src/main/resources/llm-maven-flags-inference")
 def r03Old = new File(procedure, "03-derivacao-regras-de-formacao-do-contrato")
 def r03New = new File(procedure, "03-regras-de-formacao-do-contrato")
-def r04 = new File(procedure, "04-referencia-templates-de-contrato")
+def r04Old = new File(procedure, "04-referencia-templates-de-contrato")
+def r04New = new File(procedure, "04-templates-de-contrato")
 def packaged = new File("target/classes/llm-maven-flags-inference")
 def readme = new File("README.md")
 def index = new File(procedure, "01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md")
@@ -59,7 +63,7 @@ def rulePhase = !r03New.isDirectory() ? 0 :
 def r03 = rulePhase == 0 ? r03Old : r03New
 def expected03 = rulePhase <= 1 ? p1Current : (rulePhase == 2 ? p1New[0..2] + p1Current[3..5] : p1New)
 def rejected03 = p1LegacyOld + (rulePhase >= 2 ? p1Current[0..2] : []) + (rulePhase == 3 ? p1Current[3..5] : [])
-def p2Old = [
+def p2LegacyOld = [
         "template-01-schema-do-contrato.json",
         "template-02-exemplo-contrato-plano.json",
         "template-03-exemplo-contrato-com-objetos-aninhados.json",
@@ -67,7 +71,7 @@ def p2Old = [
         "template-05-exemplo-contrato-com-tipos-do-projeto.json",
         "template-06-exemplo-contrato-com-attributes-explicito.json"
 ]
-def p2New = [
+def p2Current = [
         "01-schema-do-contrato.json",
         "02-exemplo-contrato-plano.json",
         "03-exemplo-contrato-com-objetos-aninhados.json",
@@ -75,9 +79,19 @@ def p2New = [
         "05-exemplo-contrato-com-tipos-do-projeto.json",
         "06-exemplo-contrato-com-attributes-explicito.json"
 ]
+def p2New = [
+        "01-schema-do-contrato.json",
+        "02-contrato-plano.json",
+        "03-contrato-com-objetos-aninhados.json",
+        "04-contrato-com-enums.json",
+        "05-contrato-com-tipos-do-projeto.json",
+        "06-contrato-com-attributes-explicito.json"
+]
 
-boolean phase2 = new File(r04, p2New[0]).isFile()
-println "INFO: FileRenameContractTest phase=${phase2 ? 2 : 1}"
+def templatePhase = !r04New.isDirectory() ? 0 :
+        (new File(r04New, p2New[1]).isFile() ? 2 : 1)
+def r04 = templatePhase == 0 ? r04Old : r04New
+println "INFO: FileRenameContractTest templatePhase=${templatePhase}"
 
 def allSource = filesOf(procedure)
 def allPackaged = filesOf(packaged)
@@ -99,38 +113,38 @@ check("1.7 target/classes carries 13 Markdown and 6 JSON",
 // ---------------------------------------------------------------------------
 // 2. Names
 // ---------------------------------------------------------------------------
-def expected04 = phase2 ? p2New : p2Old
+def expected04 = templatePhase == 2 ? p2New : p2Current
 check("2.1 03 carries exactly the expected names",
         filesOf(r03).collect { it.name }.sort() == expected03.sort())
-check("2.2 04 carries exactly the 6 ${phase2 ? 'new' : 'old'} names",
+check("2.2 04 carries exactly the 6 ${templatePhase == 2 ? 'new' : 'current'} names",
         filesOf(r04).collect { it.name }.sort() == expected04.sort())
 check("2.3 no old 03 names remain", rejected03.every { !new File(r03, it).exists() })
-if (phase2) {
-    check("2.4 no old 04 names remain", p2Old.every { !new File(r04, it).exists() })
+if (templatePhase == 2) {
+    check("2.4 no old 04 names remain", p2Current.every { !new File(r04, it).exists() })
 } else {
-    check("2.4 04 still carries the old names in Phase 1", p2Old.every { new File(r04, it).isFile() })
+    check("2.4 04 still carries the current names before Phase 2", p2Current.every { new File(r04, it).isFile() })
 }
 check("2.5 target/classes mirrors the 03 names",
         filesOf(new File(packaged, r03.name)).collect { it.name }.sort() == expected03.sort())
 check("2.6 target/classes mirrors the 04 names",
-        filesOf(new File(packaged, "04-referencia-templates-de-contrato")).collect { it.name }.sort() == expected04.sort())
+        filesOf(new File(packaged, r04.name)).collect { it.name }.sort() == expected04.sort())
 
 // ---------------------------------------------------------------------------
 // 3. Index
 // ---------------------------------------------------------------------------
 def indexText = index.isFile() ? index.getText("UTF-8") : ""
 def idx03 = expected03.collect { "llm-maven-flags-inference/${r03.name}/${it}" }
-def idx04 = expected04.collect { "llm-maven-flags-inference/04-referencia-templates-de-contrato/${it}" }
+def idx04 = expected04.collect { "llm-maven-flags-inference/${r04.name}/${it}" }
 check("3.1 index lists the 6 new 03 paths", idx03.every { indexText.contains(it) })
-check("3.2 index lists the 6 ${phase2 ? 'new' : 'old'} 04 paths", idx04.every { indexText.contains(it) })
+check("3.2 index lists the 6 ${templatePhase == 2 ? 'new' : 'current'} 04 paths", idx04.every { indexText.contains(it) })
 check("3.3 index does not list old 03 paths",
         rejected03.every { !indexText.contains("llm-maven-flags-inference/${r03.name}/${it}") })
-if (phase2) {
+if (templatePhase == 2) {
     check("3.4 index does not list old 04 paths",
-            p2Old.every { !indexText.contains("llm-maven-flags-inference/04-referencia-templates-de-contrato/${it}") })
+            p2Current.every { !indexText.contains("llm-maven-flags-inference/${r04.name}/${it}") })
 } else {
-    check("3.4 index still lists old 04 paths in Phase 1",
-            p2Old.every { indexText.contains("llm-maven-flags-inference/04-referencia-templates-de-contrato/${it}") })
+    check("3.4 index still lists the current 04 paths before Phase 2",
+            p2Current.every { indexText.contains("llm-maven-flags-inference/${r04.name}/${it}") })
 }
 
 // ---------------------------------------------------------------------------
@@ -140,10 +154,8 @@ def corpus = []
 ["01-inicializacao", "02-procedimento-do-agente", r03.name].each { String dir ->
     corpus.addAll(filesOf(new File(procedure, dir)))
 }
-if (phase2) {
-    corpus.addAll(filesOf(r04))
-    if (readme.isFile()) corpus << readme
-}
+if (templatePhase >= 1) corpus.addAll(filesOf(r04))
+if (readme.isFile()) corpus << readme
 suitesDir.eachFileRecurse { File f ->
     if (f.isFile() && f.name.endsWith(".groovy") && f.canonicalPath != self.canonicalPath &&
             f.name != "ContractRuleRenameContractTest.groovy") corpus << f
@@ -152,10 +164,23 @@ def hits = []
 corpus.each { File f ->
     String body = f.getText("UTF-8")
     if ((body =~ /regras-0[1-6]/).find()) hits << "${f.name}: regras"
-    if (phase2 && (body =~ /template-0[1-6]/).find()) hits << "${f.name}: template"
+    if (templatePhase == 2 && (body =~ /template-0[1-6]/).find()) hits << "${f.name}: template"
     rejected03.each { String oldName -> if (body.contains(oldName)) hits << "${f.name}: ${oldName}" }
 }
-check("4.1 no old references in the ${phase2 ? 'operational corpus' : 'Phase 1 corpus'}: ${hits}", hits.isEmpty())
+check("4.1 no old references in the ${templatePhase == 2 ? 'operational corpus' : 'Phase 1 corpus'}: ${hits}", hits.isEmpty())
+
+def docCorpus = []
+["01-inicializacao", "02-procedimento-do-agente", r03.name].each { String dir ->
+    docCorpus.addAll(filesOf(new File(procedure, dir)))
+}
+if (readme.isFile()) docCorpus << readme
+def docHits = []
+docCorpus.each { File f ->
+    String body = f.getText("UTF-8")
+    if (templatePhase >= 1 && body.contains("04-referencia-templates-de-contrato")) docHits << "${f.name}: folder"
+    if (templatePhase == 2) p2Current.each { if (body.contains(it)) docHits << "${f.name}: ${it}" }
+}
+check("4.2 no old 04 references in the operational documents: ${docHits}", docHits.isEmpty())
 
 // ---------------------------------------------------------------------------
 // 5. Catalog invariants
@@ -170,12 +195,15 @@ check("5.2 catalog carries 18 filesets: ${(catalogText =~ /<fileSet\s/).count}",
 // 6. Phase boundary: README must stay old in Phase 1 and be clean in Phase 2
 // ---------------------------------------------------------------------------
 def readmeText = readme.isFile() ? readme.getText("UTF-8") : ""
-if (phase2) {
-    check("6.1 README has no old references",
-            !((readmeText =~ /regras-0[1-6]/).find()) && !((readmeText =~ /template-0[1-6]/).find()))
+if (templatePhase == 2) {
+    check("6.1 README has no old 04 names",
+            p2Current.every { !readmeText.contains(it) } && !readmeText.contains("04-referencia-templates-de-contrato"))
+} else if (templatePhase == 1) {
+    check("6.1 README still carries the current 04 names in Phase 1",
+            p2Current.every { readmeText.contains(it) })
 } else {
-    check("6.1 README still carries old references in Phase 1",
-            (readmeText =~ /regras-0[1-6]/).find() && (readmeText =~ /template-0[1-6]/).find())
+    check("6.1 README still carries the legacy 04 names in Phase 0",
+            p2LegacyOld.every { readmeText.contains(it) })
 }
 
 println ""
