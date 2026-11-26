@@ -87,6 +87,7 @@ def p2New = [
         "05-contrato-com-tipos-do-projeto.json",
         "06-contrato-com-attributes-explicito.json"
 ]
+def p2RenamedCurrent = p2Current[1..5]
 
 def templatePhase = !r04New.isDirectory() ? 0 :
         (new File(r04New, p2New[1]).isFile() ? 2 : 1)
@@ -120,7 +121,7 @@ check("2.2 04 carries exactly the 6 ${templatePhase == 2 ? 'new' : 'current'} na
         filesOf(r04).collect { it.name }.sort() == expected04.sort())
 check("2.3 no old 03 names remain", rejected03.every { !new File(r03, it).exists() })
 if (templatePhase == 2) {
-    check("2.4 no old 04 names remain", p2Current.every { !new File(r04, it).exists() })
+    check("2.4 no old 04 names remain", p2RenamedCurrent.every { !new File(r04, it).exists() })
 } else {
     check("2.4 04 still carries the current names before Phase 2", p2Current.every { new File(r04, it).isFile() })
 }
@@ -141,7 +142,7 @@ check("3.3 index does not list old 03 paths",
         rejected03.every { !indexText.contains("llm-maven-flags-inference/${r03.name}/${it}") })
 if (templatePhase == 2) {
     check("3.4 index does not list old 04 paths",
-            p2Current.every { !indexText.contains("llm-maven-flags-inference/${r04.name}/${it}") })
+            p2RenamedCurrent.every { !indexText.contains("llm-maven-flags-inference/${r04.name}/${it}") })
 } else {
     check("3.4 index still lists the current 04 paths before Phase 2",
             p2Current.every { indexText.contains("llm-maven-flags-inference/${r04.name}/${it}") })
@@ -178,7 +179,7 @@ def docHits = []
 docCorpus.each { File f ->
     String body = f.getText("UTF-8")
     if (templatePhase >= 1 && body.contains("04-referencia-templates-de-contrato")) docHits << "${f.name}: folder"
-    if (templatePhase == 2) p2Current.each { if (body.contains(it)) docHits << "${f.name}: ${it}" }
+    if (templatePhase == 2) p2RenamedCurrent.each { if (body.contains(it)) docHits << "${f.name}: ${it}" }
 }
 check("4.2 no old 04 references in the operational documents: ${docHits}", docHits.isEmpty())
 
@@ -197,7 +198,7 @@ check("5.2 catalog carries 18 filesets: ${(catalogText =~ /<fileSet\s/).count}",
 def readmeText = readme.isFile() ? readme.getText("UTF-8") : ""
 if (templatePhase == 2) {
     check("6.1 README has no old 04 names",
-            p2Current.every { !readmeText.contains(it) } && !readmeText.contains("04-referencia-templates-de-contrato"))
+            p2RenamedCurrent.every { !readmeText.contains(it) } && !readmeText.contains("04-referencia-templates-de-contrato"))
 } else if (templatePhase == 1) {
     check("6.1 README still carries the current 04 names in Phase 1",
             p2Current.every { readmeText.contains(it) })

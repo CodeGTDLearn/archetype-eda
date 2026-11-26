@@ -76,11 +76,11 @@ def p02 = [
 ]
 def p04 = [
         "01-schema-do-contrato.json",
-        "02-exemplo-contrato-plano.json",
-        "03-exemplo-contrato-com-objetos-aninhados.json",
-        "04-exemplo-contrato-com-enums.json",
-        "05-exemplo-contrato-com-tipos-do-projeto.json",
-        "06-exemplo-contrato-com-attributes-explicito.json"
+        "02-contrato-plano.json",
+        "03-contrato-com-objetos-aninhados.json",
+        "04-contrato-com-enums.json",
+        "05-contrato-com-tipos-do-projeto.json",
+        "06-contrato-com-attributes-explicito.json"
 ]
 def expectedPaths =
         p01.collect { "llm-maven-flags-inference/01-inicializacao/${it}" } +

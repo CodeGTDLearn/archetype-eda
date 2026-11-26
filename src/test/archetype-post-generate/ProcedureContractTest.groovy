@@ -196,7 +196,7 @@ def entityTemplate = new File(resources,
         "archetype-resources/src/main/java/__entity_package_name__/__entity_name__.java")
 def rulesFile = new File(procedure,
         "03-regras-de-formacao-do-contrato/03-derivar-flags-de-tipos-aninhados.md")
-def exampleFile = new File(contractTemplates, "03-exemplo-contrato-com-objetos-aninhados.json")
+def exampleFile = new File(contractTemplates, "03-contrato-com-objetos-aninhados.json")
 
 def templateUsesFqn = entityTemplate.getText("UTF-8").contains("\${nested_package_full}.\${attrib.type}")
 def rulesText = rulesFile.getText("UTF-8")
