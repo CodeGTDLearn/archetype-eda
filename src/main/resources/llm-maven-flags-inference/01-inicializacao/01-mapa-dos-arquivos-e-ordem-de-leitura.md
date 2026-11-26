@@ -21,12 +21,12 @@ Todos os caminhos abaixo são caminhos **dentro do JAR** do archetype, não cami
 | 11 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/04-aplicar-precedencia-e-validacao.md` | Precedência e validação | Sim |
 | 12 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/05-materializar-e-emitir-o-contrato.md` | Contrato materializado | Sim |
 | 13 | `llm-maven-flags-inference/03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md` | Proveniência | Sim |
-| 14 | `llm-maven-flags-inference/04-templates-de-contrato/01-schema-do-contrato.json` | Schema permissivo do contrato | Sim |
+| 14 | `llm-maven-flags-inference/04-templates-de-contrato/01-schema-contrato.json` | Schema permissivo do contrato | Sim |
 | 15 | `llm-maven-flags-inference/04-templates-de-contrato/02-contrato-plano.json` | Exemplo de contrato plano | Sob demanda |
-| 16 | `llm-maven-flags-inference/04-templates-de-contrato/03-contrato-com-objetos-aninhados.json` | Exemplo com objetos aninhados | Sob demanda |
-| 17 | `llm-maven-flags-inference/04-templates-de-contrato/04-contrato-com-enums.json` | Exemplo com enums | Sob demanda |
-| 18 | `llm-maven-flags-inference/04-templates-de-contrato/05-contrato-com-tipos-do-projeto.json` | Exemplo com tipos do projeto | Sob demanda |
-| 19 | `llm-maven-flags-inference/04-templates-de-contrato/06-contrato-com-attributes-explicito.json` | Exemplo com `attributes` explícito | Sob demanda |
+| 16 | `llm-maven-flags-inference/04-templates-de-contrato/03-contrato-objetos-aninhados.json` | Exemplo com objetos aninhados | Sob demanda |
+| 17 | `llm-maven-flags-inference/04-templates-de-contrato/04-contrato-enums.json` | Exemplo com enums | Sob demanda |
+| 18 | `llm-maven-flags-inference/04-templates-de-contrato/05-contrato-tipos-do-projeto.json` | Exemplo com tipos do projeto | Sob demanda |
+| 19 | `llm-maven-flags-inference/04-templates-de-contrato/06-contrato-attributes-explicito.json` | Exemplo com `attributes` explícito | Sob demanda |
 
 ## 2. Leituras técnicas no JAR
 

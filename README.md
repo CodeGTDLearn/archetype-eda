@@ -2179,12 +2179,12 @@ C:\Temp\eda-sandbox
 
 | Arquivo | Papel |
 |---|---|
-| `01-schema-do-contrato.json` | schema permissivo do contrato |
+| `01-schema-contrato.json` | schema permissivo do contrato |
 | `02-contrato-plano.json` | exemplo com campos de negócio no topo |
-| `03-contrato-com-objetos-aninhados.json` | exemplo com objetos aninhados |
-| `04-contrato-com-enums.json` | exemplo com enums |
-| `05-contrato-com-tipos-do-projeto.json` | exemplo com tipos do projeto |
-| `06-contrato-com-attributes-explicito.json` | exemplo com `attributes` explícito |
+| `03-contrato-objetos-aninhados.json` | exemplo com objetos aninhados |
+| `04-contrato-enums.json` | exemplo com enums |
+| `05-contrato-tipos-do-projeto.json` | exemplo com tipos do projeto |
+| `06-contrato-attributes-explicito.json` | exemplo com `attributes` explícito |
 
 * Campos de negócio viram atributos da entidade; chaves do catálogo viram flags `-D`.
 * O contrato pode trazer a coleção `attributes` explícita, que tem precedência sobre os campos avulsos.

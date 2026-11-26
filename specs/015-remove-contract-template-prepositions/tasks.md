@@ -26,9 +26,9 @@
 
 **Purpose**: Confirmar a linha de base e os pré-requisitos da renomeação.
 
-- [ ] T001 Registrar o SHA-256 dos seis JSON de `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/` em um arquivo temporário fora do repositório, conforme `quickstart.md` §2
-- [ ] T002 Confirmar a linha de base: 19 arquivos, 13 `.md`, 6 `.json`, 4 subpastas e 6 arquivos na subpasta 04; confirmar que os cinco nomes de destino (`01-schema-contrato.json`, `03-contrato-objetos-aninhados.json`, `04-contrato-enums.json`, `05-contrato-tipos-do-projeto.json`, `06-contrato-attributes-explicito.json`) não existem em `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/` (VR-01)
-- [ ] T003 Conferir que `specs/015-remove-contract-template-prepositions/contracts/rename-manifest.md` cobre as 5 renomeações, o arquivo 02 preservado e as exceções, antes de qualquer edição
+- [X] T001 Registrar o SHA-256 dos seis JSON de `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/` em um arquivo temporário fora do repositório, conforme `quickstart.md` §2
+- [X] T002 Confirmar a linha de base: 19 arquivos, 13 `.md`, 6 `.json`, 4 subpastas e 6 arquivos na subpasta 04; confirmar que os cinco nomes de destino (`01-schema-contrato.json`, `03-contrato-objetos-aninhados.json`, `04-contrato-enums.json`, `05-contrato-tipos-do-projeto.json`, `06-contrato-attributes-explicito.json`) não existem em `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/` (VR-01)
+- [X] T003 Conferir que `specs/015-remove-contract-template-prepositions/contracts/rename-manifest.md` cobre as 5 renomeações, o arquivo 02 preservado e as exceções, antes de qualquer edição
 
 ---
 
@@ -38,9 +38,9 @@
 
 **⚠️ CRITICAL**: Nenhuma user story pode começar até esta fase estar completa.
 
-- [ ] T004 Estender `src/test/archetype-post-generate/ContractTemplateRenameContractTest.groovy` com `p3New` e `p3RenamedCurrent` (`01-schema-do-contrato.json` e os quatro `0X-contrato-com-...`), detecção independente de `schemaRenamed` (presença de `01-schema-contrato.json`) e `othersRenamed` (presença de `03-contrato-objetos-aninhados.json`); compor `expected` para os quatro estados; trocar a checagem 2.3 para usar `expected[0]`; aplicar `p3RenamedCurrent` nas checagens 2.4 e 7.1; manter as asserções negativas e o anti-drift das gerações anteriores
-- [ ] T005 Estender `src/test/archetype-post-generate/FileRenameContractTest.groovy` com `p3New` e `p3RenamedCurrent`, a mesma detecção de dois estados, e compor `expected04` para os quatro estados: estado 1 = schema novo + arquivos 3 a 6 antigos; estado 2 = schema antigo + arquivos 3 a 6 novos; estado final = `p3New`; aplicar a composição em `expected04`, nas checagens 2.2/2.4, no índice 3.2/3.4, no corpus 4.2 e no README 6.1; preservar `p2LegacyOld`, `p2Current` e `p2New`
-- [ ] T006 Rodar `mvn -B clean test` a partir de `pom.xml` na raiz e confirmar que as suítes de `src/test/archetype-post-generate/` permanecem verdes no estado 0 (baseline), sem renomeações aplicadas
+- [X] T004 Estender `src/test/archetype-post-generate/ContractTemplateRenameContractTest.groovy` com `p3New` e `p3RenamedCurrent` (`01-schema-do-contrato.json` e os quatro `0X-contrato-com-...`), detecção independente de `schemaRenamed` (presença de `01-schema-contrato.json`) e `othersRenamed` (presença de `03-contrato-objetos-aninhados.json`); compor `expected` para os quatro estados; trocar a checagem 2.3 para usar `expected[0]`; aplicar `p3RenamedCurrent` nas checagens 2.4 e 7.1; manter as asserções negativas e o anti-drift das gerações anteriores
+- [X] T005 Estender `src/test/archetype-post-generate/FileRenameContractTest.groovy` com `p3New` e `p3RenamedCurrent`, a mesma detecção de dois estados, e compor `expected04` para os quatro estados: estado 1 = schema novo + arquivos 3 a 6 antigos; estado 2 = schema antigo + arquivos 3 a 6 novos; estado final = `p3New`; aplicar a composição em `expected04`, nas checagens 2.2/2.4, no índice 3.2/3.4, no corpus 4.2 e no README 6.1; preservar `p2LegacyOld`, `p2Current` e `p2New`
+- [X] T006 Rodar `mvn -B clean test` a partir de `pom.xml` na raiz e confirmar que as suítes de `src/test/archetype-post-generate/` permanecem verdes no estado 0 (baseline), sem renomeações aplicadas
 
 **Checkpoint**: as suítes aceitam os estados 0, 1, 2 e final; a linha de base está verde.
 
@@ -54,15 +54,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/01-schema-do-contrato.json` para `01-schema-contrato.json` com `Rename-Item`, após checar colisão (VR-01) e preservar numeral `01` e extensão `.json` (VR-02)
-- [ ] T008 [P] [US1] Atualizar a linha 24 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` para `llm-maven-flags-inference/04-templates-de-contrato/01-schema-contrato.json`, mantendo papel, ordem 14 e obrigatoriedade
-- [ ] T009 [P] [US1] Atualizar a linha 721 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` para `llm-maven-flags-inference/04-templates-de-contrato/01-schema-contrato.json`
-- [ ] T010 [P] [US1] Atualizar a linha 2182 de `README.md` para citar `01-schema-contrato.json` na tabela de templates
-- [ ] T011 [P] [US1] Atualizar a linha 102 de `src/test/archetype-post-generate/BuildArtifactsTest.groovy` para `04-templates-de-contrato/01-schema-contrato.json`
-- [ ] T012 [P] [US1] Atualizar a linha 61 de `src/test/archetype-post-generate/PathRenameContractTest.groovy` para `04-templates-de-contrato/01-schema-contrato.json`
-- [ ] T013 [P] [US1] Atualizar a linha 78 de `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` para `01-schema-contrato.json`
-- [ ] T014 [P] [US1] Atualizar as linhas 12, 139 e 148 de `src/test/archetype-post-generate/ProcedureContractTest.groovy` para `01-schema-contrato.json`
-- [ ] T015 [US1] Verificar que o SHA-256 de `01-schema-contrato.json` é idêntico ao registrado em T001 (VR-03) e rodar `mvn -B clean test` no estado 1
+- [X] T007 [US1] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/01-schema-do-contrato.json` para `01-schema-contrato.json` com `Rename-Item`, após checar colisão (VR-01) e preservar numeral `01` e extensão `.json` (VR-02)
+- [X] T008 [P] [US1] Atualizar a linha 24 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` para `llm-maven-flags-inference/04-templates-de-contrato/01-schema-contrato.json`, mantendo papel, ordem 14 e obrigatoriedade
+- [X] T009 [P] [US1] Atualizar a linha 721 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` para `llm-maven-flags-inference/04-templates-de-contrato/01-schema-contrato.json`
+- [X] T010 [P] [US1] Atualizar a linha 2182 de `README.md` para citar `01-schema-contrato.json` na tabela de templates
+- [X] T011 [P] [US1] Atualizar a linha 102 de `src/test/archetype-post-generate/BuildArtifactsTest.groovy` para `04-templates-de-contrato/01-schema-contrato.json`
+- [X] T012 [P] [US1] Atualizar a linha 61 de `src/test/archetype-post-generate/PathRenameContractTest.groovy` para `04-templates-de-contrato/01-schema-contrato.json`
+- [X] T013 [P] [US1] Atualizar a linha 78 de `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` para `01-schema-contrato.json`
+- [X] T014 [P] [US1] Atualizar as linhas 12, 139 e 148 de `src/test/archetype-post-generate/ProcedureContractTest.groovy` para `01-schema-contrato.json`
+- [X] T015 [US1] Verificar que o SHA-256 de `01-schema-contrato.json` é idêntico ao registrado em T001 (VR-03) e rodar `mvn -B clean test` no estado 1
 
 **Checkpoint**: US1 completa e testável isoladamente; arquivos 02 a 06 ainda com os nomes antigos.
 
@@ -76,18 +76,18 @@
 
 ### Implementation for User Story 2
 
-- [ ] T016 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/03-contrato-com-objetos-aninhados.json` para `03-contrato-objetos-aninhados.json`, checando colisão e preservando numeral `03` e extensão `.json`
-- [ ] T017 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/04-contrato-com-enums.json` para `04-contrato-enums.json`, checando colisão e preservando numeral `04` e extensão `.json`
-- [ ] T018 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/05-contrato-com-tipos-do-projeto.json` para `05-contrato-tipos-do-projeto.json`, removendo apenas `com` e preservando o trecho `tipos-do-projeto` (FR-013)
-- [ ] T019 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/06-contrato-com-attributes-explicito.json` para `06-contrato-attributes-explicito.json`, checando colisão e preservando numeral `06` e extensão `.json`
-- [ ] T020 [P] [US2] Atualizar as linhas 26–29 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` para os quatro caminhos novos, mantendo as posições 16–19 e os papéis
-- [ ] T021 [P] [US2] Atualizar as linhas 723–726 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` para os quatro caminhos novos
-- [ ] T022 [P] [US2] Atualizar as linhas 2184–2187 de `README.md` para os quatro nomes novos na tabela de templates
-- [ ] T023 [P] [US2] Atualizar as linhas 104–107 de `src/test/archetype-post-generate/BuildArtifactsTest.groovy` para os quatro caminhos novos
-- [ ] T024 [P] [US2] Atualizar as linhas 63–66 de `src/test/archetype-post-generate/PathRenameContractTest.groovy` para os quatro caminhos novos
-- [ ] T025 [P] [US2] Atualizar as linhas 80–83 de `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` para os quatro nomes novos
-- [ ] T026 [P] [US2] Atualizar a linha 199 de `src/test/archetype-post-generate/ProcedureContractTest.groovy` para `03-contrato-objetos-aninhados.json`
-- [ ] T027 [US2] Verificar que o SHA-256 dos seis JSON é idêntico ao registrado em T001 (VR-03), que `02-contrato-plano.json` permanece (VR-05) e rodar `mvn -B clean test` no estado final
+- [X] T016 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/03-contrato-com-objetos-aninhados.json` para `03-contrato-objetos-aninhados.json`, checando colisão e preservando numeral `03` e extensão `.json`
+- [X] T017 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/04-contrato-com-enums.json` para `04-contrato-enums.json`, checando colisão e preservando numeral `04` e extensão `.json`
+- [X] T018 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/05-contrato-com-tipos-do-projeto.json` para `05-contrato-tipos-do-projeto.json`, removendo apenas `com` e preservando o trecho `tipos-do-projeto` (FR-013)
+- [X] T019 [P] [US2] Renomear `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato/06-contrato-com-attributes-explicito.json` para `06-contrato-attributes-explicito.json`, checando colisão e preservando numeral `06` e extensão `.json`
+- [X] T020 [P] [US2] Atualizar as linhas 26–29 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` para os quatro caminhos novos, mantendo as posições 16–19 e os papéis
+- [X] T021 [P] [US2] Atualizar as linhas 723–726 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` para os quatro caminhos novos
+- [X] T022 [P] [US2] Atualizar as linhas 2184–2187 de `README.md` para os quatro nomes novos na tabela de templates
+- [X] T023 [P] [US2] Atualizar as linhas 104–107 de `src/test/archetype-post-generate/BuildArtifactsTest.groovy` para os quatro caminhos novos
+- [X] T024 [P] [US2] Atualizar as linhas 63–66 de `src/test/archetype-post-generate/PathRenameContractTest.groovy` para os quatro caminhos novos
+- [X] T025 [P] [US2] Atualizar as linhas 80–83 de `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` para os quatro nomes novos
+- [X] T026 [P] [US2] Atualizar a linha 199 de `src/test/archetype-post-generate/ProcedureContractTest.groovy` para `03-contrato-objetos-aninhados.json`
+- [X] T027 [US2] Verificar que o SHA-256 dos seis JSON é idêntico ao registrado em T001 (VR-03), que `02-contrato-plano.json` permanece (VR-05) e rodar `mvn -B clean test` no estado final
 
 **Checkpoint**: US2 completa; o estado final tem os seis nomes sem as preposições-alvo.
 
@@ -97,13 +97,13 @@
 
 **Purpose**: Validação final, varredura do corpus e confirmação do artefato.
 
-- [ ] T028 Rodar `mvn -B clean test` a partir de `pom.xml` como gate final e confirmar todas as suítes de `src/test/archetype-post-generate/` verdes, incluindo `ContractTemplateRenameContractTest.groovy`, `FileRenameContractTest.groovy`, `BuildArtifactsTest.groovy`, `PathRenameContractTest.groovy`, `ContractRuleRenameContractTest.groovy` e `ProcedureContractTest.groovy`
-- [ ] T029 Rodar `mvn clean install` e confirmar que `target/classes/llm-maven-flags-inference/04-templates-de-contrato/` contém os seis nomes novos e nenhum dos cinco nomes antigos (VR-11)
-- [ ] T030 Rodar `mvn -B clean integration-test` a partir de `pom.xml` e confirmar as fixtures de integração
-- [ ] T031 [P] Varrer o corpus operacional (`src/main/resources/llm-maven-flags-inference/01-inicializacao/`, `README.md` e `src/test/archetype-post-generate/`) e confirmar 0 referências operacionais aos cinco nomes antigos; aceitar apenas asserções negativas das suítes (VR-06)
-- [ ] T032 [P] Executar as verificações de `specs/015-remove-contract-template-prepositions/quickstart.md` §5–§7 (hash, referências e contagens 19/13/6/4) e registrar a evidência
-- [ ] T033 [P] Rodar `mvn -Deda.verify.installed.jar=true verify` a partir de `pom.xml` e confirmar o JAR instalado com os nomes novos; registrar como verificação opt-in, não como gate
-- [ ] T034 Confirmar que `02-contrato-plano.json`, o nome da subpasta `04-templates-de-contrato`, as subpastas 01 a 03 e as specs históricas permanecem intocados (SC-008, FR-007, FR-011, FR-021, FR-022)
+- [X] T028 Rodar `mvn -B clean test` a partir de `pom.xml` como gate final e confirmar todas as suítes de `src/test/archetype-post-generate/` verdes, incluindo `ContractTemplateRenameContractTest.groovy`, `FileRenameContractTest.groovy`, `BuildArtifactsTest.groovy`, `PathRenameContractTest.groovy`, `ContractRuleRenameContractTest.groovy` e `ProcedureContractTest.groovy`
+- [X] T029 Rodar `mvn clean install` e confirmar que `target/classes/llm-maven-flags-inference/04-templates-de-contrato/` contém os seis nomes novos e nenhum dos cinco nomes antigos (VR-11)
+- [X] T030 Rodar `mvn -B clean integration-test` a partir de `pom.xml` e confirmar as fixtures de integração
+- [X] T031 [P] Varrer o corpus operacional (`src/main/resources/llm-maven-flags-inference/01-inicializacao/`, `README.md` e `src/test/archetype-post-generate/`) e confirmar 0 referências operacionais aos cinco nomes antigos; aceitar apenas asserções negativas das suítes (VR-06)
+- [X] T032 [P] Executar as verificações de `specs/015-remove-contract-template-prepositions/quickstart.md` §5–§7 (hash, referências e contagens 19/13/6/4) e registrar a evidência
+- [X] T033 [P] Rodar `mvn -Deda.verify.installed.jar=true verify` a partir de `pom.xml` e confirmar o JAR instalado com os nomes novos; registrar como verificação opt-in, não como gate
+- [X] T034 Confirmar que `02-contrato-plano.json`, o nome da subpasta `04-templates-de-contrato`, as subpastas 01 a 03 e as specs históricas permanecem intocados (SC-008, FR-007, FR-011, FR-021, FR-022)
 
 ---
 
