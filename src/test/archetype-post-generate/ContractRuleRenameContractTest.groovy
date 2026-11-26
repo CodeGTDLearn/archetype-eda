@@ -86,7 +86,7 @@ def expectedPaths =
         p01.collect { "llm-maven-flags-inference/01-inicializacao/${it}" } +
                 p02.collect { "llm-maven-flags-inference/02-procedimento-do-agente/${it}" } +
                 expected03.collect { "llm-maven-flags-inference/${folderName}/${it}" } +
-                p04.collect { "llm-maven-flags-inference/04-referencia-templates-de-contrato/${it}" }
+                p04.collect { "llm-maven-flags-inference/04-templates-de-contrato/${it}" }
 def roles = [
         "Porta de entrada",
         "Este índice",

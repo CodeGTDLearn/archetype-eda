@@ -75,15 +75,15 @@ Pré-requisitos: Phase 1 (Setup), Phase 2 (Foundational), Phase 5 (Polish).
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Renomear `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato` para `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato` com `Rename-Item`, sem copiar e apagar, conforme `data-model.md` E1.new_name
-- [ ] T009 [P] [US1] Atualizar nas linhas 24 a 29 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` o token do caminho da pasta para `llm-maven-flags-inference/04-templates-de-contrato/`, preservando ordem, papéis e nomes dos arquivos
-- [ ] T010 [P] [US1] Atualizar nas linhas 721 a 726 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` o token do caminho da pasta para `llm-maven-flags-inference/04-templates-de-contrato/`, preservando os nomes dos arquivos
-- [ ] T011 [US1] Atualizar `README.md`: linha 55 (texto e `href` do índice), 610 (lista de composição), 652 (tabela de artefatos), 821 (`id`/`name` da âncora), 822 (título `### 04-templates-de-contrato`) e 2178 (cabeçalho da seção de templates), usando a âncora `llm-maven-flags-inference-04-templates-de-contrato` (`research.md` D5)
-- [ ] T012 [P] [US1] Atualizar a lista `procedureCategories` de `src/test/archetype-post-generate/BuildArtifactsTest.groovy` (linha 85) para `04-templates-de-contrato`
-- [ ] T013 [P] [US1] Atualizar a lista `categories` de `src/test/archetype-post-generate/PathRenameContractTest.groovy` (linha 44) e a checagem 4.6 da subseção do README para `04-templates-de-contrato`
-- [ ] T014 [P] [US1] Atualizar o comentário (linha 11), o diretório (linha 49) e a mensagem (linha 60) de `src/test/archetype-post-generate/ProcedureContractTest.groovy` para `04-templates-de-contrato`
-- [ ] T015 [P] [US1] Atualizar a lista de caminhos esperados (linha 89) de `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` para a pasta `04-templates-de-contrato`
-- [ ] T016 [P] [US1] Atualizar a lista das quatro subpastas (linha 81) de `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para `04-templates-de-contrato`
+- [x] T008 [US1] Renomear `src/main/resources/llm-maven-flags-inference/04-referencia-templates-de-contrato` para `src/main/resources/llm-maven-flags-inference/04-templates-de-contrato` com `Rename-Item`, sem copiar e apagar, conforme `data-model.md` E1.new_name
+- [x] T009 [P] [US1] Atualizar nas linhas 24 a 29 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/01-mapa-dos-arquivos-e-ordem-de-leitura.md` o token do caminho da pasta para `llm-maven-flags-inference/04-templates-de-contrato/`, preservando ordem, papéis e nomes dos arquivos
+- [x] T010 [P] [US1] Atualizar nas linhas 721 a 726 de `src/main/resources/llm-maven-flags-inference/01-inicializacao/00-entry-point.md` o token do caminho da pasta para `llm-maven-flags-inference/04-templates-de-contrato/`, preservando os nomes dos arquivos
+- [x] T011 [US1] Atualizar `README.md`: linha 55 (texto e `href` do índice), 610 (lista de composição), 652 (tabela de artefatos), 821 (`id`/`name` da âncora), 822 (título `### 04-templates-de-contrato`) e 2178 (cabeçalho da seção de templates), usando a âncora `llm-maven-flags-inference-04-templates-de-contrato` (`research.md` D5)
+- [x] T012 [P] [US1] Atualizar a lista `procedureCategories` de `src/test/archetype-post-generate/BuildArtifactsTest.groovy` (linha 85) para `04-templates-de-contrato`
+- [x] T013 [P] [US1] Atualizar a lista `categories` de `src/test/archetype-post-generate/PathRenameContractTest.groovy` (linha 44) e a checagem 4.6 da subseção do README para `04-templates-de-contrato`
+- [x] T014 [P] [US1] Atualizar o comentário (linha 11), o diretório (linha 49) e a mensagem (linha 60) de `src/test/archetype-post-generate/ProcedureContractTest.groovy` para `04-templates-de-contrato`
+- [x] T015 [P] [US1] Atualizar a lista de caminhos esperados (linha 89) de `src/test/archetype-post-generate/ContractRuleRenameContractTest.groovy` para a pasta `04-templates-de-contrato`
+- [x] T016 [P] [US1] Atualizar a lista das quatro subpastas (linha 81) de `src/test/archetype-post-generate/ProcedureEntryRenameContractTest.groovy` para `04-templates-de-contrato`
 - [ ] T017 [US1] Rodar `mvn -B test` e confirmar o estado S1: pasta nova presente, pasta antiga ausente, seis arquivos com os nomes atuais e todas as suítes verdes
 
 **Checkpoint**: User Story 1 funcional e testável isoladamente (estado S1).

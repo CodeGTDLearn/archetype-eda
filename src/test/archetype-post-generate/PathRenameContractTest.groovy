@@ -41,7 +41,7 @@ def categories = [
         "01-inicializacao",
         "02-procedimento-do-agente",
         "03-regras-de-formacao-do-contrato",
-        "04-referencia-templates-de-contrato"
+        "04-templates-de-contrato"
 ]
 
 def procedureFiles = [
