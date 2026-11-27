@@ -217,7 +217,7 @@ O registro tem 16 paradas e 2 confirmações. Cada código tem uma mensagem comp
 > **Opções de correção:**
 > 1. Acrescente um objeto JSON. Exemplo: `{"entity_name":"Cliente","attributes":{"nome":"Maria"}}`.
 > 2. Corrija a sintaxe do objeto existente. Exemplo: feche as chaves e use aspas duplas.
-> 3. Use um exemplo do template de contrato. Exemplo: `02-exemplo-contrato-plano.json`.
+> 3. Use um exemplo do template de contrato. Exemplo: `02-contrato-plano.json`.
 >
 > **Sugestão:** use a opção 1 para um contrato mínimo; use a opção 3 para um exemplo completo.
 > **Como retomar:** salve o spec e recomece pelo Gate B de §0.2.
@@ -718,12 +718,12 @@ llm-maven-flags-inference/03-regras-de-formacao-do-contrato/03-derivar-flags-de-
 llm-maven-flags-inference/03-regras-de-formacao-do-contrato/04-aplicar-precedencia-e-validacao.md
 llm-maven-flags-inference/03-regras-de-formacao-do-contrato/05-materializar-e-emitir-o-contrato.md
 llm-maven-flags-inference/03-regras-de-formacao-do-contrato/06-relatar-proveniencia.md
-llm-maven-flags-inference/04-referencia-templates-de-contrato/01-schema-do-contrato.json
-llm-maven-flags-inference/04-referencia-templates-de-contrato/02-exemplo-contrato-plano.json
-llm-maven-flags-inference/04-referencia-templates-de-contrato/03-exemplo-contrato-com-objetos-aninhados.json
-llm-maven-flags-inference/04-referencia-templates-de-contrato/04-exemplo-contrato-com-enums.json
-llm-maven-flags-inference/04-referencia-templates-de-contrato/05-exemplo-contrato-com-tipos-do-projeto.json
-llm-maven-flags-inference/04-referencia-templates-de-contrato/06-exemplo-contrato-com-attributes-explicito.json
+llm-maven-flags-inference/04-templates-de-contrato/01-schema-contrato.json
+llm-maven-flags-inference/04-templates-de-contrato/02-contrato-plano.json
+llm-maven-flags-inference/04-templates-de-contrato/03-contrato-objetos-aninhados.json
+llm-maven-flags-inference/04-templates-de-contrato/04-contrato-enums.json
+llm-maven-flags-inference/04-templates-de-contrato/05-contrato-tipos-do-projeto.json
+llm-maven-flags-inference/04-templates-de-contrato/06-contrato-attributes-explicito.json
 META-INF/maven/archetype-metadata.xml
 META-INF/archetype-post-generate.groovy
 archetype-resources/

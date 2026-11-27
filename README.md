@@ -55,7 +55,7 @@
     - <a href="#llm-maven-flags-inference-01-inicializacao">01-inicializacao</a>
     - <a href="#llm-maven-flags-inference-02-procedimento-do-agente">02-procedimento-do-agente</a>
     - <a href="#llm-maven-flags-inference-03-regras-de-formacao-do-contrato">03-regras-de-formacao-do-contrato</a>
-    - <a href="#llm-maven-flags-inference-04-referencia-templates-de-contrato">04-referencia-templates-de-contrato</a>
+    - <a href="#llm-maven-flags-inference-04-templates-de-contrato">04-templates-de-contrato</a>
 
 - <a href="#montagem-dos-arquivos-de-archetype">Montagem do Artefato (Build) 🏗️</a>
   - <a href="#montagem-dos-arquivos-de-archetype-archetype-metadata-xml">1) Archetype-Metadata.xml 🏗️</a>
@@ -501,7 +501,7 @@
 │    01-inicializacao/ (2)                     │
 │    02-procedimento-do-agente/ (5)            │
 │    03-regras-de-formacao-do-contrato/ (6)    │
-│    04-referencia-templates-de-contrato/ (6)  │
+│    04-templates-de-contrato/ (6)  │
 │                                              │
 │    10 passos:                                │
 │    1 00-entry-point                          │
@@ -837,16 +837,16 @@ C:\Temp\eda-sandbox
 | `05-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
 | `06-relatar-proveniencia.md` | tabela de proveniência e resumo |
 
-**Templates de contrato** (`llm-maven-flags-inference/04-referencia-templates-de-contrato/`):
+**Templates de contrato** (`llm-maven-flags-inference/04-templates-de-contrato/`):
 
 | Arquivo | Papel |
 |---|---|
-| `01-schema-do-contrato.json` | schema permissivo do contrato |
-| `02-exemplo-contrato-plano.json` | exemplo com campos de negócio no topo |
-| `03-exemplo-contrato-com-objetos-aninhados.json` | exemplo com objetos aninhados |
-| `04-exemplo-contrato-com-enums.json` | exemplo com enums |
-| `05-exemplo-contrato-com-tipos-do-projeto.json` | exemplo com tipos do projeto |
-| `06-exemplo-contrato-com-attributes-explicito.json` | exemplo com `attributes` explícito |
+| `01-schema-contrato.json` | schema permissivo do contrato |
+| `02-contrato-plano.json` | exemplo com campos de negócio no topo |
+| `03-contrato-objetos-aninhados.json` | exemplo com objetos aninhados |
+| `04-contrato-enums.json` | exemplo com enums |
+| `05-contrato-tipos-do-projeto.json` | exemplo com tipos do projeto |
+| `06-contrato-attributes-explicito.json` | exemplo com `attributes` explícito |
 
 * Campos de negócio viram atributos da entidade; chaves do catálogo viram flags `-D`.
 * O contrato pode trazer a coleção `attributes` explícita, que tem precedência sobre os campos avulsos.
@@ -886,6 +886,43 @@ fica a cargo do procedimento empacotado no JAR —
 
 
 
+
+<a id="llm-maven-flags-inference" name="llm-maven-flags-inference"></a>
+## llm-maven-flags-inference 🧠 <a href="#indice">↑ topo</a>
+
+> Pasta de Prompts de Inferência.
+
+> Zoom da **Cadeia de prompts** do [Mapa das Linhas do Tempo](#mapa-das-linhas-do-tempo).
+
+* **O que é:** a pasta é o **alvo do prompt do agente**.
+* **Pelo que responde:** ela responde pelo **pré-processamento** e pelo **procedimento de execução e verificação** que o agente faz depois da linha de comando.
+* **A sequência didática:**
+  1. O operador escreve o prompt na Spec.
+  2. O prompt aponta para o archetype e para esta pasta dentro do JAR.
+  3. O agente lê a entrada e o índice.
+  4. O agente aplica as regras e materializa o contrato.
+  5. O resultado é a linha `mvn archetype:generate`.
+* **Fronteira:** o **pré-processamento** termina nessa linha. A geração Maven **começa depois** dela — e a mesma pasta governa o que vem depois: executar, validar o `package`, conferir o contrato copiado, compilar e reportar (`04-fluxo-de-execucao-e-verificacao` e `05-entregaveis-e-relatorios`).
+
+<a id="llm-maven-flags-inference-01-inicializacao" name="llm-maven-flags-inference-01-inicializacao"></a>
+### 01-inicializacao <a href="#indice">↑ topo</a>
+
+É a porta de entrada: reúne o arquivo que abre o procedimento e o índice que fixa a ordem de leitura. É o primeiro momento depois do prompt.
+
+<a id="llm-maven-flags-inference-02-procedimento-do-agente" name="llm-maven-flags-inference-02-procedimento-do-agente"></a>
+### 02-procedimento-do-agente <a href="#indice">↑ topo</a>
+
+Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execução e os entregáveis. É o momento em que o procedimento vira ação: produz a linha de geração e, depois dela, executa, verifica e reporta.
+
+<a id="llm-maven-flags-inference-03-regras-de-formacao-do-contrato" name="llm-maven-flags-inference-03-regras-de-formacao-do-contrato"></a>
+### 03-regras-de-formacao-do-contrato <a href="#indice">↑ topo</a>
+
+Reúne as regras normativas de derivação. É o momento em que o use-case e o JSON de entrada se transformam no contrato.
+
+<a id="llm-maven-flags-inference-04-templates-de-contrato" name="llm-maven-flags-inference-04-templates-de-contrato"></a>
+### 04-templates-de-contrato <a href="#indice">↑ topo</a>
+
+Traz o schema e os exemplos de contrato. É a referência consultada para materializar o contrato no formato esperado.
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli"></a>
 ## Inferência de Contrato e Use-Case: do 'Prompt no Agente' ao 'Maven Archetype Generate' 🧠 <a href="#indice">↑ topo</a>
@@ -1059,55 +1096,6 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
 > O `-DoutputDirectory` mantém o projeto gerado **fora** da árvore do archetype — sem arquivos `untracked` no Git e sem o IDE indexar dois `pom.xml` aninhados. A propriedade é **nativa do plugin de geração de archetype** (não é uma flag do catálogo) e o valor vem da marcação **PASTA DE DESTINO** do spec. O exemplo acima é ilustração; a regra normativa está em `llm-maven-flags-inference/`.
 
 > **Onde está o detalhe de cada coluna?** Em [`src/main/resources/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`](src/main/resources/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/): `01` (entidade e atributos), `02` (tipos e enums), `03` (aninhados), `04` (precedência e validação), `05` (materialização do contrato) e `06` (proveniência). O ponto de entrada é `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`.
-
-
-<a id="llm-maven-flags-inference" name="llm-maven-flags-inference"></a>
-### Pasta  de Prompts de Inferência: llm-maven-flags-inference 🧠 <a href="#indice">↑ topo</a>
-
-> Zoom da **Cadeia de prompts** do [Mapa das Linhas do Tempo](#mapa-das-linhas-do-tempo).
-
-* **O que é:** a pasta é o **alvo do prompt do agente**.
-* **Pelo que responde:** ela responde pelo **pré-processamento** e pelo **procedimento de execução e verificação** que o agente faz depois da linha de comando.
-* **A sequência didática:**
-  1. O operador escreve o prompt na Spec.
-  2. O prompt aponta para o archetype e para esta pasta dentro do JAR.
-  3. O agente lê a entrada e o índice.
-  4. O agente aplica as regras e materializa o contrato.
-  5. O resultado é a linha `mvn archetype:generate`.
-* **Fronteira:** o **pré-processamento** termina nessa linha. A geração Maven **começa depois** dela — e a mesma pasta governa o que vem depois: executar, validar o `package`, conferir o contrato copiado, compilar e reportar (`04-fluxo-de-execucao-e-verificacao` e `05-entregaveis-e-relatorios`).
-
-<a id="llm-maven-flags-inference-01-inicializacao" name="llm-maven-flags-inference-01-inicializacao"></a>
-### 01-inicializacao <a href="#indice">↑ topo</a>
-
-É a porta de entrada: reúne o arquivo que abre o procedimento e o índice que fixa a ordem de leitura. É o primeiro momento depois do prompt.
-
-<a id="llm-maven-flags-inference-02-procedimento-do-agente" name="llm-maven-flags-inference-02-procedimento-do-agente"></a>
-### 02-procedimento-do-agente <a href="#indice">↑ topo</a>
-
-Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execução e os entregáveis. É o momento em que o procedimento vira ação: produz a linha de geração e, depois dela, executa, verifica e reporta.
-
-<a id="llm-maven-flags-inference-03-regras-de-formacao-do-contrato" name="llm-maven-flags-inference-03-regras-de-formacao-do-contrato"></a>
-### 03-regras-de-formacao-do-contrato <a href="#indice">↑ topo</a>
-
-Reúne as regras normativas de derivação. É o momento em que o use-case e o JSON de entrada se transformam no contrato.
-
-<a id="llm-maven-flags-inference-04-referencia-templates-de-contrato" name="llm-maven-flags-inference-04-referencia-templates-de-contrato"></a>
-### 04-referencia-templates-de-contrato <a href="#indice">↑ topo</a>
-
-Traz o schema e os exemplos de contrato. É a referência consultada para materializar o contrato no formato esperado.
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <a id="montagem-dos-arquivos-de-archetype" name="montagem-dos-arquivos-de-archetype"></a>
