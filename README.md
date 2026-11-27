@@ -17,42 +17,32 @@
     - <a href="#maven-archetype-system-cores-manejo-de-arquivos-groovy">1.2) Manejo de Arquivos c/ Groovy</a>
     - <a href="#maven-archetype-system-cores-testes-relativos-ao-archetype">1.3) Testes Relativos ao Archetype</a>
 
-  - <a href="#maven-archetype-system-fluxo">2) Fluxo 🔄</a>
-    - <a href="#maven-archetype-system-fluxo-os-tres-slots-do-archetype-empacotado">Os três slots do archetype empacotado 📦</a>
-      - <a href="#maven-archetype-system-fluxo-archetype-metadata-xml-o-indice-nao-contem-conteudo">2.1) <code>archetype-metadata.xml</code> — o índice (não contém conteúdo) 📇</a>
-      - <a href="#maven-archetype-system-fluxo-archetype-resources-o-conteudo-nao-sabe-se-existe">2.2) <code>archetype-resources/</code> — o conteúdo (não sabe se existe) 📦</a>
-      - <a href="#maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento">2.3) <code>archetype-post-generate.groovy</code> — o pós-processamento 🧬</a>
-
-    - <a href="#maven-archetype-system-fluxo-a-relacao-um-pipeline-de-3-tempos">A relação: um pipeline de 3 tempos ⏱️</a>
-
-    - <a href="#maven-archetype-system-fluxo-o-ciclo-do-artefato-o-archetype-packaging-amarra-tudo">O ciclo do artefato (o <code>archetype-packaging</code> amarra tudo) 🔗</a>
+  - <a href="#maven-archetype-system-fluxo">2) Anatomia dos 3 slots</a>
 
   - <a href="#maven-archetype-system-velocity">3) Velocity📍</a>
 
-- <a href="#maven-coordinates">Maven Coordinates 📍</a>
+- <a href="#maven-coordinates">Maven Coordinates do Projeto 📍</a>
   - <a href="#maven-coordinates-configuration-project">1) Configuration Project 🔧</a>
   - <a href="#maven-coordinates-pom-xml">2) POM.xml 📝</a>
   - <a href="#maven-coordinates-folder-structure">3) Folder Structure 🗂️</a>
 
-- <a href="#etapas-de-processamento">Etapas de Processamento 📈</a>
-  - <a href="#etapas-de-processamento-fluxo-das-tres-etapas">Fluxo das três etapas 🧭</a>
+- <a href="#mapa-das-linhas-do-tempo">Mapa das Linhas do Tempo</a>
+  - <a href="#mapa-tempo-visao">Visão geral — o ciclo completo</a>
+  - <a href="#mapa-tempo-pre">Pré-processamento</a>
+  - <a href="#mapa-tempo-processamento">Processamento</a>
+  - <a href="#mapa-tempo-pos">Pós-processamento</a>
+  - <a href="#mapa-tempo-artefato">Artefato — instalação do archetype no M2</a>
 
-  - <a href="#etapas-de-processamento-pre-processamento-empacotado">1) Pré-processamento (empacotado) 🧠</a>
-    - <a href="#etapas-de-processamento-pre-processamento-empacotado-suites-unitarias-do-pos-processador">Suítes unitárias do pós-processador 🧪</a>
+- <a href="#glossario">Glossário</a>
+  - <a href="#glossario-conceitos">1) Conceitos que costumam confundir</a>
+  - <a href="#glossario-termos">2) Termos</a>
 
-  - <a href="#etapas-de-processamento-processamento-empacotado">2) Processamento (empacotado) 🏗️</a>
+- <a href="#procedimento-para-especificacao-spec">Procedimento para Especificação/Spec</a>
+  - <a href="#procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit">Como usar no 'OpenCode' OU no 'GitHub Spec Kit'</a>
+  - <a href="#exemplo-de-prompt-para-spec">Exemplo de Prompt para Spec</a>
+  - <a href="#procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato">Onde estão as regras de formação do contrato</a>
+  - <a href="#procedimento-para-especificacao-spec-onde-usar-cada-abordagem">Onde usar cada abordagem</a>
 
-  - <a href="#etapas-de-processamento-pos-processamento-empacotado">3) Pós-processamento (empacotado) 🧬</a>
-
-  - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas">4) Montagem e instalação do artefato 📦 (fora das três etapas)</a>
-    - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-fluxo">Fluxo 🔄</a>
-    - <a href="#etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-regras-estruturais">Regras estruturais 📏</a>
-
-- <a href="#llm-maven-flags-inference">llm-maven-flags-inference 🧠</a>
-  - <a href="#llm-maven-flags-inference-01-inicializacao">01-inicializacao</a>
-  - <a href="#llm-maven-flags-inference-02-procedimento-do-agente">02-procedimento-do-agente</a>
-  - <a href="#llm-maven-flags-inference-03-regras-de-formacao-do-contrato">03-regras-de-formacao-do-contrato</a>
-  - <a href="#llm-maven-flags-inference-04-referencia-templates-de-contrato">04-referencia-templates-de-contrato</a>
 
 - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli">Inferência de Contrato e Use-Case: do 'Prompt 
   no Agente' ao 'Maven Archetype Generate' 🧠</a>
@@ -61,18 +51,21 @@
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-exemplo-ponta-a-ponta">3) O exemplo, ponta a ponta</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-as-tres-regras-que-mais-surpreendem">4) As três regras que mais surpreendem</a>
   - <a href="#inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli-o-portao-final-e-o-resultado">5) A Validação final 🚪</a>
+  - <a href="#llm-maven-flags-inference">Pasta  de Prompts de Inferência: llm-maven-flags-inference</a>
+    - <a href="#llm-maven-flags-inference-01-inicializacao">01-inicializacao</a>
+    - <a href="#llm-maven-flags-inference-02-procedimento-do-agente">02-procedimento-do-agente</a>
+    - <a href="#llm-maven-flags-inference-03-regras-de-formacao-do-contrato">03-regras-de-formacao-do-contrato</a>
+    - <a href="#llm-maven-flags-inference-04-referencia-templates-de-contrato">04-referencia-templates-de-contrato</a>
 
-- <a href="#instalacao">Instalacao 📦</a>
+- <a href="#montagem-dos-arquivos-de-archetype">Montagem do Artefato (Build) 🏗️</a>
+  - <a href="#montagem-dos-arquivos-de-archetype-archetype-metadata-xml">1) Archetype-Metadata.xml 🏗️</a>
+  - <a href="#montagem-dos-arquivos-de-archetype-archetype-post-generate-groovy">2) Archetype-Post-Generate.groovy 🧬</a>
+
+- <a href="#instalacao">Instalação do Archetype no M2 📦</a>
   - <a href="#instalacao-pre-requisitos">Pré-requisitos</a>
   - <a href="#instalacao-instalar-e-publicar-este-archetype">Instalar e publicar este archetype</a>
 
-- <a href="#cronograma-do-projeto">Cronograma do Projeto 🏗️</a>
-  - <a href="#cronograma-do-projeto-milestones">1) Milestones 📅</a>
-  - <a href="#cronograma-do-projeto-task-planning">2) Task Planning 📝️</a>
-  - <a href="#cronograma-do-projeto-concluded-tasks">3) Concluded Tasks ✅</a>
-  - <a href="#cronograma-do-projeto-next-version">4) Next Version 🔮️</a>
-
-- <a href="#acrescentando-novas-flags">Acrescentando Novas Flags ➕️</a>
+- <a href="#acrescentando-novas-flags">Acrescentando Novas Flags ao Catálogo ➕️</a>
   - <a href="#acrescentando-novas-flags-areas-alteradas-pela-adicao">1) Areas alteradas pela adição:</a>
 
   - <a href="#acrescentando-novas-flags-exemplo-pratico-na-mao-flag-c-manipulacao-de-pasta-e-arquivo">2) EXEMPLO PRATICO (na mao) - Flag c/ MANIPULACAO de Pasta e Arquivo:</a>
@@ -90,17 +83,7 @@
 
   - <a href="#acrescentando-novas-flags-padronizacao">3) Padronização:</a>
 
-- <a href="#procedimento-para-especificacao-spec">Procedimento para Especificação/Spec</a>
-  - <a href="#procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit">Como usar no 'OpenCode' OU no 'GitHub Spec Kit'</a>
-  - <a href="#exemplo-de-prompt-para-spec">Exemplo de Prompt para Spec</a>
-  - <a href="#procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato">Onde estão as regras de formação do contrato</a>
-  - <a href="#procedimento-para-especificacao-spec-onde-usar-cada-abordagem">Onde usar cada abordagem</a>
-
-- <a href="#montagem-dos-arquivos-de-archetype">Montagem dos Arquivos de Archetype 🏗️</a>
-  - <a href="#montagem-dos-arquivos-de-archetype-archetype-metadata-xml">1) Archetype-Metadata.xml 🏗️</a>
-  - <a href="#montagem-dos-arquivos-de-archetype-archetype-post-generate-groovy">2) Archetype-Post-Generate.groovy 🧬</a>
-
-- <a href="#testabilidade">Testabilidade 🧪</a>
+- <a href="#testabilidade">Testabilidade: Artefato × Módulo Gerado 🧪</a>
   - <a href="#testabilidade-onde-os-testes-vivem">1) ONDE OS TESTES VIVEM</a>
   - <a href="#testabilidade-o-que-cada-pasta-cobre">2) O QUE CADA PASTA COBRE</a>
   - <a href="#21-schema-test-entidade-contrato-gerado-na-aplicacao">2.1) SCHEMA TEST ENTIDADE-CONTRATO (gerado na aplicacao)</a>
@@ -136,8 +119,14 @@
   - <a href="#flags-do-mvn-archetype-generate-estrutura-de-testes">10. Estrutura de testes</a>
   - <a href="#flags-do-mvn-archetype-generate-grafo-de-dependencias">Grafo de dependências</a>
 
-- <a href="#funcionalidades">Funcionalidades 🛠️</a>
+- <a href="#funcionalidades">Funcionalidades do Módulo Gerado 🛠️</a>
   - <a href="#funcionalidades-contratos-a-fonte-da-verdade-do-modulo-da-api">Contratos📜: a 'Fonte da Verdade' do Módulo da API</a>
+
+- <a href="#cronograma-do-projeto">Cronograma do Projeto 🏗️</a>
+  - <a href="#cronograma-do-projeto-milestones">1) Milestones 📅</a>
+  - <a href="#cronograma-do-projeto-task-planning">2) Task Planning 📝️</a>
+  - <a href="#cronograma-do-projeto-concluded-tasks">3) Concluded Tasks ✅</a>
+  - <a href="#cronograma-do-projeto-next-version">4) Next Version 🔮️</a>
 
 ---
 
@@ -154,6 +143,8 @@
 
 <a id="tecnologias-utilizadas" name="tecnologias-utilizadas"></a>
 ## Tecnologias Utilizadas 🛠️ <a href="#indice">↑ topo</a>
+
+> Contexto técnico deste projeto; não é fluxo.
 
 * Escopo: as tecnologias **deste projeto** (o gerador). A stack dos projetos **gerados** não faz parte desta seção.
 
@@ -210,6 +201,8 @@
 
 <a id="maven-archetype-system" name="maven-archetype-system"></a>
 ## Maven Archetype System 🏗️ <a href="#indice">↑ topo</a>
+
+> Anatomia do artefato e da geração; não é uma linha do tempo.
 
 <a id="maven-archetype-system-cores" name="maven-archetype-system-cores"></a>
 ### 1) Cores ⚛️ <a href="#indice">↑ topo</a>
@@ -377,17 +370,7 @@
 	* Esse teste é realizado na fase `integration-test`, depois de `package` (o artefato já está montado).
 
 <a id="maven-archetype-system-fluxo" name="maven-archetype-system-fluxo"></a>
-### 2) Fluxo 🔄 <a href="#indice">↑ topo</a>
-
-* **Objetivo:** explicar a **essência** do `archetype:generate` do Maven — como os slots
-  do JAR empacotado se relacionam entre si, e **por que** o Maven os separa.
-
-<a id="maven-archetype-system-fluxo-os-tres-slots-do-archetype-empacotado" name="maven-archetype-system-fluxo-os-tres-slots-do-archetype-empacotado"></a>
-#### Os três slots do archetype empacotado 📦 <a href="#indice">↑ topo</a>
-
-* O archetype empacotado (`packaging=maven-archetype`) é um JAR com **três slots**
-  de **nomes fixos**, reconhecidos pelo plugin por constantes próprias
-  (`org.apache.maven.archetype.common.Constants`):
+### 2) Anatomia dos 3 slots <a href="#indice">↑ topo</a>
 
 | Slot no JAR | Constante | Obrigatório? |
 |---|---|---|
@@ -395,107 +378,7 @@
 | `archetype-resources/` | `ARCHETYPE_RESOURCES` | sim |
 | `META-INF/archetype-post-generate.groovy` | `ARCHETYPE_POST_GENERATION_SCRIPT` | opcional |
 
-* O slot **é** o nome da pasta/arquivo dentro do JAR — nada mais.
-* O `archetype:jar` (goal `jar`, fase `package`) empacota `target/classes` no JAR.
-
-<a id="maven-archetype-system-fluxo-archetype-metadata-xml-o-indice-nao-contem-conteudo" name="maven-archetype-system-fluxo-archetype-metadata-xml-o-indice-nao-contem-conteudo"></a>
-#### 2.1) `archetype-metadata.xml` — o índice (não contém conteúdo) 📇 <a href="#indice">↑ topo</a>
-
-* Descreve **o que** o archetype precisa e **o que fazer** com a pasta de templates:
-  * `<requiredProperties>` — as **variáveis** pedidas, quais sejam:
-    * `key`
-    * `defaultValue`
-    * `validationRegex`
-  * `<fileSets>` — o **roteamento**: 
-    * cada `<fileSet>` diz *qual diretório* de `archetype-resources/` vira 
-    * *qual lugar* da árvore gerada, e com que tratamento:
-      * `filtered`
-      * `packaged`
-      * `encoding`
-      * `includes`/`excludes`
-    * O metadata **nunca lista arquivos**:
-      * aponta pastas e deixa o `includes` filtrar.
-      * 
-* **Motivação:** separar a *declaração* do *conteúdo*.
-  * o descritor é pequeno, revisável, substituível;
-  * o template pode ser gigante e nunca é lido pelo parser — só copiado.
-
-<a id="maven-archetype-system-fluxo-archetype-resources-o-conteudo-nao-sabe-se-existe" name="maven-archetype-system-fluxo-archetype-resources-o-conteudo-nao-sabe-se-existe"></a>
-#### 2.2) `archetype-resources/` — o conteúdo (não sabe se existe) 📦 <a href="#indice">↑ topo</a>
-
-* A árvore esqueleto do projeto a ser gerado. Única fonte do *conteúdo* dos arquivos.
-* O parser do metadata nunca entra aqui. 
-* Quem entra é o **gerador**, que usa o
-  metadata como instrução de montagem:
-  * `__entity_name_package__` no **nome** de arquivo/pasta → substituído pelo valor da flag;
-  * `${entity_name}` no **conteúdo** → renderizado pelo Velocity (só com `filtered="true"`).
-* **Motivação:** 
-  * o template é puro "material virgem" — não carrega lógica de montagem.
-  * Quem decide como usá-lo é o metadata.
-
-<a id="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento" name="maven-archetype-system-fluxo-archetype-post-generate-groovy-o-pos-processamento"></a>
-#### 2.3) `archetype-post-generate.groovy` — o pós-processamento 🧬 <a href="#indice">↑ topo</a>
-
-* Script Groovy executado **depois** da cópia.
-  * Recebe, via `Binding` do `GroovyShell`:
-    * cada `requiredProperty` como **variável direta**;
-    * a variável `request` = `ArchetypeGenerationRequest` completo, ex:
-      * `request.properties`
-      * `request.outputDirectory`
-      * `request.artifactId`
-      * etc…
-* **Motivação (a essencial):** o descritor é **estático e sem condição**.
-  * No modelo atual (`archetype-metadata.xml` do Maven 3.4.1) **não existe** forma de
-    dizer *"este fileSet só entra se a flag X for true"*.
-    * Logo: **quem decide manter/excluir por flag é o Groovy**.
-    * Ele existe para o que a forma declarativa não consegue expressar.
-
-<a id="maven-archetype-system-fluxo-a-relacao-um-pipeline-de-3-tempos" name="maven-archetype-system-fluxo-a-relacao-um-pipeline-de-3-tempos"></a>
-#### A relação: um pipeline de 3 tempos ⏱️ <a href="#indice">↑ topo</a>
-
-```
-   metadata.xml          resources/          post-generate.groovy
-   ───────────────       ───────────         ─────────────────────
-   "O QUE preciso"  +   "O QUE copio"   →   "O QUE ajusto"
-   (variáveis)            (template bruto)     (mantém/exclui/renomeia)
-
-   declarado / passivo                         único que decide
-   estático / só conteúdo
-```
-
-* Cada slot é consumido em um **momento diferente da mesma execução** do
-  `archetype:generate`:
-  1. **Metadata primeiro**:
-     * o configurador lê o descritor
-     * resolve as flags
-       * (CLI > `defaultValue` > prompt)
-         * monta o `Properties`.
-  2. **Resources no meio**:
-     * o gerador percorre os `<fileSet>`
-     * resolve os templates correspondentes
-       * aplica Velocity / `packaged` / `encoding`, e
-         * escreve a árvore.
-  3. **Groovy no fim**:
-     * roda sobre a árvore já escrita, com as mesmas flags em mãos.
-
-* **A lei da relação:** 
-  * Fluxo:
-    * o metadata **dirige**, 
-    * os resources **sofrem**,
-    * o Groovy **corrige**.
-  * Nenhum dos dois primeiros sabe que o terceiro existe;
-  * o Groovy não pode adicionar ao contrato — só intervém no resultado.
-
-<a id="maven-archetype-system-fluxo-o-ciclo-do-artefato-o-archetype-packaging-amarra-tudo" name="maven-archetype-system-fluxo-o-ciclo-do-artefato-o-archetype-packaging-amarra-tudo"></a>
-#### O ciclo do artefato (o `archetype-packaging` amarra tudo) 🔗 <a href="#indice">↑ topo</a>
-
-```
-process-resources → resources
-package           → archetype:jar              (monta o JAR com os 3 slots)
-integration-test  → archetype:integration-test (gera projeto, roda goal.txt, compara)
-install           → install + archetype:update-local-catalog
-                                               (escreve ~/.m2/archetype-catalog.xml)
-```
+> O fluxo de uso está no [Mapa das Linhas do Tempo](#mapa-das-linhas-do-tempo).
 
 <a id="maven-archetype-system-velocity" name="maven-archetype-system-velocity"></a>
 ### 3) Velocity📍 <a href="#indice">↑ topo</a>
@@ -511,7 +394,9 @@ install           → install + archetype:update-local-catalog
 
 
 <a id="maven-coordinates" name="maven-coordinates"></a>
-## Maven Coordinates 📍 <a href="#indice">↑ topo</a>
+## Maven Coordinates do Projeto 📍 <a href="#indice">↑ topo</a>
+
+> Setup do projeto; não é fluxo.
 
 * [Click to check the Coordinates Documentation](https://maven.apache.org/pom.html#Maven_Coordinates)
 
@@ -540,245 +425,449 @@ install           → install + archetype:update-local-catalog
 
 
 
-<a id="etapas-de-processamento" name="etapas-de-processamento"></a>
-## Etapas de Processamento 📈 <a href="#indice">↑ topo</a>
+<a id="mapa-das-linhas-do-tempo" name="mapa-das-linhas-do-tempo"></a>
+## Mapa das Linhas do Tempo <a href="#indice">↑ topo</a>
 
-* Visão geral: o processamento do archetype acontece em **3 etapas** — e apenas 2
-  delas viajam empacotadas dentro do JAR:
-  - **1) Pré-processamento**:
-    - captura a intenção (use-case + contrato JSON) e demais elementos
-    - Essa intencao e capturada no 'TUI' do Agente
-    - Os valores das Flags são inferidos 'Agenticamente'
-      - ✅ **JAR empacotado** com as 'Diretivas Agenticas de Inferencia' possui:
-        - Os Procedimento Agenticos (prompts)
-          - Localizados na pasta `llm-maven-flags-inference/`, lido pelo agente a partir do JAR).
-    - RESULTADO: 
-      - Produz a command line `-D...` do Maven.  
+> Leia esta seção antes das demais. As linhas do tempo são o mapa; as seções seguintes são os zooms.
 
-  - **2) Processamento**:
-    - o `maven-archetype-plugin` materializa a árvore do
-      projeto
-    - Isso ocorre a partir dos:
-      - catálogo de flags
-      - Procedimentos AGentics
-      - Templates de Contratos
+<a id="mapa-tempo-visao" name="mapa-tempo-visao"></a>
+### 1) Visão geral — o ciclo completo <a href="#indice">↑ topo</a>
 
-  - **3) Pós-processamento**:
-    - o Groovy modulariza o projeto gerado
-      - Mecanismo: mantém / exclui arquivos e pastas.
+```text
+🧭  O CICLO COMPLETO — DO PROMPT AO MÓDULO
 
-<a id="etapas-de-processamento-fluxo-das-tres-etapas" name="etapas-de-processamento-fluxo-das-tres-etapas"></a>
-### Fluxo de três etapas 🧭 <a href="#indice">↑ topo</a>
+┌──────────────────────────────────────────────┐
+│ USUÁRIO (agente de código: OpenCode)         │
+│ prompt:                                       │
+│   use-case                                    │
+│   package + pasta de destino (path)           │
+│   contrato JSON                               │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ PRÉ-PROCESSAMENTO (INFERÊNCIA)               │
+│ pasta llm-maven-flags-inference/             │
+│ spec → Gates A–D → 10 passos → contrato      │
+│ → flags → comando                            │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ PROCESSAMENTO                                │
+│ mvn archetype:generate                       │
+│ (flags inferidas no pré-processamento)       │
+│ metadata → resources (Velocity)              │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ PÓS-PROCESSAMENTO (GROOVY)                   │
+│ modularização                                │
+│ manejo de pastas e arquivos                  │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ VERIFICAÇÃO                                  │
+│ execução de testes para confirmação          │
+│ do módulo gerado                             │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ MÓDULO GERADO                                │
+│ módulo de API gerado com o contrato          │
+│ e o use case inferidos                       │
+│ no pré-processamento                         │
+└──────────────────────────────────────────────┘
+```
 
-| Fluxo | Papel | Tecnologia | Pacote <br> JAR? | Momento no <br>`archetype:generate` |
-|---|---|---|---|---|
-| Pré-processamento | intenção → `mvn ... -D...` | procedimento do agente (`llm-maven-flags-inference/` no JAR) | ✅ | antes  |
-| Processamento | catálogo + templates → árvore do projeto | `archetype-metadata.xml` + `archetype-resources/` (Velocity) | ✅ | durante |
-| Pós-processamento | árvore gerada → modularização | `archetype-post-generate.groovy` | ✅ | Depois |
+<a id="mapa-tempo-pre" name="mapa-tempo-pre"></a>
+### 2) Pré-processamento <a href="#indice">↑ topo</a>
 
-> O `mvn clean install` **não** é uma etapa de processamento: é o passo final do
-> *pipeline do artefato* (montagem, testes e instalação em `~/.m2`), detalhado no
-> §4 abaixo.
+```text
+🧠  PRÉ-PROCESSAMENTO (INFERÊNCIA) — A IA ANTES DO COMANDO
 
-<a id="etapas-de-processamento-pre-processamento-empacotado" name="etapas-de-processamento-pre-processamento-empacotado"></a>
-### 1) Pré-processamento (empacotado) 🧠 <a href="#indice">↑ topo</a>
+┌──────────────────────────────────────────────┐
+│ 1. PROMPT DIGITADO PELO USUÁRIO              │
+│    no agente de código (OpenCode)            │
+│    na spec do Spec Kit                       │
+│    use-case + tipo de módulo + package       │
+│    + pasta de destino (path) + contrato JSON │
+│    validação: Gates A–D                      │
+│    (use-case, contrato, ordem, destino)      │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 2. CADEIA DE PROMPTS                         │
+│    pasta llm-maven-flags-inference/          │
+│                                              │
+│    01-inicializacao/ (2)                     │
+│    02-procedimento-do-agente/ (5)            │
+│    03-regras-de-formacao-do-contrato/ (6)    │
+│    04-referencia-templates-de-contrato/ (6)  │
+│                                              │
+│    10 passos:                                │
+│    1 00-entry-point                          │
+│    2 01-mapa                                 │
+│    3 01-papel-e-restricoes                   │
+│    4 02-localizar-e-ler-o-archetype          │
+│    5 leituras técnicas do JAR                │
+│    6 03-regras-obrigatorias-de-geracao       │
+│    7 04-fluxo-de-execucao-e-verificacao      │
+│    8 05-entregaveis-e-relatorios             │
+│    9 03-regras 01..06                        │
+│    10 04-templates 01 + exemplo              │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 3. INFERÊNCIA (LLM)                          │
+│    contrato + flags + proveniência           │
+│    proveniência = origem de cada flag        │
+│    (contrato, derivada, inferência, default) │
+│    contrato materializado em disco           │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 4. COMANDO                                   │
+│    montagem da linha                         │
+│    mvn archetype:generate                    │
+│    execução do comando Maven                 │
+└──────────────────────────────────────────────┘
+```
 
-* **Objetivo:** 
-  * transformar **use-case + contrato JSON** + demais elementos contidos no 'Prompt dado ao Agente' em mvn-cli
-    * command line pronta do `mvn archetype:generate` (todas as flags `-D` resolvidas).
+<a id="mapa-tempo-processamento" name="mapa-tempo-processamento"></a>
+### 3) Processamento <a href="#indice">↑ topo</a>
 
-* **Quem faz:** 
-  * o **agente** que opera o archetype:
-    * Atraves da Inferencia das Flags de `mvn archetype:generate`
-    * Construindo a `mvn archetype:generate`
-    * Executando a `mvn archetype:generate`
+```text
+🔧  PROCESSAMENTO — O MAVEN ARCHETYPE GENERATE
+    (flags inferidas no pré-processamento)
 
-  * Observacoes:
-    * Não há motor, CLI ou script externo: 
-      * 'Diretivas Agenticas de Inferencia':
-        * Sao o conjunto do procedimentos(arquivos) em Markdown e JSON
-          * Empacotados no JAR.
+┌──────────────────────────────────────────────┐
+│ 1. CATÁLOGO DE FLAGS                         │
+│    descrições das propriedades e filesets    │
+│    no archetype-metadata.xml                 │
+│    35 properties + 18 filesets + 53 entities │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 2. METADATA                                  │
+│    archetype-metadata.xml montado pelo       │
+│    xml-maven-plugin +                        │
+│    archetype-metadata-identity.xsl           │
+│    fileSet + requiredProperty                │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 3. RESOURCES                                 │
+│    Velocity substitui ${...} nos templates   │
+│    de archetype-resources/ (filtered=true)   │
+│    a partir das flags                        │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 4. ÁRVORE DO MÓDULO                          │
+│    projeto gerado no destino: pastas e       │
+│    arquivos já renderizados pelo Velocity    │
+└──────────────────────────────────────────────┘
+```
 
-* **Composição:** [`src/main/resources/llm-maven-flags-inference/`](src/main/resources/llm-maven-flags-inference/) — 19 arquivos em 4 categorias:
-  - `01-inicializacao/`:
-    - porta de entrada (`00-entry-point`) e mapa de leitura (`01-mapa-dos-arquivos-e-ordem-de-leitura`);
-  - `02-procedimento-do-agente/`:
-    - papel, leitura do JAR, regras obrigatórias, execução e entregáveis;
-  - `03-regras-de-formacao-do-contrato/`:
-    - derivação da entidade, tipos, tipos aninhados, precedência, 
-      materialização e proveniência;
-  - `04-referencia-templates-de-contrato/`:
-    - schema e exemplos.
+<a id="mapa-tempo-pos" name="mapa-tempo-pos"></a>
+### 4) Pós-processamento <a href="#indice">↑ topo</a>
 
-* **Entrada/Saída:** 
-  * Entrada: Dados fornecidos ao Agente e inferidos em flags (tipo de módulo, package base, use-case, contrato JSON)
-  * Command line do Maven + tabela de proveniência.
+```text
+🧬  PÓS-PROCESSAMENTO (GROOVY) — DEPOIS DA GERAÇÃO
+    manejo de pastas e arquivos
 
-* **Fonte da verdade:** 
-  * o JAR instalado `com.eda-archetype:eda-archetype` contendo:
-    * Diretivas Agenticas de Inferencia
-    * O catálogo de flags (`META-INF/maven/archetype-metadata.xml`).
+┌──────────────────────────────────────────────┐
+│ ENTRADAS DO COMPOSER                         │
+│                                              │
+│ body/ (15)       imports, paths, helpers     │
+│ variables/ (25)  flags                       │
+│ generators/ (4)  enums, POJOs, contrato      │
+│ snippets/ (20)   mantém/exclui/renomeia      │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ COMPOSER                                     │
+│ ArchetypePostGenerateComposer.groovy         │
+│ usa as 4 entradas acima para montar o        │
+│ arquivo final                                │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ archetype-post-generate.groovy               │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ RUNTIME                                      │
+│ manejo de pastas e arquivos                  │
+│ enums                                        │
+│ POJOs                                        │
+│ classes aninhadas (nested)                   │
+│ contrato                                     │
+│ modularização do projeto                     │
+└──────────────────────────────────────────────┘
+```
 
-* Detalhes do procedimento → seção **"Procedimento para Especificação"**:
-  * Diretivas Agenticas de Inferencia
+<a id="mapa-tempo-artefato" name="mapa-tempo-artefato"></a>
+### 5) Artefato — instalação do archetype no M2 <a href="#indice">↑ topo</a>
 
-<a id="etapas-de-processamento-pre-processamento-empacotado-suites-unitarias-do-pos-processador" name="etapas-de-processamento-pre-processamento-empacotado-suites-unitarias-do-pos-processador"></a>
-#### Suítes unitárias do pós-processador 🧪 <a href="#indice">↑ topo</a>
+```text
+🧰  ARTEFATO — INSTALAÇÃO DO ARCHETYPE NO M2
+    build + testes + instalação; não gera módulo
+    (generate-resources → process-resources →
+     test → integration-test → install)
 
-Runner: `run-archetype-post-generate-tests.groovy` — as suítes são scripts Groovy com checks próprios, executados pelo `groovy-maven-plugin` na fase `test`.
+┌──────────────────────────────────────────────┐
+│ 1. METADATA                                  │
+│    archetype-metadata.xml (core + DOCTYPE)   │
+│    montado por xml-maven-plugin +            │
+│    archetype-metadata-identity.xsl           │
+│    a partir de:                              │
+│    archetype_metadata_filesets/ (18)         │
+│    archetype_metadata_required_properties/   │
+│    (35)                                      │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 2. PÓS-PROCESSADOR                           │
+│    archetype-post-generate.groovy            │
+│    montado por                               │
+│    ArchetypePostGenerateComposer.groovy      │
+│    a partir de:                              │
+│    body (15)                                 │
+│      (archetype_post_generate_body/)        │
+│    variables (25)                            │
+│      (archetype_post_generate_variables/)   │
+│    generators (4)                            │
+│      (archetype_post_generate_generators/)  │
+│    snippets (20)                             │
+│      (archetype_post_generate_snippets/)    │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 3. TESTES UNITÁRIOS                          │
+│    src/test/archetype-post-generate/         │
+│    runner:                                   │
+│    src/test/groovy/                          │
+│    run-archetype-post-generate-tests.groovy  │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 4. FIXTURES + verify.groovy                  │
+│    src/test/resources/projects/              │
+│    22 pastas                                 │
+│    cada uma com:                             │
+│    archetype.properties, goal.txt,           │
+│    verify.groovy                             │
+└──────────────────────┬───────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────┐
+│ 5. INSTALAÇÃO                                │
+│    JAR em ~/.m2/repository/                  │
+│    com/eda-archetype/eda-archetype/          │
+│    0.0.1-SNAPSHOT/                           │
+│    dentro do JAR:                            │
+│    META-INF/maven/archetype-metadata.xml     │
+│                                              │
+│    catálogo local:                           │
+│    ~/.m2/repository/archetype-catalog.xml    │
+│    (lista o archetype instalado;             │
+│    não é o archetype-metadata.xml)           │
+└──────────────────────────────────────────────┘
+```
 
-> Detalhamento por camada, tecnologia, pasta e comando → seção **"Testabilidade 🧪"**
+<a id="glossario" name="glossario"></a>
+## Glossário <a href="#indice">↑ topo</a>
 
-<a id="etapas-de-processamento-processamento-empacotado" name="etapas-de-processamento-processamento-empacotado"></a>
-### 2) Processamento (empacotado) 🏗️ <a href="#indice">↑ topo</a>
+<a id="glossario-conceitos" name="glossario-conceitos"></a>
+### 1) Conceitos que costumam confundir <a href="#indice">↑ topo</a>
 
-* **Objetivo:** 
-  * o `maven-archetype-plugin` materializa a árvore do projeto gerado
-  * Isso ocorre a partir do catálogo de flags + templates
-    * durante o `mvn archetype:generate`.
+| Dúvida | Resposta |
+|---|---|
+| Proveniência | Origem de cada flag: contrato, derivada, inferência ou default. |
+| Inferência × comando | Inferência produz contrato/flags; comando monta e executa a linha. |
+| Catálogo de flags | Descrições de properties/filesets no `archetype-metadata.xml`. |
+| Catálogo local × metadata | `archetype-catalog.xml` no M2 lista archetypes; `archetype-metadata.xml` viaja no JAR. |
+| Árvore do módulo | Projeto gerado no destino, não o template. |
+| Testes unitários | `src/test/archetype-post-generate/` + runner. |
+| Fixtures + `verify.groovy` | `src/test/resources/projects/`; cada pasta tem os três arquivos. |
+| `verify.groovy` | Hook do artefato, não do módulo gerado. |
 
-* **Composição (fonte da verdade):**
+<a id="glossario-termos" name="glossario-termos"></a>
+### 2) Termos <a href="#indice">↑ topo</a>
 
-| # | Artefato | Local | Papel |
-|---|----------|-------|-------|
-| A1 | Catálogo de flags - `archetype_metadata_required_properties` | `src/main/resources/META-INF/maven/archetype_metadata_required_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
-| A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | 18 arquivos, um `<fileSet>` cada; mapeia `archetype-resources/` → árvore do projeto gerado |
-| A3 | Core do metadata (Catalogo Montado) | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 53 entities (35 `property-<NN>-<flag>` + 18 `fileset-<NN>-<flag>`) |
-| A4 | XSLT identidade | `src/main/resources/META-INF/maven/archetype-metadata-identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
+| Termo | Definição |
+|---|---|
+| Linha do tempo | Sequência didática em cascata; cada passo tem O que é / Entra / Sai / Onde vive. |
+| Artefato | O archetype construído e instalado no M2. |
+| Módulo gerado | O projeto que sai do `mvn archetype:generate`. |
+| Pré-processamento (Inferência) | IA: prompt, Gates, cadeia de prompts, contrato, flags e comando. |
+| Processamento | Maven Archetype Generate: metadata + resources. |
+| Pós-processamento | Groovy: modularização e manejo de pastas/arquivos. |
+| Verificação | Execução de testes para confirmação do módulo gerado. |
+| Cadeia de prompts | 4 subpastas e 10 passos dentro de `llm-maven-flags-inference/`. |
+| Inferência | Derivação do contrato, flags e proveniência. |
+| Comando | Montagem e execução do `mvn archetype:generate`. |
+| Geração | Metadata + resources + post-generate. |
+| Catálogo de flags | Descrições de properties/filesets no `archetype-metadata.xml`. |
+| Catálogo local | `archetype-catalog.xml` no M2; lista archetypes instalados. |
+| Proveniência | Origem de cada flag. |
+| Pipeline do artefato | Fragmentos → XSLT/compositor → JAR → testes → `~/.m2`. |
+| Testes do artefato | Suítes unitárias, fixtures e `verify.groovy`. |
+| Testes do módulo | JUnit 5 e schema test. |
+| `verify.groovy` | Hook da verificação do artefato; não é verificação pós-comando. |
 
-| Artefato | Local | Papel |
-|----------|-------|-------|
-| Templates de Criacao do Modulo | `src/main/resources/archetype-resources/` | esqueleto do projeto gerado; os `${...}` são renderizados pelo Velocity |
-| 'Diretivas Agenticas de Inferencia' | `src/main/resources/llm-maven-flags-inference/` | 19 arquivos em 4 categorias (`01-inicializacao/`, `02-procedimento-do-agente/`, `03-regras-de-formacao-do-contrato/`, `04-referencia-templates-de-contrato/`) que viajam no JAR; o agente lê o procedimento de dentro do JAR |
-| Fixtures de integração | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um validado com `mvn clean verify` |
+<a id="procedimento-para-especificacao-spec" name="procedimento-para-especificacao-spec"></a>
+## Procedimento para Especificação/Spec <a href="#indice">↑ topo</a>
 
-* **Montagem do catálogo:** 
-  * fragmentos (A1 + A2) + DOCTYPE (A3) →
-    * `xml-maven-plugin:transform` + `archetype-metadata-identity.xsl` 
-    * (A4) na fase `generate-resources` → `target/classes/META-INF/maven/archetype-metadata.xml`
-      (cópia convencional excluída — `pom.xml:38-41`).
+> Zoom do nó **Spec** do [Mapa das Linhas do Tempo](#mapa-das-linhas-do-tempo).
 
-* **Execução:**
-  * Ciclo:
-    * o plugin lê o JAR instalado (`~/.m2`)
-    * valida as flags `-D` (default × `validationRegex`) e 
-    * renderiza os templates
-  * etapa **autossuficiente**: 
-    * depende apenas do `.m2`, nunca da pasta-fonte.
+<a id="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit" name="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit"></a>
+### Como usar no 'OpenCode' OU no 'GitHub Spec Kit' <a href="#indice">↑ topo</a>
 
-<a id="etapas-de-processamento-pos-processamento-empacotado" name="etapas-de-processamento-pos-processamento-empacotado"></a>
-### 3) Pós-processamento (empacotado) 🧬 <a href="#indice">↑ topo</a>
+* O procedimento completo **está empacotado no JAR** do archetype.
+* O operador entrega a **spec**(usando, por ex.: 'GitHub Spec Kit') ao agente(por ex.: OpenCode)
+  * A Spec devera obrigatoriamente conter (ORDEM OBRIGATORIA):
+    * Preambulo `0. PROCEDIMENTO` — ponteiro para o `00-entry-point` dentro do JAR; nao e entrada de derivacao
+    * Tipo de Modulo (Root/Principal ou Branch/Secundario)
+    * PACKAGE BASE (sem o nome da entidade)
+    * Descricao do USE-CASE desejado para o modulo (OBRIGATORIO)
+    * O Contrato que sera fornecido pelo modulo a ser criado (OBRIGATORIO)
+    * O Local de destino onde o projeto deve ser gerado (OBRIGATORIO)
+  * Detalhes tecnicos adicionais:
+    * se forem flags do catalogo, vao no contrato;
+    * se forem contexto, vao no use-case;
+    * instrucoes de execucao (PowerShell, `mvn clean verify`, IDE) sao opcionais e nao sao entradas de derivacao.
+  * Nao fazem parte da Spec: `groupId` (= package base), `artifactId`, `version` do modulo, flags e defaults — o procedimento resolve.
+* OBS1: Os procedimentos de Inferencia sao originariamente 'empacotados' na JAR.
+* OBS2: O README não é fonte de runtime, sendo ele mera documentacao.
 
-* **Objetivo:** 
-  * modularizar o projeto recém-gerado
-    * Estrategia: mantém / exclui pastas e arquivos conforme as flags escolhidas)
-  * Momento:
-    * Ao final do `mvn archetype:generate`.
-
-* **Composição:**
-
-| # | Artefato | Local | Papel |
-|---|----------|-------|-------|
-| A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 64 fragmentos Groovy (15 `body/` + 25 `variables/` + 4 `generators/` + 20 `snippets/`) |
-| A6 | pós-processador montado | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
-
-* **Montagem:** `ArchetypePostGenerateComposer` (A6) via `groovy-maven-plugin:execute` na fase
-  `process-resources` → `target/classes/META-INF/archetype-post-generate.groovy`
-  → levado no JAR.
-* **O que faz em runtime:** mantém / exclui por flag; persiste o contrato em
-  `src/test/resources/contracts/contract.json` (quando
-  `enable_folder_src_test_java=true`); gera enums customizados; log opcional
-  (`show_archetype_post_generate_log`).
-
-<a id="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas" name="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas"></a>
-### 4) Montagem e instalação do artefato 📦 (fora das três etapas) <a href="#indice">↑ topo</a>
-
-| Fase | Plugin | Entrada | Saída |
-|------|--------|---------|-------|
-| `generate-resources` | `xml-maven-plugin:1.2.1` (`transform`) | `archetype-metadata.xml` + <br>`archetype-metadata-identity.xsl` | `target/classes/META-INF/maven/archetype-metadata.xml`<br> (catálogo completo, sem DOCTYPE) |
-| `process-resources` | `groovy-maven-plugin:2.1.1` (`execute`) | 64 fragmentos `.groovy` | `target/classes/META-INF/archetype-post-generate.groovy` |
-| `test` | `groovy-maven-plugin:2.1.1` (`execute`) | `run-archetype-post-generate-tests.groovy` | as suítes unitárias do pós-processador (o build falha se alguma falhar) |
-| `integration-test` | `maven-archetype-plugin:3.4.1` (`integration-test`) | `src/test/resources/projects/*` | um projeto gerado por fixture, cada um com `mvn clean verify` |
-| `install` | `maven-install-plugin` + <br>`maven-archetype-plugin:3.4.1` (`update-local-catalog`) | JAR do archetype | `~/.m2/repository/` + `archetype-catalog.xml` |
-
-> **Comando canônico:** `mvn clean install`
+> ⚠️ **Advertência — premissa de entrada obrigatória.**
+> Este modelo de prompt só é válido com o preâmbulo, **as _'duas partes'_, _'nesta ordem'_**, mais a **pasta de destino** e as demais entradas do spec (tipo de módulo e package base):
 >
-> A fase `integration-test` é **anterior** a `install` e já é executada por ele.<br>
-> Portanto `mvn clean install integration-test` roda a suíte de integração
-> **duas vezes** (cada fixture é gerada e validada 2×)<br>
-> use `mvn clean install` ou, se não quiser instalar, `mvn clean integration-test`.
+> 1. **use-case** (texto) — seção `3. USE-CASE` ou marcador `USE CASE`;
+> 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`;
+> 3. **pasta de destino** (caminho absoluto) — seção `5. PASTA DE DESTINO`.
+>
+> O procedimento Para e Reporta quando:
+>
+> - o use-case estiver **AUSENTE** ou em branco (**Gate A**);
+> - o contrato estiver **AUSENTE**, em branco, for `{}` ou **'NAO FOR**' um **'OBJETO JSON'** (**Gate B**);
+> - o contrato aparecer **ANTES** do use-case (**Gate C**);
+> - a pasta de destino estiver **AUSENTE**, for **relativa/ambígua** ou estiver **dentro da árvore do archetype** (**Gate D**).
+>
+> O preâmbulo `0. PROCEDIMENTO` não é entrada de derivação: é a ordem de leitura do procedimento dentro do JAR.
+> As 5 entradas continuam obrigatórias; os Gates A–D permanecem inalterados.
+>
+> Não reordene as seções, não omita o contrato, não use `none` como substituto e não presuma destino.
+> A fonte normativa é `00-entry-point` §0, dentro do JAR.
 
-* **De volta aos 2 momentos do archetype:** 
-  * o §4 acima é o **momento de
-    montagem** (build + testes + instalação em `~/.m2`); 
-  * as **etapas 1 → 3** são o **momento de geração do modulo** (`mvn archetype:generate`).
 
-<a id="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-fluxo" name="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-fluxo"></a>
-#### Fluxo 🔄 <a href="#indice">↑ topo</a>
-
-```text
-TRILHA 1 — MONTAGEM (mvn clean install; fora das três etapas)
-────────────────────────────────────────────────────────────────────------------
-[1] CATÁLOGO         35 property-*.xml + 18 fileset-*.xml + DOCTYPE (53 entities)
-                     └─ xml-maven-plugin:transform + archetype-metadata-identity.xsl (generate-resources)
-                     
-[2] PÓS-PROCESSADOR  64 fragmentos .groovy
-                     └─ ArchetypePostGenerateComposer.groovy via gmaven:execute (process-resources)
-                        (local: src/main/groovy/ArchetypePostGenerateComposer.groovy)
-                        
-[3] TESTES           unitários: as suítes do pós-processador (fase test)
-                     integração: uma fixture por combinação de flags (fase integration-test)
-                     
-[4] INSTALAÇÃO       ~/.m2/repository + archetype-catalog.xml (fase install)
-
-```
+<a id="exemplo-de-prompt-para-spec" name="exemplo-de-prompt-para-spec"></a>
+#### Exemplo de Prompt p/ Spec <a href="#indice">↑ topo</a>
 
 ```text
-TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
-──────────────────────────────────────────────────────────-----------───────────
-[5] PRÉ PROCESSAMENTO   → use-case + contrato JSON + outros elementos (Originados a partir do Agentes[Opencode])
-    (DENTRO DO JAR)     → o agente lê o procedimento em llm-maven-flags-inference/ ('Diretivas Agenticas de Inferencia')
-                        → e o catálogo montado dentro no JAR (archetype-metadata.xml) para conhecer as Flags
-                          → formula-se a mvn-cli (mvn archetype:generate --batch-mode -D...)
-                        
-[6] PROCESSAMENTO       → archetype-metadata.xml (flags)
-                        → archetype-resources
-                          → Velocity montando o modulo + árvore do projeto gerado
-                        
-[7] PÓS PROCESSAMENTO   → archetype-post-generate.groovy:
-                          → mantém / exclui pastas pre-projetadas
-                            → Essas pastas contem Modulos[Codigo + Classe] manejadas pelo Velocity
-                            → contrato → src/test/resources/contracts/contract.json
- 
-[8] MODULO CONCLUIDO (projeto final)
+# TAREFA: Gerar módulo com o Maven Archetype EDA
+
+0. PROCEDIMENTO:
+- Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
+  repositório local, leia
+  llm-maven-flags-inference/01-inicializacao/00-entry-point.md
+  de dentro do JAR e siga-o antes de derivar.
+- Este spec pode ser executado fora da pasta do repositório do archetype.
+
+1. TIPO DE MÓDULO:
+[X] RAIZ
+[ ] SECUNDARIO
+
+2. PACKAGE BASE (sem o nome da entidade):
+org.clinica
+
+3. USE-CASE:
+- Cadastro de clientes de uma clínica
+- O cadastro coleta: nome, data de nascimento, endereço, telefone e se o cliente está ativo.
+- O sistema expõe uma API REST com autenticação JWT na porta 8080.
+
+4. CONTRATO JSON do módulo:
+{
+  "id": 1024,
+  "nome_cliente": "Maria Silva",
+  "data_nascimento": "1990-05-14",
+  "endereco": "Rua das Faias, 221",
+  "telefone": "11987654321",
+  "ativo": true,
+  "enable_jwt_authentication": true,
+  "api_port": 8080
+}
+
+5. PASTA DE DESTINO:
+C:\Temp\eda-sandbox
 ```
 
-<a id="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-regras-estruturais" name="etapas-de-processamento-montagem-e-instalacao-do-artefato-fora-das-tres-etapas-regras-estruturais"></a>
-#### Regras estruturais 📏 <a href="#indice">↑ topo</a>
+* A ordem é normativa: 
+  * Sequencia: 
+    * **use-case primeiro**;
+    * **contrato depois**;
+    * **pasta de destino** em seguida;
+  * Sem qualquer uma delas
+    * com o contrato antes do use-case
+    * ou com destino dentro da árvore do archetype
+    * o procedimento para (Gates A, B, C e D de `00-entry-point` §0).
+* O agente começa por `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`
+  * dentro do JAR empacotado/instalado (`com.eda-archetype:eda-archetype`).
+* O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.
+  - ✅ `-Dpackage=org.clinica` → `package org.clinica.cliente;`
+  - ❌ `-Dpackage=org.clinica.cliente` → `package org.clinica.cliente.cliente;`
+* `entity_package_name` não é entrada da SPEC; o procedimento deriva.
+* A SPEC não informa `groupId`, `artifactId` nem `version` do módulo.
+  * O procedimento deriva `groupId` do package base, `artifactId` do nome da entidade e aplica a `version` default.
 
-* **Fonte da verdade = os fragmentos** (A1, A2, A5). 
-  * Os arquivos em `target/classes/` são **gerados** a cada build
-  * editá-los é trabalho perdido.
+<a id="procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato" name="procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato"></a>
+### Onde estão as regras de formação do contrato <a href="#indice">↑ topo</a>
 
-* **O pré-processamento é empacotado:** 
-  * o procedimento para especificação('Diretivas Agenticas de Inferencia') vive em `src/main/resources/llm-maven-flags-inference/`
-  * e empacotado no JAR originariamente, a cada Build:
-    * O agente lê de dentro do artefato.
+* O detalhamento do procedimento não vive mais no README. 
+* Ele está empacotado no JAR, em `llm-maven-flags-inference/`, e é lido pelo Agente(ex.: Opencode) antes de qualquer derivação.
 
-* **O catálogo é lido do JAR pelo Agente(Opencode):** 
-  * o agente considera fonte da verdade das flags:
-      * `META-INF/maven/archetype-metadata.xml`
-        * e os fragmentos `META-INF/maven/archetype_metadata_required_properties/*.xml`
+**Regras de formação do contrato** (`llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`):
 
-* **O catálogo não é alterado em código:** 
-  * as flags são lidas em runtime:
-    * flag nova = 1 fragmento `property-<NN>-<flag>.xml` + 
-    * 1..N fragmentos `fileset-<NN>-<flag>[-parte].xml` (um `<fileSet>` cada) + 
-    * registros no DOCTYPE.
+| Arquivo | Papel |
+|---|---|
+| `01-derivar-a-entidade-do-contrato.md` | nome da entidade, pacote da entidade, extração e sanitização dos atributos |
+| `02-resolver-tipos-e-enums.md` | tipos `java.lang` × tipos do projeto × enums |
+| `03-derivar-flags-de-tipos-aninhados.md` | POJOs aninhados, imports, enums e tipos aninhados |
+| `04-aplicar-precedencia-e-validacao.md` | precedência das fontes e validação contra o catálogo |
+| `05-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
+| `06-relatar-proveniencia.md` | tabela de proveniência e resumo |
 
-* **As flags são auto-descritivas:** 
-  * o `defaultValue` nunca é vazio
-  * e o `validationRegex` é aplicado por quem emite a command line.
+**Templates de contrato** (`llm-maven-flags-inference/04-referencia-templates-de-contrato/`):
+
+| Arquivo | Papel |
+|---|---|
+| `01-schema-do-contrato.json` | schema permissivo do contrato |
+| `02-exemplo-contrato-plano.json` | exemplo com campos de negócio no topo |
+| `03-exemplo-contrato-com-objetos-aninhados.json` | exemplo com objetos aninhados |
+| `04-exemplo-contrato-com-enums.json` | exemplo com enums |
+| `05-exemplo-contrato-com-tipos-do-projeto.json` | exemplo com tipos do projeto |
+| `06-exemplo-contrato-com-attributes-explicito.json` | exemplo com `attributes` explícito |
+
+* Campos de negócio viram atributos da entidade; chaves do catálogo viram flags `-D`.
+* O contrato pode trazer a coleção `attributes` explícita, que tem precedência sobre os campos avulsos.
+* Cada atributo pode declarar o seu `type`; um tipo do projeto é preservado, nomeia o atributo
+  e viaja em `custom_entity_attribute_imports` e/ou `contract_enum_definitions`.
+* O contrato materializado é copiado para `src/test/resources/contracts/contract.json` no projeto
+  gerado (quando `enable_folder_src_test_java = true`) — é a base dos testes de esquema do módulo.
+
+<a id="procedimento-para-especificacao-spec-onde-usar-cada-abordagem" name="procedimento-para-especificacao-spec-onde-usar-cada-abordagem"></a>
+### Onde usar cada abordagem <a href="#indice">↑ topo</a>
+
+| Abordagem | Quando usar | Prós | Contras                        |
+|---|---|---|--------------------------------|
+| OpenCode | Testes rápidos, exploração, validação de ideias | Simples e imediato | Sem rastreabilidade; você cola a cada pedido |
+| Spec Kit | Projeto que vai evoluir | Contrato vira artefato versionado; fases seguintes reutilizam | Burocrático                    |
+
+**Em ambos os casos**, o seu modelo mental é o mesmo: descrição em cima,
+JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
+fica a cargo do procedimento empacotado no JAR —
+`llm-maven-flags-inference/01-inicializacao/00-entry-point.md` e as regras em
+`llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`.
 
 
 
@@ -790,41 +879,18 @@ TRILHA 2 — USO (mvn archetype:generate; etapas 1 → 3)
 
 
 
-<a id="llm-maven-flags-inference" name="llm-maven-flags-inference"></a>
-## llm-maven-flags-inference 🧠 <a href="#indice">↑ topo</a>
 
-* **O que é:** a pasta é o **alvo do prompt do agente**.
-* **Pelo que responde:** ela responde pelo **pré-processamento** e pelo **procedimento de execução e verificação** que o agente faz depois da linha de comando.
-* **A sequência didática:**
-  1. O operador escreve o prompt na Spec.
-  2. O prompt aponta para o archetype e para esta pasta dentro do JAR.
-  3. O agente lê a entrada e o índice.
-  4. O agente aplica as regras e materializa o contrato.
-  5. O resultado é a linha `mvn archetype:generate`.
-* **Fronteira:** o **pré-processamento** termina nessa linha. A geração Maven **começa depois** dela — e a mesma pasta governa o que vem depois: executar, validar o `package`, conferir o contrato copiado, compilar e reportar (`04-fluxo-de-execucao-e-verificacao` e `05-entregaveis-e-relatorios`).
 
-<a id="llm-maven-flags-inference-01-inicializacao" name="llm-maven-flags-inference-01-inicializacao"></a>
-### 01-inicializacao <a href="#indice">↑ topo</a>
 
-É a porta de entrada: reúne o arquivo que abre o procedimento e o índice que fixa a ordem de leitura. É o primeiro momento depois do prompt.
 
-<a id="llm-maven-flags-inference-02-procedimento-do-agente" name="llm-maven-flags-inference-02-procedimento-do-agente"></a>
-### 02-procedimento-do-agente <a href="#indice">↑ topo</a>
 
-Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execução e os entregáveis. É o momento em que o procedimento vira ação: produz a linha de geração e, depois dela, executa, verifica e reporta.
 
-<a id="llm-maven-flags-inference-03-regras-de-formacao-do-contrato" name="llm-maven-flags-inference-03-regras-de-formacao-do-contrato"></a>
-### 03-regras-de-formacao-do-contrato <a href="#indice">↑ topo</a>
 
-Reúne as regras normativas de derivação. É o momento em que o use-case e o JSON de entrada se transformam no contrato.
-
-<a id="llm-maven-flags-inference-04-referencia-templates-de-contrato" name="llm-maven-flags-inference-04-referencia-templates-de-contrato"></a>
-### 04-referencia-templates-de-contrato <a href="#indice">↑ topo</a>
-
-Traz o schema e os exemplos de contrato. É a referência consultada para materializar o contrato no formato esperado.
 
 <a id="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli" name="inferencia-de-contrato-e-use-case-do-prompt-ao-maven-cli"></a>
 ## Inferência de Contrato e Use-Case: do 'Prompt no Agente' ao 'Maven Archetype Generate' 🧠 <a href="#indice">↑ topo</a>
+
+> Zoom da **Inferência** do [Mapa das Linhas do Tempo](#mapa-das-linhas-do-tempo).
 
 * **A pergunta:** 
   * o operador entrega um **use case** (texto) + um **contrato JSON**; 
@@ -995,6 +1061,40 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
 > **Onde está o detalhe de cada coluna?** Em [`src/main/resources/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`](src/main/resources/llm-maven-flags-inference/03-regras-de-formacao-do-contrato/): `01` (entidade e atributos), `02` (tipos e enums), `03` (aninhados), `04` (precedência e validação), `05` (materialização do contrato) e `06` (proveniência). O ponto de entrada é `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`.
 
 
+<a id="llm-maven-flags-inference" name="llm-maven-flags-inference"></a>
+### Pasta  de Prompts de Inferência: llm-maven-flags-inference 🧠 <a href="#indice">↑ topo</a>
+
+> Zoom da **Cadeia de prompts** do [Mapa das Linhas do Tempo](#mapa-das-linhas-do-tempo).
+
+* **O que é:** a pasta é o **alvo do prompt do agente**.
+* **Pelo que responde:** ela responde pelo **pré-processamento** e pelo **procedimento de execução e verificação** que o agente faz depois da linha de comando.
+* **A sequência didática:**
+  1. O operador escreve o prompt na Spec.
+  2. O prompt aponta para o archetype e para esta pasta dentro do JAR.
+  3. O agente lê a entrada e o índice.
+  4. O agente aplica as regras e materializa o contrato.
+  5. O resultado é a linha `mvn archetype:generate`.
+* **Fronteira:** o **pré-processamento** termina nessa linha. A geração Maven **começa depois** dela — e a mesma pasta governa o que vem depois: executar, validar o `package`, conferir o contrato copiado, compilar e reportar (`04-fluxo-de-execucao-e-verificacao` e `05-entregaveis-e-relatorios`).
+
+<a id="llm-maven-flags-inference-01-inicializacao" name="llm-maven-flags-inference-01-inicializacao"></a>
+### 01-inicializacao <a href="#indice">↑ topo</a>
+
+É a porta de entrada: reúne o arquivo que abre o procedimento e o índice que fixa a ordem de leitura. É o primeiro momento depois do prompt.
+
+<a id="llm-maven-flags-inference-02-procedimento-do-agente" name="llm-maven-flags-inference-02-procedimento-do-agente"></a>
+### 02-procedimento-do-agente <a href="#indice">↑ topo</a>
+
+Concentra o papel do agente, a leitura do JAR, as regras obrigatórias, a execução e os entregáveis. É o momento em que o procedimento vira ação: produz a linha de geração e, depois dela, executa, verifica e reporta.
+
+<a id="llm-maven-flags-inference-03-regras-de-formacao-do-contrato" name="llm-maven-flags-inference-03-regras-de-formacao-do-contrato"></a>
+### 03-regras-de-formacao-do-contrato <a href="#indice">↑ topo</a>
+
+Reúne as regras normativas de derivação. É o momento em que o use-case e o JSON de entrada se transformam no contrato.
+
+<a id="llm-maven-flags-inference-04-referencia-templates-de-contrato" name="llm-maven-flags-inference-04-referencia-templates-de-contrato"></a>
+### 04-referencia-templates-de-contrato <a href="#indice">↑ topo</a>
+
+Traz o schema e os exemplos de contrato. É a referência consultada para materializar o contrato no formato esperado.
 
 
 
@@ -1010,9 +1110,131 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:3.4.1:generate --batch-mode 
 
 
 
+<a id="montagem-dos-arquivos-de-archetype" name="montagem-dos-arquivos-de-archetype"></a>
+## Montagem do Artefato (Build) 🏗️ <a href="#indice">↑ topo</a>
+
+> Isto é sobre o build do artefato; não é a geração do módulo.
+
+<a id="montagem-dos-arquivos-de-archetype-archetype-metadata-xml" name="montagem-dos-arquivos-de-archetype-archetype-metadata-xml"></a>
+### 1) Archetype-Metadata.xml 🏗️ <a href="#indice">↑ topo</a>
+
+* **OBJETIVO**
+  * Manter 1 arquivo final [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml) consumido pelo (`maven-archetype-plugin`),
+    mas organizado no source em modulos menores (**35 arquivos de propriedades + 18 de filesets**).
+
+* **MECANISMO**
+  * O XML "core" declara DOCTYPE com (`ENTITY property-<NN>-<flag> SYSTEM ".../property-<NN>-<flag>.xml"`) para cada snippet de propriedade
+    e (`ENTITY fileset-<NN>-<flag> SYSTEM ".../fileset-<NN>-<flag>.xml"`) para cada snippet de fileset.
+  * O total e **53 entidades** (35 + 18).
+  * O corpo referencia as entities como (`&property-<NN>-<flag>;`) (em (`requiredProperties`)) e (`&fileset-<NN>-<flag>;`) (em (`fileSets`)).
+  * Resultado: o arquivo-fonte continua sendo um unico XML valido, legivel, com (`&`) no lugar dos blocos.
+
+* **ARTEFATOS A1–A4:**
+
+| # | Artefato | Local | Papel |
+|---|----------|-------|-------|
+| A1 | Catálogo de flags - `archetype_metadata_required_properties` | `src/main/resources/META-INF/maven/archetype_metadata_required_properties/` | 35 flags: `key`, `defaultValue`, `validationRegex`; descrição e `DEPENDS_ON` em comentário XML |
+| A2 | Filesets — `archetype_metadata_filesets` | `src/main/resources/META-INF/maven/archetype_metadata_filesets/` | 18 arquivos, um `<fileSet>` cada; mapeia `archetype-resources/` → árvore do projeto gerado |
+| A3 | Core do metadata (Catalogo Montado) | `src/main/resources/META-INF/maven/archetype-metadata.xml` | DOCTYPE com 53 entities (35 `property-<NN>-<flag>` + 18 `fileset-<NN>-<flag>`) |
+| A4 | XSLT identidade | `src/main/resources/META-INF/maven/archetype-metadata-identity.xsl` | resolve as entities `SYSTEM` e materializa os blocos inline |
+
+* **PLUGIN** — [`xml-maven-plugin`](https://www.mojohaus.org/xml-maven-plugin/) 1.2.1
+  * Fase: (`generate-resources`) (antes do (`maven-archetype-plugin`) ler o metadata).
+  * Goal: (`transform`) — aplica XSLT em um input e grava o resultado no outputDir.
+  * Input : (`src/main/resources/META-INF/maven/archetype-metadata.xml`)
+  * Output: (`${project.build.outputDirectory}/META-INF/maven/archetype-metadata.xml`)
+    (ou seja, (`target/classes/META-INF/maven/...`), dentro do JAR do arquetipo).
+  * O (`<resources>`) do pom **exclui** o (`archetype-metadata.xml`) da copia convencional,
+    garantindo que so a versao transformada va para o classpath.
+
+* **ARCHETYPE-METADATA-IDENTITY.XSL**
+  * XSLT 1.0, template identidade: (`<xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates.../></xsl:copy></xsl:template>`).
+  * Copia verbatim, forca reescrita do XML — efeito colateral desejado: o parser XSLT resolve as (`SYSTEM`) entities DOCTYPE
+    e o output sai com os blocos inline (sem DOCTYPE/entities no XML final).
+
+* **LAYOUT FISICO**
+  * [`archetype_metadata_required_properties/`](src/main/resources/META-INF/maven/archetype_metadata_required_properties)
+    => **35** (`property-<NN>-<flag>.xml`) (**1 por flag**, numerados `02` a `36`).
+  * [`archetype_metadata_filesets/`](src/main/resources/META-INF/maven/archetype_metadata_filesets)
+    => **18** (`fileset-<NN>-<flag>[-parte].xml`) (**1 `<fileSet>` por arquivo**, numerados `01` a `18`).
+  * [`archetype-metadata-identity.xsl`](src/main/resources/META-INF/maven/archetype-metadata-identity.xsl) => folha de estilo XSLT.
+  * [`archetype-metadata.xml`](src/main/resources/META-INF/maven/archetype-metadata.xml) => core (DOCTYPE com 53 entidades + (`&property-<NN>-<flag>;`)/(`&fileset-<NN>-<flag>;`)).
+
+* **FLUXO BUILD**
+  * source (`archetype-metadata.xml`) (com (`&entity;`))
+    * => (`xml-maven-plugin:transform`) aplica (`archetype-metadata-identity.xsl`)
+    * => (`target/classes/META-INF/maven/archetype-metadata.xml`) (XML completo, sem DOCTYPE)
+    * => empacotado no JAR do arquetipo
+    * => lido pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`).
+
+<a id="montagem-dos-arquivos-de-archetype-archetype-post-generate-groovy" name="montagem-dos-arquivos-de-archetype-archetype-post-generate-groovy"></a>
+### 2) Archetype-Post-Generate.groovy 🧬 <a href="#indice">↑ topo</a>
+
+* **OBJETIVO**
+  * Manter 1 arquivo final gerado em (`target/classes/META-INF/archetype-post-generate.groovy`) e consumido pelo (`maven-archetype-plugin`)
+    durante o pos-processamento do projeto gerado,
+    mas organizado no source em modulos menores (15 arquivos de (`body/`) + 25 de (`variables/`) + 4 de (`generators/`) + 20 de (`snippets/`)).
+
+* **MECANISMO**
+  * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 4 diretorios.
+  * A [`List<String> SECTIONS`](src/main/groovy/ArchetypePostGenerateComposer.groovy) no topo do compositor e a **fonte unica da verdade da ordem**.
+  * Resultado: o source continua sendo uma colecao de 64 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
+  * Visibilidade: (`target/`) esta no (`.gitignore`) e o IDE normalmente o exclui — o arquivo **nao aparece** na arvore do projeto. Use `mvn clean process-resources` e abra (`target/classes/META-INF/archetype-post-generate.groovy`), ou `Ctrl+Shift+N` no IntelliJ.
+
+* **ARTEFATOS A5–A6:**
+
+| # | Artefato | Local | Papel |
+|---|----------|-------|-------|
+| A5 | Pós-processador — `body/` + `variables/` + `generators/` + `snippets/` | `src/main/resources/META-INF/archetype_post_generate_{body,variables,generators,snippets}/` | 64 fragmentos Groovy (15 `body/` + 25 `variables/` + 4 `generators/` + 20 `snippets/`) |
+| A6 | pós-processador montado | `src/main/groovy/ArchetypePostGenerateComposer.groovy` | remonta A5 em 1 arquivo: ordem canônica + consolidação de imports |
+
+* **PLUGIN** — [`groovy-maven-plugin`](https://groovy.github.io/gmaven/) 2.1.1
+  * Fase: (`process-resources`) (imediatamente apos (`xml-maven-plugin:transform`) montar o metadata em (`generate-resources`), e antes do (`package`) e do (`integration-test`)).
+  * Goal: (`execute`) — invoca o script Groovy declarado em (`<source>`).
+  * Input : [`src/main/groovy/ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) (o compositor).
+  * Output: (`${project.build.outputDirectory}/META-INF/archetype-post-generate.groovy`)
+    (ou seja, (`target/classes/META-INF/...`), dentro do JAR do arquetipo).
+  * O (`archetype-post-generate.groovy`) **nao existe** em (`src/main/resources/META-INF/`). O (`BuildArtifactsTest`) 1.4 falha se alguem recriar o monolito; assim o unico arquivo no classpath e o remontado.
+
+* **COMPOSITOR** — [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy)
+  * Le os 15 arquivos de (`body/`) na ordem canonica da (`List<String> SECTIONS`); le os diretorios (`variables/`), (`generators/`) e (`snippets/`) em ordem do `NN` via (`listFiles().sort { it.name }`).
+  * Aplica **consolidacao de imports** em 3 passos:
+    1. Para cada arquivo concatenado, remove (`^import …`) e (`^//[[:space:]]*import`).
+    2. Prepende o conteudo de (`archetype_post_generate_body/body-01-imports.groovy`) no topo, aplicando (`replaceAll('/', '')`) em cada linha.
+    3. Concatena tudo e grava em (`target/classes/META-INF/archetype-post-generate.groovy`).
+  * Sanity check: falha com (`IllegalStateException`) listando o arquivo faltando se qualquer arquivo obrigatorio de (`body/`) estiver ausente, ou se (`variables/`)/(`generators/`)/(`snippets/`) estiverem vazios.
+
+* **LAYOUT FISICO**
+  * [`archetype_post_generate_body/`](src/main/resources/META-INF/archetype_post_generate_body)
+    => 15 arquivos canonicos (1 imports, 1 header, 1 logging, 1 global-vars, 5 path-vars, 1 binding-artifact-registry, 1 footer, 4 helpers).
+  * [`archetype_post_generate_variables/`](src/main/resources/META-INF/archetype_post_generate_variables)
+    => 25 (`variables-NN-*.groovy`) (1 por categoria de flag).
+  * [`archetype_post_generate_generators/`](src/main/resources/META-INF/archetype_post_generate_generators)
+    => 4 (`generator-NN-*.groovy`) (geram fontes Java: enums, tipos aninhados e contrato).
+  * [`archetype_post_generate_snippets/`](src/main/resources/META-INF/archetype_post_generate_snippets)
+    => 20 (`snippet-NN-*.groovy`) (1 por comportamento condicional).
+  * [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) => o compositor Groovy de build-time.
+
+* **FLUXO BUILD**
+  * source 4 diretorios (`body/`)+(`variables/`)+(`generators/`)+(`snippets/`) + (`body-01-imports.groovy`)
+    * => (`ArchetypePostGenerateComposer.groovy`) le na ordem da (`List<String> SECTIONS`), consolida imports
+    * => (`target/classes/META-INF/archetype-post-generate.groovy`) (Groovy completo, sem duplicacao de imports)
+    * => empacotado no JAR do arquetipo
+    * => executado pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`), durante o pos-processamento do projeto gerado.
+
+* **⚠️ ADVERTENCIAS** (particularidades deste mecanismo)
+  * **1. Plugin estagnado**: o (`groovy-maven-plugin:2.1.1`) nao recebe release desde **2019-08-04** — risco latente se o (`groovy-bom`) do archetype-plugin migrar para Groovy 5/6.
+  * **2. Override de Groovy 4.0.28 via (`<dependencies>`) nao pega**: o gmaven roda em classloader proprio com Groovy 2.4.9 default. O composer funciona com 2.4.9.
+
+* **Regras estruturais:**
+  * **Fonte da verdade = fragmentos** (A1, A2, A5); `target/classes/` é gerado a cada build.
+  * **Procedimento empacotado:** `llm-maven-flags-inference/` (19 arquivos em 4 categorias) vive no JAR; o agente lê dali.
+  * **Catálogo lido do JAR:** `archetype-metadata.xml` + `archetype_metadata_required_properties/*.xml`; flag nova = 1 property + 1..N filesets + DOCTYPE; `defaultValue` nunca vazio; `validationRegex` na command line.
 
 <a id="instalacao" name="instalacao"></a>
-## Instalacao 📦 <a href="#indice">↑ topo</a>
+## Instalação do Archetype no M2 📦 <a href="#indice">↑ topo</a>
+
+> Isto é sobre o artefato instalado no M2; não é o módulo gerado.
 
 <a id="instalacao-pre-requisitos" name="instalacao-pre-requisitos"></a>
 ### Pré-requisitos <a href="#indice">↑ topo</a>
@@ -1089,396 +1311,10 @@ mvn clean install
 
 
 
-<a id="cronograma-do-projeto" name="cronograma-do-projeto"></a>
-## Cronograma do Projeto 🏗️ <a href="#indice">↑ topo</a>
-
-<a id="cronograma-do-projeto-milestones" name="cronograma-do-projeto-milestones"></a>
-### 1) Milestones 📅 <a href="#indice">↑ topo</a>
-
-* CRUD
-  - Basic
-  - Advanced
-
-* Integration Testes
-  - Repo
-  - Service
-  - Controller
-
-  * DB's for Tests
-    - H2
-    - TestContainer
-
-* Externalized Configurations
-  - App properties
-  - Excecoes
-  - Mensagens
-  - I18N
-  - Rotas
-  - Credentials (Unpushaveis)
-  - etc...
-
-* Type Safe 'Externalized Properties/Configuration' Binding
-  - Filetypes:
-    - .proprerties
-    - .yml
-  - Types:
-    - Simple
-    - List
-    - Map
-  - Mutable / Immutable
-  - Validation
-
-* Good Practices
-  - Pageable
-  - HATEOAS
-
-* DTO
-  - Tipos
-    - Request
-    - Response
-    - Entity protection
-
-* Mapper
-
-* Exceptions
-  - Global
-  - Customizadas
-  - Segurança
-  - Autenticação
-
-* BeanValidation
-  - Exceções
-  - Validações Personalizadas
-    - Pattern Regex
-
-* Cache
-
-* I18N
-
-* Testes de Contratos
-  - Contratos
-    - JSON
-  - SchemaValidator
-    - JSONSchema
-
-* Documentação
-- Swagger
-
-* Database
-  - DBs:
-    - MongoDB
-    - MySQL
-    - Postgres
-  - DDL
-    - Hibernate
-    - Flyway
-  - Persistence
-    - Spring Data
-    - JDBC
-    - JDBC Clients
-
-* Autenticação (Spring Security)
-  - JWT:
-    - Simples
-    - Oauth Server
-  - OAuth2
-    - GitHub
-    - Google
-    - Facebook
-
-* DevOps
-  - Docker
-    - Folder
-    - Dockerfiles
-    - Docker Secrets
-    - Docker-Compose
-  - DevSecOps:
-    - ![dev-sec-ops.png](assets/dev-sec-ops.png)
-  - CI/CD
-  - CloudFlare
-  - AWS
-
-* Seguranca
-  - SAST (Static Application Security Testing)
-    - Credentials:
-      - GitGuardian:
-        - dificil instalacao
-        - Freemium
-      - GitLeaks:
-        - facil instalacao
-        - Open-source
-        - Depende de regras personalizadas, para credenciais customizidas
-  - Proxy Reverso (Nginx)
-
-* Modularidade
-
-* Performance
-  - Load Balancer (Nginx)
-  - Cache
-  - CDN
-  - Virtual Threads
-
-* API Proxies  (Internal UI Clients)
-  - DB
-  - Docker (Portainer)
-  - Spring actuator (graphana)
-  - Documentacao (swagger)
-  - Log Kibana (logstash + Elasticsearch)
-
-<a id="cronograma-do-projeto-task-planning" name="cronograma-do-projeto-task-planning"></a>
-### 2) Task Planning 📝️ <a href="#indice">↑ topo</a>
-
-1. DTO
-  - Libraries
-    - MapStruct (AutoAPI)
-    - MyBatis (Guang)
-    - ModelMapper
-  - Request / Response
-  - AbstractDto
-    - Public class to facilitate DTO creation (Guang)
-
-2. Lombok
-  - AutoAPI
-  - Guang
-
-3. Database Versioning
-  - FlyWay
-  - Liquibase (AutoAPI)
-
-4. Documentation
-  - Swagger (AutoAPI + Guang)
-  - Montagem Automática de README.md
-
-5. Testing
-  - DataBuilder (Guang)
-  - CustomUtils (Guang)
-    - Convert Java object to JSON string
-    - Handle conversion failure with RuntimeException
-  - TestController (Guang)
-    - Unit testing with:
-      - `@Transactional`
-      - Mockito
-  - Test-Db:
-    - H2
-    - TestContainer
-
-6. Service
-  - Transactional (Guang)
-  - Dto-Mapper (Guang)
-  - Apache Commons BeanUtils (Guang)
-    - Copy properties from object to entity
-
-7. Controller
-  - @Validated on DTO (Guang)
-    - BeanValidation
-  - Pageable (Guang)
-  - Dto-Mapper (Guang)
-
-8. Repository
-  - JPA Repository (AutoAPI + Guang)
-  - CRUD Repository (AutoAPI)
-  - JpaSpecificationExecutor (Guang)
-  - Transactions (ACID)
-
-9. Entities
-  - POJO
-  - Records
-
-10. Safety
-  - Input:
-    - sanitizing/encode (replace)
-    - filtering (block)
-  - Shield Dtos:
-    - BeanValidation REGEX
-  - OWASP
-  - Credentials Protection
-    - Externalized Properties-File FROM .Env-file
-    - Gitleaks (SAST)
-      - Nao sera usado, pois depende de instalacao local
-      - Apenas 'Recomendado como 2 layer de protecao"'
-  - Sanitização de URL:
-    - pré despatcherServlet
-    - Header Request
-
-11. Log
-  - Logback:
-    - logback-spring
-    - logback-test
-  - ELK:
-    - Elasticsearch
-    - Logstach
-    - Kibana
-    - Fluxo do ELK:
-> 1) O WebApp envia os logs p/ (logstash.conf: "INPUT") APPENDER-TCP-LOGSTASH "<destination>" do Logback-spring.xml
-> 2) O Logstasch (logstash.conf: "OUTPUT") envia os 'Logs Processados' p/ 'elasticsearch:9200'
-> 3) O kibana exibe os Logs recebidos no 'elasticsearch:9200'
-
-12. Health Check
-  - Actuator
-
-13. API Proxies (Internal UI Clients)
-  - DBA Client
-  - Docker (Portainer)
-  - Spring actuator (graphana)
-  - Documentacao (swagger)
-  - Log Kibana (logstash + Elasticsearch)
-
-14. Type Safe Externalized Properties/Configuration Binding
-  - Application.propriedades
-  - Mensagens:
-    - Gerais
-    - Excecoes
-  - I18N (Traducoes)
-  - Rotas
-  - Credentials(secrets) Vault 'Unpushaveis'
-
-<a id="cronograma-do-projeto-concluded-tasks" name="cronograma-do-projeto-concluded-tasks"></a>
-### 3) Concluded Tasks ✅ <a href="#indice">↑ topo</a>
-
-- [x] Credentials protection
-  - [x] Gitleaks / GitGuardian (Alternative Approaches)
-    - CONS:
-      - GitGuardian:
-        - is not free
-        - Must be installed locally
-      - GitLeaks:
-        - dont works 'efficiently' with Custom-Credentials
-  - [x] **'Encrypted Folder + Global GitIgnore'** _(Chosen Approach)_
-    - [x] Encripted Folder:
-      - Win10 BitLocker
-      - ALL **Credentials-Files** (any sensitive data) must be storaged on this folder 'individually'
-      - The folder will encrypt All its content automatically (files + subfolders)
-      - This folder:
-        - "IS NOT VERSIONED/COMMITTED" _(MUST be inserted in GitIgnore Global)_
-        - 'dont belong' to any project
-        - is not inside any project
-        - is not inside any folder, from any project
-      - Example:
-        - <img alt="credentials-flow" height="140" src="assets/credentials-approuch.png" width="364"/>
-    - [x] **GitIgnore-Global**:
-      - Will detect (excluding for any commit):
-      - Global GitIgnore CLI:
-        - _Creating_ an "Global GitIgnore" **'NOT CREATED YET'**:
-          - _git config --global core.excludesfile C:\your-path\.gitignore_global_
-        - _Finding_ an **'ALREADY EXISTING FILE'**:
-          - _git config --global core.excludesfile_
-        - _GitIgnore-Global_ **'HELP'** can be found, in: 
-          - [GitHub - Global GitIgnore Documentation](https://gist.github.com/subfuzion/db7f57fff2fb6998a16c)
-      - Example:
-        - <img alt="GitIgnore-Global" height="72" src="assets/git-ignore-global.png" width="75"/>
-
-      - Exclusion 'keywords'(fragment-word in begin/middle/end), such as:
-          * docker_secret
-          * dockersecret
-          * secret
-          * authorization
-          * authentication
-          * secret
-          * secretkey
-          * credential
-          * token
-          * etc...
-    - [x] **_'Protected-properties-folder'_**
-      - App Folder for 'sensitive-properties'
-      - These 'sensitive-properties' will data from receive "Environment_Variables"
-      - These "Environment_Variables" will be extracted from the **'Credentials-Files'**
-      - All **'Credentials-Files'** will be stored in a **'Windows Encrypted Folder'**
-
-- [x] Log
-  - [x] Logback:
-    - Logback-spring + logback-test
-    - Console banner (dev + test)
-  - [x] Logback - Console Appender:
-    - 03 types:
-      - Default (Spring)
-      - Tabular
-      - Granular
-  - [x] Logback - Extra Appenders:
-    - Email
-    - RollingFile storage
-      - classic
-      - rolling
-      - logstash
-    - TCP-SOCKETS for logstash (CPanel)
-  - [x] Log Hierarchy:
-    - <img alt="Log Hierarchy" height="56" src="assets/log-scale.png" width="179"/>
-
-- [x] Type Safe 'Externalized Properties/Configuration' Binding
-  - Types:
-    - Constructor Binding (Immutable)
-      - Record (native: no setters + canonical constructor + only constants[finals])
-        - OBS: Implicit Canonical constructor not allow @ConstructorBinding annotation
-      - Class (no setters + canonical constructor + only constants[finals])
-        - OBS: All arguments constructor (canonical constructor in Records)
-    - JavaBean Binding (Mutable)
-      - No arguments constructor (implicit default constructor)
-      - Setter mandatory
-      - Only Classes (with setters/mutators)
-  - **_'Context Scanning'_**:
-    - Constructor Binding + JavaBean Binding:
-        * EnableConfigurationProperties (define the class to be scanned)
-        * _ConfigurationPropertiesScan_ (define the package to be scanned)
-    -  JavaBean Binding:
-        * Stereotype Annotations: Component or Configuration
-  - File Types:
-    - Properties
-    - YAML
-  - Formats:
-    - Simple
-    - Map
-    - List
-  - Validation:
-    - Spring-Validation
-      - jakarta.validation.constraints
-    - Externalization of Messages Absence - Explanation:
-      - Mensagens de 'falha de validacao' serao hardcoded
-      - Pois, servem apenas para 'Log' ou 'debug' da API (Internal Messages)
-      - Nao destinando-se ao 'output'(User/Admin Messages) da API
-      - Nao sendo entao, objeto de I18N ou Externalizacao
-
-  - [ ] TestDB
-    - H2
-    - TestContainer
-
-- [ ] CPanel - API Proxies (UI Clients)
-  - [ ] Log Kibana (ELK - Elasticsearch + Logstash + Kibana)
-  - [ ] Docker (Portainer)
-  - [ ] DB (DB-Client)
-  - [ ] Documentacao (Swagger)
-  - [ ] Spring actuator (Graphana)
-
-<a id="cronograma-do-projeto-next-version" name="cronograma-do-projeto-next-version"></a>
-### 4) Next Version 🔮️ <a href="#indice">↑ topo</a>
-
-  - JpaSpecificationExecutor
-  - Upload
-  - Download
-  - Oauth2 (Google + Facebook + Linkedin)
-  - Swagger
-  - Performance (ECache + Virtual Threads)
-  - Multi-Tenant
-  - Modularity (Java)
-  - "Feature" Generation/Automation
-  - "Component" Generation
-  - Stripe
-  - Document/PDF Visualizer
-  - 2FA Authentication
-  - Passwordless Authentication
-  - UbyKey (OTP)
-
-
-
-
-
-
-
-
-
-
-
-
 <a id="acrescentando-novas-flags" name="acrescentando-novas-flags"></a>
-## Acrescentando Novas Flags ➕️ <a href="#indice">↑ topo</a>
+## Acrescentando Novas Flags ao Catálogo ➕️ <a href="#indice">↑ topo</a>
+
+> Zoom do eixo **Extensão** do [Mapa das Linhas do Tempo](#mapa-das-linhas-do-tempo).
 
 <a id="acrescentando-novas-flags-areas-alteradas-pela-adicao" name="acrescentando-novas-flags-areas-alteradas-pela-adicao"></a>
 ### 1) Areas alteradas pela adição: <a href="#indice">↑ topo</a>
@@ -2055,288 +1891,15 @@ if (keep_binding_properties == 'false') {
 
 
 
-<a id="procedimento-para-especificacao-spec" name="procedimento-para-especificacao-spec"></a>
-## Procedimento para Especificação/Spec <a href="#indice">↑ topo</a>
-
-<a id="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit" name="procedimento-para-especificacao-spec-como-usar-no-opencode-ou-no-github-spec-kit"></a>
-### Como usar no 'OpenCode' OU no 'GitHub Spec Kit' <a href="#indice">↑ topo</a>
-
-* O procedimento completo **está empacotado no JAR** do archetype.
-* O operador entrega a **spec**(usando, por ex.: 'GitHub Spec Kit') ao agente(por ex.: OpenCode)
-  * A Spec devera obrigatoriamente conter (ORDEM OBRIGATORIA):
-    * Preambulo `0. PROCEDIMENTO` — ponteiro para o `00-entry-point` dentro do JAR; nao e entrada de derivacao
-    * Tipo de Modulo (Root/Principal ou Branch/Secundario)
-    * PACKAGE BASE (sem o nome da entidade)
-    * Descricao do USE-CASE desejado para o modulo (OBRIGATORIO)
-    * O Contrato que sera fornecido pelo modulo a ser criado (OBRIGATORIO)
-    * O Local de destino onde o projeto deve ser gerado (OBRIGATORIO)
-  * Detalhes tecnicos adicionais:
-    * se forem flags do catalogo, vao no contrato;
-    * se forem contexto, vao no use-case;
-    * instrucoes de execucao (PowerShell, `mvn clean verify`, IDE) sao opcionais e nao sao entradas de derivacao.
-  * Nao fazem parte da Spec: `groupId` (= package base), `artifactId`, `version` do modulo, flags e defaults — o procedimento resolve.
-* OBS1: Os procedimentos de Inferencia sao originariamente 'empacotados' na JAR.
-* OBS2: O README não é fonte de runtime, sendo ele mera documentacao.
-
-> ⚠️ **Advertência — premissa de entrada obrigatória.**
-> Este modelo de prompt só é válido com o preâmbulo, **as _'duas partes'_, _'nesta ordem'_**, mais a **pasta de destino** e as demais entradas do spec (tipo de módulo e package base):
->
-> 1. **use-case** (texto) — seção `3. USE-CASE` ou marcador `USE CASE`;
-> 2. **contrato JSON** (objeto não vazio) — seção `4. CONTRATO JSON` ou marcador `CONTRATO`;
-> 3. **pasta de destino** (caminho absoluto) — seção `5. PASTA DE DESTINO`.
->
-> O procedimento Para e Reporta quando:
->
-> - o use-case estiver **AUSENTE** ou em branco (**Gate A**);
-> - o contrato estiver **AUSENTE**, em branco, for `{}` ou **'NAO FOR**' um **'OBJETO JSON'** (**Gate B**);
-> - o contrato aparecer **ANTES** do use-case (**Gate C**);
-> - a pasta de destino estiver **AUSENTE**, for **relativa/ambígua** ou estiver **dentro da árvore do archetype** (**Gate D**).
->
-> O preâmbulo `0. PROCEDIMENTO` não é entrada de derivação: é a ordem de leitura do procedimento dentro do JAR.
-> As 5 entradas continuam obrigatórias; os Gates A–D permanecem inalterados.
->
-> Não reordene as seções, não omita o contrato, não use `none` como substituto e não presuma destino.
-> A fonte normativa é `00-entry-point` §0, dentro do JAR.
-
-
-<a id="exemplo-de-prompt-para-spec" name="exemplo-de-prompt-para-spec"></a>
-#### Exemplo de Prompt p/ Spec <a href="#indice">↑ topo</a>
-
-```text
-# TAREFA: Gerar módulo com o Maven Archetype EDA
-
-0. PROCEDIMENTO:
-- Com o JAR com.eda-archetype:eda-archetype:0.0.1-SNAPSHOT instalado no
-  repositório local, leia
-  llm-maven-flags-inference/01-inicializacao/00-entry-point.md
-  de dentro do JAR e siga-o antes de derivar.
-- Este spec pode ser executado fora da pasta do repositório do archetype.
-
-1. TIPO DE MÓDULO:
-[X] RAIZ
-[ ] SECUNDARIO
-
-2. PACKAGE BASE (sem o nome da entidade):
-org.clinica
-
-3. USE-CASE:
-- Cadastro de clientes de uma clínica
-- O cadastro coleta: nome, data de nascimento, endereço, telefone e se o cliente está ativo.
-- O sistema expõe uma API REST com autenticação JWT na porta 8080.
-
-4. CONTRATO JSON do módulo:
-{
-  "id": 1024,
-  "nome_cliente": "Maria Silva",
-  "data_nascimento": "1990-05-14",
-  "endereco": "Rua das Faias, 221",
-  "telefone": "11987654321",
-  "ativo": true,
-  "enable_jwt_authentication": true,
-  "api_port": 8080
-}
-
-5. PASTA DE DESTINO:
-C:\Temp\eda-sandbox
-```
-
-* A ordem é normativa: 
-  * Sequencia: 
-    * **use-case primeiro**;
-    * **contrato depois**;
-    * **pasta de destino** em seguida;
-  * Sem qualquer uma delas
-    * com o contrato antes do use-case
-    * ou com destino dentro da árvore do archetype
-    * o procedimento para (Gates A, B, C e D de `00-entry-point` §0).
-* O agente começa por `llm-maven-flags-inference/01-inicializacao/00-entry-point.md`
-  * dentro do JAR empacotado/instalado (`com.eda-archetype:eda-archetype`).
-* O `-Dpackage` é sempre o **pacote-base**: o archetype concatena `entity_package_name` automaticamente.
-  - ✅ `-Dpackage=org.clinica` → `package org.clinica.cliente;`
-  - ❌ `-Dpackage=org.clinica.cliente` → `package org.clinica.cliente.cliente;`
-* `entity_package_name` não é entrada da SPEC; o procedimento deriva.
-* A SPEC não informa `groupId`, `artifactId` nem `version` do módulo.
-  * O procedimento deriva `groupId` do package base, `artifactId` do nome da entidade e aplica a `version` default.
-
-<a id="procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato" name="procedimento-para-especificacao-spec-onde-estao-as-regras-de-formacao-do-contrato"></a>
-### Onde estão as regras de formação do contrato <a href="#indice">↑ topo</a>
-
-* O detalhamento do procedimento não vive mais no README. 
-* Ele está empacotado no JAR, em `llm-maven-flags-inference/`, e é lido pelo Agente(ex.: Opencode) antes de qualquer derivação.
-
-**Regras de formação do contrato** (`llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`):
-
-| Arquivo | Papel |
-|---|---|
-| `01-derivar-a-entidade-do-contrato.md` | nome da entidade, pacote da entidade, extração e sanitização dos atributos |
-| `02-resolver-tipos-e-enums.md` | tipos `java.lang` × tipos do projeto × enums |
-| `03-derivar-flags-de-tipos-aninhados.md` | POJOs aninhados, imports, enums e tipos aninhados |
-| `04-aplicar-precedencia-e-validacao.md` | precedência das fontes e validação contra o catálogo |
-| `05-materializar-e-emitir-o-contrato.md` | materialização do contrato e emissão de `entity_contract_file_path` |
-| `06-relatar-proveniencia.md` | tabela de proveniência e resumo |
-
-**Templates de contrato** (`llm-maven-flags-inference/04-referencia-templates-de-contrato/`):
-
-| Arquivo | Papel |
-|---|---|
-| `01-schema-do-contrato.json` | schema permissivo do contrato |
-| `02-exemplo-contrato-plano.json` | exemplo com campos de negócio no topo |
-| `03-exemplo-contrato-com-objetos-aninhados.json` | exemplo com objetos aninhados |
-| `04-exemplo-contrato-com-enums.json` | exemplo com enums |
-| `05-exemplo-contrato-com-tipos-do-projeto.json` | exemplo com tipos do projeto |
-| `06-exemplo-contrato-com-attributes-explicito.json` | exemplo com `attributes` explícito |
-
-* Campos de negócio viram atributos da entidade; chaves do catálogo viram flags `-D`.
-* O contrato pode trazer a coleção `attributes` explícita, que tem precedência sobre os campos avulsos.
-* Cada atributo pode declarar o seu `type`; um tipo do projeto é preservado, nomeia o atributo
-  e viaja em `custom_entity_attribute_imports` e/ou `contract_enum_definitions`.
-* O contrato materializado é copiado para `src/test/resources/contracts/contract.json` no projeto
-  gerado (quando `enable_folder_src_test_java = true`) — é a base dos testes de esquema do módulo.
-
-<a id="procedimento-para-especificacao-spec-onde-usar-cada-abordagem" name="procedimento-para-especificacao-spec-onde-usar-cada-abordagem"></a>
-### Onde usar cada abordagem <a href="#indice">↑ topo</a>
-
-| Abordagem | Quando usar | Prós | Contras                        |
-|---|---|---|--------------------------------|
-| OpenCode | Testes rápidos, exploração, validação de ideias | Simples e imediato | Sem rastreabilidade; você cola a cada pedido |
-| Spec Kit | Projeto que vai evoluir | Contrato vira artefato versionado; fases seguintes reutilizam | Burocrático                    |
-
-**Em ambos os casos**, o seu modelo mental é o mesmo: descrição em cima,
-JSON indentado embaixo. A parte técnica (`stdin`, flags, `-D` na saída)
-fica a cargo do procedimento empacotado no JAR —
-`llm-maven-flags-inference/01-inicializacao/00-entry-point.md` e as regras em
-`llm-maven-flags-inference/03-regras-de-formacao-do-contrato/`.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<a id="montagem-dos-arquivos-de-archetype" name="montagem-dos-arquivos-de-archetype"></a>
-## Montagem dos Arquivos de Archetype 🏗️ <a href="#indice">↑ topo</a>
-
-<a id="montagem-dos-arquivos-de-archetype-archetype-metadata-xml" name="montagem-dos-arquivos-de-archetype-archetype-metadata-xml"></a>
-### 1) Archetype-Metadata.xml 🏗️ <a href="#indice">↑ topo</a>
-
-* **OBJETIVO**
-  * Manter 1 arquivo final [ARCHETYPE-METADATA.XML](src/main/resources/META-INF/maven/archetype-metadata.xml) consumido pelo (`maven-archetype-plugin`),
-    mas organizado no source em modulos menores (**35 arquivos de propriedades + 18 de filesets**).
-
-* **MECANISMO**
-  * O XML "core" declara DOCTYPE com (`ENTITY property-<NN>-<flag> SYSTEM ".../property-<NN>-<flag>.xml"`) para cada snippet de propriedade
-    e (`ENTITY fileset-<NN>-<flag> SYSTEM ".../fileset-<NN>-<flag>.xml"`) para cada snippet de fileset.
-  * O total e **53 entidades** (35 + 18).
-  * O corpo referencia as entities como (`&property-<NN>-<flag>;`) (em (`requiredProperties`)) e (`&fileset-<NN>-<flag>;`) (em (`fileSets`)).
-  * Resultado: o arquivo-fonte continua sendo um unico XML valido, legivel, com (`&`) no lugar dos blocos.
-
-* **PLUGIN** — [`xml-maven-plugin`](https://www.mojohaus.org/xml-maven-plugin/) 1.2.1
-  * Fase: (`generate-resources`) (antes do (`maven-archetype-plugin`) ler o metadata).
-  * Goal: (`transform`) — aplica XSLT em um input e grava o resultado no outputDir.
-  * Input : (`src/main/resources/META-INF/maven/archetype-metadata.xml`)
-  * Output: (`${project.build.outputDirectory}/META-INF/maven/archetype-metadata.xml`)
-    (ou seja, (`target/classes/META-INF/maven/...`), dentro do JAR do arquetipo).
-  * O (`<resources>`) do pom **exclui** o (`archetype-metadata.xml`) da copia convencional,
-    garantindo que so a versao transformada va para o classpath.
-
-* **ARCHETYPE-METADATA-IDENTITY.XSL**
-  * XSLT 1.0, template identidade: (`<xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates.../></xsl:copy></xsl:template>`).
-  * Copia verbatim, forca reescrita do XML — efeito colateral desejado: o parser XSLT resolve as (`SYSTEM`) entities DOCTYPE
-    e o output sai com os blocos inline (sem DOCTYPE/entities no XML final).
-
-* **LAYOUT FISICO**
-  * [`archetype_metadata_required_properties/`](src/main/resources/META-INF/maven/archetype_metadata_required_properties)
-    => **35** (`property-<NN>-<flag>.xml`) (**1 por flag**, numerados `02` a `36`).
-  * [`archetype_metadata_filesets/`](src/main/resources/META-INF/maven/archetype_metadata_filesets)
-    => **18** (`fileset-<NN>-<flag>[-parte].xml`) (**1 `<fileSet>` por arquivo**, numerados `01` a `18`).
-  * [`archetype-metadata-identity.xsl`](src/main/resources/META-INF/maven/archetype-metadata-identity.xsl) => folha de estilo XSLT.
-  * [`archetype-metadata.xml`](src/main/resources/META-INF/maven/archetype-metadata.xml) => core (DOCTYPE com 53 entidades + (`&property-<NN>-<flag>;`)/(`&fileset-<NN>-<flag>;`)).
-
-* **FLUXO BUILD**
-  * source (`archetype-metadata.xml`) (com (`&entity;`))
-    * => (`xml-maven-plugin:transform`) aplica (`archetype-metadata-identity.xsl`)
-    * => (`target/classes/META-INF/maven/archetype-metadata.xml`) (XML completo, sem DOCTYPE)
-    * => empacotado no JAR do arquetipo
-    * => lido pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`).
-
-<a id="montagem-dos-arquivos-de-archetype-archetype-post-generate-groovy" name="montagem-dos-arquivos-de-archetype-archetype-post-generate-groovy"></a>
-### 2) Archetype-Post-Generate.groovy 🧬 <a href="#indice">↑ topo</a>
-
-* **OBJETIVO**
-  * Manter 1 arquivo final gerado em (`target/classes/META-INF/archetype-post-generate.groovy`) e consumido pelo (`maven-archetype-plugin`)
-    durante o pos-processamento do projeto gerado,
-    mas organizado no source em modulos menores (15 arquivos de (`body/`) + 25 de (`variables/`) + 4 de (`generators/`) + 20 de (`snippets/`)).
-
-* **MECANISMO**
-  * O arquivo final **nao existe como fonte unica** — ele e remontado a cada build a partir de 4 diretorios.
-  * A [`List<String> SECTIONS`](src/main/groovy/ArchetypePostGenerateComposer.groovy) no topo do compositor e a **fonte unica da verdade da ordem**.
-  * Resultado: o source continua sendo uma colecao de 64 arquivos `.groovy` granulares, e o arquivo final e remontado sob demanda.
-  * Visibilidade: (`target/`) esta no (`.gitignore`) e o IDE normalmente o exclui — o arquivo **nao aparece** na arvore do projeto. Use `mvn clean process-resources` e abra (`target/classes/META-INF/archetype-post-generate.groovy`), ou `Ctrl+Shift+N` no IntelliJ.
-
-* **PLUGIN** — [`groovy-maven-plugin`](https://groovy.github.io/gmaven/) 2.1.1
-  * Fase: (`process-resources`) (imediatamente apos (`xml-maven-plugin:transform`) montar o metadata em (`generate-resources`), e antes do (`package`) e do (`integration-test`)).
-  * Goal: (`execute`) — invoca o script Groovy declarado em (`<source>`).
-  * Input : [`src/main/groovy/ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) (o compositor).
-  * Output: (`${project.build.outputDirectory}/META-INF/archetype-post-generate.groovy`)
-    (ou seja, (`target/classes/META-INF/...`), dentro do JAR do arquetipo).
-  * O (`archetype-post-generate.groovy`) **nao existe** em (`src/main/resources/META-INF/`). O (`BuildArtifactsTest`) 1.4 falha se alguem recriar o monolito; assim o unico arquivo no classpath e o remontado.
-
-* **COMPOSITOR** — [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy)
-  * Le os 15 arquivos de (`body/`) na ordem canonica da (`List<String> SECTIONS`); le os diretorios (`variables/`), (`generators/`) e (`snippets/`) em ordem do `NN` via (`listFiles().sort { it.name }`).
-  * Aplica **consolidacao de imports** em 3 passos:
-    1. Para cada arquivo concatenado, remove (`^import …`) e (`^//[[:space:]]*import`).
-    2. Prepende o conteudo de (`archetype_post_generate_body/body-01-imports.groovy`) no topo, aplicando (`replaceAll('/', '')`) em cada linha.
-    3. Concatena tudo e grava em (`target/classes/META-INF/archetype-post-generate.groovy`).
-  * Sanity check: falha com (`IllegalStateException`) listando o arquivo faltando se qualquer arquivo obrigatorio de (`body/`) estiver ausente, ou se (`variables/`)/(`generators/`)/(`snippets/`) estiverem vazios.
-
-* **LAYOUT FISICO**
-  * [`archetype_post_generate_body/`](src/main/resources/META-INF/archetype_post_generate_body)
-    => 15 arquivos canonicos (1 imports, 1 header, 1 logging, 1 global-vars, 5 path-vars, 1 binding-artifact-registry, 1 footer, 4 helpers).
-  * [`archetype_post_generate_variables/`](src/main/resources/META-INF/archetype_post_generate_variables)
-    => 25 (`variables-NN-*.groovy`) (1 por categoria de flag).
-  * [`archetype_post_generate_generators/`](src/main/resources/META-INF/archetype_post_generate_generators)
-    => 4 (`generator-NN-*.groovy`) (geram fontes Java: enums, tipos aninhados e contrato).
-  * [`archetype_post_generate_snippets/`](src/main/resources/META-INF/archetype_post_generate_snippets)
-    => 20 (`snippet-NN-*.groovy`) (1 por comportamento condicional).
-  * [`ArchetypePostGenerateComposer.groovy`](src/main/groovy/ArchetypePostGenerateComposer.groovy) => o compositor Groovy de build-time.
-
-* **FLUXO BUILD**
-  * source 4 diretorios (`body/`)+(`variables/`)+(`generators/`)+(`snippets/`) + (`body-01-imports.groovy`)
-    * => (`ArchetypePostGenerateComposer.groovy`) le na ordem da (`List<String> SECTIONS`), consolida imports
-    * => (`target/classes/META-INF/archetype-post-generate.groovy`) (Groovy completo, sem duplicacao de imports)
-    * => empacotado no JAR do arquetipo
-    * => executado pelo (`maven-archetype-plugin`) 3.4.1 em (`mvn archetype:generate`), durante o pos-processamento do projeto gerado.
-
-* **⚠️ ADVERTENCIAS** (particularidades deste mecanismo)
-  * **1. Plugin estagnado**: o (`groovy-maven-plugin:2.1.1`) nao recebe release desde **2019-08-04** — risco latente se o (`groovy-bom`) do archetype-plugin migrar para Groovy 5/6.
-  * **2. Override de Groovy 4.0.28 via (`<dependencies>`) nao pega**: o gmaven roda em classloader proprio com Groovy 2.4.9 default. O composer funciona com 2.4.9.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <a id="testabilidade" name="testabilidade"></a>
-## Testabilidade 🧪 <a href="#indice">↑ topo</a>
+## Testabilidade: Artefato × Módulo Gerado 🧪 <a href="#indice">↑ topo</a>
+
+> Duas testabilidades distintas: artefato (build/M2) e módulo gerado.
+
+| Testabilidade | O que cobre | Onde olhar |
+|---|---|---|
+| Do artefato | suítes, fixtures, `verify.groovy` | seções 1–5 |
+| Do módulo gerado | JUnit 5, schema test, cenários | 2.1, 6, 7 |
 
 <a id="testabilidade-onde-os-testes-vivem" name="testabilidade-onde-os-testes-vivem"></a>
 ### 1) ONDE OS TESTES VIVEM <a href="#indice">↑ topo</a>
@@ -2438,6 +2001,8 @@ fica a cargo do procedimento empacotado no JAR —
 
 <a id="testabilidade-verify-groovy-o-hook-pos-build" name="testabilidade-verify-groovy-o-hook-pos-build"></a>
 ### 4) verify.groovy — o hook pós-build 🔬 <a href="#indice">↑ topo</a>
+
+> Este hook pertence à verificação do artefato; não é a verificação pós-comando do módulo gerado.
 
   * Script Groovy executado **depois** do `mvn clean verify` da fixture. Atua como **assercao estrutural pos-build** sobre o projeto Spring Boot gerado (NAO e teste unitario) e e **auto-contido** — hardcoda a expectativa e nao depende do JSON copiado.
   * O `maven-archetype-plugin:3.4.1` dispara o hook pelo parametro `postBuildHookScript` (default **`verify`**, user property `archetype.test.verifyScript`): procura `verify.bsh` ou `verify.groovy` na raiz da fixture.
@@ -2785,6 +2350,8 @@ C:\Temp\eda-005-destino-d
 
 <a id="flags-do-mvn-archetype-generate" name="flags-do-mvn-archetype-generate"></a>
 ## Flags do mvn archetype:generate 🤖 <a href="#indice">↑ topo</a>
+
+> Referência das flags usadas nos nós Inferência e Geração.
 
 * **NOTA**: as flags se dividem em *de pergunta* (aparecem no prompt interativo do archetype:generate) e *de
   resposta* (vão no archetype.properties do perfil de teste). A flag entity_package_name é **derivada** pelo
@@ -3160,7 +2727,9 @@ enable_folder_src_test_java = true
 
 
 <a id="funcionalidades" name="funcionalidades"></a>
-## Funcionalidades 🛠️ <a href="#indice">↑ topo</a>
+## Funcionalidades do Módulo Gerado 🛠️ <a href="#indice">↑ topo</a>
+
+> Isto é sobre o módulo entregue; não é o artefato.
 
   <a id="funcionalidades-contratos-a-fonte-da-verdade-do-modulo-da-api" name="funcionalidades-contratos-a-fonte-da-verdade-do-modulo-da-api"></a>
 
@@ -3226,3 +2795,381 @@ enable_folder_src_test_java = true
 
   * **6. Detalhes técnicos**:
     * onde o teste vive, o que cobre e como a entrega é provada: <a href="#21-schema-test-entidade-contrato-gerado-na-aplicacao">Testabilidade → 2.1) SCHEMA TEST ENTIDADE-CONTRATO</a>.
+<a id="cronograma-do-projeto" name="cronograma-do-projeto"></a>
+## Cronograma do Projeto 🏗️ <a href="#indice">↑ topo</a>
+
+> Roadmap; fora do fluxo.
+
+<a id="cronograma-do-projeto-milestones" name="cronograma-do-projeto-milestones"></a>
+### 1) Milestones 📅 <a href="#indice">↑ topo</a>
+
+* CRUD
+  - Basic
+  - Advanced
+
+* Integration Testes
+  - Repo
+  - Service
+  - Controller
+
+  * DB's for Tests
+    - H2
+    - TestContainer
+
+* Externalized Configurations
+  - App properties
+  - Excecoes
+  - Mensagens
+  - I18N
+  - Rotas
+  - Credentials (Unpushaveis)
+  - etc...
+
+* Type Safe 'Externalized Properties/Configuration' Binding
+  - Filetypes:
+    - .proprerties
+    - .yml
+  - Types:
+    - Simple
+    - List
+    - Map
+  - Mutable / Immutable
+  - Validation
+
+* Good Practices
+  - Pageable
+  - HATEOAS
+
+* DTO
+  - Tipos
+    - Request
+    - Response
+    - Entity protection
+
+* Mapper
+
+* Exceptions
+  - Global
+  - Customizadas
+  - Segurança
+  - Autenticação
+
+* BeanValidation
+  - Exceções
+  - Validações Personalizadas
+    - Pattern Regex
+
+* Cache
+
+* I18N
+
+* Testes de Contratos
+  - Contratos
+    - JSON
+  - SchemaValidator
+    - JSONSchema
+
+* Documentação
+- Swagger
+
+* Database
+  - DBs:
+    - MongoDB
+    - MySQL
+    - Postgres
+  - DDL
+    - Hibernate
+    - Flyway
+  - Persistence
+    - Spring Data
+    - JDBC
+    - JDBC Clients
+
+* Autenticação (Spring Security)
+  - JWT:
+    - Simples
+    - Oauth Server
+  - OAuth2
+    - GitHub
+    - Google
+    - Facebook
+
+* DevOps
+  - Docker
+    - Folder
+    - Dockerfiles
+    - Docker Secrets
+    - Docker-Compose
+  - DevSecOps:
+    - ![dev-sec-ops.png](assets/dev-sec-ops.png)
+  - CI/CD
+  - CloudFlare
+  - AWS
+
+* Seguranca
+  - SAST (Static Application Security Testing)
+    - Credentials:
+      - GitGuardian:
+        - dificil instalacao
+        - Freemium
+      - GitLeaks:
+        - facil instalacao
+        - Open-source
+        - Depende de regras personalizadas, para credenciais customizidas
+  - Proxy Reverso (Nginx)
+
+* Modularidade
+
+* Performance
+  - Load Balancer (Nginx)
+  - Cache
+  - CDN
+  - Virtual Threads
+
+* API Proxies  (Internal UI Clients)
+  - DB
+  - Docker (Portainer)
+  - Spring actuator (graphana)
+  - Documentacao (swagger)
+  - Log Kibana (logstash + Elasticsearch)
+
+<a id="cronograma-do-projeto-task-planning" name="cronograma-do-projeto-task-planning"></a>
+### 2) Task Planning 📝️ <a href="#indice">↑ topo</a>
+
+1. DTO
+  - Libraries
+    - MapStruct (AutoAPI)
+    - MyBatis (Guang)
+    - ModelMapper
+  - Request / Response
+  - AbstractDto
+    - Public class to facilitate DTO creation (Guang)
+
+2. Lombok
+  - AutoAPI
+  - Guang
+
+3. Database Versioning
+  - FlyWay
+  - Liquibase (AutoAPI)
+
+4. Documentation
+  - Swagger (AutoAPI + Guang)
+  - Montagem Automática de README.md
+
+5. Testing
+  - DataBuilder (Guang)
+  - CustomUtils (Guang)
+    - Convert Java object to JSON string
+    - Handle conversion failure with RuntimeException
+  - TestController (Guang)
+    - Unit testing with:
+      - `@Transactional`
+      - Mockito
+  - Test-Db:
+    - H2
+    - TestContainer
+
+6. Service
+  - Transactional (Guang)
+  - Dto-Mapper (Guang)
+  - Apache Commons BeanUtils (Guang)
+    - Copy properties from object to entity
+
+7. Controller
+  - @Validated on DTO (Guang)
+    - BeanValidation
+  - Pageable (Guang)
+  - Dto-Mapper (Guang)
+
+8. Repository
+  - JPA Repository (AutoAPI + Guang)
+  - CRUD Repository (AutoAPI)
+  - JpaSpecificationExecutor (Guang)
+  - Transactions (ACID)
+
+9. Entities
+  - POJO
+  - Records
+
+10. Safety
+  - Input:
+    - sanitizing/encode (replace)
+    - filtering (block)
+  - Shield Dtos:
+    - BeanValidation REGEX
+  - OWASP
+  - Credentials Protection
+    - Externalized Properties-File FROM .Env-file
+    - Gitleaks (SAST)
+      - Nao sera usado, pois depende de instalacao local
+      - Apenas 'Recomendado como 2 layer de protecao"'
+  - Sanitização de URL:
+    - pré despatcherServlet
+    - Header Request
+
+11. Log
+  - Logback:
+    - logback-spring
+    - logback-test
+  - ELK:
+    - Elasticsearch
+    - Logstach
+    - Kibana
+    - Fluxo do ELK:
+> 1) O WebApp envia os logs p/ (logstash.conf: "INPUT") APPENDER-TCP-LOGSTASH "<destination>" do Logback-spring.xml
+> 2) O Logstasch (logstash.conf: "OUTPUT") envia os 'Logs Processados' p/ 'elasticsearch:9200'
+> 3) O kibana exibe os Logs recebidos no 'elasticsearch:9200'
+
+12. Health Check
+  - Actuator
+
+13. API Proxies (Internal UI Clients)
+  - DBA Client
+  - Docker (Portainer)
+  - Spring actuator (graphana)
+  - Documentacao (swagger)
+  - Log Kibana (logstash + Elasticsearch)
+
+14. Type Safe Externalized Properties/Configuration Binding
+  - Application.propriedades
+  - Mensagens:
+    - Gerais
+    - Excecoes
+  - I18N (Traducoes)
+  - Rotas
+  - Credentials(secrets) Vault 'Unpushaveis'
+
+<a id="cronograma-do-projeto-concluded-tasks" name="cronograma-do-projeto-concluded-tasks"></a>
+### 3) Concluded Tasks ✅ <a href="#indice">↑ topo</a>
+
+- [x] Credentials protection
+  - [x] Gitleaks / GitGuardian (Alternative Approaches)
+    - CONS:
+      - GitGuardian:
+        - is not free
+        - Must be installed locally
+      - GitLeaks:
+        - dont works 'efficiently' with Custom-Credentials
+  - [x] **'Encrypted Folder + Global GitIgnore'** _(Chosen Approach)_
+    - [x] Encripted Folder:
+      - Win10 BitLocker
+      - ALL **Credentials-Files** (any sensitive data) must be storaged on this folder 'individually'
+      - The folder will encrypt All its content automatically (files + subfolders)
+      - This folder:
+        - "IS NOT VERSIONED/COMMITTED" _(MUST be inserted in GitIgnore Global)_
+        - 'dont belong' to any project
+        - is not inside any project
+        - is not inside any folder, from any project
+      - Example:
+        - <img alt="credentials-flow" height="140" src="assets/credentials-approuch.png" width="364"/>
+    - [x] **GitIgnore-Global**:
+      - Will detect (excluding for any commit):
+      - Global GitIgnore CLI:
+        - _Creating_ an "Global GitIgnore" **'NOT CREATED YET'**:
+          - _git config --global core.excludesfile C:\your-path\.gitignore_global_
+        - _Finding_ an **'ALREADY EXISTING FILE'**:
+          - _git config --global core.excludesfile_
+        - _GitIgnore-Global_ **'HELP'** can be found, in: 
+          - [GitHub - Global GitIgnore Documentation](https://gist.github.com/subfuzion/db7f57fff2fb6998a16c)
+      - Example:
+        - <img alt="GitIgnore-Global" height="72" src="assets/git-ignore-global.png" width="75"/>
+
+      - Exclusion 'keywords'(fragment-word in begin/middle/end), such as:
+          * docker_secret
+          * dockersecret
+          * secret
+          * authorization
+          * authentication
+          * secret
+          * secretkey
+          * credential
+          * token
+          * etc...
+    - [x] **_'Protected-properties-folder'_**
+      - App Folder for 'sensitive-properties'
+      - These 'sensitive-properties' will data from receive "Environment_Variables"
+      - These "Environment_Variables" will be extracted from the **'Credentials-Files'**
+      - All **'Credentials-Files'** will be stored in a **'Windows Encrypted Folder'**
+
+- [x] Log
+  - [x] Logback:
+    - Logback-spring + logback-test
+    - Console banner (dev + test)
+  - [x] Logback - Console Appender:
+    - 03 types:
+      - Default (Spring)
+      - Tabular
+      - Granular
+  - [x] Logback - Extra Appenders:
+    - Email
+    - RollingFile storage
+      - classic
+      - rolling
+      - logstash
+    - TCP-SOCKETS for logstash (CPanel)
+  - [x] Log Hierarchy:
+    - <img alt="Log Hierarchy" height="56" src="assets/log-scale.png" width="179"/>
+
+- [x] Type Safe 'Externalized Properties/Configuration' Binding
+  - Types:
+    - Constructor Binding (Immutable)
+      - Record (native: no setters + canonical constructor + only constants[finals])
+        - OBS: Implicit Canonical constructor not allow @ConstructorBinding annotation
+      - Class (no setters + canonical constructor + only constants[finals])
+        - OBS: All arguments constructor (canonical constructor in Records)
+    - JavaBean Binding (Mutable)
+      - No arguments constructor (implicit default constructor)
+      - Setter mandatory
+      - Only Classes (with setters/mutators)
+  - **_'Context Scanning'_**:
+    - Constructor Binding + JavaBean Binding:
+        * EnableConfigurationProperties (define the class to be scanned)
+        * _ConfigurationPropertiesScan_ (define the package to be scanned)
+    -  JavaBean Binding:
+        * Stereotype Annotations: Component or Configuration
+  - File Types:
+    - Properties
+    - YAML
+  - Formats:
+    - Simple
+    - Map
+    - List
+  - Validation:
+    - Spring-Validation
+      - jakarta.validation.constraints
+    - Externalization of Messages Absence - Explanation:
+      - Mensagens de 'falha de validacao' serao hardcoded
+      - Pois, servem apenas para 'Log' ou 'debug' da API (Internal Messages)
+      - Nao destinando-se ao 'output'(User/Admin Messages) da API
+      - Nao sendo entao, objeto de I18N ou Externalizacao
+
+  - [ ] TestDB
+    - H2
+    - TestContainer
+
+- [ ] CPanel - API Proxies (UI Clients)
+  - [ ] Log Kibana (ELK - Elasticsearch + Logstash + Kibana)
+  - [ ] Docker (Portainer)
+  - [ ] DB (DB-Client)
+  - [ ] Documentacao (Swagger)
+  - [ ] Spring actuator (Graphana)
+
+<a id="cronograma-do-projeto-next-version" name="cronograma-do-projeto-next-version"></a>
+### 4) Next Version 🔮️ <a href="#indice">↑ topo</a>
+
+  - JpaSpecificationExecutor
+  - Upload
+  - Download
+  - Oauth2 (Google + Facebook + Linkedin)
+  - Swagger
+  - Performance (ECache + Virtual Threads)
+  - Multi-Tenant
+  - Modularity (Java)
+  - "Feature" Generation/Automation
+  - "Component" Generation
+  - Stripe
+  - Document/PDF Visualizer
+  - 2FA Authentication
+  - Passwordless Authentication
+  - UbyKey (OTP)
